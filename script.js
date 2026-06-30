@@ -122,69 +122,111 @@ document.addEventListener('DOMContentLoaded', function () {
       }, 800);
     }, 2400);
   }
+
   /* ─── FLOATING HERO SEARCH FILTER ─── */
   const searchBtn = document.getElementById('hero-search-btn');
   const searchInput = document.getElementById('hero-search-input');
-  
-  if (searchBtn && searchInput) {
-    const handleSearch = () => {
-      const query = searchInput.value.toLowerCase().trim();
+  const genreSelect = document.getElementById('hero-genre-select');
+  const artistInput = document.getElementById('hero-artist-input');
+
+  const executeSearch = (queryKeyword = '', queryGenre = '', queryArtist = '') => {
+    let matchedServiceCount = 0;
+    let matchedArtistCount = 0;
+
+    // Filter services
+    document.querySelectorAll('.service-card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      const matchKeyword = !queryKeyword || text.includes(queryKeyword);
+      const matchGenre = !queryGenre || text.includes(queryGenre);
       
-      let matchedServiceCount = 0;
-      let matchedArtistCount = 0;
-      
-      // Filter services
-      document.querySelectorAll('.service-card').forEach(card => {
-        const text = card.textContent.toLowerCase();
-        if (!query || text.includes(query)) {
-          card.style.display = '';
-          card.style.borderColor = query ? 'var(--gold)' : '';
-          card.style.boxShadow = query ? 'var(--shadow-gold)' : '';
-          matchedServiceCount++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      // Filter offers
-      document.querySelectorAll('.offer-card').forEach(card => {
-        const text = card.textContent.toLowerCase();
-        if (!query || text.includes(query)) {
-          card.style.display = '';
-          card.style.borderColor = query ? 'var(--gold)' : '';
-          matchedServiceCount++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      // Filter artists
-      document.querySelectorAll('.artist-card').forEach(card => {
-        const text = card.textContent.toLowerCase();
-        if (!query || text.includes(query)) {
-          card.style.display = '';
-          card.style.borderColor = query ? 'var(--gold)' : '';
-          matchedArtistCount++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      // Scroll to the most relevant matched section
-      if (query) {
-        if (matchedServiceCount > 0) {
-          document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
-        } else if (matchedArtistCount > 0) {
-          document.getElementById('artists').scrollIntoView({ behavior: 'smooth' });
-        }
+      if (matchKeyword && matchGenre) {
+        card.style.display = '';
+        card.style.borderColor = (queryKeyword || queryGenre) ? 'var(--gold)' : '';
+        card.style.boxShadow = (queryKeyword || queryGenre) ? 'var(--shadow-gold)' : '';
+        matchedServiceCount++;
+      } else {
+        card.style.display = 'none';
       }
-    };
+    });
 
-    searchBtn.addEventListener('click', handleSearch);
-    searchInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') handleSearch();
+    // Filter offers
+    document.querySelectorAll('.offer-card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      const matchKeyword = !queryKeyword || text.includes(queryKeyword);
+      const matchGenre = !queryGenre || text.includes(queryGenre);
+
+      if (matchKeyword && matchGenre) {
+        card.style.display = '';
+        card.style.borderColor = (queryKeyword || queryGenre) ? 'var(--gold)' : '';
+        matchedServiceCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Filter artists
+    document.querySelectorAll('.artist-card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      const matchKeyword = !queryKeyword || text.includes(queryKeyword);
+      const matchGenre = !queryGenre || text.includes(queryGenre);
+      const matchArtistName = !queryArtist || text.includes(queryArtist);
+
+      if (matchKeyword && matchGenre && matchArtistName) {
+        card.style.display = '';
+        card.style.borderColor = (queryKeyword || queryGenre || queryArtist) ? 'var(--gold)' : '';
+        matchedArtistCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Scroll
+    if (queryKeyword || queryGenre || queryArtist) {
+      if (matchedServiceCount > 0) {
+        document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
+      } else if (matchedArtistCount > 0) {
+        document.getElementById('artists').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  if (searchBtn) {
+    searchBtn.addEventListener('click', () => {
+      executeSearch(
+        searchInput.value.toLowerCase().trim(),
+        genreSelect.value.toLowerCase().trim(),
+        artistInput.value.toLowerCase().trim()
+      );
+    });
+
+    [searchInput, artistInput].forEach(input => {
+      if (input) {
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            executeSearch(
+              searchInput.value.toLowerCase().trim(),
+              genreSelect.value.toLowerCase().trim(),
+              artistInput.value.toLowerCase().trim()
+            );
+          }
+        });
+      }
     });
   }
+
+  // Global function for Popular Tag clicks
+  window.filterByTag = function(tag) {
+    if (tag === 'weddings') executeSearch('wedding');
+    else if (tag === 'corporate') executeSearch('corporate');
+    else if (tag === 'bands') executeSearch('band');
+    else if (tag === 'djs') executeSearch('dj');
+    else if (tag === 'solo') executeSearch('solo');
+    else if (tag === 'tributes') executeSearch('tribute');
+    else if (tag === 'car') executeSearch('car');
+    else if (tag === 'yacht') executeSearch('yacht');
+    else if (tag === 'jazz') executeSearch('jazz');
+    else if (tag === 'security') executeSearch('security');
+  };
 
   /* ─── STICKY HEADER ─── */
   const header = document.getElementById('site-header');
@@ -274,12 +316,36 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   revealEls.forEach(el => revealObserver.observe(el));
-
   /* ─── FORM SUBMIT ─── */
   const form = document.getElementById('quote-form');
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      // Extract form values
+      const name = document.getElementById('form-name').value;
+      const email = document.getElementById('form-email').value;
+      const phone = document.getElementById('form-phone').value;
+      const date = document.getElementById('form-date').value;
+      const service = document.getElementById('form-service').value;
+      const message = document.getElementById('form-message').value;
+
+      const newInquiry = {
+        id: 'INQ-' + Date.now().toString().slice(-5),
+        name,
+        email,
+        phone,
+        date,
+        service,
+        message,
+        status: 'Pending',
+        timestamp: new Date().toLocaleString()
+      };
+
+      // Save to localStorage
+      const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
+      inquiries.unshift(newInquiry);
+      localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
 
       const btn = form.querySelector('button[type="submit"]');
       const originalText = btn.textContent;

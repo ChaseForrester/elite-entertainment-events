@@ -1796,3 +1796,30 @@ input, select, textarea { font: inherit; }
   stroke-linecap: round !important;
   stroke-linejoin: round !important;
 }
+
+/* ─── POPULAR SEARCH TAG PILLS ─── */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 850px;
+  margin-inline: auto;
+}
+.tag-pill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--silver-light);
+  padding: 0.5rem 1.25rem;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.tag-pill:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 10px rgba(200, 168, 76, 0.2);
+  transform: translateY(-2px);
+}

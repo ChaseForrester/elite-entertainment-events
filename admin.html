@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Admin Dashboard | Elite Entertainment & Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --bg-dark: #050505;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.06);
+      --gold-glow: 0 0 25px rgba(200, 168, 76, 0.35);
+    }
+    body {
+      background: var(--bg-dark);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    /* Grid Mesh */
+    .dashboard-wrap {
+      position: relative;
+      min-height: 100vh;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+      background-size: 40px 40px;
+      padding: 3rem 2rem;
+      box-sizing: border-box;
+    }
+    .glow-point {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(200, 168, 76, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      top: 10%;
+      left: 70%;
+    }
+    /* Auth Modal */
+    #auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(25px);
+      transition: var(--transition);
+    }
+    #auth-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .auth-card {
+      background: var(--black-3);
+      border: 1px solid var(--gold-dark);
+      border-radius: var(--radius-md);
+      padding: 3rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--gold-glow);
+      text-align: center;
+    }
+    .auth-card h2 {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      color: var(--white);
+    }
+    .auth-card p {
+      font-size: 0.8rem;
+      color: var(--silver-mid);
+      margin-bottom: 2rem;
+    }
+    .auth-input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .auth-input-group label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .auth-input-group input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      color: var(--white);
+      outline: none;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+      transition: var(--transition);
+    }
+    .auth-input-group input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 10px rgba(200, 168, 76, 0.2);
+    }
+    /* Main Layout */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+    .db-logo {
+      display: flex;
+      flex-direction: column;
+    }
+    .db-logo-main {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+      line-height: 1;
+    }
+    .db-logo-sub {
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-top: 0.25rem;
+    }
+    /* Grid Analytics */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .analytic-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .analytic-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: var(--gradient-gold);
+      opacity: 0.6;
+    }
+    .analytic-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--silver-mid);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .analytic-value {
+      font-family: var(--font-heading);
+      font-size: 2.6rem;
+      font-weight: 300;
+      color: var(--white);
+      margin-top: 0.5rem;
+    }
+    /* Table Container */
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .table-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .table-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 1.25rem 2rem;
+      background: rgba(255, 255, 255, 0.01);
+      border-bottom: 1px solid var(--card-border);
+    }
+    td {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      font-size: 0.85rem;
+      color: var(--silver-light);
+    }
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.01);
+    }
+    .status-pill {
+      display: inline-flex;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .status-pending {
+      background: rgba(200, 168, 76, 0.1);
+      color: var(--gold);
+      border: 1px solid rgba(200, 168, 76, 0.25);
+    }
+    .status-contacted {
+      background: rgba(58, 122, 58, 0.1);
+      color: #55c555;
+      border: 1px solid rgba(58, 122, 58, 0.25);
+    }
+    .btn-action {
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--silver-light);
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .btn-action:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    @media (max-width: 900px) {
+      .analytics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .analytics-grid {
+        grid-template-columns: 1fr;
+      }
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+      tr {
+        border-bottom: 1px solid var(--card-border);
+        padding-bottom: 1rem;
+      }
+      td {
+        border: none;
+        padding: 0.5rem 1.5rem;
+        position: relative;
+        padding-left: 50%;
+      }
+      td:before {
+        position: absolute;
+        left: 1.5rem;
+        width: 45%;
+        font-weight: 700;
+        color: var(--gold);
+        text-transform: uppercase;
+        font-size: 0.6rem;
+        content: attr(data-label);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AUTH COVER OVERLAY -->
+  <div id="auth-overlay">
+    <div class="auth-card">
+      <div class="db-logo" style="align-items:center; margin-bottom:2rem;">
+        <span class="db-logo-main">ELITE</span>
+        <span class="db-logo-sub">Administration portal</span>
+      </div>
+      <h2>Secure Sign In</h2>
+      <p>Enter administrative credentials to access the lead engine</p>
+      <div class="auth-input-group">
+        <label>Username</label>
+        <input type="text" id="auth-user" placeholder="e.g. admin" />
+      </div>
+      <div class="auth-input-group" style="margin-bottom:2.5rem;">
+        <label>Password</label>
+        <input type="password" id="auth-pass" placeholder="••••••••" />
+      </div>
+      <button class="btn btn-gold" id="btn-login" style="width:100%;">ACCESS PORTAL</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD CONTAINER -->
+  <div class="dashboard-wrap">
+    <div class="glow-point"></div>
+
+    <div class="container">
+      <!-- HEADER -->
+      <div class="dashboard-header">
+        <div class="db-logo">
+          <span class="db-logo-main">ELITE</span>
+          <span class="db-logo-sub">Entertainment &amp; Events &bull; Lead Engine</span>
+        </div>
+        <div style="display:flex; gap:1rem;">
+          <button class="btn btn-outline" id="btn-logout">Logout</button>
+          <a href="index.html" class="btn btn-gold">View Live Site</a>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div class="analytics-grid">
+        <div class="analytic-card">
+          <div class="analytic-label">Total Leads</div>
+          <div class="analytic-value" id="stat-leads">0</div>
+        </div>
+        <div class="analytic-card">
+          <div class="analytic-label">Pending Reviews</div>
+          <div class="analytic-value" id="stat-pending" style="color:var(--gold);">0</div>
+        </div>
+        <div class="analytic-card">
+          <div class="analytic-label">Contacted Rate</div>
+          <div class="analytic-value" id="stat-rate">0%</div>
+        </div>
+        <div class="analytic-card">
+          <div class="analytic-label">Revenue Pipeline</div>
+          <div class="analytic-value" id="stat-rev" style="color: #55c555;">$0</div>
+        </div>
+      </div>
+
+      <!-- LEADS TABLE -->
+      <div class="table-container">
+        <div class="table-header">
+          <div class="table-title">Lead Pipeline</div>
+          <button class="btn btn-outline btn-sm" id="btn-clear-leads" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear Local Logs</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Client Name</th>
+                <th>Service Needed</th>
+                <th>Event Date</th>
+                <th>Contact Info</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="leads-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Mock Seed Data if empty
+    const seedInquiries = [
+      {
+        id: "INQ-94827",
+        name: "Jessica Miller",
+        email: "jess.miller@gmail.com",
+        phone: "+61 487 112 001",
+        date: "2026-11-14",
+        service: "Wedding Band Hire",
+        message: "Looking for a 5-piece cover band for our reception at the SOH.",
+        status: "Pending",
+        timestamp: "06/30/2026, 4:18 PM"
+      },
+      {
+        id: "INQ-94711",
+        name: "David Sterling (Telstra)",
+        email: "d.sterling@telstra.com.au",
+        phone: "+61 412 887 232",
+        date: "2026-12-08",
+        service: "Corporate Event",
+        message: "Corporate gala dinner entertainment and stage production required.",
+        status: "Contacted",
+        timestamp: "06/30/2026, 1:44 PM"
+      }
+    ];
+
+    // Auth logic
+    const authOverlay = document.getElementById('auth-overlay');
+    const userField = document.getElementById('auth-user');
+    const passField = document.getElementById('auth-pass');
+    const loginBtn = document.getElementById('btn-login');
+    const logoutBtn = document.getElementById('btn-logout');
+
+    // Check session
+    if (sessionStorage.getItem('elite_admin_auth') === 'true') {
+      authOverlay.classList.add('hidden');
+      renderDashboard();
+    }
+
+    loginBtn.addEventListener('click', () => {
+      if (userField.value === 'admin' && passField.value === 'elite2026') {
+        sessionStorage.setItem('elite_admin_auth', 'true');
+        authOverlay.classList.add('hidden');
+        renderDashboard();
+      } else {
+        alert('Invalid credentials. Access Denied.');
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('elite_admin_auth');
+      window.location.reload();
+    });
+
+    // Dashboard render
+    function renderDashboard() {
+      let inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
+      if (inquiries.length === 0) {
+        localStorage.setItem('elite_inquiries', JSON.stringify(seedInquiries));
+        inquiries = seedInquiries;
+      }
+
+      const tbody = document.getElementById('leads-body');
+      tbody.innerHTML = '';
+
+      let pending = 0;
+      let contacted = 0;
+
+      inquiries.forEach((inq, index) => {
+        if (inq.status === 'Pending') pending++;
+        else contacted++;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td data-label="ID">${inq.id}</td>
+          <td data-label="Client Name"><strong>${inq.name}</strong><br><span style="font-size:0.72rem; color:var(--silver-mid);">${inq.timestamp}</span></td>
+          <td data-label="Service Needed">${inq.service}</td>
+          <td data-label="Event Date">${inq.date}</td>
+          <td data-label="Contact Info">${inq.email}<br>${inq.phone}</td>
+          <td data-label="Status">
+            <span class="status-pill ${inq.status === 'Pending' ? 'status-pending' : 'status-contacted'}">${inq.status}</span>
+          </td>
+          <td data-label="Action">
+            <button class="btn-action" onclick="toggleStatus(${index})">
+              ${inq.status === 'Pending' ? 'Mark Contacted' : 'Mark Pending'}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Statistics
+      document.getElementById('stat-leads').textContent = inquiries.length;
+      document.getElementById('stat-pending').textContent = pending;
+      
+      const rate = inquiries.length ? Math.round((contacted / inquiries.length) * 100) : 0;
+      document.getElementById('stat-rate').textContent = rate + '%';
+      
+      const revenue = inquiries.length * 4500; // Est average booking value
+      document.getElementById('stat-rev').textContent = '$' + revenue.toLocaleString();
+    }
+
+    window.toggleStatus = function(index) {
+      const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
+      if (inquiries[index]) {
+        inquiries[index].status = inquiries[index].status === 'Pending' ? 'Contacted' : 'Pending';
+        localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
+        renderDashboard();
+      }
+    };
+
+    document.getElementById('btn-clear-leads').addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all inquiries?')) {
+        localStorage.removeItem('elite_inquiries');
+        renderDashboard();
+      }
+    });
+  </script>
+
+</body>
+</html>
