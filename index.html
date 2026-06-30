@@ -9,8 +9,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <!-- Lottie Player -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 <body>
+
+  <!-- ══════════════════════════════════════════
+       LOADING / PRELOADER OVERLAY
+  ══════════════════════════════════════════ -->
+  <div id="loading-screen" class="loading-screen">
+    <canvas id="fireworks-canvas"></canvas>
+    <div class="loading-content">
+      <h1 class="loading-logo">ELITE</h1>
+      <p class="loading-sub">ENTERTAINMENT &amp; EVENTS</p>
+      <div class="loading-bar-wrap">
+        <div class="loading-bar"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- ══════════════════════════════════════════
        TOP BAR
@@ -43,7 +59,7 @@
   </div>
 
   <!-- ══════════════════════════════════════════
-       HEADER / NAV
+       HEADER / NAV (TRANSPARENT HERO OVERLAY)
   ══════════════════════════════════════════ -->
   <header class="site-header" id="site-header">
     <div class="container header-inner">
@@ -79,7 +95,7 @@
           <li><a href="#contact">Contact</a></li>
         </ul>
 
-        <!-- Mobile Contact Info (visible only on mobile menu open) -->
+        <!-- Mobile Contact Info -->
         <div class="mobile-contact-info">
           <div class="mobile-contact-item">
             <span class="topbar-icon">
@@ -108,7 +124,7 @@
       </nav>
 
       <div class="header-actions">
-        <a href="#contact" class="btn btn-gold header-cta">Get a Quote</a>
+        <a href="#contact" class="btn btn-outline header-cta">INQUIRE NOW</a>
         <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
           <span></span><span></span><span></span>
         </button>
@@ -117,40 +133,68 @@
   </header>
 
   <!-- ══════════════════════════════════════════
-       HERO
+       HERO (VIDEO BACKGROUND & FLOATING SEARCH)
   ══════════════════════════════════════════ -->
   <section class="hero" id="home">
-    <div class="container hero-grid">
+    <div class="hero-video-wrap">
+      <video class="hero-video" src="https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c054e3d93d3950a2e41a90e3cd29a43a&profile_id=139&oauth2_token_id=57447761" autoplay loop muted playsinline></video>
+      <div class="hero-video-overlay"></div>
+    </div>
+
+    <div class="container hero-grid-overlay">
       <div class="hero-left">
         <div class="hero-badge">
           <span class="badge-line"></span>
-          <span>Australia's Premier Entertainment Agency</span>
+          <span>Extraordinary Live Acts</span>
           <span class="badge-line"></span>
+          <!-- Heading Sparkle Lottie -->
+          <lottie-player src="https://lottie.host/7dbb5a99-cf36-4d51-968b-d78216c5b6b1/f3Y0XyF1H8.json" background="transparent" speed="1" style="width: 32px; height: 32px;" loop autoplay></lottie-player>
         </div>
         <h1 class="hero-title">
-          <span class="hero-title-top">Every Event.</span>
-          <span class="hero-title-mid">A Masterpiece.</span>
+          <span class="hero-title-top" style="text-transform: uppercase; font-family: var(--font-body); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 0.5rem;">Luxury Entertainment</span>
+          <span class="hero-title-mid" style="font-family: var(--font-heading); font-size: clamp(2.8rem, 5vw, 4.5rem); font-weight: 300; font-style: normal; color: var(--white); background: none; -webkit-text-fill-color: initial;">Exceptional Events.</span>
         </h1>
-        <p class="hero-sub">Over 41 years delivering world-class live bands, corporate acts, DJs, solo artists and production across NSW &amp; Australia wide.</p>
+        <p class="hero-sub" style="max-width: 580px;">Over 41 years delivering world-class live bands, corporate acts, DJs, solo artists and production across NSW &amp; Australia wide.</p>
         <div class="hero-actions">
-          <a href="#contact" class="btn btn-gold">Request a Quote</a>
-          <a href="#artists" class="btn btn-outline">Browse Artists</a>
-        </div>
-        <div class="hero-client-social">
-          <div class="client-avatars">
-            <div class="avatar-img av1"></div>
-            <div class="avatar-img av2"></div>
-            <div class="avatar-img av3"></div>
-            <div class="avatar-img av4"></div>
-          </div>
-          <span class="client-text"><strong>10K+</strong> Events Successfully Run</span>
+          <a href="#contact" class="btn btn-gold">DISCOVER COLLECTION</a>
         </div>
       </div>
-      <div class="hero-right">
-        <div class="hero-media-wrapper">
-          <img src="hero_banner.png" alt="41 Years of Elite Entertainment" class="hero-img" />
-          <div class="hero-media-glow"></div>
+
+      <!-- Floating Search Bar -->
+      <div class="search-bar-floating">
+        <div class="search-field">
+          <label>EVENT TYPE</label>
+          <select id="search-event-type">
+            <option value="">Any Event</option>
+            <option value="weddings">Weddings</option>
+            <option value="corporate">Corporate Events</option>
+            <option value="private-parties">Private Parties</option>
+          </select>
         </div>
+        <div class="search-field">
+          <label>ARTIST CATEGORY</label>
+          <select id="search-artist-cat">
+            <option value="">All Categories</option>
+            <option value="artists-solo">Solo Artists</option>
+            <option value="artists-duo">Duos</option>
+            <option value="artists-bands">Trios &amp; Bands</option>
+            <option value="artists-tributes">Tribute Acts</option>
+            <option value="artists-jazz">Classical &amp; Jazz</option>
+            <option value="artists-djs">DJs</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label>LOCATION</label>
+          <select id="search-location">
+            <option value="">Any Location</option>
+            <option value="sydney">Sydney &amp; Suburbs</option>
+            <option value="nsw">NSW Regional</option>
+            <option value="australia">Australia Wide</option>
+          </select>
+        </div>
+        <button class="search-btn" id="hero-search-btn">
+          <span>SEARCH EVENTS</span>
+        </button>
       </div>
     </div>
   </section>
@@ -185,14 +229,17 @@
   ══════════════════════════════════════════ -->
   <section class="services-section" id="services">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header" style="position: relative;">
         <div class="section-eyebrow">Our Portfolio</div>
-        <h2 class="section-title">Our Finest Work</h2>
+        <h2 class="section-title" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          Our Finest Work
+          <lottie-player src="https://lottie.host/7dbb5a99-cf36-4d51-968b-d78216c5b6b1/f3Y0XyF1H8.json" background="transparent" speed="1" style="width: 44px; height: 44px;" loop autoplay></lottie-player>
+        </h2>
         <div class="gold-divider"></div>
       </div>
 
       <div class="services-grid">
-        <div class="service-card">
+        <div class="service-card" id="card-weddings">
           <div class="service-img-container" style="background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop');">
             <div class="service-overlay"></div>
           </div>
@@ -203,7 +250,7 @@
           </div>
         </div>
 
-        <div class="service-card">
+        <div class="service-card" id="card-corporate">
           <div class="service-img-container" style="background-image: url('https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=600&auto=format&fit=crop');">
             <div class="service-overlay"></div>
           </div>
@@ -214,7 +261,7 @@
           </div>
         </div>
 
-        <div class="service-card">
+        <div class="service-card" id="card-private-parties">
           <div class="service-img-container" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600&auto=format&fit=crop');">
             <div class="service-overlay"></div>
           </div>
@@ -363,14 +410,17 @@
   ══════════════════════════════════════════ -->
   <section class="artists-section" id="artists">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header" style="position: relative;">
         <div class="section-eyebrow">Our Roster</div>
-        <h2 class="section-title">Browse Artists</h2>
+        <h2 class="section-title" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          Browse Artists
+          <lottie-player src="https://lottie.host/7dbb5a99-cf36-4d51-968b-d78216c5b6b1/f3Y0XyF1H8.json" background="transparent" speed="1.2" style="width: 44px; height: 44px;" loop autoplay></lottie-player>
+        </h2>
         <div class="gold-divider"></div>
       </div>
 
       <div class="artists-grid">
-        <div class="artist-card">
+        <div class="artist-card" id="art-solo">
           <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop');">
             <div class="artist-overlay"></div>
           </div>
@@ -381,7 +431,7 @@
           </div>
         </div>
 
-        <div class="artist-card">
+        <div class="artist-card" id="art-duo">
           <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop');">
             <div class="artist-overlay"></div>
           </div>
@@ -392,7 +442,7 @@
           </div>
         </div>
 
-        <div class="artist-card">
+        <div class="artist-card" id="art-bands">
           <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=400&auto=format&fit=crop');">
             <div class="artist-overlay"></div>
           </div>
@@ -403,7 +453,7 @@
           </div>
         </div>
 
-        <div class="artist-card">
+        <div class="artist-card" id="art-tributes">
           <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?q=80&w=400&auto=format&fit=crop');">
             <div class="artist-overlay"></div>
           </div>
@@ -414,7 +464,7 @@
           </div>
         </div>
 
-        <div class="artist-card">
+        <div class="artist-card" id="art-jazz">
           <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=400&auto=format&fit=crop');">
             <div class="artist-overlay"></div>
           </div>
@@ -425,7 +475,7 @@
           </div>
         </div>
 
-        <div class="artist-card">
+        <div class="artist-card" id="art-djs">
           <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=400&auto=format&fit=crop');">
             <div class="artist-overlay"></div>
           </div>

@@ -4,24 +4,183 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  /* ─── METALLIC THEME TOGGLE ─── */
-  const themeToggle = document.getElementById('theme-toggle');
-  const currentTheme = localStorage.getItem('theme');
+  /* ─── LOADING OVERLAY & CANVAS FIREWORKS ─── */
+  const loader = document.getElementById('loading-screen');
+  const canvas = document.getElementById('fireworks-canvas');
+  
+  if (canvas && loader) {
+    const ctx = canvas.getContext('2d');
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-  // Apply saved theme preference on load
-  if (currentTheme === 'silver') {
-    document.body.classList.add('theme-silver');
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.angle = Math.random() * Math.PI * 2;
+        this.speed = Math.random() * 4 + 1;
+        this.friction = 0.95;
+        this.gravity = 0.08;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.015 + 0.01;
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+      }
+      update() {
+        this.speed *= this.friction;
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed + this.gravity;
+        this.alpha -= this.decay;
+      }
+    }
+
+    class Firework {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = height;
+        this.targetY = Math.random() * (height * 0.5);
+        this.speed = Math.random() * 5 + 4;
+        this.particles = [];
+        // Luxury gold shades
+        const golds = ['#c9a84c', '#f3e5ab', '#8a6f27', '#ffffff', '#e8c86b'];
+        this.color = golds[Math.floor(Math.random() * golds.length)];
+      }
+      draw() {
+        if (this.speed > 0) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        }
+        this.particles.forEach(p => p.draw());
+      }
+      update() {
+        if (this.speed > 0) {
+          this.y -= this.speed;
+          if (this.y <= this.targetY) {
+            this.speed = 0;
+            this.explode();
+          }
+        }
+        this.particles.forEach((p, index) => {
+          p.update();
+          if (p.alpha <= 0) {
+            this.particles.splice(index, 1);
+          }
+        });
+      }
+      explode() {
+        for (let i = 0; i < 40; i++) {
+          this.particles.push(new Particle(this.x, this.y, this.color));
+        }
+      }
+    }
+
+    const fireworks = [];
+    let animationId;
+
+    function loop() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.fillRect(0, 0, width, height);
+
+      if (Math.random() < 0.08) {
+        fireworks.push(new Firework());
+      }
+
+      fireworks.forEach((fw, index) => {
+        fw.update();
+        fw.draw();
+        if (fw.speed === 0 && fw.particles.length === 0) {
+          fireworks.splice(index, 1);
+        }
+      });
+
+      animationId = requestAnimationFrame(loop);
+    }
+
+    loop();
+
+    // Fade out loading screen after 2.4s
+    setTimeout(() => {
+      loader.classList.add('fade-out');
+      setTimeout(() => {
+        cancelAnimationFrame(animationId);
+        loader.remove();
+      }, 800);
+    }, 2400);
   }
 
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('theme-silver');
-      
-      let theme = 'gold';
-      if (document.body.classList.contains('theme-silver')) {
-        theme = 'silver';
+  /* ─── FLOATING HERO SEARCH FILTER ─── */
+  const searchBtn = document.getElementById('hero-search-btn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', () => {
+      const eventType = document.getElementById('search-event-type').value;
+      const artistCat = document.getElementById('search-artist-cat').value;
+
+      // Event filtering
+      if (eventType) {
+        const targetCardId = 'card-' + eventType;
+        document.querySelectorAll('.service-card').forEach(card => {
+          if (card.id === targetCardId) {
+            card.style.display = '';
+            card.style.borderColor = 'var(--gold)';
+            card.style.boxShadow = 'var(--shadow-gold)';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        // Scroll to services
+        document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        document.querySelectorAll('.service-card').forEach(card => {
+          card.style.display = '';
+          card.style.borderColor = '';
+          card.style.boxShadow = '';
+        });
       }
-      localStorage.setItem('theme', theme);
+
+      // Artist filtering
+      if (artistCat) {
+        let targetId = '';
+        if (artistCat === 'artists-solo') targetId = 'art-solo';
+        else if (artistCat === 'artists-duo') targetId = 'art-duo';
+        else if (artistCat === 'artists-bands') targetId = 'art-bands';
+        else if (artistCat === 'artists-tributes') targetId = 'art-tributes';
+        else if (artistCat === 'artists-jazz') targetId = 'art-jazz';
+        else if (artistCat === 'artists-djs') targetId = 'art-djs';
+
+        document.querySelectorAll('.artist-card').forEach(card => {
+          if (card.id === targetId) {
+            card.style.display = '';
+            card.style.borderColor = 'var(--gold)';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // Scroll to artists if not scrolled to services
+        if (!eventType) {
+          document.getElementById('artists').scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        document.querySelectorAll('.artist-card').forEach(card => {
+          card.style.display = '';
+          card.style.borderColor = '';
+        });
+      }
     });
   }
 
