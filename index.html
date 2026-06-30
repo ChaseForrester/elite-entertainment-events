@@ -104,12 +104,64 @@
         <h1 class="hero-title" style="font-size: clamp(2.8rem, 6vw, 4.5rem); font-family: var(--font-heading); font-weight: 300; line-height: 1.15; margin-bottom: 1.25rem; color: var(--white); text-align:center;">
           Premium Event <span style="color:var(--gold); font-style:italic;">"Marketplace"</span>
         </h1>
-        <p class="hero-sub" style="font-size: 1.05rem; color: var(--silver-mid); margin-bottom: 2rem; line-height: 1.6; text-align:center; max-width:650px; margin-inline:auto;">
+        <p class="hero-sub" style="font-size: 1.05rem; color: var(--silver-mid); margin-bottom: 1rem; line-height: 1.6; text-align:center; max-width:650px; margin-inline:auto;">
           The premium double-sided event ecosystem. Instantly connect verified luxury suppliers, world-class entertainment, and elite security with event hosts nationwide.
         </p>
       </div>
 
-      <!-- Double-Sided Business Model Cards (Stacked vertically, Centred) -->
+      <!-- Glowing Capsule Search Wrapper (Centred Front and Centre) -->
+      <div class="search-capsule-container" style="display:flex; align-items:center; gap:1.25rem; width:100%; max-width:920px; margin-inline:auto; margin-bottom:0.5rem;">
+        <div class="search-bar-floating" style="display:grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap:1px; flex-grow:1; background:rgba(255,255,255,0.03); backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px); border:1px solid rgba(200,168,76,0.3); border-radius:50px; padding:0.4rem 0.4rem 0.4rem 1.5rem; box-shadow: var(--gold-glow); overflow:visible;">
+          <div class="search-field" style="border-right:1px solid rgba(255,255,255,0.08); padding:0.5rem 1rem 0.5rem 0; text-align:left; display:flex; flex-direction:column; justify-content:center; position:relative;">
+            <label style="font-size:0.55rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:0.25rem;">What are you looking for?</label>
+            <input type="text" id="hero-search-input" placeholder="Search artists, bands, keywords..." style="background:transparent; border:none; color:var(--white); font-size:0.85rem; outline:none; width:100%;" autocomplete="off" />
+            <div id="search-autocomplete-dropdown" class="autocomplete-dropdown"></div>
+          </div>
+          <div class="search-field" style="border-right:1px solid rgba(255,255,255,0.08); padding:0.5rem 1rem; text-align:left; display:flex; flex-direction:column; justify-content:center;">
+            <label style="font-size:0.55rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:0.25rem;">Genre</label>
+            <select id="hero-genre-select" style="background:transparent; border:none; color:var(--white); font-size:0.85rem; outline:none; width:100%; cursor:pointer;">
+              <option value="" style="background:#111;">Rock, Jazz, Pop...</option>
+              <option value="acoustic" style="background:#111;">Acoustic</option>
+              <option value="rock" style="background:#111;">Rock</option>
+              <option value="pop" style="background:#111;">Pop</option>
+              <option value="jazz" style="background:#111;">Jazz</option>
+              <option value="tribute" style="background:#111;">Tribute</option>
+              <option value="dj" style="background:#111;">DJ</option>
+            </select>
+          </div>
+          <div class="search-field" style="padding:0.5rem 1rem; text-align:left; display:flex; flex-direction:column; justify-content:center;">
+            <label style="font-size:0.55rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:0.25rem;">Specific Artists</label>
+            <input type="text" id="hero-artist-input" placeholder="The Velvet Tones, DJ" style="background:transparent; border:none; color:var(--white); font-size:0.85rem; outline:none; width:100%;" />
+          </div>
+          <button class="search-btn" id="hero-search-btn" style="background:var(--gradient-gold); border:none; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition); box-shadow:0 4px 15px rgba(200,168,76,0.3); padding:0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" style="width:20px; height:20px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+        </div>
+
+        <!-- Flanking Golden Microphone -->
+        <div class="mic-icon-wrap" style="display:flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:50%; border:1px solid rgba(200,168,76,0.4); background:rgba(200,168,76,0.05); box-shadow: var(--gold-glow); flex-shrink:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="width:24px; height:24px;"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg>
+        </div>
+      </div>
+
+      <!-- Popular Search Tags (Centred Front and Centre) -->
+      <div class="popular-tags-wrap" style="margin-top:0; margin-bottom:1.5rem;">
+        <span style="font-size:0.68rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; display:block; margin-bottom:1rem;">Popular Search Tags</span>
+        <div class="tags-container" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.75rem; max-width:850px; margin-inline:auto;">
+          <button class="tag-pill" onclick="filterByTag('weddings')">Weddings</button>
+          <button class="tag-pill" onclick="filterByTag('corporate')">Corporate Galas</button>
+          <button class="tag-pill" onclick="filterByTag('bands')">Live Bands</button>
+          <button class="tag-pill" onclick="filterByTag('djs')">Event DJs</button>
+          <button class="tag-pill" onclick="filterByTag('solo')">Solo Acts</button>
+          <button class="tag-pill" onclick="filterByTag('tributes')">Tribute Shows</button>
+          <button class="tag-pill" onclick="filterByTag('car')">Luxury Car Hire</button>
+          <button class="tag-pill" onclick="filterByTag('yacht')">Yacht Charters</button>
+          <button class="tag-pill" onclick="filterByTag('jazz')">Jazz &amp; Swing</button>
+          <button class="tag-pill" onclick="filterByTag('security')">Security</button>
+        </div>
+      </div>
+
+      <!-- Double-Sided Business Model Cards -->
       <div style="display:flex; flex-direction:column; gap:1.25rem; margin-bottom:1rem; width:100%; max-width:600px; margin-inline:auto;">
         <!-- Pillar 1: Event Hosts -->
         <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(200,168,76,0.3); border-radius:12px; padding:1.25rem; text-align:left; display:flex; gap:1rem; align-items:center;">
@@ -152,60 +204,9 @@
         <!-- Second Picture: Animated Floating Lounge Shot -->
         <div class="animated-lounge-frame" style="background-image:url('https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=400&auto=format&fit=crop'); background-size:cover; background-position:center; border-radius:12px; border:1px solid rgba(255,255,255,0.08); animation: gentle-pulse 6s ease-in-out infinite; box-shadow: var(--shadow-md); width:100%; height:100%;"></div>
       </div>
-
-      <!-- Glowing Capsule Search Wrapper (Centred Below Collage) -->
-      <div class="search-capsule-container" style="display:flex; align-items:center; gap:1.25rem; width:100%; max-width:920px; margin-inline:auto;">
-        <div class="search-bar-floating" style="display:grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap:1px; flex-grow:1; background:rgba(255,255,255,0.03); backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px); border:1px solid rgba(200,168,76,0.3); border-radius:50px; padding:0.4rem 0.4rem 0.4rem 1.5rem; box-shadow: var(--gold-glow); overflow:visible;">
-          <div class="search-field" style="border-right:1px solid rgba(255,255,255,0.08); padding:0.5rem 1rem 0.5rem 0; text-align:left; display:flex; flex-direction:column; justify-content:center; position:relative;">
-            <label style="font-size:0.55rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:0.25rem;">What are you looking for?</label>
-            <input type="text" id="hero-search-input" placeholder="Search artists, bands, keywords..." style="background:transparent; border:none; color:var(--white); font-size:0.85rem; outline:none; width:100%;" autocomplete="off" />
-            <div id="search-autocomplete-dropdown" class="autocomplete-dropdown"></div>
-          </div>
-          <div class="search-field" style="border-right:1px solid rgba(255,255,255,0.08); padding:0.5rem 1rem; text-align:left; display:flex; flex-direction:column; justify-content:center;">
-            <label style="font-size:0.55rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:0.25rem;">Genre</label>
-            <select id="hero-genre-select" style="background:transparent; border:none; color:var(--white); font-size:0.85rem; outline:none; width:100%; cursor:pointer;">
-              <option value="" style="background:#111;">Rock, Jazz, Pop...</option>
-              <option value="acoustic" style="background:#111;">Acoustic</option>
-              <option value="rock" style="background:#111;">Rock</option>
-              <option value="pop" style="background:#111;">Pop</option>
-              <option value="jazz" style="background:#111;">Jazz</option>
-              <option value="tribute" style="background:#111;">Tribute</option>
-              <option value="dj" style="background:#111;">DJ</option>
-            </select>
-          </div>
-          <div class="search-field" style="padding:0.5rem 1rem; text-align:left; display:flex; flex-direction:column; justify-content:center;">
-            <label style="font-size:0.55rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:0.25rem;">Specific Artists</label>
-            <input type="text" id="hero-artist-input" placeholder="The Velvet Tones, DJ" style="background:transparent; border:none; color:var(--white); font-size:0.85rem; outline:none; width:100%;" />
-          </div>
-          <button class="search-btn" id="hero-search-btn" style="background:var(--gradient-gold); border:none; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition); box-shadow:0 4px 15px rgba(200,168,76,0.3); padding:0;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" style="width:20px; height:20px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
-        </div>
-
-        <!-- Flanking Golden Microphone -->
-        <div class="mic-icon-wrap" style="display:flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:50%; border:1px solid rgba(200,168,76,0.4); background:rgba(200,168,76,0.05); box-shadow: var(--gold-glow); flex-shrink:0;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="width:24px; height:24px;"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg>
-        </div>
-      </div>
-
-      <!-- Popular Search Tags -->
-      <div class="popular-tags-wrap" style="margin-top:0.5rem;">
-        <span style="font-size:0.68rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; display:block; margin-bottom:1rem;">Popular Search Tags</span>
-        <div class="tags-container" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.75rem; max-width:850px; margin-inline:auto;">
-          <button class="tag-pill" onclick="filterByTag('weddings')">Weddings</button>
-          <button class="tag-pill" onclick="filterByTag('corporate')">Corporate Galas</button>
-          <button class="tag-pill" onclick="filterByTag('bands')">Live Bands</button>
-          <button class="tag-pill" onclick="filterByTag('djs')">Event DJs</button>
-          <button class="tag-pill" onclick="filterByTag('solo')">Solo Acts</button>
-          <button class="tag-pill" onclick="filterByTag('tributes')">Tribute Shows</button>
-          <button class="tag-pill" onclick="filterByTag('car')">Luxury Car Hire</button>
-          <button class="tag-pill" onclick="filterByTag('yacht')">Yacht Charters</button>
-          <button class="tag-pill" onclick="filterByTag('jazz')">Jazz &amp; Swing</button>
-          <button class="tag-pill" onclick="filterByTag('security')">Security</button>
-        </div>
-      </div>
     </div>
   </section>
+
   <!-- Features Horizontal Bar -->
   <div class="features-bar">
     <div class="container features-bar-inner">
