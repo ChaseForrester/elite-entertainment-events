@@ -578,15 +578,23 @@
       tbody.innerHTML = '';
 
       partners.forEach((prt, index) => {
-        // Extract dynamic step 2 fields display
         let detailsHtml = '';
+        if (prt.abn) detailsHtml += `<span style="font-size:0.7rem; display:block; color:var(--silver-light);">ABN: ${prt.abn}</span>`;
+        if (prt.price) detailsHtml += `<span style="font-size:0.7rem; display:block; color:#55c555; font-weight:700;">Start: $${parseInt(prt.price).toLocaleString()}</span>`;
+        if (prt.insurance) detailsHtml += `<span style="font-size:0.7rem; display:block; color:var(--silver-mid);">Ins: ${prt.insurance}</span>`;
         if (prt.details) {
-          detailsHtml = Object.entries(prt.details)
+          detailsHtml += Object.entries(prt.details)
             .map(([k, v]) => `<span style="font-size:0.7rem; display:block; color:var(--gold);">${k.toUpperCase()}: ${v}</span>`)
             .join('');
         }
+        if (prt.photoFile && prt.photoFile !== 'Not provided') {
+          detailsHtml += `<span style="font-size:0.7rem; display:block; color:var(--white);">Photo: 🖼️ ${prt.photoFile}</span>`;
+        }
+        if (prt.certFile && prt.certFile !== 'Not provided') {
+          detailsHtml += `<span style="font-size:0.7rem; display:block; color:var(--white);">Cert: 📄 ${prt.certFile}</span>`;
+        }
         if (prt.link) {
-          detailsHtml += `<a href="${prt.link}" target="_blank" style="font-size:0.7rem; color:var(--white); text-decoration:underline;">Promo Link</a>`;
+          detailsHtml += `<a href="${prt.link}" target="_blank" style="font-size:0.7rem; color:var(--gold); text-decoration:underline; font-weight:700;">Promo Link &rarr;</a>`;
         }
 
         const tr = document.createElement('tr');

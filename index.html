@@ -92,10 +92,10 @@
        HERO (VIDEO BACKGROUND & CAPSULE SEARCH)
   ══════════════════════════════════════════ -->
   <section class="hero" id="home">
-    <div class="hero-video-wrap">
-      <video class="hero-video" src="https://assets.mixkit.co/videos/preview/mixkit-concert-crowd-raising-hands-under-stage-lights-41764-large.mp4" autoplay loop muted playsinline></video>
-      <div class="hero-video-overlay"></div>
-      </div>
+    <div class="hero-video-wrap" style="background-image: url('luxury_gold_hero_backdrop.jpg'); background-size: cover; background-position: center;">
+      <video class="hero-video" src="https://assets.mixkit.co/videos/preview/mixkit-concert-crowd-raising-hands-under-stage-lights-41764-large.mp4" autoplay loop muted playsinline style="opacity: 0.15;"></video>
+      <div class="hero-video-overlay" style="background: linear-gradient(to bottom, rgba(10,10,10,0.7), rgba(10,10,10,0.95));"></div>
+    </div>
 
     <div class="container hero-grid-overlay" style="display:flex; flex-direction:column; gap:3rem; padding-top:2rem;">
       <div class="hero-split-wrap" style="display:grid; grid-template-columns: 1.1fr 0.9fr; gap:4rem; align-items:center; width:100%;">
@@ -1074,6 +1074,9 @@
                 <option value="Luxury Car Hire">Luxury Car Hire</option>
                 <option value="Yacht Charter">Yacht Charter</option>
                 <option value="Security">Security Services</option>
+                <option value="Models & Dancers">Models &amp; Dancers</option>
+                <option value="RSA & RCG Staff">RSA &amp; RCG Staff</option>
+                <option value="Corporate Vendor">Corporate Vendor</option>
               </select>
             </div>
           </div>
@@ -1108,16 +1111,55 @@
           <div style="margin-bottom:1rem;">
             <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Promotional / Website Link</label>
             <input type="url" id="signup-link" required placeholder="https://soundcloud.com/yourpage" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; margin-bottom:1rem;" />
+          <div style="margin-bottom:1rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">ABN / Business Number</label>
+              <input type="text" id="signup-abn" required placeholder="e.g. 17 698 991 481" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            </div>
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Starting Package Price ($)</label>
+              <input type="number" id="signup-price" required placeholder="e.g. 1500" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            </div>
           </div>
-          <div style="margin-bottom:1rem;">
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Years in Industry</label>
-            <select id="signup-exp" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; cursor:pointer; margin-bottom:1.5rem;">
-              <option value="1-2 years">1-2 years</option>
-              <option value="3-5 years">3-5 years</option>
-              <option value="5-10 years">5-10 years</option>
-              <option value="10+ years">10+ years</option>
-            </select>
+          <div style="margin-bottom:1rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Years in Industry</label>
+              <select id="signup-exp" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; cursor:pointer;">
+                <option value="1-2 years">1-2 years</option>
+                <option value="3-5 years">3-5 years</option>
+                <option value="5-10 years">5-10 years</option>
+                <option value="10+ years">10+ years</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Public Liability Insurance</label>
+              <select id="signup-insurance" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; cursor:pointer;">
+                <option value="Yes ($20M)">Yes ($20M coverage)</option>
+                <option value="Yes ($10M)">Yes ($10M coverage)</option>
+                <option value="Yes ($5M)">Yes ($5M coverage)</option>
+                <option value="No">No / Not Yet Covered</option>
+              </select>
+            </div>
           </div>
+
+          <!-- File Uploads Section -->
+          <div style="margin-bottom:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Upload Promo / Profile Photo</label>
+              <div style="border:1px dashed rgba(255,255,255,0.15); border-radius:8px; padding:0.55rem; text-align:center; background:rgba(255,255,255,0.02); cursor:pointer; position:relative;">
+                <span id="photo-upload-status" style="font-size:0.7rem; color:var(--silver-mid);">Select Photo file</span>
+                <input type="file" id="signup-file-photo" style="position:absolute; inset:0; opacity:0; cursor:pointer;" accept="image/*" />
+              </div>
+            </div>
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Upload Certificate / Credentials</label>
+              <div style="border:1px dashed rgba(255,255,255,0.15); border-radius:8px; padding:0.55rem; text-align:center; background:rgba(255,255,255,0.02); cursor:pointer; position:relative;">
+                <span id="cert-upload-status" style="font-size:0.7rem; color:var(--silver-mid);">Select Doc file</span>
+                <input type="file" id="signup-file-cert" style="position:absolute; inset:0; opacity:0; cursor:pointer;" accept=".pdf,.jpg,.jpeg,.png" />
+              </div>
+            </div>
+          </div>
+
           <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
             <input type="checkbox" id="signup-agree" required style="cursor:pointer;" />
             <label for="signup-agree" style="font-size:0.75rem; color:var(--silver-light); cursor:pointer;">I agree to Elite's standards and margin policies</label>

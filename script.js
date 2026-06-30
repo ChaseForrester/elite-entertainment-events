@@ -665,7 +665,7 @@ document.addEventListener('DOMContentLoaded', function () {
       dynamicContainer.innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
           <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Genre</label>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Genre / Style</label>
             <input type="text" id="spec-genre" required placeholder="e.g. Rock, Pop, Jazz" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
           </div>
           <div>
@@ -673,33 +673,116 @@ document.addEventListener('DOMContentLoaded', function () {
             <input type="number" id="spec-size" required placeholder="e.g. 5" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
           </div>
         </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Set List Duration</label>
+            <select id="spec-duration" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="1 Hour">1 Hour Total</option>
+              <option value="2 Hours">2 Hours (2x 45m sets)</option>
+              <option value="3 Hours">3 Hours (3x 45m sets)</option>
+              <option value="4+ Hours">4+ Hours (Premium acts)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Technical Rider Provided?</label>
+            <select id="spec-rider" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="Yes">Yes, technical rider ready</option>
+              <option value="No">No, need standard PA system</option>
+            </select>
+          </div>
+        </div>
       `;
     } else if (selectedType === 'Event DJ') {
       dynamicContainer.innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
           <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Lighting Rig Included?</label>
-            <select id="spec-lighting" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; cursor:pointer;">
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">DJ Specialist Category</label>
+            <select id="spec-djstyle" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="Open-Format">Open-Format / Corporate</option>
+              <option value="Wedding DJ">Wedding Specialist</option>
+              <option value="Club / Electronic">Club / Electronic (Techno, House)</option>
+              <option value="R&B / Hip-Hop">Retro R&amp;B / Hip-Hop</option>
             </select>
           </div>
           <div>
             <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Sound System Wattage</label>
-            <input type="text" id="spec-sound" required placeholder="e.g. 2000W" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            <input type="text" id="spec-sound" required placeholder="e.g. 1500W RMS" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Lighting Rig Included?</label>
+            <select id="spec-lighting" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="Yes">Yes, multi-beam rig</option>
+              <option value="No">No, basic booth lights only</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Microphones Provided</label>
+            <select id="spec-mics" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="Wireless Mics">Wireless Shure Mics (x2)</option>
+              <option value="Wired Mics">Wired Mics (x1)</option>
+              <option value="None">None</option>
+            </select>
           </div>
         </div>
       `;
-    } else if (selectedType === 'Luxury Car Hire' || selectedType === 'Yacht Charter') {
+    } else if (selectedType === 'Luxury Car Hire') {
       dynamicContainer.innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
           <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Make & Model</label>
-            <input type="text" id="spec-model" required placeholder="e.g. Rolls-Royce Ghost" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Vehicle Make, Model &amp; Year</label>
+            <input type="text" id="spec-car-model" required placeholder="e.g. Rolls-Royce Ghost 2022" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
           </div>
           <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Hourly Hire Rate ($)</label>
-            <input type="number" id="spec-rate" required placeholder="e.g. 250" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Exterior Color</label>
+            <select id="spec-car-color" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="White">White / Pearl</option>
+              <option value="Black">Gloss Black</option>
+              <option value="Silver">Silver / Chrome</option>
+              <option value="Gold">Gilded Gold</option>
+              <option value="Other">Other Custom Wrap</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Min. Hire Duration (Hours)</label>
+            <input type="number" id="spec-car-min" required placeholder="e.g. 3" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Chauffeur Service Included?</label>
+            <select id="spec-car-driver" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="Yes">Yes, licensed chauffeur</option>
+              <option value="No">No, dry hire only</option>
+            </select>
+          </div>
+        </div>
+      `;
+    } else if (selectedType === 'Yacht Charter') {
+      dynamicContainer.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Vessel Name &amp; Length (ft)</label>
+            <input type="text" id="spec-yacht-len" required placeholder="e.g. Athena II (80ft)" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Max Passenger Capacity</label>
+            <input type="number" id="spec-yacht-cap" required placeholder="e.g. 45" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Catering Service Packages</label>
+            <select id="spec-yacht-catering" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="BYO Only">BYO Food &amp; Drinks Allowed</option>
+              <option value="Gold Menu">Gold Canape &amp; Beverage Package</option>
+              <option value="Platinum Menu">Platinum Private Chef Menu</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Captain &amp; Onboard Crew Size</label>
+            <input type="number" id="spec-yacht-crew" required placeholder="e.g. 3" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
           </div>
         </div>
       `;
@@ -707,13 +790,99 @@ document.addEventListener('DOMContentLoaded', function () {
       dynamicContainer.innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
           <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">License Number</label>
-            <input type="text" id="spec-lic" required placeholder="e.g. 40998822" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Class 1A License Number</label>
+            <input type="text" id="spec-sec-lic" required placeholder="e.g. 40998822" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
           </div>
           <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Coverage Range</label>
-            <input type="text" id="spec-region" required placeholder="e.g. Sydney Metro" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">License Expiry Date</label>
+            <input type="date" id="spec-sec-exp" required style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
           </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">First-Aid Certified Staff?</label>
+            <select id="spec-sec-firstaid" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="Yes">Yes, all guards certified</option>
+              <option value="No">No / Select Guards Only</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Crowd Control Experience</label>
+            <select id="spec-sec-exp" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="1-3 years">1-3 years</option>
+              <option value="4-7 years">4-7 years</option>
+              <option value="8+ years">8+ years</option>
+            </select>
+          </div>
+        </div>
+      `;
+    } else if (selectedType === 'Models & Dancers') {
+      dynamicContainer.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Performer Type</label>
+            <select id="spec-model-type" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="Promotional Model">Promotional Model / Hostess</option>
+              <option value="Choreographed Dancer">Choreographed Dancer</option>
+              <option value="Acrobat / Stage Act">Acrobat / Stage performer</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Height (cm)</label>
+            <input type="number" id="spec-model-height" required placeholder="e.g. 175" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Costumes / Outfits Provided?</label>
+            <select id="spec-model-outfit" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="BYO Costumes">BYO Performance Costumes</option>
+              <option value="Client Provided">Client / Venue Provided Uniform</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Performance Video Reel Link</label>
+            <input type="url" id="spec-model-reel" placeholder="https://vimeo.com/yourshow" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+      `;
+    } else if (selectedType === 'RSA & RCG Staff') {
+      dynamicContainer.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">RSA Card Number</label>
+            <input type="text" id="spec-staff-rsa" required placeholder="e.g. RSA009988" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">RCG Card Number (Optional)</label>
+            <input type="text" id="spec-staff-rcg" placeholder="e.g. RCG001122" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Bar / Mixology Experience</label>
+            <select id="spec-staff-mixology" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="General Server">General Bar / Drink Server</option>
+              <option value="Cocktail Maker">Cocktail Maker / Intermediate</option>
+              <option value="Master Mixologist">Master Mixologist / Flair Bartender</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Uniform Size</label>
+            <select id="spec-staff-size" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
+              <option value="S">Small (S)</option>
+              <option value="M">Medium (M)</option>
+              <option value="L">Large (L)</option>
+              <option value="XL">Extra Large (XL)</option>
+            </select>
+          </div>
+        </div>
+      `;
+    } else {
+      dynamicContainer.innerHTML = `
+        <div>
+          <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Service Description &amp; Specifications</label>
+          <textarea id="spec-corporate" required placeholder="Describe corporate services, staffing, and staging details..." style="width:100%; height:90px; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; resize:none;"></textarea>
         </div>
       `;
     }
@@ -722,6 +891,29 @@ document.addEventListener('DOMContentLoaded', function () {
   if (typeSelector) {
     typeSelector.addEventListener('change', updateDynamicFields);
     updateDynamicFields();
+  }
+
+  // File Upload labels change observers
+  const photoInput = document.getElementById('signup-file-photo');
+  const photoStatus = document.getElementById('photo-upload-status');
+  if (photoInput && photoStatus) {
+    photoInput.addEventListener('change', () => {
+      if (photoInput.files.length > 0) {
+        photoStatus.textContent = '✓ ' + photoInput.files[0].name;
+        photoStatus.style.color = 'var(--gold)';
+      }
+    });
+  }
+
+  const certInput = document.getElementById('signup-file-cert');
+  const certStatus = document.getElementById('cert-upload-status');
+  if (certInput && certStatus) {
+    certInput.addEventListener('change', () => {
+      if (certInput.files.length > 0) {
+        certStatus.textContent = '✓ ' + certInput.files[0].name;
+        certStatus.style.color = 'var(--gold)';
+      }
+    });
   }
 
   // Next / Back buttons
@@ -793,16 +985,49 @@ document.addEventListener('DOMContentLoaded', function () {
       if (type === 'Live Band') {
         details.genre = document.getElementById('spec-genre').value;
         details.size = document.getElementById('spec-size').value;
+        details.duration = document.getElementById('spec-duration').value;
+        details.rider = document.getElementById('spec-rider').value;
       } else if (type === 'Event DJ') {
-        details.lighting = document.getElementById('spec-lighting').value;
+        details.djstyle = document.getElementById('spec-djstyle').value;
         details.sound = document.getElementById('spec-sound').value;
-      } else if (type === 'Luxury Car Hire' || type === 'Yacht Charter') {
-        details.model = document.getElementById('spec-model').value;
-        details.rate = document.getElementById('spec-rate').value;
+        details.lighting = document.getElementById('spec-lighting').value;
+        details.mics = document.getElementById('spec-mics').value;
+      } else if (type === 'Luxury Car Hire') {
+        details.carModel = document.getElementById('spec-car-model').value;
+        details.carColor = document.getElementById('spec-car-color').value;
+        details.carMinHours = document.getElementById('spec-car-min').value;
+        details.carChauffeur = document.getElementById('spec-car-driver').value;
+      } else if (type === 'Yacht Charter') {
+        details.yachtLength = document.getElementById('spec-yacht-len').value;
+        details.yachtCapacity = document.getElementById('spec-yacht-cap').value;
+        details.yachtCatering = document.getElementById('spec-yacht-catering').value;
+        details.yachtCrew = document.getElementById('spec-yacht-crew').value;
       } else if (type === 'Security') {
-        details.license = document.getElementById('spec-lic').value;
-        details.region = document.getElementById('spec-region').value;
+        details.license = document.getElementById('spec-sec-lic').value;
+        details.expiry = document.getElementById('spec-sec-exp').value;
+        details.firstAid = document.getElementById('spec-sec-firstaid').value;
+        details.experience = document.getElementById('spec-sec-exp').value;
+      } else if (type === 'Models & Dancers') {
+        details.modelType = document.getElementById('spec-model-type').value;
+        details.height = document.getElementById('spec-model-height').value;
+        details.outfits = document.getElementById('spec-model-outfit').value;
+        details.reel = document.getElementById('spec-model-reel').value;
+      } else if (type === 'RSA & RCG Staff') {
+        details.rsa = document.getElementById('spec-staff-rsa').value;
+        details.rcg = document.getElementById('spec-staff-rcg').value;
+        details.mixology = document.getElementById('spec-staff-mixology').value;
+        details.size = document.getElementById('spec-staff-size').value;
+      } else {
+        details.corporate = document.getElementById('spec-corporate').value;
       }
+
+      // Read files if selected
+      const photoFile = photoInput && photoInput.files.length > 0 ? photoInput.files[0].name : 'Not provided';
+      const certFile = certInput && certInput.files.length > 0 ? certInput.files[0].name : 'Not provided';
+
+      const abn = document.getElementById('signup-abn').value;
+      const price = document.getElementById('signup-price').value;
+      const insurance = document.getElementById('signup-insurance').value;
 
       const newPartner = {
         id: 'PRT-' + Date.now().toString().slice(-4),
@@ -812,6 +1037,11 @@ document.addEventListener('DOMContentLoaded', function () {
         phone,
         link,
         experience,
+        abn,
+        price,
+        insurance,
+        photoFile,
+        certFile,
         details,
         status: 'Pending',
         timestamp: new Date().toLocaleString()
