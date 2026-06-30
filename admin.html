@@ -355,10 +355,12 @@
           <div class="analytic-value" id="stat-rev" style="color: #55c555;">$0</div>
         </div>
       </div>
+
       <!-- Tab Toggles -->
       <div class="db-tabs" style="display:flex; gap:1.25rem; margin-bottom:2rem; justify-content:flex-start; width:100%;">
         <button class="btn btn-gold tab-btn" id="tab-btn-leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; text-transform:none;">Lead Pipeline</button>
         <button class="btn btn-outline tab-btn" id="tab-btn-partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2); text-transform:none;">Partner Signups</button>
+        <button class="btn btn-outline tab-btn" id="tab-btn-clients" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2); text-transform:none;">CRM - Clients</button>
       </div>
 
       <!-- LEADS TABLE -->
@@ -407,6 +409,32 @@
               </tr>
             </thead>
             <tbody id="partners-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CRM CLIENTS TABLE -->
+      <div class="table-container" id="clients-container" style="display:none; width:100%;">
+        <div class="table-header">
+          <div class="table-title">CRM - Clients Pipeline</div>
+          <button class="btn btn-outline btn-sm" id="btn-clear-clients" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear Local Logs</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Client Name</th>
+                <th>Contact Info</th>
+                <th>Event Date &amp; Budget</th>
+                <th>Requirements / Notes</th>
+                <th>CRM Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="clients-body">
               <!-- Dynamically populated -->
             </tbody>
           </table>
@@ -538,9 +566,9 @@
       
       const revenue = inquiries.length * 4500;
       document.getElementById('stat-rev').textContent = '$' + revenue.toLocaleString();
-    }
-      // Render partners if active
+      // Render tabs
       renderPartners();
+      renderClients();
     }
 
     // Render Partner registrations
@@ -550,19 +578,76 @@
       tbody.innerHTML = '';
 
       partners.forEach((prt, index) => {
+        // Extract dynamic step 2 fields display
+        let detailsHtml = '';
+        if (prt.details) {
+          detailsHtml = Object.entries(prt.details)
+            .map(([k, v]) => `<span style="font-size:0.7rem; display:block; color:var(--gold);">${k.toUpperCase()}: ${v}</span>`)
+            .join('');
+        }
+        if (prt.link) {
+          detailsHtml += `<a href="${prt.link}" target="_blank" style="font-size:0.7rem; color:var(--white); text-decoration:underline;">Promo Link</a>`;
+        }
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td data-label="ID">${prt.id}</td>
           <td data-label="Business Name"><strong>${prt.name}</strong><br><span style="font-size:0.72rem; color:var(--silver-mid);">${prt.timestamp}</span></td>
           <td data-label="Partner Type">${prt.type}</td>
           <td data-label="Contact Info">${prt.email}<br>${prt.phone}</td>
-          <td data-label="Bio/Details" style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${prt.bio}">${prt.bio}</td>
+          <td data-label="Specs/Link">${detailsHtml || 'None'}</td>
           <td data-label="Status">
             <span class="status-pill ${prt.status === 'Pending' ? 'status-pending' : 'status-contacted'}">${prt.status}</span>
           </td>
           <td data-label="Action">
             <button class="btn-action" onclick="togglePartnerStatus(${index})">
               ${prt.status === 'Pending' ? 'Mark Approved' : 'Mark Pending'}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Render CRM Clients list
+    function renderClients() {
+      const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
+      const tbody = document.getElementById('clients-body');
+      tbody.innerHTML = '';
+
+      clients.forEach((cli, index) => {
+        // Format notes logs
+        const notesHtml = (cli.notes || [])
+          .map(note => `<div style="font-size:0.72rem; border-bottom:1px solid rgba(255,255,255,0.05); padding:0.25rem 0;">• ${note}</div>`)
+          .join('');
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td data-label="ID">${cli.id}</td>
+          <td data-label="Client Name"><strong>${cli.name}</strong><br><span style="font-size:0.72rem; color:var(--silver-mid);">${cli.timestamp}</span></td>
+          <td data-label="Contact Info">${cli.email}<br>${cli.phone}</td>
+          <td data-label="Date & Budget"><strong>${cli.date}</strong><br><span style="color:#55c555;">$${parseInt(cli.budget).toLocaleString()}</span></td>
+          <td data-label="Requirements & Notes">
+            <div style="font-size:0.75rem; color:var(--silver-light); margin-bottom:0.4rem;">${cli.message}</div>
+            <div class="crm-notes-log" style="max-height:80px; overflow-y:auto; margin-bottom:0.4rem; background:rgba(0,0,0,0.15); padding:0.25rem; border-radius:4px;">
+              ${notesHtml || '<span style="color:rgba(255,255,255,0.3); font-size:0.7rem;">No advisor notes</span>'}
+            </div>
+            <div style="display:flex; gap:0.25rem;">
+              <input type="text" id="note-input-${index}" placeholder="Add CRM note..." style="font-size:0.7rem; padding:0.2rem 0.4rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:4px; color:#white; width:100%; outline:none;" />
+              <button class="btn btn-gold btn-sm" onclick="addClientNote(${index})" style="padding:0.2rem 0.5rem; font-size:0.65rem;">+</button>
+            </div>
+          </td>
+          <td data-label="CRM Status">
+            <select onchange="updateClientStatus(${index}, this.value)" style="background:rgba(20,20,20,0.95); border:1px solid rgba(200,168,76,0.3); color:var(--white); border-radius:4px; padding:0.25rem; font-size:0.75rem; cursor:pointer;">
+              <option value="Lead" ${cli.status === 'Lead' ? 'selected' : ''}>New Lead</option>
+              <option value="Negotiation" ${cli.status === 'Negotiation' ? 'selected' : ''}>Negotiating</option>
+              <option value="Booked" ${cli.status === 'Booked' ? 'selected' : ''}>Booked</option>
+              <option value="Lost" ${cli.status === 'Lost' ? 'selected' : ''}>Lost</option>
+            </select>
+          </td>
+          <td data-label="Action">
+            <button class="btn-action" onclick="removeClient(${index})" style="background:rgba(255,0,0,0.1); color:#ff5555; border-color:rgba(255,0,0,0.2);">
+              Delete
             </button>
           </td>
         `;
@@ -590,28 +675,80 @@
       }
     };
 
+    // Update Client CRM status
+    window.updateClientStatus = function(index, newStatus) {
+      const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
+      if (clients[index]) {
+        clients[index].status = newStatus;
+        localStorage.setItem('elite_clients', JSON.stringify(clients));
+        renderDashboard();
+      }
+    };
+
+    // Add Client note
+    window.addClientNote = function(index) {
+      const noteVal = document.getElementById(`note-input-${index}`).value.trim();
+      if (!noteVal) return;
+
+      const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
+      if (clients[index]) {
+        if (!clients[index].notes) clients[index].notes = [];
+        clients[index].notes.push(noteVal);
+        localStorage.setItem('elite_clients', JSON.stringify(clients));
+        renderDashboard();
+      }
+    };
+
+    // Remove Client CRM profile
+    window.removeClient = function(index) {
+      if (confirm('Delete this client registration record?')) {
+        const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
+        clients.splice(index, 1);
+        localStorage.setItem('elite_clients', JSON.stringify(clients));
+        renderDashboard();
+      }
+    };
+
     // Tabs switching logic
     const tabLeads = document.getElementById('tab-btn-leads');
     const tabPartners = document.getElementById('tab-btn-partners');
+    const tabClients = document.getElementById('tab-btn-clients');
+
     const containerLeads = document.getElementById('leads-container');
     const containerPartners = document.getElementById('partners-container');
+    const containerClients = document.getElementById('clients-container');
 
     const switchTab = (tab) => {
+      tabLeads.className = 'btn btn-outline tab-btn';
+      tabPartners.className = 'btn btn-outline tab-btn';
+      tabClients.className = 'btn btn-outline tab-btn';
+
+      tabLeads.style.borderColor = 'rgba(255,255,255,0.2)';
+      tabPartners.style.borderColor = 'rgba(255,255,255,0.2)';
+      tabClients.style.borderColor = 'rgba(255,255,255,0.2)';
+
+      containerLeads.style.display = 'none';
+      containerPartners.style.display = 'none';
+      containerClients.style.display = 'none';
+
       if (tab === 'leads') {
         tabLeads.className = 'btn btn-gold tab-btn';
-        tabPartners.className = 'btn btn-outline tab-btn';
+        tabLeads.style.borderColor = '';
         containerLeads.style.display = 'block';
-        containerPartners.style.display = 'none';
-      } else {
-        tabLeads.className = 'btn btn-outline tab-btn';
+      } else if (tab === 'partners') {
         tabPartners.className = 'btn btn-gold tab-btn';
-        containerLeads.style.display = 'none';
+        tabPartners.style.borderColor = '';
         containerPartners.style.display = 'block';
+      } else if (tab === 'clients') {
+        tabClients.className = 'btn btn-gold tab-btn';
+        tabClients.style.borderColor = '';
+        containerClients.style.display = 'block';
       }
     };
 
     tabLeads.addEventListener('click', () => switchTab('leads'));
     tabPartners.addEventListener('click', () => switchTab('partners'));
+    tabClients.addEventListener('click', () => switchTab('clients'));
 
     document.getElementById('btn-clear-leads').addEventListener('click', () => {
       if (confirm('Are you sure you want to clear all inquiries?')) {
@@ -626,6 +763,14 @@
         renderDashboard();
       }
     });
+
+    document.getElementById('btn-clear-clients').addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all client signups?')) {
+        localStorage.removeItem('elite_clients');
+        renderDashboard();
+      }
+    });
   </script>
 </body>
 </html>
+

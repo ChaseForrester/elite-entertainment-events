@@ -80,7 +80,7 @@
         </ul>
       </nav>
       <div class="header-actions">
-        <a href="#contact" class="btn btn-outline header-cta" style="border-radius:30px; font-weight:600; padding:0.65rem 1.7rem; font-size:0.8rem; border-color:rgba(255,255,255,0.4); text-transform:none;">Book Consultation</a>
+        <a href="#" id="nav-btn-client" class="btn btn-outline header-cta" style="border-radius:30px; font-weight:600; padding:0.65rem 1.7rem; font-size:0.8rem; border-color:rgba(255,255,255,0.4); text-transform:none;">Book Consultation</a>
         <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
           <span></span><span></span><span></span>
         </button>
@@ -101,31 +101,35 @@
       <div class="hero-split-wrap" style="display:grid; grid-template-columns: 1.1fr 0.9fr; gap:4rem; align-items:center; width:100%;">
         <!-- Left Side: Title & Badges -->
         <div class="hero-left" style="align-items:flex-start; text-align:left;">
-          <h1 class="hero-title" style="font-size: clamp(2.8rem, 5.5vw, 4.4rem); font-family: var(--font-heading); font-weight: 300; line-height: 1.15; margin-bottom: 1.5rem; color: var(--white); text-align:left;">
-            Find <span style="color:var(--gold); font-style:italic;">"Anything."</span><br/>For <span style="color:var(--gold); font-style:italic;">"Any Event."</span>
+          <h1 class="hero-title" style="font-size: clamp(2.6rem, 5vw, 4rem); font-family: var(--font-heading); font-weight: 300; line-height: 1.15; margin-bottom: 1.25rem; color: var(--white); text-align:left;">
+            Premium Event <span style="color:var(--gold); font-style:italic;">"Marketplace"</span>
           </h1>
-          <p class="hero-sub" style="max-width: 520px; font-size: 1.02rem; color: var(--silver-mid); margin-bottom: 2rem; line-height: 1.6; text-align:left; margin-left:0;">
-            One marketplace for events. Thousands of vendors, services, venues &amp; everything in between.
+          <p class="hero-sub" style="max-width: 540px; font-size: 0.95rem; color: var(--silver-mid); margin-bottom: 2rem; line-height: 1.6; text-align:left; margin-left:0;">
+            The premium double-sided event ecosystem. Instantly connect verified luxury suppliers, world-class entertainment, and elite security with event hosts nationwide.
           </p>
-          <!-- Hero Badges -->
-          <div class="hero-badges-list" style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:2.2rem; text-align:left; align-items:flex-start;">
-            <div style="display:flex; align-items:center; gap:0.6rem; font-size:0.85rem; color:var(--silver-light);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" style="width:16px; height:16px; flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <span>Discover top-rated vendors</span>
+
+          <!-- Double-Sided Business Model Cards -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:2.2rem; width:100%; max-width:540px;">
+            <!-- Pillar 1: Event Hosts -->
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(200,168,76,0.3); border-radius:12px; padding:1.25rem; text-align:left;">
+              <span style="font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); font-weight:800; display:block; margin-bottom:0.5rem;">For Event Hosts</span>
+              <h4 style="color:var(--white); font-size:0.95rem; margin-bottom:0.4rem; font-weight:700;">Find Anything</h4>
+              <p style="font-size:0.75rem; color:var(--silver-mid); margin-bottom:0; line-height:1.4;">Vetted live bands, luxury hire yachts, cars &amp; private guards in one secure place.</p>
             </div>
-            <div style="display:flex; align-items:center; gap:0.6rem; font-size:0.85rem; color:var(--silver-light);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" style="width:16px; height:16px; flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span>Book securely in one place</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:0.6rem; font-size:0.85rem; color:var(--silver-light);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" style="width:16px; height:16px; flex-shrink:0;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <span>Reviews from real customers</span>
+            
+            <!-- Pillar 2: Premium Vendors -->
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1.25rem; text-align:left;">
+              <span style="font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--silver-light); font-weight:800; display:block; margin-bottom:0.5rem;">For Agencies &amp; Acts</span>
+              <h4 style="color:var(--white); font-size:0.95rem; margin-bottom:0.4rem; font-weight:700;">Grow Bookings</h4>
+              <p style="font-size:0.75rem; color:var(--silver-mid); margin-bottom:0; line-height:1.4;">Submit your dynamic spec profile to access our exclusive, pre-qualified CRM leads pipeline.</p>
             </div>
           </div>
-          <a href="#services" class="btn btn-gold" style="border-radius:30px; padding:0.8rem 2rem; font-size:0.82rem; font-weight:700;">Explore All Categories &rarr;</a>
-        </div>
 
-        <!-- Right Side: Luxury Photo Collage -->
+          <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+            <a href="#services" class="btn btn-gold" style="border-radius:30px; padding:0.8rem 2.2rem; font-size:0.8rem; font-weight:700; text-transform:none;">Explore Ecosystem</a>
+            <button class="btn btn-outline" id="hero-btn-vendor-signup" style="border-radius:30px; padding:0.8rem 2.2rem; font-size:0.8rem; font-weight:700; border-color:rgba(255,255,255,0.2); text-transform:none;">Apply as Partner</button>
+          </div>
+        </div>        <!-- Right Side: Luxury Photo Collage -->
         <div class="hero-right-collage" style="position:relative; display:grid; grid-template-columns: 1.2fr 1fr; gap:0.75rem; width:100%; max-width:480px; aspect-ratio:1.2; margin-inline:auto;">
           <div style="background-image:url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=300&auto=format&fit=crop'); background-size:cover; background-position:center; border-radius:var(--radius-md); border:1px solid rgba(200,168,76,0.3); grid-row: span 2;"></div>
           <div style="background-image:url('https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=300&auto=format&fit=crop'); background-size:cover; background-position:center; border-radius:var(--radius-md); border:1px solid rgba(200,168,76,0.3);"></div>
@@ -1029,57 +1033,144 @@
       <button class="btn btn-gold" id="modal-btn-login-submit" style="width:100%; border-radius:30px; padding:0.75rem;">Login to Dashboard</button>
     </div>
   </div>
-
-  <!-- ─── VENDOR/BAND SIGNUP MODAL ─── -->
+  <!-- ─── VENDOR/BAND SIGNUP MODAL (3-STEP MULTI FORM) ─── -->
   <div id="signup-modal" class="custom-modal-overlay">
-    <div class="custom-modal-card" style="max-width:550px;">
+    <div class="custom-modal-card" style="max-width:560px;">
       <button class="modal-close-btn" id="signup-modal-close">&times;</button>
       <div style="text-align:center; margin-bottom:1.5rem;">
         <span style="font-family:'Montserrat',sans-serif; font-weight:800; font-size:1.8rem; color:var(--white); letter-spacing:-0.02em;">Elite</span>
         <span style="font-family:'Cormorant Garamond',serif; font-size:0.6rem; letter-spacing:0.18em; color:var(--gold); display:block; text-transform:uppercase;">Join Our Premium Network</span>
       </div>
-      <h3 style="margin-bottom:0.5rem; color:var(--white);">Vendor Registration</h3>
-      <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem;">Register your business, live band, or service to partner with us</p>
       
-      <form id="vendor-signup-form" style="display:flex; flex-direction:column; gap:1rem; text-align:left;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Business/Band Name</label>
-            <input type="text" id="signup-name" required placeholder="e.g. The Groove Trio" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+      <!-- Step Dots -->
+      <div class="step-indicator" style="display:flex; justify-content:center; gap:2.5rem; margin-bottom:2rem;">
+        <span class="step-dot" id="dot-1" style="width:30px; height:30px; border-radius:50%; background:var(--gold); color:#000; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">1</span>
+        <span class="step-dot" id="dot-2" style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.1); color:var(--white); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">2</span>
+        <span class="step-dot" id="dot-3" style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.1); color:var(--white); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">3</span>
+      </div>
+
+      <form id="vendor-signup-form" style="text-align:left;">
+        <!-- STEP 1: Basic Profile -->
+        <div id="step-1-panel">
+          <h4 style="color:var(--white); margin-bottom:1rem; font-size:1.05rem;">Step 1: General Profile</h4>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Business/Band Name</label>
+              <input type="text" id="signup-name" required placeholder="e.g. The Groove Trio" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            </div>
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Partner Type</label>
+              <select id="signup-type" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; cursor:pointer;">
+                <option value="Live Band">Live Band / Artist</option>
+                <option value="Event DJ">Event DJ</option>
+                <option value="Luxury Car Hire">Luxury Car Hire</option>
+                <option value="Yacht Charter">Yacht Charter</option>
+                <option value="Security">Security Services</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Partner Type</label>
-            <select id="signup-type" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; cursor:pointer;">
-              <option value="Live Band">Live Band / Artist</option>
-              <option value="Event DJ">Event DJ</option>
-              <option value="Luxury Car Hire">Luxury Car Hire</option>
-              <option value="Yacht Charter">Yacht Charter</option>
-              <option value="Corporate Vendor">Corporate Vendor</option>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Contact Email</label>
+              <input type="email" id="signup-email" required placeholder="hello@yourbrand.com" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            </div>
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Contact Phone</label>
+              <input type="tel" id="signup-phone" required placeholder="+61 400 000 000" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            </div>
+          </div>
+          <button type="button" class="btn btn-gold" id="btn-next-1" style="width:100%; border-radius:30px; padding:0.75rem;">Next Step &rarr;</button>
+        </div>
+
+        <!-- STEP 2: Dynamic Requirements (Managed in script.js) -->
+        <div id="step-2-panel" style="display:none;">
+          <h4 style="color:var(--white); margin-bottom:1rem; font-size:1.05rem;">Step 2: Service Specifications</h4>
+          <div id="dynamic-fields-container" style="margin-bottom:1.5rem;">
+            <!-- Loaded dynamically based on Partner Type -->
+          </div>
+          <div style="display:flex; gap:1rem;">
+            <button type="button" class="btn btn-outline" id="btn-prev-2" style="flex:1; border-radius:30px; padding:0.75rem;">Back</button>
+            <button type="button" class="btn btn-gold" id="btn-next-2" style="flex:1; border-radius:30px; padding:0.75rem;">Next Step &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Media & Verifications -->
+        <div id="step-3-panel" style="display:none;">
+          <h4 style="color:var(--white); margin-bottom:1rem; font-size:1.05rem;">Step 3: Verification &amp; Submit</h4>
+          <div style="margin-bottom:1rem;">
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Promotional / Website Link</label>
+            <input type="url" id="signup-link" required placeholder="https://soundcloud.com/yourpage" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; margin-bottom:1rem;" />
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Years in Industry</label>
+            <select id="signup-exp" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; cursor:pointer; margin-bottom:1.5rem;">
+              <option value="1-2 years">1-2 years</option>
+              <option value="3-5 years">3-5 years</option>
+              <option value="5-10 years">5-10 years</option>
+              <option value="10+ years">10+ years</option>
             </select>
           </div>
-        </div>
-        
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Contact Email</label>
-            <input type="email" id="signup-email" required placeholder="hello@yourbrand.com" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
+            <input type="checkbox" id="signup-agree" required style="cursor:pointer;" />
+            <label for="signup-agree" style="font-size:0.75rem; color:var(--silver-light); cursor:pointer;">I agree to Elite's standards and margin policies</label>
           </div>
-          <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Contact Phone</label>
-            <input type="tel" id="signup-phone" required placeholder="+61 400 000 000" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          <div style="display:flex; gap:1rem;">
+            <button type="button" class="btn btn-outline" id="btn-prev-3" style="flex:1; border-radius:30px; padding:0.75rem;">Back</button>
+            <button type="submit" class="btn btn-gold" id="btn-signup-submit" style="flex:1; border-radius:30px; padding:0.75rem; font-weight:700;">Submit Profile</button>
           </div>
         </div>
-
-        <div>
-          <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Brief Bio &amp; Service Details</label>
-          <textarea id="signup-bio" required placeholder="Tell us about your services, experience, and pricing..." style="width:100%; height:80px; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; resize:none;"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-gold" style="width:100%; border-radius:30px; padding:0.75rem; font-weight:700; margin-top:0.5rem;">Submit Application</button>
       </form>
     </div>
   </div>
 
+  <!-- ─── CLIENT/HOST CONSULTATION SIGNUP MODAL (CRM INTEGRATED) ─── -->
+  <div id="client-modal" class="custom-modal-overlay">
+    <div class="custom-modal-card">
+      <button class="modal-close-btn" id="client-modal-close">&times;</button>
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <span style="font-family:'Montserrat',sans-serif; font-weight:800; font-size:1.8rem; color:var(--white); letter-spacing:-0.02em;">Elite</span>
+        <span style="font-family:'Cormorant Garamond',serif; font-size:0.6rem; letter-spacing:0.18em; color:var(--gold); display:block; text-transform:uppercase;">Talk to an Advisor</span>
+      </div>
+      <h3 style="margin-bottom:0.5rem; color:var(--white);">Schedule Consultation</h3>
+      <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem;">Register details to schedule a call and access your client pipeline</p>
+      
+      <form id="client-signup-form" style="display:flex; flex-direction:column; gap:1rem; text-align:left;">
+        <div>
+          <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Full Name</label>
+          <input type="text" id="client-name" required placeholder="e.g. Sarah Jenkins" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+        </div>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Email Address</label>
+            <input type="email" id="client-email" required placeholder="sarah@example.com" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Phone Number</label>
+            <input type="tel" id="client-phone" required placeholder="+61 400 000 000" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Event Date</label>
+            <input type="date" id="client-date" required style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Budget allocation ($)</label>
+            <input type="number" id="client-budget" required placeholder="5000" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Event Details / Message</label>
+          <textarea id="client-message" required placeholder="Tell us about the event venue, theme, and desired music..." style="width:100%; height:70px; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; resize:none;"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-gold" style="width:100%; border-radius:30px; padding:0.75rem; font-weight:700; margin-top:0.5rem;">Register Consultation Call</button>
+      </form>
+    </div>
+  </div>
   <!-- Firebase Dependencies for Login Popup -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";

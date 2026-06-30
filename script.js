@@ -557,17 +557,19 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
-
-  /* ─── MODAL CONTROLS (LOGIN & SIGNUP) ─── */
+  /* ─── MODAL CONTROLS (LOGIN & SIGNUP & CLIENT) ─── */
   const loginOverlay = document.getElementById('login-modal');
   const signupOverlay = document.getElementById('signup-modal');
+  const clientOverlay = document.getElementById('client-modal');
   
   const btnOpenLogin = document.getElementById('nav-btn-login');
   const btnOpenSignup = document.getElementById('nav-btn-signup');
   const btnOpenSignupHero = document.querySelector('.vendor-callout-card .btn');
+  const btnOpenClientNav = document.getElementById('nav-btn-client');
 
   const btnCloseLogin = document.getElementById('login-modal-close');
   const btnCloseSignup = document.getElementById('signup-modal-close');
+  const btnCloseClient = document.getElementById('client-modal-close');
 
   const openModal = (modal) => {
     if (modal) modal.classList.add('active');
@@ -577,32 +579,20 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modal) modal.classList.remove('active');
   };
 
-  if (btnOpenLogin) {
-    btnOpenLogin.addEventListener('click', (e) => {
-      e.preventDefault();
-      openModal(loginOverlay);
-    });
-  }
+  const btnOpenHeroSignup = document.getElementById('hero-btn-vendor-signup');
 
-  if (btnOpenSignup) {
-    btnOpenSignup.addEventListener('click', (e) => {
-      e.preventDefault();
-      openModal(signupOverlay);
-    });
-  }
-
-  if (btnOpenSignupHero) {
-    btnOpenSignupHero.addEventListener('click', (e) => {
-      e.preventDefault();
-      openModal(signupOverlay);
-    });
-  }
+  if (btnOpenLogin) btnOpenLogin.addEventListener('click', (e) => { e.preventDefault(); openModal(loginOverlay); });
+  if (btnOpenSignup) btnOpenSignup.addEventListener('click', (e) => { e.preventDefault(); openModal(signupOverlay); });
+  if (btnOpenSignupHero) btnOpenSignupHero.addEventListener('click', (e) => { e.preventDefault(); openModal(signupOverlay); });
+  if (btnOpenHeroSignup) btnOpenHeroSignup.addEventListener('click', (e) => { e.preventDefault(); openModal(signupOverlay); });
+  if (btnOpenClientNav) btnOpenClientNav.addEventListener('click', (e) => { e.preventDefault(); openModal(clientOverlay); });
 
   if (btnCloseLogin) btnCloseLogin.addEventListener('click', () => closeModal(loginOverlay));
   if (btnCloseSignup) btnCloseSignup.addEventListener('click', () => closeModal(signupOverlay));
+  if (btnCloseClient) btnCloseClient.addEventListener('click', () => closeModal(clientOverlay));
 
   // Close modals on overlay background click
-  [loginOverlay, signupOverlay].forEach(overlay => {
+  [loginOverlay, signupOverlay, clientOverlay].forEach(overlay => {
     if (overlay) {
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) closeModal(overlay);
@@ -610,17 +600,209 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Handle Vendor Signup submit
-  const signupForm = document.getElementById('vendor-signup-form');
-  if (signupForm) {
-    signupForm.addEventListener('submit', (e) => {
+  /* ─── CLIENT CONSULTATION FORM (CRM) ─── */
+  const clientForm = document.getElementById('client-signup-form');
+  if (clientForm) {
+    clientForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      
+      const name = document.getElementById('client-name').value;
+      const email = document.getElementById('client-email').value;
+      const phone = document.getElementById('client-phone').value;
+      const date = document.getElementById('client-date').value;
+      const budget = document.getElementById('client-budget').value;
+      const message = document.getElementById('client-message').value;
+
+      const newClient = {
+        id: 'CRM-' + Date.now().toString().slice(-4),
+        name,
+        email,
+        phone,
+        date,
+        budget,
+        message,
+        status: 'Lead',
+        notes: [],
+        timestamp: new Date().toLocaleString()
+      };
+
+      const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
+      clients.unshift(newClient);
+      localStorage.setItem('elite_clients', JSON.stringify(clients));
+
+      const submitBtn = clientForm.querySelector('button[type="submit"]');
+      submitBtn.textContent = '✓ Schedule Registered!';
+      submitBtn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
+      submitBtn.style.color = '#fff';
+
+      setTimeout(() => {
+        submitBtn.textContent = 'Register Consultation Call';
+        submitBtn.style.background = '';
+        submitBtn.style.color = '';
+        clientForm.reset();
+        closeModal(clientOverlay);
+        alert('Your consultation request has been logged. An advisor will contact you shortly.');
+      }, 1800);
+    });
+  }
+
+  /* ─── 3-STEP DYNAMIC VENDOR REGISTRATION WIZARD ─── */
+  const step1 = document.getElementById('step-1-panel');
+  const step2 = document.getElementById('step-2-panel');
+  const step3 = document.getElementById('step-3-panel');
+
+  const dot1 = document.getElementById('dot-1');
+  const dot2 = document.getElementById('dot-2');
+  const dot3 = document.getElementById('dot-3');
+
+  const typeSelector = document.getElementById('signup-type');
+  const dynamicContainer = document.getElementById('dynamic-fields-container');
+
+  const updateDynamicFields = () => {
+    const selectedType = typeSelector.value;
+    dynamicContainer.innerHTML = '';
+
+    if (selectedType === 'Live Band') {
+      dynamicContainer.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Genre</label>
+            <input type="text" id="spec-genre" required placeholder="e.g. Rock, Pop, Jazz" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Band Size (Members)</label>
+            <input type="number" id="spec-size" required placeholder="e.g. 5" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+      `;
+    } else if (selectedType === 'Event DJ') {
+      dynamicContainer.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Lighting Rig Included?</label>
+            <select id="spec-lighting" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; cursor:pointer;">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Sound System Wattage</label>
+            <input type="text" id="spec-sound" required placeholder="e.g. 2000W" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+      `;
+    } else if (selectedType === 'Luxury Car Hire' || selectedType === 'Yacht Charter') {
+      dynamicContainer.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Make & Model</label>
+            <input type="text" id="spec-model" required placeholder="e.g. Rolls-Royce Ghost" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Hourly Hire Rate ($)</label>
+            <input type="number" id="spec-rate" required placeholder="e.g. 250" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+      `;
+    } else if (selectedType === 'Security') {
+      dynamicContainer.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">License Number</label>
+            <input type="text" id="spec-lic" required placeholder="e.g. 40998822" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Coverage Range</label>
+            <input type="text" id="spec-region" required placeholder="e.g. Sydney Metro" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+      `;
+    }
+  };
+
+  if (typeSelector) {
+    typeSelector.addEventListener('change', updateDynamicFields);
+    updateDynamicFields();
+  }
+
+  // Next / Back buttons
+  const btnNext1 = document.getElementById('btn-next-1');
+  const btnNext2 = document.getElementById('btn-next-2');
+  const btnPrev2 = document.getElementById('btn-prev-2');
+  const btnPrev3 = document.getElementById('btn-prev-3');
+
+  if (btnNext1) {
+    btnNext1.addEventListener('click', () => {
+      // Validate step 1 fields
+      if (!document.getElementById('signup-name').value || !document.getElementById('signup-email').value || !document.getElementById('signup-phone').value) {
+        alert('Please fill out all profile fields.');
+        return;
+      }
+      step1.style.display = 'none';
+      step2.style.display = 'block';
+      dot2.style.background = 'var(--gold)';
+      dot2.style.color = '#000';
+    });
+  }
+
+  if (btnNext2) {
+    btnNext2.addEventListener('click', () => {
+      step2.style.display = 'none';
+      step3.style.display = 'block';
+      dot3.style.background = 'var(--gold)';
+      dot3.style.color = '#000';
+    });
+  }
+
+  if (btnPrev2) {
+    btnPrev2.addEventListener('click', () => {
+      step2.style.display = 'none';
+      step1.style.display = 'block';
+      dot2.style.background = 'rgba(255,255,255,0.1)';
+      dot2.style.color = 'var(--white)';
+    });
+  }
+
+  if (btnPrev3) {
+    btnPrev3.addEventListener('click', () => {
+      step3.style.display = 'none';
+      step2.style.display = 'block';
+      dot3.style.background = 'rgba(255,255,255,0.1)';
+      dot3.style.color = 'var(--white)';
+    });
+  }
+
+  // Final Vendor Form submit
+  const vendorSignupForm = document.getElementById('vendor-signup-form');
+  if (vendorSignupForm) {
+    vendorSignupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!document.getElementById('signup-agree').checked) {
+        alert('You must agree to Elite standards.');
+        return;
+      }
+
       const name = document.getElementById('signup-name').value;
-      const type = document.getElementById('signup-type').value;
+      const type = typeSelector.value;
       const email = document.getElementById('signup-email').value;
       const phone = document.getElementById('signup-phone').value;
-      const bio = document.getElementById('signup-bio').value;
+      const link = document.getElementById('signup-link').value;
+      const experience = document.getElementById('signup-exp').value;
+
+      // Extract dynamic step 2 fields
+      let details = {};
+      if (type === 'Live Band') {
+        details.genre = document.getElementById('spec-genre').value;
+        details.size = document.getElementById('spec-size').value;
+      } else if (type === 'Event DJ') {
+        details.lighting = document.getElementById('spec-lighting').value;
+        details.sound = document.getElementById('spec-sound').value;
+      } else if (type === 'Luxury Car Hire' || type === 'Yacht Charter') {
+        details.model = document.getElementById('spec-model').value;
+        details.rate = document.getElementById('spec-rate').value;
+      } else if (type === 'Security') {
+        details.license = document.getElementById('spec-lic').value;
+        details.region = document.getElementById('spec-region').value;
+      }
 
       const newPartner = {
         id: 'PRT-' + Date.now().toString().slice(-4),
@@ -628,7 +810,9 @@ document.addEventListener('DOMContentLoaded', function () {
         type,
         email,
         phone,
-        bio,
+        link,
+        experience,
+        details,
         status: 'Pending',
         timestamp: new Date().toLocaleString()
       };
@@ -637,20 +821,27 @@ document.addEventListener('DOMContentLoaded', function () {
       partners.unshift(newPartner);
       localStorage.setItem('elite_partners', JSON.stringify(partners));
 
-      const submitBtn = signupForm.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-
-      submitBtn.textContent = '✓ Registered!';
+      const submitBtn = document.getElementById('btn-signup-submit');
+      submitBtn.textContent = '✓ Submitted!';
       submitBtn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
       submitBtn.style.color = '#fff';
 
       setTimeout(() => {
-        submitBtn.textContent = originalText;
+        submitBtn.textContent = 'Submit Profile';
         submitBtn.style.background = '';
         submitBtn.style.color = '';
-        signupForm.reset();
+        vendorSignupForm.reset();
         closeModal(signupOverlay);
-        alert('Thank you for registering! Our premium curation team will review your application soon.');
+        
+        // Reset steps
+        step3.style.display = 'none';
+        step1.style.display = 'block';
+        dot2.style.background = 'rgba(255,255,255,0.1)';
+        dot2.style.color = 'var(--white)';
+        dot3.style.background = 'rgba(255,255,255,0.1)';
+        dot3.style.color = 'var(--white)';
+        
+        alert('Thank you for registering! Our curation team will review your specs and links shortly.');
       }, 1800);
     });
   }
