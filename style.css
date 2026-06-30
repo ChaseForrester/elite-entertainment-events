@@ -1785,3 +1785,14 @@ input, select, textarea { font: inherit; }
   .hero-actions .btn { width: 100%; }
   .footer-top-inner { grid-template-columns: 1fr; }
 }
+
+/* ─── INLINE SVG ICON CONTRAST FIXES ─── */
+.ci-icon svg,
+.doc-card-icon svg,
+.legacy-badge svg {
+  stroke: var(--gold) !important;
+  fill: none !important;
+  stroke-width: 2px !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
