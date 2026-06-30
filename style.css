@@ -483,11 +483,9 @@ input, select, textarea { font: inherit; }
   gap: 1rem;
 }
 
-/* Floating Selector Search Bar */
 .search-bar-floating {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  gap: 1px;
+  display: flex;
+  align-items: center;
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -504,10 +502,7 @@ input, select, textarea { font: inherit; }
   flex-direction: column;
   justify-content: center;
   padding: 0.6rem 1.8rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-}
-.search-field:nth-child(3) {
-  border-right: none;
+  flex-grow: 1;
 }
 .search-field label {
   font-size: 0.55rem;
@@ -517,20 +512,7 @@ input, select, textarea { font: inherit; }
   text-transform: uppercase;
   margin-bottom: 0.35rem;
 }
-.search-field select {
-  background: transparent;
-  border: none;
-  color: var(--white);
-  font-size: 0.85rem;
-  font-weight: 500;
-  outline: none;
-  cursor: pointer;
-  width: 100%;
-}
-.search-field select option {
-  background: var(--black-3);
-  color: var(--white);
-}
+
 .search-btn {
   background: var(--gradient-gold);
   border: none;
@@ -689,11 +671,10 @@ input, select, textarea { font: inherit; }
   filter: contrast(105%) grayscale(0%);
 }
 
-/* ─── HIRE QUICK SELECTOR GRID ─── */
 .hire-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
 }
 .hire-item {
   position: relative;
@@ -701,10 +682,10 @@ input, select, textarea { font: inherit; }
   align-items: center;
   justify-content: center;
   text-align: center;
-  height: 90px;
+  height: 180px;
   background-size: cover;
   background-position: center;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   border: 1px solid rgba(200, 168, 76, 0.15);
   overflow: hidden;
   transition: var(--transition);
@@ -712,21 +693,23 @@ input, select, textarea { font: inherit; }
 .hire-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.88) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.88) 100%);
   transition: var(--transition);
   z-index: 1;
 }
 .hire-item span {
   position: relative;
   z-index: 2;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--silver-light);
-  padding: 0.5rem;
+  color: var(--white);
+  padding: 1.5rem;
   transition: var(--transition);
 }
+
 .hire-item:hover {
   border-color: var(--gold);
   transform: translateY(-3px);

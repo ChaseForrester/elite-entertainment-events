@@ -122,65 +122,67 @@ document.addEventListener('DOMContentLoaded', function () {
       }, 800);
     }, 2400);
   }
-
   /* ─── FLOATING HERO SEARCH FILTER ─── */
   const searchBtn = document.getElementById('hero-search-btn');
-  if (searchBtn) {
-    searchBtn.addEventListener('click', () => {
-      const eventType = document.getElementById('search-event-type').value;
-      const artistCat = document.getElementById('search-artist-cat').value;
-
-      // Event filtering
-      if (eventType) {
-        const targetCardId = 'card-' + eventType;
-        document.querySelectorAll('.service-card').forEach(card => {
-          if (card.id === targetCardId) {
-            card.style.display = '';
-            card.style.borderColor = 'var(--gold)';
-            card.style.boxShadow = 'var(--shadow-gold)';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-        // Scroll to services
-        document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
-      } else {
-        document.querySelectorAll('.service-card').forEach(card => {
+  const searchInput = document.getElementById('hero-search-input');
+  
+  if (searchBtn && searchInput) {
+    const handleSearch = () => {
+      const query = searchInput.value.toLowerCase().trim();
+      
+      let matchedServiceCount = 0;
+      let matchedArtistCount = 0;
+      
+      // Filter services
+      document.querySelectorAll('.service-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!query || text.includes(query)) {
           card.style.display = '';
-          card.style.borderColor = '';
-          card.style.boxShadow = '';
-        });
-      }
+          card.style.borderColor = query ? 'var(--gold)' : '';
+          card.style.boxShadow = query ? 'var(--shadow-gold)' : '';
+          matchedServiceCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
 
-      // Artist filtering
-      if (artistCat) {
-        let targetId = '';
-        if (artistCat === 'artists-solo') targetId = 'art-solo';
-        else if (artistCat === 'artists-duo') targetId = 'art-duo';
-        else if (artistCat === 'artists-bands') targetId = 'art-bands';
-        else if (artistCat === 'artists-tributes') targetId = 'art-tributes';
-        else if (artistCat === 'artists-jazz') targetId = 'art-jazz';
-        else if (artistCat === 'artists-djs') targetId = 'art-djs';
+      // Filter offers
+      document.querySelectorAll('.offer-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!query || text.includes(query)) {
+          card.style.display = '';
+          card.style.borderColor = query ? 'var(--gold)' : '';
+          matchedServiceCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
 
-        document.querySelectorAll('.artist-card').forEach(card => {
-          if (card.id === targetId) {
-            card.style.display = '';
-            card.style.borderColor = 'var(--gold)';
-          } else {
-            card.style.display = 'none';
-          }
-        });
+      // Filter artists
+      document.querySelectorAll('.artist-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!query || text.includes(query)) {
+          card.style.display = '';
+          card.style.borderColor = query ? 'var(--gold)' : '';
+          matchedArtistCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
 
-        // Scroll to artists if not scrolled to services
-        if (!eventType) {
+      // Scroll to the most relevant matched section
+      if (query) {
+        if (matchedServiceCount > 0) {
+          document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
+        } else if (matchedArtistCount > 0) {
           document.getElementById('artists').scrollIntoView({ behavior: 'smooth' });
         }
-      } else {
-        document.querySelectorAll('.artist-card').forEach(card => {
-          card.style.display = '';
-          card.style.borderColor = '';
-        });
       }
+    };
+
+    searchBtn.addEventListener('click', handleSearch);
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleSearch();
     });
   }
 

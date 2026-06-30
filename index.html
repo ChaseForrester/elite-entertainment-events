@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Elite Entertainment & Events | Premium Live Entertainment Australia</title>
-  <meta name="description" content="Australia's premier entertainment agency with 41 years of excellence. Wedding bands, corporate entertainment, DJs, solo artists and more across NSW and Australia wide." />
+  <meta name="description" content="Australia's premier entertainment agency with 40 years of excellence. Wedding bands, corporate entertainment, DJs, solo artists and more across NSW and Australia wide." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
@@ -137,7 +137,7 @@
   ══════════════════════════════════════════ -->
   <section class="hero" id="home">
     <div class="hero-video-wrap">
-      <video class="hero-video" src="https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c054e3d93d3950a2e41a90e3cd29a43a&profile_id=139&oauth2_token_id=57447761" autoplay loop muted playsinline></video>
+      <video class="hero-video" src="https://assets.mixkit.co/videos/preview/mixkit-concert-crowd-raising-hands-under-stage-lights-41764-large.mp4" autoplay loop muted playsinline></video>
       <div class="hero-video-overlay"></div>
     </div>
 
@@ -154,7 +154,7 @@
           <span class="hero-title-top" style="text-transform: uppercase; font-family: var(--font-body); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 0.5rem;">Luxury Entertainment</span>
           <span class="hero-title-mid" style="font-family: var(--font-heading); font-size: clamp(2.8rem, 5vw, 4.5rem); font-weight: 300; font-style: normal; color: var(--white); background: none; -webkit-text-fill-color: initial;">Exceptional Events.</span>
         </h1>
-        <p class="hero-sub" style="max-width: 580px;">Over 41 years delivering world-class live bands, corporate acts, DJs, solo artists and production across NSW &amp; Australia wide.</p>
+        <p class="hero-sub" style="max-width: 580px;">Over 40 years delivering world-class live bands, corporate acts, DJs, solo artists and production across NSW &amp; Australia wide.</p>
         <div class="hero-actions">
           <a href="#contact" class="btn btn-gold">DISCOVER COLLECTION</a>
         </div>
@@ -162,38 +162,12 @@
 
       <!-- Floating Search Bar -->
       <div class="search-bar-floating">
-        <div class="search-field">
-          <label>EVENT TYPE</label>
-          <select id="search-event-type">
-            <option value="">Any Event</option>
-            <option value="weddings">Weddings</option>
-            <option value="corporate">Corporate Events</option>
-            <option value="private-parties">Private Parties</option>
-          </select>
-        </div>
-        <div class="search-field">
-          <label>ARTIST CATEGORY</label>
-          <select id="search-artist-cat">
-            <option value="">All Categories</option>
-            <option value="artists-solo">Solo Artists</option>
-            <option value="artists-duo">Duos</option>
-            <option value="artists-bands">Trios &amp; Bands</option>
-            <option value="artists-tributes">Tribute Acts</option>
-            <option value="artists-jazz">Classical &amp; Jazz</option>
-            <option value="artists-djs">DJs</option>
-          </select>
-        </div>
-        <div class="search-field">
-          <label>LOCATION</label>
-          <select id="search-location">
-            <option value="">Any Location</option>
-            <option value="sydney">Sydney &amp; Suburbs</option>
-            <option value="nsw">NSW Regional</option>
-            <option value="australia">Australia Wide</option>
-          </select>
+        <div class="search-field text-search" style="flex-grow: 1;">
+          <label>Search Entertainment &amp; Events</label>
+          <input type="text" id="hero-search-input" placeholder="Type name, genre or service (e.g. Band, DJ, Weddings, Car, Yacht, Security...)" style="background:transparent; border:none; color:var(--white); font-size:0.95rem; outline:none; width:100%;" />
         </div>
         <button class="search-btn" id="hero-search-btn">
-          <span>SEARCH EVENTS</span>
+          <span>Search</span>
         </button>
       </div>
     </div>
@@ -204,7 +178,7 @@
     <div class="container features-bar-inner">
       <div class="feature-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        <span>41+ YEARS EXPERIENCE</span>
+        <span>40+ YEARS EXPERIENCE</span>
       </div>
       <div class="feature-divider"></div>
       <div class="feature-item">
@@ -342,10 +316,37 @@
           <p>Spectacular tribute shows and themed entertainment acts (Beatles, Elvis, Retro Disco &amp; more).</p>
           <a href="tribute-shows.html" class="offer-btn">Learn More &rarr;</a>
         </div>
+
+        <div class="offer-card">
+          <div class="offer-img" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop');"></div>
+          <h3>Luxury Car Hire</h3>
+          <p>Prestigious Rolls-Royce, Bentley, &amp; limousine hires with professional chauffeurs.</p>
+          <a href="luxury-car-hire.html" class="offer-btn">Learn More &rarr;</a>
+        </div>
+
+        <div class="offer-card">
+          <div class="offer-img" style="background-image: url('https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=400&auto=format&fit=crop');"></div>
+          <h3>Luxury Yacht &amp; Boat Hire</h3>
+          <p>Private superyacht charters and premium catamaran cruises on Sydney Harbour.</p>
+          <a href="luxury-yacht-hire.html" class="offer-btn">Learn More &rarr;</a>
+        </div>
+
+        <div class="offer-card">
+          <div class="offer-img" style="background-image: url('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop');"></div>
+          <h3>Models &amp; Dancers</h3>
+          <p>Commercial models, hostesses, and high-energy stage dancers for premium events.</p>
+          <a href="models-dancers.html" class="offer-btn">Learn More &rarr;</a>
+        </div>
+
+        <div class="offer-card">
+          <div class="offer-img" style="background-image: url('https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=400&auto=format&fit=crop');"></div>
+          <h3>Security &amp; Crowd Control</h3>
+          <p>Licensed guards, VIP bodyguards, and crowd control services for private functions.</p>
+          <a href="security.html" class="offer-btn">Learn More &rarr;</a>
+        </div>
       </div>
     </div>
   </section>
-
   <!-- Middle Banner (Bokeh/Sparkle Callout) -->
   <section class="middle-banner">
     <div class="middle-banner-bg"></div>
@@ -474,7 +475,6 @@
             <a href="artists-jazz.html" class="artist-btn">Enquire Now</a>
           </div>
         </div>
-
         <div class="artist-card" id="art-djs">
           <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=400&auto=format&fit=crop');">
             <div class="artist-overlay"></div>
@@ -485,18 +485,62 @@
             <a href="artists-djs.html" class="artist-btn">Enquire Now</a>
           </div>
         </div>
+
+        <div class="artist-card" id="art-car">
+          <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop');">
+            <div class="artist-overlay"></div>
+          </div>
+          <div class="artist-card-body">
+            <h4>Luxury Car Hire</h4>
+            <p>Chauffeur-driven prestige Rolls-Royce, Bentley, and luxury limousine hires.</p>
+            <a href="luxury-car-hire.html" class="artist-btn">Enquire Now</a>
+          </div>
+        </div>
+
+        <div class="artist-card" id="art-yacht">
+          <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=400&auto=format&fit=crop');">
+            <div class="artist-overlay"></div>
+          </div>
+          <div class="artist-card-body">
+            <h4>Luxury Yacht &amp; Boat Hire</h4>
+            <p>Private superyacht charters and premium catamaran cruises on Sydney Harbour.</p>
+            <a href="luxury-yacht-hire.html" class="artist-btn">Enquire Now</a>
+          </div>
+        </div>
+
+        <div class="artist-card" id="art-models">
+          <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop');">
+            <div class="artist-overlay"></div>
+          </div>
+          <div class="artist-card-body">
+            <h4>Models &amp; Dancers</h4>
+            <p>Commercial models, hostesses, and high-energy stage dancers for premium events.</p>
+            <a href="models-dancers.html" class="artist-btn">Enquire Now</a>
+          </div>
+        </div>
+
+        <div class="artist-card" id="art-security">
+          <div class="artist-img-wrap" style="background-image: url('https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=400&auto=format&fit=crop');">
+            <div class="artist-overlay"></div>
+          </div>
+          <div class="artist-card-body">
+            <h4>Security &amp; Crowd Control</h4>
+            <p>Licensed guards, VIP bodyguards, and crowd control services for private functions.</p>
+            <a href="security.html" class="artist-btn">Enquire Now</a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ══════════════════════════════════════════
-       LEGACY SECTION (41 Years)
+       LEGACY SECTION (40 Years)
   ══════════════════════════════════════════ -->
   <section class="legacy-section">
     <div class="legacy-bg"></div>
     <div class="container legacy-content">
       <div class="legacy-left">
-        <div class="legacy-number">41</div>
+        <div class="legacy-number">40</div>
         <div class="legacy-years-label">YEARS OF<br/>EXCELLENCE</div>
       </div>
       <div class="legacy-divider-v"></div>
@@ -686,7 +730,7 @@
             <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           </div>
-          <p class="testimonial-text">"After 41 years in the industry, Elite truly understands what makes an event unforgettable. Our wedding was absolutely magical – the band read the room perfectly."</p>
+          <p class="testimonial-text">"After 40 years in the industry, Elite truly understands what makes an event unforgettable. Our wedding was absolutely magical – the band read the room perfectly."</p>
           <div class="testimonial-author">
             <div class="author-avatar">JT</div>
             <div class="author-info">
@@ -892,7 +936,7 @@
             <span class="logo-main">ELITE</span>
             <span class="logo-sub">Entertainment &amp; Events</span>
           </div>
-          <p>Australia's premier entertainment agency delivering world-class acts for over 41 years. Your perfect event starts here.</p>
+          <p>Australia's premier entertainment agency delivering world-class acts for over 40 years. Your perfect event starts here.</p>
           <p style="margin-top:0.5rem;font-size:0.72rem;color:#555;">ABN: 17 698 991 481 &nbsp;|&nbsp; ACN: 698 991 481</p>
           <div class="footer-socials">
             <a href="#" aria-label="Facebook">
@@ -953,7 +997,7 @@
 
     <div class="footer-bottom">
       <div class="container footer-bottom-inner">
-        <p>&copy; 2026 Elite Entertainment &amp; Events. All rights reserved. ABN: 17 698 991 481 | 41 Years of Excellence.</p>
+        <p>&copy; 2026 Elite Entertainment &amp; Events. All rights reserved. ABN: 17 698 991 481 | 40 Years of Excellence.</p>
         <div class="footer-bottom-links">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Service</a>
