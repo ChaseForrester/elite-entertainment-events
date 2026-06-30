@@ -462,4 +462,197 @@ document.addEventListener('DOMContentLoaded', function () {
 
   counters.forEach(c => counterObserver.observe(c));
 
+  /* ─── AUTOCOMPLETE & DIRECT PAGE REDIRECT SEARCH ─── */
+  const searchSuggestions = [
+    { name: "Wedding Band Hire", url: "artists-bands.html" },
+    { name: "Wedding DJ Hire", url: "artists-djs.html" },
+    { name: "Corporate Band Hire", url: "artists-bands.html" },
+    { name: "Corporate DJ Hire", url: "artists-djs.html" },
+    { name: "Party Band Hire", url: "artists-bands.html" },
+    { name: "Party DJ Hire", url: "artists-djs.html" },
+    { name: "Solo Acoustic Artists", url: "artists-solo.html" },
+    { name: "Duo Artists", url: "artists-duo.html" },
+    { name: "Tribute Shows & Acts", url: "artists-tributes.html" },
+    { name: "Classical & Jazz Ensembles", url: "artists-jazz.html" },
+    { name: "Luxury Car Hire", url: "luxury-car-hire.html" },
+    { name: "Luxury Yacht Hire", url: "luxury-yacht-hire.html" },
+    { name: "Models & Dancers", url: "models-dancers.html" },
+    { name: "Security & Guard Services", url: "security.html" }
+  ];
+
+  const searchInputEl = document.getElementById('hero-search-input');
+  const dropdownEl = document.getElementById('search-autocomplete-dropdown');
+  const searchBtnEl = document.getElementById('hero-search-btn');
+
+  if (searchInputEl && dropdownEl) {
+    // Show suggestions on typing
+    searchInputEl.addEventListener('input', () => {
+      const val = searchInputEl.value.toLowerCase().trim();
+      dropdownEl.innerHTML = '';
+      
+      if (!val) {
+        dropdownEl.style.display = 'none';
+        return;
+      }
+
+      const matches = searchSuggestions.filter(item => 
+        item.name.toLowerCase().includes(val)
+      );
+
+      if (matches.length > 0) {
+        matches.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'autocomplete-item';
+          div.textContent = item.name;
+          div.addEventListener('click', () => {
+            searchInputEl.value = item.name;
+            dropdownEl.style.display = 'none';
+            window.location.href = item.url;
+          });
+          dropdownEl.appendChild(div);
+        });
+        dropdownEl.style.display = 'block';
+      } else {
+        dropdownEl.style.display = 'none';
+      }
+    });
+
+    // Hide dropdown on click outside
+    document.addEventListener('click', (e) => {
+      if (!searchInputEl.contains(e.target) && !dropdownEl.contains(e.target)) {
+        dropdownEl.style.display = 'none';
+      }
+    });
+
+    // Direct page redirect on search click or Enter key
+    const performRedirectSearch = () => {
+      const query = searchInputEl.value.toLowerCase().trim();
+      if (!query) return;
+
+      // Check for exact or close matches in suggestions
+      const directMatch = searchSuggestions.find(item => 
+        item.name.toLowerCase().includes(query) || query.includes(item.name.toLowerCase())
+      );
+
+      if (directMatch) {
+        window.location.href = directMatch.url;
+      } else {
+        // Fallback to in-page section scrolling
+        if (typeof executeSearch === 'function') {
+          executeSearch(query);
+        }
+      }
+    };
+
+    if (searchBtnEl) {
+      searchBtnEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        performRedirectSearch();
+      });
+    }
+
+    searchInputEl.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        performRedirectSearch();
+      }
+    });
+  }
+
+  /* ─── MODAL CONTROLS (LOGIN & SIGNUP) ─── */
+  const loginOverlay = document.getElementById('login-modal');
+  const signupOverlay = document.getElementById('signup-modal');
+  
+  const btnOpenLogin = document.getElementById('nav-btn-login');
+  const btnOpenSignup = document.getElementById('nav-btn-signup');
+  const btnOpenSignupHero = document.querySelector('.vendor-callout-card .btn');
+
+  const btnCloseLogin = document.getElementById('login-modal-close');
+  const btnCloseSignup = document.getElementById('signup-modal-close');
+
+  const openModal = (modal) => {
+    if (modal) modal.classList.add('active');
+  };
+
+  const closeModal = (modal) => {
+    if (modal) modal.classList.remove('active');
+  };
+
+  if (btnOpenLogin) {
+    btnOpenLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(loginOverlay);
+    });
+  }
+
+  if (btnOpenSignup) {
+    btnOpenSignup.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(signupOverlay);
+    });
+  }
+
+  if (btnOpenSignupHero) {
+    btnOpenSignupHero.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(signupOverlay);
+    });
+  }
+
+  if (btnCloseLogin) btnCloseLogin.addEventListener('click', () => closeModal(loginOverlay));
+  if (btnCloseSignup) btnCloseSignup.addEventListener('click', () => closeModal(signupOverlay));
+
+  // Close modals on overlay background click
+  [loginOverlay, signupOverlay].forEach(overlay => {
+    if (overlay) {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal(overlay);
+      });
+    }
+  });
+
+  // Handle Vendor Signup submit
+  const signupForm = document.getElementById('vendor-signup-form');
+  if (signupForm) {
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('signup-name').value;
+      const type = document.getElementById('signup-type').value;
+      const email = document.getElementById('signup-email').value;
+      const phone = document.getElementById('signup-phone').value;
+      const bio = document.getElementById('signup-bio').value;
+
+      const newPartner = {
+        id: 'PRT-' + Date.now().toString().slice(-4),
+        name,
+        type,
+        email,
+        phone,
+        bio,
+        status: 'Pending',
+        timestamp: new Date().toLocaleString()
+      };
+
+      const partners = JSON.parse(localStorage.getItem('elite_partners') || '[]');
+      partners.unshift(newPartner);
+      localStorage.setItem('elite_partners', JSON.stringify(partners));
+
+      const submitBtn = signupForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+
+      submitBtn.textContent = '✓ Registered!';
+      submitBtn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
+      submitBtn.style.color = '#fff';
+
+      setTimeout(() => {
+        submitBtn.textContent = originalText;
+        submitBtn.style.background = '';
+        submitBtn.style.color = '';
+        signupForm.reset();
+        closeModal(signupOverlay);
+        alert('Thank you for registering! Our premium curation team will review your application soon.');
+      }, 1800);
+    });
+  }
+
 });

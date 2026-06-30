@@ -355,9 +355,14 @@
           <div class="analytic-value" id="stat-rev" style="color: #55c555;">$0</div>
         </div>
       </div>
+      <!-- Tab Toggles -->
+      <div class="db-tabs" style="display:flex; gap:1.25rem; margin-bottom:2rem; justify-content:flex-start; width:100%;">
+        <button class="btn btn-gold tab-btn" id="tab-btn-leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; text-transform:none;">Lead Pipeline</button>
+        <button class="btn btn-outline tab-btn" id="tab-btn-partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2); text-transform:none;">Partner Signups</button>
+      </div>
 
       <!-- LEADS TABLE -->
-      <div class="table-container">
+      <div class="table-container" id="leads-container" style="width:100%;">
         <div class="table-header">
           <div class="table-title">Lead Pipeline</div>
           <button class="btn btn-outline btn-sm" id="btn-clear-leads" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear Local Logs</button>
@@ -376,6 +381,32 @@
               </tr>
             </thead>
             <tbody id="leads-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PARTNERS TABLE -->
+      <div class="table-container" id="partners-container" style="display:none; width:100%;">
+        <div class="table-header">
+          <div class="table-title">Partner Signups</div>
+          <button class="btn btn-outline btn-sm" id="btn-clear-partners" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear Local Logs</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Business/Band Name</th>
+                <th>Partner Type</th>
+                <th>Contact Info</th>
+                <th>Bio/Details</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="partners-body">
               <!-- Dynamically populated -->
             </tbody>
           </table>
@@ -508,7 +539,38 @@
       const revenue = inquiries.length * 4500;
       document.getElementById('stat-rev').textContent = '$' + revenue.toLocaleString();
     }
+      // Render partners if active
+      renderPartners();
+    }
 
+    // Render Partner registrations
+    function renderPartners() {
+      const partners = JSON.parse(localStorage.getItem('elite_partners') || '[]');
+      const tbody = document.getElementById('partners-body');
+      tbody.innerHTML = '';
+
+      partners.forEach((prt, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td data-label="ID">${prt.id}</td>
+          <td data-label="Business Name"><strong>${prt.name}</strong><br><span style="font-size:0.72rem; color:var(--silver-mid);">${prt.timestamp}</span></td>
+          <td data-label="Partner Type">${prt.type}</td>
+          <td data-label="Contact Info">${prt.email}<br>${prt.phone}</td>
+          <td data-label="Bio/Details" style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${prt.bio}">${prt.bio}</td>
+          <td data-label="Status">
+            <span class="status-pill ${prt.status === 'Pending' ? 'status-pending' : 'status-contacted'}">${prt.status}</span>
+          </td>
+          <td data-label="Action">
+            <button class="btn-action" onclick="togglePartnerStatus(${index})">
+              ${prt.status === 'Pending' ? 'Mark Approved' : 'Mark Pending'}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Toggle Lead status
     window.toggleStatus = function(index) {
       const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
       if (inquiries[index]) {
@@ -518,13 +580,52 @@
       }
     };
 
+    // Toggle Partner status
+    window.togglePartnerStatus = function(index) {
+      const partners = JSON.parse(localStorage.getItem('elite_partners') || '[]');
+      if (partners[index]) {
+        partners[index].status = partners[index].status === 'Pending' ? 'Approved' : 'Pending';
+        localStorage.setItem('elite_partners', JSON.stringify(partners));
+        renderDashboard();
+      }
+    };
+
+    // Tabs switching logic
+    const tabLeads = document.getElementById('tab-btn-leads');
+    const tabPartners = document.getElementById('tab-btn-partners');
+    const containerLeads = document.getElementById('leads-container');
+    const containerPartners = document.getElementById('partners-container');
+
+    const switchTab = (tab) => {
+      if (tab === 'leads') {
+        tabLeads.className = 'btn btn-gold tab-btn';
+        tabPartners.className = 'btn btn-outline tab-btn';
+        containerLeads.style.display = 'block';
+        containerPartners.style.display = 'none';
+      } else {
+        tabLeads.className = 'btn btn-outline tab-btn';
+        tabPartners.className = 'btn btn-gold tab-btn';
+        containerLeads.style.display = 'none';
+        containerPartners.style.display = 'block';
+      }
+    };
+
+    tabLeads.addEventListener('click', () => switchTab('leads'));
+    tabPartners.addEventListener('click', () => switchTab('partners'));
+
     document.getElementById('btn-clear-leads').addEventListener('click', () => {
       if (confirm('Are you sure you want to clear all inquiries?')) {
         localStorage.removeItem('elite_inquiries');
         renderDashboard();
       }
     });
-  </script>
 
+    document.getElementById('btn-clear-partners').addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all partner registrations?')) {
+        localStorage.removeItem('elite_partners');
+        renderDashboard();
+      }
+    });
+  </script>
 </body>
 </html>

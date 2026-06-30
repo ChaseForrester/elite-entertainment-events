@@ -69,16 +69,16 @@
           <span class="logo-sub" style="font-family:'Cormorant Garamond', serif; font-size:0.68rem; letter-spacing:0.18em; color:var(--silver-light); text-transform:uppercase;">Entertainment &amp; Events</span>
         </a>
       </div>
-
       <nav class="main-nav" id="main-nav">
         <ul>
           <li><a href="#home">Venues</a></li>
           <li><a href="#artists">Artists</a></li>
           <li><a href="#services">Corporate</a></li>
           <li><a href="#company">About Us</a></li>
+          <li><a href="#" id="nav-btn-signup" style="color: var(--gold); font-weight:700;">Join as Vendor</a></li>
+          <li><a href="#" id="nav-btn-login" style="opacity:0.85;">Login</a></li>
         </ul>
       </nav>
-
       <div class="header-actions">
         <a href="#contact" class="btn btn-outline header-cta" style="border-radius:30px; font-weight:600; padding:0.65rem 1.7rem; font-size:0.8rem; border-color:rgba(255,255,255,0.4); text-transform:none;">Book Consultation</a>
         <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
@@ -144,9 +144,10 @@
       <!-- Glowing Capsule Search Wrapper (Centred Below Collage) -->
       <div class="search-capsule-container" style="display:flex; align-items:center; gap:1.25rem; width:100%; max-width:920px; margin-inline:auto;">
         <div class="search-bar-floating" style="display:grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap:1px; flex-grow:1; background:rgba(255,255,255,0.03); backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px); border:1px solid rgba(200,168,76,0.3); border-radius:50px; padding:0.4rem 0.4rem 0.4rem 1.5rem; box-shadow: var(--gold-glow); overflow:visible;">
-          <div class="search-field" style="border-right:1px solid rgba(255,255,255,0.08); padding:0.5rem 1rem 0.5rem 0; text-align:left; display:flex; flex-direction:column; justify-content:center;">
+          <div class="search-field" style="border-right:1px solid rgba(255,255,255,0.08); padding:0.5rem 1rem 0.5rem 0; text-align:left; display:flex; flex-direction:column; justify-content:center; position:relative;">
             <label style="font-size:0.55rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:0.25rem;">What are you looking for?</label>
-            <input type="text" id="hero-search-input" placeholder="Search artists, bands, keywords..." style="background:transparent; border:none; color:var(--white); font-size:0.85rem; outline:none; width:100%;" />
+            <input type="text" id="hero-search-input" placeholder="Search artists, bands, keywords..." style="background:transparent; border:none; color:var(--white); font-size:0.85rem; outline:none; width:100%;" autocomplete="off" />
+            <div id="search-autocomplete-dropdown" class="autocomplete-dropdown"></div>
           </div>
           <div class="search-field" style="border-right:1px solid rgba(255,255,255,0.08); padding:0.5rem 1rem; text-align:left; display:flex; flex-direction:column; justify-content:center;">
             <label style="font-size:0.55rem; font-weight:800; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:0.25rem;">Genre</label>
@@ -1004,6 +1005,117 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><polyline points="18 15 12 9 6 15"/></svg>
   </button>
 
+  <!-- ─── AUTH/LOGIN POPUP MODAL ─── -->
+  <div id="login-modal" class="custom-modal-overlay">
+    <div class="custom-modal-card">
+      <button class="modal-close-btn" id="login-modal-close">&times;</button>
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <span style="font-family:'Montserrat',sans-serif; font-weight:800; font-size:1.8rem; color:var(--white); letter-spacing:-0.02em;">Elite</span>
+        <span style="font-family:'Cormorant Garamond',serif; font-size:0.6rem; letter-spacing:0.18em; color:var(--gold); display:block; text-transform:uppercase;">Administration Login</span>
+      </div>
+      <h3 style="margin-bottom:0.5rem; color:var(--white);">Secure Sign In</h3>
+      <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem;">Access the administrative portal and lead pipelines</p>
+      
+      <div class="auth-input-group" style="text-align:left; margin-bottom:1.25rem;">
+        <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Email Address</label>
+        <input type="email" id="modal-login-email" placeholder="admin@eliteentertainment.com.au" style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+      </div>
+      
+      <div class="auth-input-group" style="text-align:left; margin-bottom:2rem;">
+        <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Password</label>
+        <input type="password" id="modal-login-password" placeholder="••••••••" style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+      </div>
+      
+      <button class="btn btn-gold" id="modal-btn-login-submit" style="width:100%; border-radius:30px; padding:0.75rem;">Login to Dashboard</button>
+    </div>
+  </div>
+
+  <!-- ─── VENDOR/BAND SIGNUP MODAL ─── -->
+  <div id="signup-modal" class="custom-modal-overlay">
+    <div class="custom-modal-card" style="max-width:550px;">
+      <button class="modal-close-btn" id="signup-modal-close">&times;</button>
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <span style="font-family:'Montserrat',sans-serif; font-weight:800; font-size:1.8rem; color:var(--white); letter-spacing:-0.02em;">Elite</span>
+        <span style="font-family:'Cormorant Garamond',serif; font-size:0.6rem; letter-spacing:0.18em; color:var(--gold); display:block; text-transform:uppercase;">Join Our Premium Network</span>
+      </div>
+      <h3 style="margin-bottom:0.5rem; color:var(--white);">Vendor Registration</h3>
+      <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem;">Register your business, live band, or service to partner with us</p>
+      
+      <form id="vendor-signup-form" style="display:flex; flex-direction:column; gap:1rem; text-align:left;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Business/Band Name</label>
+            <input type="text" id="signup-name" required placeholder="e.g. The Groove Trio" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Partner Type</label>
+            <select id="signup-type" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; cursor:pointer;">
+              <option value="Live Band">Live Band / Artist</option>
+              <option value="Event DJ">Event DJ</option>
+              <option value="Luxury Car Hire">Luxury Car Hire</option>
+              <option value="Yacht Charter">Yacht Charter</option>
+              <option value="Corporate Vendor">Corporate Vendor</option>
+            </select>
+          </div>
+        </div>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Contact Email</label>
+            <input type="email" id="signup-email" required placeholder="hello@yourbrand.com" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Contact Phone</label>
+            <input type="tel" id="signup-phone" required placeholder="+61 400 000 000" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Brief Bio &amp; Service Details</label>
+          <textarea id="signup-bio" required placeholder="Tell us about your services, experience, and pricing..." style="width:100%; height:80px; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; resize:none;"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-gold" style="width:100%; border-radius:30px; padding:0.75rem; font-weight:700; margin-top:0.5rem;">Submit Application</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase Dependencies for Login Popup -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      projectId: "elite-entertainment-and-events",
+      appId: "1:382118825306:web:de90f67c0aed268eb9f763",
+      databaseURL: "https://elite-entertainment-and-events-default-rtdb.firebaseio.com",
+      storageBucket: "elite-entertainment-and-events.firebasestorage.app",
+      apiKey: "AIzaSyBQh3pFu5Hmiusn791esleiiVKNlcoKIPU",
+      authDomain: "elite-entertainment-and-events.firebaseapp.com",
+      messagingSenderId: "382118825306",
+      projectNumber: "382118825306"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Global Login Handler
+    document.getElementById('modal-btn-login-submit').addEventListener('click', () => {
+      const email = document.getElementById('modal-login-email').value;
+      const pass = document.getElementById('modal-login-password').value;
+      
+      signInWithEmailAndPassword(auth, email, pass)
+        .then(() => {
+          window.location.href = "admin.html";
+        })
+        .catch(error => {
+          alert("Login Failed: " + error.message);
+        });
+    });
+  </script>
+
   <script src="script.js"></script>
 </body>
 </html>
+
+
