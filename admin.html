@@ -308,8 +308,8 @@
       <h2>Secure Sign In</h2>
       <p>Enter administrative credentials to access the lead engine</p>
       <div class="auth-input-group">
-        <label>Username</label>
-        <input type="text" id="auth-user" placeholder="e.g. admin" />
+        <label>Email Address</label>
+        <input type="email" id="auth-user" placeholder="e.g. admin@eliteentertainment.com.au" />
       </div>
       <div class="auth-input-group" style="margin-bottom:2.5rem;">
         <label>Password</label>
@@ -384,9 +384,27 @@
 
     </div>
   </div>
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-  <script>
-    // Mock Seed Data if empty
+    // Firebase configuration
+    const firebaseConfig = {
+      projectId: "elite-entertain-events",
+      appId: "1:28470915437:web:76a75ba29141b554052a64",
+      storageBucket: "elite-entertain-events.firebasestorage.app",
+      apiKey: "AIzaSyD4GbAxY4qFIF6Fz_KTWK8xKF4tynjcdS4",
+      authDomain: "elite-entertain-events.firebaseapp.com",
+      messagingSenderId: "28470915437",
+      projectNumber: "28470915437"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Seed Data
     const seedInquiries = [
       {
         id: "INQ-94827",
@@ -419,25 +437,28 @@
     const loginBtn = document.getElementById('btn-login');
     const logoutBtn = document.getElementById('btn-logout');
 
-    // Check session
-    if (sessionStorage.getItem('elite_admin_auth') === 'true') {
-      authOverlay.classList.add('hidden');
-      renderDashboard();
-    }
-
-    loginBtn.addEventListener('click', () => {
-      if (userField.value === 'admin' && passField.value === 'elite2026') {
-        sessionStorage.setItem('elite_admin_auth', 'true');
+    // Monitor Auth State
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
         authOverlay.classList.add('hidden');
         renderDashboard();
       } else {
-        alert('Invalid credentials. Access Denied.');
+        authOverlay.classList.remove('hidden');
       }
     });
 
+    loginBtn.addEventListener('click', () => {
+      const email = userField.value;
+      const password = passField.value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .catch(error => {
+          alert("Sign In Failed: " + error.message);
+        });
+    });
+
     logoutBtn.addEventListener('click', () => {
-      sessionStorage.removeItem('elite_admin_auth');
-      window.location.reload();
+      signOut(auth);
     });
 
     // Dashboard render
@@ -484,7 +505,7 @@
       const rate = inquiries.length ? Math.round((contacted / inquiries.length) * 100) : 0;
       document.getElementById('stat-rate').textContent = rate + '%';
       
-      const revenue = inquiries.length * 4500; // Est average booking value
+      const revenue = inquiries.length * 4500;
       document.getElementById('stat-rev').textContent = '$' + revenue.toLocaleString();
     }
 

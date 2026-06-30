@@ -26,5 +26,10 @@
         ]
       }
     ]
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true
+    }
   }
 }
