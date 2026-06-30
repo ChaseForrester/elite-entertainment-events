@@ -1076,4 +1076,160 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Automatic slideshow logic for Hero Showcase frame
+  const slides = document.querySelectorAll('.slideshow-frame .slide-item');
+  if (slides.length > 0) {
+    let currentSlide = 0;
+    setInterval(() => {
+      slides[currentSlide].style.opacity = '0';
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].style.opacity = '1';
+      slides[currentSlide].classList.add('active');
+    }, 4000);
+  }
+
+  // Live Shows Calendar Data & Filtering
+  const eventsData = [
+    {
+      date: '20 AUG 2026',
+      venue: 'Merrylands RSL',
+      artist: 'The Velvet Tones Live',
+      mapUrl: 'https://maps.google.com/?q=Merrylands+RSL',
+      soldOut: true,
+      month: 'aug'
+    },
+    {
+      date: '27 AUG 2026',
+      venue: 'Castle Hill RSL',
+      artist: 'Symphonic Beatles Tribute',
+      mapUrl: 'https://maps.google.com/?q=Castle+Hill+RSL',
+      soldOut: false,
+      month: 'aug'
+    },
+    {
+      date: '05 SEP 2026',
+      venue: 'Shellharbour Club',
+      artist: 'Club DJ Sunset Lounge Set',
+      mapUrl: 'https://maps.google.com/?q=Shellharbour+Club',
+      soldOut: false,
+      month: 'sep'
+    },
+    {
+      date: '18 SEP 2026',
+      venue: 'Penrith Panthers',
+      artist: 'Rock Anthology Show',
+      mapUrl: 'https://maps.google.com/?q=Penrith+Panthers',
+      soldOut: true,
+      month: 'sep'
+    },
+    {
+      date: '03 OCT 2026',
+      venue: 'Darling Harbour Centre',
+      artist: 'Spring Gala Big Band Concert',
+      mapUrl: 'https://maps.google.com/?q=Darling+Harbour',
+      soldOut: false,
+      month: 'oct'
+    },
+    {
+      date: '17 OCT 2026',
+      venue: 'Merrylands RSL',
+      artist: 'Groove Syndicate Funk Tour',
+      mapUrl: 'https://maps.google.com/?q=Merrylands+RSL',
+      soldOut: false,
+      month: 'oct'
+    }
+  ];
+
+  window.renderEvents = (filter = 'all') => {
+    const listContainer = document.getElementById('events-calendar-list');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+
+    const filtered = filter === 'all' ? eventsData : eventsData.filter(e => e.month === filter);
+
+    filtered.forEach(evt => {
+      const row = document.createElement('div');
+      row.style.cssText = `
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 1.25rem 2rem;
+        transition: 0.3s;
+      `;
+      row.className = 'evt-row-card';
+
+      row.onmouseover = () => {
+        row.style.borderColor = 'rgba(200,168,76,0.3)';
+        row.style.background = 'rgba(200,168,76,0.02)';
+        row.style.transform = 'translateY(-2px)';
+      };
+      row.onmouseout = () => {
+        row.style.borderColor = 'rgba(255,255,255,0.06)';
+        row.style.background = 'rgba(255,255,255,0.02)';
+        row.style.transform = 'translateY(0)';
+      };
+
+      const parts = evt.date.split(' ');
+      const dateHtml = `
+        <div style="text-align:center; min-width:80px; border-right:1px solid rgba(255,255,255,0.08); padding-right:1.5rem; margin-right:1.5rem; display:flex; flex-direction:column; justify-content:center;">
+          <span style="font-family:'Bebas Neue', sans-serif; font-size:1.8rem; color:var(--white); line-height:1; display:block;">${parts[0]}</span>
+          <span style="font-size:0.65rem; color:var(--gold); font-weight:800; letter-spacing:0.1em; display:block; margin-top:0.2rem;">${parts[1]} ${parts[2]}</span>
+        </div>
+      `;
+
+      const detailsHtml = `
+        <div style="flex-grow:1; text-align:left; display:flex; flex-direction:column; justify-content:center;">
+          <h4 style="color:var(--white); font-size:1.05rem; margin-bottom:0.3rem; font-weight:600;">${evt.artist}</h4>
+          <p style="font-size:0.78rem; color:var(--silver-light); margin-bottom:0; display:flex; align-items:center; gap:0.5rem;">
+            <span>📍 ${evt.venue}</span>
+            <span style="color:rgba(255,255,255,0.15);">|</span>
+            <a href="${evt.mapUrl}" target="_blank" style="color:var(--gold); text-decoration:none; font-weight:600; font-size:0.75rem;">Directions &rarr;</a>
+          </p>
+        </div>
+      `;
+
+      const btnHtml = evt.soldOut 
+        ? `<button disabled style="background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05); border-radius:30px; padding:0.55rem 1.4rem; font-size:0.72rem; font-weight:700; cursor:not-allowed;">SOLD OUT</button>`
+        : `<a href="#" onclick="alert('Securing connection with ticketing agent...'); return false;" class="btn btn-gold" style="border-radius:30px; padding:0.55rem 1.4rem; font-size:0.72rem; font-weight:700; text-transform:none; box-shadow:none;">Buy Tickets &rarr;</a>`;
+
+      row.innerHTML = `
+        <div style="display:flex; align-items:center; flex-grow:1; flex-wrap:wrap;">
+          ${dateHtml}
+          ${detailsHtml}
+        </div>
+        <div style="margin-left:1.5rem; display:flex; align-items:center;">
+          ${btnHtml}
+        </div>
+      `;
+      listContainer.appendChild(row);
+    });
+  };
+
+  window.filterEvents = (month) => {
+    const btns = document.querySelectorAll('.evt-filter-btn');
+    btns.forEach(btn => {
+      btn.style.background = 'rgba(255,255,255,0.02)';
+      btn.style.border = '1px solid rgba(255,255,255,0.08)';
+      btn.style.color = 'var(--silver-light)';
+    });
+
+    const activeBtn = document.getElementById('evt-btn-' + month);
+    if (activeBtn) {
+      activeBtn.style.background = 'var(--gradient-gold)';
+      activeBtn.style.border = 'none';
+      activeBtn.style.color = '#000';
+    }
+
+    renderEvents(month);
+  };
+
+  // Initial event calendar render
+  renderEvents();
+
 });
+
+

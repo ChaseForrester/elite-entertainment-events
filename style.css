@@ -1907,3 +1907,26 @@ input, select, textarea { font: inherit; }
 .modal-close-btn:hover {
   color: var(--gold);
 }
+
+/* ─── HERO SHOWCASE & TRANSITIONS ─── */
+@keyframes gentle-pulse {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.025) translateY(-5px);
+    box-shadow: 0 15px 30px rgba(200, 168, 76, 0.2);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-slideshow-container {
+    grid-template-columns: 1fr !important;
+    height: 360px !important;
+    gap: 1rem !important;
+  }
+}
+
