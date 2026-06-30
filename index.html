@@ -107,24 +107,32 @@
           <p class="hero-sub" style="max-width: 540px; font-size: 0.95rem; color: var(--silver-mid); margin-bottom: 2rem; line-height: 1.6; text-align:left; margin-left:0;">
             The premium double-sided event ecosystem. Instantly connect verified luxury suppliers, world-class entertainment, and elite security with event hosts nationwide.
           </p>
-
-          <!-- Double-Sided Business Model Cards -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:2.2rem; width:100%; max-width:540px;">
+          <!-- Double-Sided Business Model Cards (Stacked vertically) -->
+          <div style="display:flex; flex-direction:column; gap:1.25rem; margin-bottom:2.2rem; width:100%; max-width:540px;">
             <!-- Pillar 1: Event Hosts -->
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(200,168,76,0.3); border-radius:12px; padding:1.25rem; text-align:left;">
-              <span style="font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); font-weight:800; display:block; margin-bottom:0.5rem;">For Event Hosts</span>
-              <h4 style="color:var(--white); font-size:0.95rem; margin-bottom:0.4rem; font-weight:700;">Find Anything</h4>
-              <p style="font-size:0.75rem; color:var(--silver-mid); margin-bottom:0; line-height:1.4;">Vetted live bands, luxury hire yachts, cars &amp; private guards in one secure place.</p>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(200,168,76,0.3); border-radius:12px; padding:1.25rem; text-align:left; display:flex; gap:1rem; align-items:flex-start;">
+              <div style="background:rgba(200,168,76,0.1); border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="width:18px; height:18px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div style="flex-grow:1;">
+                <span style="font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); font-weight:800; display:block; margin-bottom:0.25rem;">For Event Hosts &amp; Planners</span>
+                <h4 style="color:var(--white); font-size:0.95rem; margin-bottom:0.3rem; font-weight:700;">Find Anything. For Any Event.</h4>
+                <p style="font-size:0.78rem; color:var(--silver-mid); margin-bottom:0; line-height:1.45;">Vetted live bands, luxury hire yachts, cars &amp; private guards in one secure place.</p>
+              </div>
             </div>
             
             <!-- Pillar 2: Premium Vendors -->
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1.25rem; text-align:left;">
-              <span style="font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--silver-light); font-weight:800; display:block; margin-bottom:0.5rem;">For Agencies &amp; Acts</span>
-              <h4 style="color:var(--white); font-size:0.95rem; margin-bottom:0.4rem; font-weight:700;">Grow Bookings</h4>
-              <p style="font-size:0.75rem; color:var(--silver-mid); margin-bottom:0; line-height:1.4;">Submit your dynamic spec profile to access our exclusive, pre-qualified CRM leads pipeline.</p>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1.25rem; text-align:left; display:flex; gap:1rem; align-items:flex-start;">
+              <div style="background:rgba(255,255,255,0.05); border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--silver-light)" stroke-width="2" style="width:18px; height:18px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              </div>
+              <div style="flex-grow:1;">
+                <span style="font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--silver-light); font-weight:800; display:block; margin-bottom:0.25rem;">For Premium Agencies &amp; Acts</span>
+                <h4 style="color:var(--white); font-size:0.95rem; margin-bottom:0.3rem; font-weight:700;">Grow Your Bookings &amp; Pipeline</h4>
+                <p style="font-size:0.78rem; color:var(--silver-mid); margin-bottom:0; line-height:1.45;">Submit your dynamic spec profile to access our exclusive, pre-qualified CRM leads pipeline.</p>
+              </div>
             </div>
           </div>
-
           <div style="display:flex; gap:1rem; flex-wrap:wrap;">
             <a href="#services" class="btn btn-gold" style="border-radius:30px; padding:0.8rem 2.2rem; font-size:0.8rem; font-weight:700; text-transform:none;">Explore Ecosystem</a>
             <button class="btn btn-outline" id="hero-btn-vendor-signup" style="border-radius:30px; padding:0.8rem 2.2rem; font-size:0.8rem; font-weight:700; border-color:rgba(255,255,255,0.2); text-transform:none;">Apply as Partner</button>
