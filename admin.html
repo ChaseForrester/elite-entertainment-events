@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Elite Admin Dashboard | Elite Entertainment & Events</title>
+  <title>Elite Super Admin Dashboard | Elite Entertainment &amp; Events</title>
+  
+  <!-- PWA Metadata -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#c9a84c" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
@@ -23,7 +29,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-    /* Grid Mesh */
     .dashboard-wrap {
       position: relative;
       min-height: 100vh;
@@ -43,7 +48,6 @@
       top: 10%;
       left: 70%;
     }
-    /* Auth Modal */
     #auth-overlay {
       position: fixed;
       inset: 0;
@@ -58,6 +62,7 @@
     #auth-overlay.hidden {
       opacity: 0;
       visibility: hidden;
+      pointer-events: none;
     }
     .auth-card {
       background: var(--black-3);
@@ -95,7 +100,7 @@
       display: block;
       margin-bottom: 0.5rem;
     }
-    .auth-input-group input {
+    .auth-input-group input, .auth-input-group select, .auth-input-group textarea {
       width: 100%;
       padding: 0.85rem 1rem;
       background: rgba(255, 255, 255, 0.03);
@@ -107,16 +112,17 @@
       box-sizing: border-box;
       transition: var(--transition);
     }
-    .auth-input-group input:focus {
+    .auth-input-group input:focus, .auth-input-group select:focus, .auth-input-group textarea:focus {
       border-color: var(--gold);
       box-shadow: 0 0 10px rgba(200, 168, 76, 0.2);
     }
-    /* Main Layout */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 3rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
     }
     .db-logo {
       display: flex;
@@ -136,7 +142,6 @@
       text-transform: uppercase;
       margin-top: 0.25rem;
     }
-    /* Grid Analytics */
     .analytics-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -172,7 +177,6 @@
       color: var(--white);
       margin-top: 0.5rem;
     }
-    /* Table Container */
     .table-container {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -186,6 +190,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     .table-title {
       font-family: var(--font-heading);
@@ -246,52 +252,60 @@
       font-size: 0.72rem;
       font-weight: 600;
       transition: var(--transition);
+      margin-right: 0.25rem;
     }
     .btn-action:hover {
       border-color: var(--gold);
       color: var(--gold);
     }
+    .artist-img-preview {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--gold-dark);
+    }
+    /* Modal Styling */
+    .admin-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(15px);
+      z-index: 12000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .admin-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .admin-modal-body {
+      background: var(--black-3);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius-md);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 550px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--gold-glow);
+    }
     @media (max-width: 900px) {
       .analytics-grid {
         grid-template-columns: repeat(2, 1fr);
-      }
-      .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.5rem;
       }
     }
     @media (max-width: 600px) {
       .analytics-grid {
         grid-template-columns: 1fr;
       }
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-      thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-      }
-      tr {
-        border-bottom: 1px solid var(--card-border);
-        padding-bottom: 1rem;
-      }
-      td {
-        border: none;
-        padding: 0.5rem 1.5rem;
-        position: relative;
-        padding-left: 50%;
-      }
-      td:before {
-        position: absolute;
-        left: 1.5rem;
-        width: 45%;
-        font-weight: 700;
-        color: var(--gold);
-        text-transform: uppercase;
-        font-size: 0.6rem;
-        content: attr(data-label);
+      .db-tabs {
+        flex-wrap: wrap;
       }
     }
   </style>
@@ -303,19 +317,19 @@
     <div class="auth-card">
       <div class="db-logo" style="align-items:center; margin-bottom:2rem;">
         <span class="db-logo-main">ELITE</span>
-        <span class="db-logo-sub">Administration portal</span>
+        <span class="db-logo-sub">Super Admin CMS Portal</span>
       </div>
-      <h2>Secure Sign In</h2>
-      <p>Enter administrative credentials to access the lead engine</p>
+      <h2>Super Admin Login</h2>
+      <p>Enter administrator credentials to manage artists, content, and leads</p>
       <div class="auth-input-group">
         <label>Email Address</label>
-        <input type="email" id="auth-user" placeholder="e.g. admin@eliteentertainment.com.au" />
+        <input type="email" id="auth-user" placeholder="admin@eliteentertainment.com.au" value="admin@eliteentertainment.com.au" />
       </div>
       <div class="auth-input-group" style="margin-bottom:2.5rem;">
         <label>Password</label>
-        <input type="password" id="auth-pass" placeholder="••••••••" />
+        <input type="password" id="auth-pass" placeholder="••••••••" value="admin123" />
       </div>
-      <button class="btn btn-gold" id="btn-login" style="width:100%;">ACCESS PORTAL</button>
+      <button class="btn btn-gold" id="btn-login" style="width:100%;">ACCESS SUPER ADMIN</button>
     </div>
   </div>
 
@@ -328,27 +342,28 @@
       <div class="dashboard-header">
         <div class="db-logo">
           <span class="db-logo-main">ELITE</span>
-          <span class="db-logo-sub">Entertainment &amp; Events &bull; Lead Engine</span>
+          <span class="db-logo-sub">SUPER ADMIN CMS &bull; ENTERTAINMENT &amp; EVENTS</span>
         </div>
-        <div style="display:flex; gap:1rem;">
+        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+          <button class="btn btn-outline" id="btn-reset-cms" style="border-color:rgba(200,168,76,0.3); color:var(--gold);">Reset CMS Defaults</button>
           <button class="btn btn-outline" id="btn-logout">Logout</button>
-          <a href="index.html" class="btn btn-gold">View Live Site</a>
+          <a href="index.html" class="btn btn-gold" target="_blank">View Live Site &rarr;</a>
         </div>
       </div>
 
       <!-- ANALYTICS -->
       <div class="analytics-grid">
         <div class="analytic-card">
+          <div class="analytic-label">Active Artists</div>
+          <div class="analytic-value" id="stat-artists">0</div>
+        </div>
+        <div class="analytic-card">
+          <div class="analytic-label">Total Events</div>
+          <div class="analytic-value" id="stat-events" style="color:var(--gold);">0</div>
+        </div>
+        <div class="analytic-card">
           <div class="analytic-label">Total Leads</div>
           <div class="analytic-value" id="stat-leads">0</div>
-        </div>
-        <div class="analytic-card">
-          <div class="analytic-label">Pending Reviews</div>
-          <div class="analytic-value" id="stat-pending" style="color:var(--gold);">0</div>
-        </div>
-        <div class="analytic-card">
-          <div class="analytic-label">Contacted Rate</div>
-          <div class="analytic-value" id="stat-rate">0%</div>
         </div>
         <div class="analytic-card">
           <div class="analytic-label">Revenue Pipeline</div>
@@ -357,14 +372,101 @@
       </div>
 
       <!-- Tab Toggles -->
-      <div class="db-tabs" style="display:flex; gap:1.25rem; margin-bottom:2rem; justify-content:flex-start; width:100%;">
-        <button class="btn btn-gold tab-btn" id="tab-btn-leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; text-transform:none;">Lead Pipeline</button>
-        <button class="btn btn-outline tab-btn" id="tab-btn-partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2); text-transform:none;">Partner Signups</button>
-        <button class="btn btn-outline tab-btn" id="tab-btn-clients" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2); text-transform:none;">CRM - Clients</button>
+      <div class="db-tabs" style="display:flex; gap:1rem; margin-bottom:2rem; justify-content:flex-start; width:100%; flex-wrap:wrap;">
+        <button class="btn btn-gold tab-btn" id="tab-btn-cms-artists" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem;">Artists &amp; Performers CMS</button>
+        <button class="btn btn-outline tab-btn" id="tab-btn-cms-events" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Events &amp; Packages CMS</button>
+        <button class="btn btn-outline tab-btn" id="tab-btn-cms-content" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Hero &amp; Global Content</button>
+        <button class="btn btn-outline tab-btn" id="tab-btn-leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Lead Pipeline</button>
+        <button class="btn btn-outline tab-btn" id="tab-btn-partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Partner Applications</button>
+      </div>
+
+      <!-- ARTISTS CMS TABLE -->
+      <div class="table-container" id="cms-artists-container" style="width:100%;">
+        <div class="table-header">
+          <div class="table-title">Artist &amp; Performer Management (All Categories)</div>
+          <button class="btn btn-gold btn-sm" id="btn-add-artist">+ Add New Artist / Act</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Artist / Act Name</th>
+                <th>Category</th>
+                <th>Genre / Style</th>
+                <th>Rate / Price</th>
+                <th>Featured</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="artists-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EVENTS CMS TABLE -->
+      <div class="table-container" id="cms-events-container" style="display:none; width:100%;">
+        <div class="table-header">
+          <div class="table-title">Events &amp; Experience Packages</div>
+          <button class="btn btn-gold btn-sm" id="btn-add-event">+ Add New Event / Package</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Banner</th>
+                <th>Event / Package Title</th>
+                <th>Category</th>
+                <th>Date / Tag</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="events-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SITE CONTENT FORM -->
+      <div class="table-container" id="cms-content-container" style="display:none; width:100%; padding: 2rem;">
+        <div class="table-header" style="border-bottom:none; padding:0 0 1.5rem 0;">
+          <div class="table-title">Global Site Content &amp; Imagery</div>
+          <button class="btn btn-gold btn-sm" id="btn-save-content">Save Global Changes</button>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+          <div class="auth-input-group">
+            <label>Hero Title</label>
+            <input type="text" id="content-hero-title" />
+          </div>
+          <div class="auth-input-group">
+            <label>Hero Subtitle</label>
+            <input type="text" id="content-hero-subtitle" />
+          </div>
+          <div class="auth-input-group">
+            <label>Hero Banner Image Path / URL</label>
+            <input type="text" id="content-hero-banner" />
+          </div>
+          <div class="auth-input-group">
+            <label>Contact Phone Number</label>
+            <input type="text" id="content-phone" />
+          </div>
+          <div class="auth-input-group">
+            <label>Contact Email Address</label>
+            <input type="text" id="content-email" />
+          </div>
+          <div class="auth-input-group">
+            <label>Operating Regions / Address</label>
+            <input type="text" id="content-address" />
+          </div>
+        </div>
       </div>
 
       <!-- LEADS TABLE -->
-      <div class="table-container" id="leads-container" style="width:100%;">
+      <div class="table-container" id="leads-container" style="display:none; width:100%;">
         <div class="table-header">
           <div class="table-title">Lead Pipeline</div>
           <button class="btn btn-outline btn-sm" id="btn-clear-leads" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear Local Logs</button>
@@ -382,9 +484,7 @@
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody id="leads-body">
-              <!-- Dynamically populated -->
-            </tbody>
+            <tbody id="leads-body"></tbody>
           </table>
         </div>
       </div>
@@ -400,385 +500,362 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Business/Band Name</th>
-                <th>Partner Type</th>
+                <th>Business / Act Name</th>
+                <th>Type</th>
                 <th>Contact Info</th>
-                <th>Bio/Details</th>
+                <th>Details</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody id="partners-body">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- CRM CLIENTS TABLE -->
-      <div class="table-container" id="clients-container" style="display:none; width:100%;">
-        <div class="table-header">
-          <div class="table-title">CRM - Clients Pipeline</div>
-          <button class="btn btn-outline btn-sm" id="btn-clear-clients" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear Local Logs</button>
-        </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Client Name</th>
-                <th>Contact Info</th>
-                <th>Event Date &amp; Budget</th>
-                <th>Requirements / Notes</th>
-                <th>CRM Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="clients-body">
-              <!-- Dynamically populated -->
-            </tbody>
+            <tbody id="partners-body"></tbody>
           </table>
         </div>
       </div>
 
     </div>
   </div>
-  <!-- Firebase SDKs -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    // Firebase configuration
-    const firebaseConfig = {
-      projectId: "elite-entertainment-and-events",
-      appId: "1:382118825306:web:de90f67c0aed268eb9f763",
-      databaseURL: "https://elite-entertainment-and-events-default-rtdb.firebaseio.com",
-      storageBucket: "elite-entertainment-and-events.firebasestorage.app",
-      apiKey: "AIzaSyBQh3pFu5Hmiusn791esleiiVKNlcoKIPU",
-      authDomain: "elite-entertainment-and-events.firebaseapp.com",
-      messagingSenderId: "382118825306",
-      projectNumber: "382118825306"
-    };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  <!-- ARTIST EDITOR MODAL -->
+  <div class="admin-modal-overlay" id="artist-modal">
+    <div class="admin-modal-body">
+      <h3 style="font-family:var(--font-heading); font-size:1.8rem; margin-top:0; color:var(--gold);" id="artist-modal-title">Edit Artist / Act</h3>
+      <form id="artist-form">
+        <input type="hidden" id="artist-id" />
+        <div class="auth-input-group">
+          <label>Act / Artist Name</label>
+          <input type="text" id="artist-name" required />
+        </div>
+        <div class="auth-input-group">
+          <label>Category</label>
+          <select id="artist-category" required>
+            <option value="bands">Live Bands &amp; Orchestras</option>
+            <option value="djs">VIP &amp; Event DJs</option>
+            <option value="solos">Solo Vocalists &amp; Performers</option>
+            <option value="duos">Acoustic &amp; Electric Duos</option>
+            <option value="jazz">Jazz Ensembles</option>
+            <option value="tributes">Tribute Shows &amp; Concepts</option>
+            <option value="models-dancers">Models &amp; Dancers</option>
+            <option value="corporate">Corporate Gala Acts</option>
+            <option value="weddings">Wedding Specialists</option>
+          </select>
+        </div>
+        <div class="auth-input-group">
+          <label>Genre / Style</label>
+          <input type="text" id="artist-genre" placeholder="e.g. Soul / Pop / High Energy" required />
+        </div>
+        <div class="auth-input-group">
+          <label>Picture Image URL</label>
+          <input type="text" id="artist-image" placeholder="https://images.unsplash.com/..." required />
+        </div>
+        <div class="auth-input-group">
+          <label>Starting Rate / Price</label>
+          <input type="text" id="artist-rate" placeholder="e.g. $2,500+" required />
+        </div>
+        <div class="auth-input-group">
+          <label>Bio / Description</label>
+          <textarea id="artist-bio" rows="3" required></textarea>
+        </div>
+        <div class="auth-input-group" style="display:flex; align-items:center; gap:0.5rem;">
+          <input type="checkbox" id="artist-featured" style="width:auto;" />
+          <label for="artist-featured" style="margin-bottom:0; cursor:pointer;">Show as Featured on Homepage</label>
+        </div>
+        <div style="display:flex; gap:1rem; margin-top:2rem;">
+          <button type="submit" class="btn btn-gold" style="flex:1;">Save Artist</button>
+          <button type="button" class="btn btn-outline" id="btn-close-artist-modal" style="flex:1;">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-    // Seed Data
-    const seedInquiries = [
-      {
-        id: "INQ-94827",
-        name: "Jessica Miller",
-        email: "jess.miller@gmail.com",
-        phone: "+61 487 112 001",
-        date: "2026-11-14",
-        service: "Wedding Band Hire",
-        message: "Looking for a 5-piece cover band for our reception at the SOH.",
-        status: "Pending",
-        timestamp: "06/30/2026, 4:18 PM"
-      },
-      {
-        id: "INQ-94711",
-        name: "David Sterling (Telstra)",
-        email: "d.sterling@telstra.com.au",
-        phone: "+61 412 887 232",
-        date: "2026-12-08",
-        service: "Corporate Event",
-        message: "Corporate gala dinner entertainment and stage production required.",
-        status: "Contacted",
-        timestamp: "06/30/2026, 1:44 PM"
-      }
-    ];
+  <!-- EVENT EDITOR MODAL -->
+  <div class="admin-modal-overlay" id="event-modal">
+    <div class="admin-modal-body">
+      <h3 style="font-family:var(--font-heading); font-size:1.8rem; margin-top:0; color:var(--gold);" id="event-modal-title">Edit Event / Package</h3>
+      <form id="event-form">
+        <input type="hidden" id="event-id" />
+        <div class="auth-input-group">
+          <label>Event / Package Title</label>
+          <input type="text" id="event-title" required />
+        </div>
+        <div class="auth-input-group">
+          <label>Category</label>
+          <input type="text" id="event-category" placeholder="e.g. Weddings, Luxury Yacht, Corporate" required />
+        </div>
+        <div class="auth-input-group">
+          <label>Date or Availability Tag</label>
+          <input type="text" id="event-date" placeholder="e.g. Available Daily or Dec 31, 2026" required />
+        </div>
+        <div class="auth-input-group">
+          <label>Banner Image URL</label>
+          <input type="text" id="event-image" placeholder="https://images.unsplash.com/..." required />
+        </div>
+        <div class="auth-input-group">
+          <label>Description</label>
+          <textarea id="event-description" rows="3" required></textarea>
+        </div>
+        <div class="auth-input-group">
+          <label>Status</label>
+          <input type="text" id="event-status" placeholder="e.g. Booking Open" required />
+        </div>
+        <div style="display:flex; gap:1rem; margin-top:2rem;">
+          <button type="submit" class="btn btn-gold" style="flex:1;">Save Event</button>
+          <button type="button" class="btn btn-outline" id="btn-close-event-modal" style="flex:1;">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-    // Auth logic
-    const authOverlay = document.getElementById('auth-overlay');
-    const userField = document.getElementById('auth-user');
-    const passField = document.getElementById('auth-pass');
-    const loginBtn = document.getElementById('btn-login');
-    const logoutBtn = document.getElementById('btn-logout');
+  <!-- CMS ENGINE -->
+  <script src="cms.js"></script>
 
-    // Monitor Auth State
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        authOverlay.classList.add('hidden');
-        renderDashboard();
-      } else {
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Auth logic
+      const authOverlay = document.getElementById('auth-overlay');
+      const userField = document.getElementById('auth-user');
+      const passField = document.getElementById('auth-pass');
+      const loginBtn = document.getElementById('btn-login');
+      const logoutBtn = document.getElementById('btn-logout');
+
+      const isAuthed = localStorage.getItem('elite_admin_authed') === 'true';
+      if (isAuthed) authOverlay.classList.add('hidden');
+
+      loginBtn.addEventListener('click', () => {
+        if (userField.value && passField.value) {
+          localStorage.setItem('elite_admin_authed', 'true');
+          authOverlay.classList.add('hidden');
+          renderDashboard();
+        }
+      });
+
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('elite_admin_authed');
         authOverlay.classList.remove('hidden');
-      }
-    });
+      });
 
-    loginBtn.addEventListener('click', () => {
-      const email = userField.value;
-      const password = passField.value;
+      // Tabs Logic
+      const tabs = {
+        'cms-artists': document.getElementById('cms-artists-container'),
+        'cms-events': document.getElementById('cms-events-container'),
+        'cms-content': document.getElementById('cms-content-container'),
+        'leads': document.getElementById('leads-container'),
+        'partners': document.getElementById('partners-container')
+      };
 
-      signInWithEmailAndPassword(auth, email, password)
-        .catch(error => {
-          alert("Sign In Failed: " + error.message);
+      const tabBtns = {
+        'cms-artists': document.getElementById('tab-btn-cms-artists'),
+        'cms-events': document.getElementById('tab-btn-cms-events'),
+        'cms-content': document.getElementById('tab-btn-cms-content'),
+        'leads': document.getElementById('tab-btn-leads'),
+        'partners': document.getElementById('tab-btn-partners')
+      };
+
+      function switchTab(activeKey) {
+        Object.keys(tabs).forEach(key => {
+          if (tabs[key]) tabs[key].style.display = key === activeKey ? 'block' : 'none';
+          if (tabBtns[key]) {
+            tabBtns[key].className = key === activeKey ? 'btn btn-gold tab-btn' : 'btn btn-outline tab-btn';
+          }
         });
-    });
-
-    logoutBtn.addEventListener('click', () => {
-      signOut(auth);
-    });
-
-    // Dashboard render
-    function renderDashboard() {
-      let inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
-      if (inquiries.length === 0) {
-        localStorage.setItem('elite_inquiries', JSON.stringify(seedInquiries));
-        inquiries = seedInquiries;
       }
 
-      const tbody = document.getElementById('leads-body');
-      tbody.innerHTML = '';
-
-      let pending = 0;
-      let contacted = 0;
-
-      inquiries.forEach((inq, index) => {
-        if (inq.status === 'Pending') pending++;
-        else contacted++;
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td data-label="ID">${inq.id}</td>
-          <td data-label="Client Name"><strong>${inq.name}</strong><br><span style="font-size:0.72rem; color:var(--silver-mid);">${inq.timestamp}</span></td>
-          <td data-label="Service Needed">${inq.service}</td>
-          <td data-label="Event Date">${inq.date}</td>
-          <td data-label="Contact Info">${inq.email}<br>${inq.phone}</td>
-          <td data-label="Status">
-            <span class="status-pill ${inq.status === 'Pending' ? 'status-pending' : 'status-contacted'}">${inq.status}</span>
-          </td>
-          <td data-label="Action">
-            <button class="btn-action" onclick="toggleStatus(${index})">
-              ${inq.status === 'Pending' ? 'Mark Contacted' : 'Mark Pending'}
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
+      Object.keys(tabBtns).forEach(key => {
+        if (tabBtns[key]) {
+          tabBtns[key].addEventListener('click', () => switchTab(key));
+        }
       });
 
-      // Statistics
-      document.getElementById('stat-leads').textContent = inquiries.length;
-      document.getElementById('stat-pending').textContent = pending;
-      
-      const rate = inquiries.length ? Math.round((contacted / inquiries.length) * 100) : 0;
-      document.getElementById('stat-rate').textContent = rate + '%';
-      
-      const revenue = inquiries.length * 4500;
-      document.getElementById('stat-rev').textContent = '$' + revenue.toLocaleString();
-      // Render tabs
-      renderPartners();
-      renderClients();
-    }
+      // Render Artists
+      function renderArtists() {
+        const artists = window.EliteCMS.getArtists();
+        const tbody = document.getElementById('artists-body');
+        tbody.innerHTML = '';
+        document.getElementById('stat-artists').textContent = artists.length;
 
-    // Render Partner registrations
-    function renderPartners() {
-      const partners = JSON.parse(localStorage.getItem('elite_partners') || '[]');
-      const tbody = document.getElementById('partners-body');
-      tbody.innerHTML = '';
+        artists.forEach(art => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><img src="${art.image}" class="artist-img-preview" alt="${art.name}"></td>
+            <td><strong>${art.name}</strong></td>
+            <td><span style="text-transform:uppercase; font-size:0.75rem; color:var(--gold);">${art.category}</span></td>
+            <td>${art.genre}</td>
+            <td><strong style="color:#55c555;">${art.rate}</strong></td>
+            <td>${art.featured ? '⭐ Featured' : 'Standard'}</td>
+            <td>
+              <button class="btn-action" onclick="editArtist('${art.id}')">Edit</button>
+              <button class="btn-action" style="color:#ff5555;" onclick="deleteArtist('${art.id}')">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
 
-      partners.forEach((prt, index) => {
-        let detailsHtml = '';
-        if (prt.abn) detailsHtml += `<span style="font-size:0.7rem; display:block; color:var(--silver-light);">ABN: ${prt.abn}</span>`;
-        if (prt.price) detailsHtml += `<span style="font-size:0.7rem; display:block; color:#55c555; font-weight:700;">Start: $${parseInt(prt.price).toLocaleString()}</span>`;
-        if (prt.insurance) detailsHtml += `<span style="font-size:0.7rem; display:block; color:var(--silver-mid);">Ins: ${prt.insurance}</span>`;
-        if (prt.details) {
-          detailsHtml += Object.entries(prt.details)
-            .map(([k, v]) => `<span style="font-size:0.7rem; display:block; color:var(--gold);">${k.toUpperCase()}: ${v}</span>`)
-            .join('');
-        }
-        if (prt.photoFile && prt.photoFile !== 'Not provided') {
-          detailsHtml += `<span style="font-size:0.7rem; display:block; color:var(--white);">Photo: 🖼️ ${prt.photoFile}</span>`;
-        }
-        if (prt.certFile && prt.certFile !== 'Not provided') {
-          detailsHtml += `<span style="font-size:0.7rem; display:block; color:var(--white);">Cert: 📄 ${prt.certFile}</span>`;
-        }
-        if (prt.link) {
-          detailsHtml += `<a href="${prt.link}" target="_blank" style="font-size:0.7rem; color:var(--gold); text-decoration:underline; font-weight:700;">Promo Link &rarr;</a>`;
-        }
+      // Render Events
+      function renderEvents() {
+        const events = window.EliteCMS.getEvents();
+        const tbody = document.getElementById('events-body');
+        tbody.innerHTML = '';
+        document.getElementById('stat-events').textContent = events.length;
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td data-label="ID">${prt.id}</td>
-          <td data-label="Business Name"><strong>${prt.name}</strong><br><span style="font-size:0.72rem; color:var(--silver-mid);">${prt.timestamp}</span></td>
-          <td data-label="Partner Type">${prt.type}</td>
-          <td data-label="Contact Info">${prt.email}<br>${prt.phone}</td>
-          <td data-label="Specs/Link">${detailsHtml || 'None'}</td>
-          <td data-label="Status">
-            <span class="status-pill ${prt.status === 'Pending' ? 'status-pending' : 'status-contacted'}">${prt.status}</span>
-          </td>
-          <td data-label="Action">
-            <button class="btn-action" onclick="togglePartnerStatus(${index})">
-              ${prt.status === 'Pending' ? 'Mark Approved' : 'Mark Pending'}
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
+        events.forEach(evt => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><img src="${evt.image}" class="artist-img-preview" alt="${evt.title}"></td>
+            <td><strong>${evt.title}</strong></td>
+            <td>${evt.category}</td>
+            <td>${evt.date}</td>
+            <td><span class="status-pill status-contacted">${evt.status}</span></td>
+            <td>
+              <button class="btn-action" onclick="editEvent('${evt.id}')">Edit</button>
+              <button class="btn-action" style="color:#ff5555;" onclick="deleteEvent('${evt.id}')">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Load Site Content Form
+      function loadContentForm() {
+        const content = window.EliteCMS.getContent();
+        document.getElementById('content-hero-title').value = content.heroTitle || '';
+        document.getElementById('content-hero-subtitle').value = content.heroSubtitle || '';
+        document.getElementById('content-hero-banner').value = content.heroBackdrop || '';
+        document.getElementById('content-phone').value = content.contactPhone || '';
+        document.getElementById('content-email').value = content.contactEmail || '';
+        document.getElementById('content-address').value = content.contactAddress || '';
+      }
+
+      document.getElementById('btn-save-content').addEventListener('click', () => {
+        window.EliteCMS.saveContent({
+          heroTitle: document.getElementById('content-hero-title').value,
+          heroSubtitle: document.getElementById('content-hero-subtitle').value,
+          heroBackdrop: document.getElementById('content-hero-banner').value,
+          contactPhone: document.getElementById('content-phone').value,
+          contactEmail: document.getElementById('content-email').value,
+          contactAddress: document.getElementById('content-address').value
+        });
+        alert('Global Site Content saved successfully!');
       });
-    }
 
-    // Render CRM Clients list
-    function renderClients() {
-      const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
-      const tbody = document.getElementById('clients-body');
-      tbody.innerHTML = '';
-
-      clients.forEach((cli, index) => {
-        // Format notes logs
-        const notesHtml = (cli.notes || [])
-          .map(note => `<div style="font-size:0.72rem; border-bottom:1px solid rgba(255,255,255,0.05); padding:0.25rem 0;">• ${note}</div>`)
-          .join('');
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td data-label="ID">${cli.id}</td>
-          <td data-label="Client Name"><strong>${cli.name}</strong><br><span style="font-size:0.72rem; color:var(--silver-mid);">${cli.timestamp}</span></td>
-          <td data-label="Contact Info">${cli.email}<br>${cli.phone}</td>
-          <td data-label="Date & Budget"><strong>${cli.date}</strong><br><span style="color:#55c555;">$${parseInt(cli.budget).toLocaleString()}</span></td>
-          <td data-label="Requirements & Notes">
-            <div style="font-size:0.75rem; color:var(--silver-light); margin-bottom:0.4rem;">${cli.message}</div>
-            <div class="crm-notes-log" style="max-height:80px; overflow-y:auto; margin-bottom:0.4rem; background:rgba(0,0,0,0.15); padding:0.25rem; border-radius:4px;">
-              ${notesHtml || '<span style="color:rgba(255,255,255,0.3); font-size:0.7rem;">No advisor notes</span>'}
-            </div>
-            <div style="display:flex; gap:0.25rem;">
-              <input type="text" id="note-input-${index}" placeholder="Add CRM note..." style="font-size:0.7rem; padding:0.2rem 0.4rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:4px; color:#white; width:100%; outline:none;" />
-              <button class="btn btn-gold btn-sm" onclick="addClientNote(${index})" style="padding:0.2rem 0.5rem; font-size:0.65rem;">+</button>
-            </div>
-          </td>
-          <td data-label="CRM Status">
-            <select onchange="updateClientStatus(${index}, this.value)" style="background:rgba(20,20,20,0.95); border:1px solid rgba(200,168,76,0.3); color:var(--white); border-radius:4px; padding:0.25rem; font-size:0.75rem; cursor:pointer;">
-              <option value="Lead" ${cli.status === 'Lead' ? 'selected' : ''}>New Lead</option>
-              <option value="Negotiation" ${cli.status === 'Negotiation' ? 'selected' : ''}>Negotiating</option>
-              <option value="Booked" ${cli.status === 'Booked' ? 'selected' : ''}>Booked</option>
-              <option value="Lost" ${cli.status === 'Lost' ? 'selected' : ''}>Lost</option>
-            </select>
-          </td>
-          <td data-label="Action">
-            <button class="btn-action" onclick="removeClient(${index})" style="background:rgba(255,0,0,0.1); color:#ff5555; border-color:rgba(255,0,0,0.2);">
-              Delete
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
+      // Artist Modal
+      const artistModal = document.getElementById('artist-modal');
+      document.getElementById('btn-add-artist').addEventListener('click', () => {
+        document.getElementById('artist-form').reset();
+        document.getElementById('artist-id').value = '';
+        document.getElementById('artist-modal-title').textContent = 'Add New Artist / Act';
+        artistModal.classList.add('active');
       });
-    }
+      document.getElementById('btn-close-artist-modal').addEventListener('click', () => {
+        artistModal.classList.remove('active');
+      });
 
-    // Toggle Lead status
-    window.toggleStatus = function(index) {
-      const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
-      if (inquiries[index]) {
-        inquiries[index].status = inquiries[index].status === 'Pending' ? 'Contacted' : 'Pending';
-        localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
-        renderDashboard();
+      window.editArtist = function(id) {
+        const artist = window.EliteCMS.getArtists().find(a => a.id === id);
+        if (artist) {
+          document.getElementById('artist-id').value = artist.id;
+          document.getElementById('artist-name').value = artist.name;
+          document.getElementById('artist-category').value = artist.category;
+          document.getElementById('artist-genre').value = artist.genre;
+          document.getElementById('artist-image').value = artist.image;
+          document.getElementById('artist-rate').value = artist.rate;
+          document.getElementById('artist-bio').value = artist.bio;
+          document.getElementById('artist-featured').checked = !!artist.featured;
+          document.getElementById('artist-modal-title').textContent = 'Edit Artist / Act';
+          artistModal.classList.add('active');
+        }
+      };
+
+      window.deleteArtist = function(id) {
+        if (confirm('Delete this artist act profile?')) {
+          window.EliteCMS.deleteArtist(id);
+          renderArtists();
+        }
+      };
+
+      document.getElementById('artist-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        window.EliteCMS.saveArtist({
+          id: document.getElementById('artist-id').value,
+          name: document.getElementById('artist-name').value,
+          category: document.getElementById('artist-category').value,
+          genre: document.getElementById('artist-genre').value,
+          image: document.getElementById('artist-image').value,
+          rate: document.getElementById('artist-rate').value,
+          bio: document.getElementById('artist-bio').value,
+          featured: document.getElementById('artist-featured').checked,
+          tags: [document.getElementById('artist-category').value]
+        });
+        artistModal.classList.remove('active');
+        renderArtists();
+      });
+
+      // Event Modal
+      const eventModal = document.getElementById('event-modal');
+      document.getElementById('btn-add-event').addEventListener('click', () => {
+        document.getElementById('event-form').reset();
+        document.getElementById('event-id').value = '';
+        document.getElementById('event-modal-title').textContent = 'Add New Event / Package';
+        eventModal.classList.add('active');
+      });
+      document.getElementById('btn-close-event-modal').addEventListener('click', () => {
+        eventModal.classList.remove('active');
+      });
+
+      window.editEvent = function(id) {
+        const evt = window.EliteCMS.getEvents().find(e => e.id === id);
+        if (evt) {
+          document.getElementById('event-id').value = evt.id;
+          document.getElementById('event-title').value = evt.title;
+          document.getElementById('event-category').value = evt.category;
+          document.getElementById('event-date').value = evt.date;
+          document.getElementById('event-image').value = evt.image;
+          document.getElementById('event-description').value = evt.description;
+          document.getElementById('event-status').value = evt.status;
+          document.getElementById('event-modal-title').textContent = 'Edit Event / Package';
+          eventModal.classList.add('active');
+        }
+      };
+
+      window.deleteEvent = function(id) {
+        if (confirm('Delete this event package?')) {
+          window.EliteCMS.deleteEvent(id);
+          renderEvents();
+        }
+      };
+
+      document.getElementById('event-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        window.EliteCMS.saveEvent({
+          id: document.getElementById('event-id').value,
+          title: document.getElementById('event-title').value,
+          category: document.getElementById('event-category').value,
+          date: document.getElementById('event-date').value,
+          image: document.getElementById('event-image').value,
+          description: document.getElementById('event-description').value,
+          status: document.getElementById('event-status').value
+        });
+        eventModal.classList.remove('active');
+        renderEvents();
+      });
+
+      // Reset CMS
+      document.getElementById('btn-reset-cms').addEventListener('click', () => {
+        if (confirm('Reset CMS data back to original defaults?')) {
+          window.EliteCMS.resetToDefaults();
+          renderDashboard();
+        }
+      });
+
+      function renderDashboard() {
+        renderArtists();
+        renderEvents();
+        loadContentForm();
       }
-    };
 
-    // Toggle Partner status
-    window.togglePartnerStatus = function(index) {
-      const partners = JSON.parse(localStorage.getItem('elite_partners') || '[]');
-      if (partners[index]) {
-        partners[index].status = partners[index].status === 'Pending' ? 'Approved' : 'Pending';
-        localStorage.setItem('elite_partners', JSON.stringify(partners));
-        renderDashboard();
-      }
-    };
-
-    // Update Client CRM status
-    window.updateClientStatus = function(index, newStatus) {
-      const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
-      if (clients[index]) {
-        clients[index].status = newStatus;
-        localStorage.setItem('elite_clients', JSON.stringify(clients));
-        renderDashboard();
-      }
-    };
-
-    // Add Client note
-    window.addClientNote = function(index) {
-      const noteVal = document.getElementById(`note-input-${index}`).value.trim();
-      if (!noteVal) return;
-
-      const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
-      if (clients[index]) {
-        if (!clients[index].notes) clients[index].notes = [];
-        clients[index].notes.push(noteVal);
-        localStorage.setItem('elite_clients', JSON.stringify(clients));
-        renderDashboard();
-      }
-    };
-
-    // Remove Client CRM profile
-    window.removeClient = function(index) {
-      if (confirm('Delete this client registration record?')) {
-        const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
-        clients.splice(index, 1);
-        localStorage.setItem('elite_clients', JSON.stringify(clients));
-        renderDashboard();
-      }
-    };
-
-    // Tabs switching logic
-    const tabLeads = document.getElementById('tab-btn-leads');
-    const tabPartners = document.getElementById('tab-btn-partners');
-    const tabClients = document.getElementById('tab-btn-clients');
-
-    const containerLeads = document.getElementById('leads-container');
-    const containerPartners = document.getElementById('partners-container');
-    const containerClients = document.getElementById('clients-container');
-
-    const switchTab = (tab) => {
-      tabLeads.className = 'btn btn-outline tab-btn';
-      tabPartners.className = 'btn btn-outline tab-btn';
-      tabClients.className = 'btn btn-outline tab-btn';
-
-      tabLeads.style.borderColor = 'rgba(255,255,255,0.2)';
-      tabPartners.style.borderColor = 'rgba(255,255,255,0.2)';
-      tabClients.style.borderColor = 'rgba(255,255,255,0.2)';
-
-      containerLeads.style.display = 'none';
-      containerPartners.style.display = 'none';
-      containerClients.style.display = 'none';
-
-      if (tab === 'leads') {
-        tabLeads.className = 'btn btn-gold tab-btn';
-        tabLeads.style.borderColor = '';
-        containerLeads.style.display = 'block';
-      } else if (tab === 'partners') {
-        tabPartners.className = 'btn btn-gold tab-btn';
-        tabPartners.style.borderColor = '';
-        containerPartners.style.display = 'block';
-      } else if (tab === 'clients') {
-        tabClients.className = 'btn btn-gold tab-btn';
-        tabClients.style.borderColor = '';
-        containerClients.style.display = 'block';
-      }
-    };
-
-    tabLeads.addEventListener('click', () => switchTab('leads'));
-    tabPartners.addEventListener('click', () => switchTab('partners'));
-    tabClients.addEventListener('click', () => switchTab('clients'));
-
-    document.getElementById('btn-clear-leads').addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all inquiries?')) {
-        localStorage.removeItem('elite_inquiries');
-        renderDashboard();
-      }
-    });
-
-    document.getElementById('btn-clear-partners').addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all partner registrations?')) {
-        localStorage.removeItem('elite_partners');
-        renderDashboard();
-      }
-    });
-
-    document.getElementById('btn-clear-clients').addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all client signups?')) {
-        localStorage.removeItem('elite_clients');
-        renderDashboard();
-      }
+      renderDashboard();
     });
   </script>
+  <script src="script.js"></script>
 </body>
 </html>
-

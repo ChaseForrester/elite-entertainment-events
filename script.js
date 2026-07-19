@@ -1230,6 +1230,99 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initial event calendar render
   renderEvents();
 
+  /* ─── PWA SERVICE WORKER & INSTALL PROMPT ─── */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((reg) => console.log('[SW] Registered successfully scope:', reg.scope))
+        .catch((err) => console.warn('[SW] Registration failed:', err));
+    });
+  }
+
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const installToast = document.createElement('div');
+    installToast.id = 'pwa-install-toast';
+    installToast.style.cssText = `
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 10000;
+      background: rgba(13,13,13,0.95);
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(200,168,76,0.3);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      backdrop-filter: blur(10px);
+    `;
+    installToast.innerHTML = `
+      <img src="./icons/icon-192.png" style="width:36px; height:36px; border-radius:6px;" alt="Elite App">
+      <div>
+        <div style="font-size:0.85rem; font-weight:700; color:#fff;">Install Elite App</div>
+        <div style="font-size:0.7rem; color:var(--silver-mid);">Fast offline access &amp; instant booking</div>
+      </div>
+      <button id="pwa-install-btn" class="btn btn-gold btn-sm" style="padding:0.4rem 1rem;">Install</button>
+      <button id="pwa-close-btn" style="color:var(--silver-dark); font-size:1.2rem; margin-left:0.5rem;">&times;</button>
+    `;
+    document.body.appendChild(installToast);
+
+    document.getElementById('pwa-install-btn').addEventListener('click', () => {
+      installToast.remove();
+      deferredPrompt.prompt();
+    });
+    document.getElementById('pwa-close-btn').addEventListener('click', () => {
+      installToast.remove();
+    });
+  });
+
+  /* ─── DYNAMIC CMS CONTENT POPULATION ─── */
+  if (window.EliteCMS) {
+    const siteContent = window.EliteCMS.getContent();
+    
+    // Update Hero elements if present
+    const heroTitleEl = document.querySelector('.hero-title-main, .hero h1');
+    if (heroTitleEl && siteContent.heroTitle) {
+      heroTitleEl.textContent = siteContent.heroTitle;
+    }
+    const heroSubEl = document.querySelector('.hero-sub, .hero p');
+    if (heroSubEl && siteContent.heroSubtitle) {
+      heroSubEl.textContent = siteContent.heroSubtitle;
+    }
+
+    // Dynamic Artist cards population on index.html / artist pages if .artist-grid container exists
+    const artistGrid = document.getElementById('artists-grid') || document.querySelector('.artist-grid');
+    if (artistGrid) {
+      // Determine page category if applicable from body dataset or title
+      const pageCategory = document.body.dataset.category || null;
+      const cmsArtists = window.EliteCMS.getArtists(pageCategory);
+      
+      if (cmsArtists && cmsArtists.length > 0) {
+        artistGrid.innerHTML = '';
+        cmsArtists.forEach(art => {
+          const card = document.createElement('div');
+          card.className = 'artist-card service-card';
+          card.innerHTML = `
+            <div class="artist-img-wrap" style="position:relative; overflow:hidden; border-radius:12px; margin-bottom:1.2rem;">
+              <img src="${art.image}" alt="${art.name}" style="width:100%; height:260px; object-fit:cover; transition:var(--transition);" />
+              <div style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.75); border:1px solid var(--gold); color:var(--gold); padding:0.25rem 0.75rem; border-radius:20px; font-size:0.65rem; font-weight:700; text-transform:uppercase;">${art.rate}</div>
+            </div>
+            <h3 style="font-family:var(--font-heading); font-size:1.6rem; color:var(--white); margin-bottom:0.3rem;">${art.name}</h3>
+            <p style="color:var(--gold); font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.6rem;">${art.genre}</p>
+            <p style="font-size:0.85rem; color:var(--silver-light); line-height:1.6; margin-bottom:1.2rem;">${art.bio}</p>
+            <a href="#booking" class="btn btn-outline btn-full" onclick="openBookingModal('${art.name}')">Book ${art.name} &rarr;</a>
+          `;
+          artistGrid.appendChild(card);
+        });
+      }
+    }
+  }
+
 });
+
 
 
