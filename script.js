@@ -195,16 +195,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Global function for Popular Tag clicks
   window.filterByTag = function(tag) {
-    if (tag === 'weddings') executeSearch('wedding');
-    else if (tag === 'corporate') executeSearch('corporate');
-    else if (tag === 'bands') executeSearch('band');
-    else if (tag === 'djs') executeSearch('dj');
-    else if (tag === 'solo') executeSearch('solo');
-    else if (tag === 'tributes') executeSearch('tribute');
-    else if (tag === 'car') executeSearch('car');
+    const routes = {
+      weddings: 'category-live-bands.html',
+      bands: 'category-live-bands.html',
+      tributes: 'category-live-bands.html',
+      djs: 'category-djs-karaoke.html',
+      solo: 'category-live-bands.html',
+      jazz: 'category-specialty.html',
+      corporate: 'category-live-bands.html'
+    };
+    if (routes[tag]) {
+      window.location.href = routes[tag];
+      return;
+    }
+    if (tag === 'car') executeSearch('car');
     else if (tag === 'yacht') executeSearch('yacht');
-    else if (tag === 'jazz') executeSearch('jazz');
     else if (tag === 'security') executeSearch('security');
+    else executeSearch(tag);
   };
 
   /* ─── STICKY HEADER ─── */
@@ -367,27 +374,6 @@ document.addEventListener('DOMContentLoaded', function () {
       inquiries.unshift(newInquiry);
       localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
 
-      // Dispatch prefilled email to owner's inbox (info@eliteentertainment.com.au)
-      const emailSubject = encodeURIComponent(`NEW EVENT ENQUIRY: ${service} - ${name}`);
-      const emailBody = encodeURIComponent(
-        `Hi Elite Entertainment Team,\n\n` +
-        `You have received a new event enquiry from the website:\n\n` +
-        `Client Name: ${name}\n` +
-        `Email: ${email}\n` +
-        `Phone: ${phone || 'Not provided'}\n` +
-        `Event Date: ${date || 'Not specified'}\n` +
-        `Event Service: ${service}\n` +
-        `Artist Preference: ${artistType || 'Not specified'}\n\n` +
-        `Message / Details:\n${message || 'No additional notes provided'}\n\n` +
-        `---\n` +
-        `Recorded in Super Admin Lead Pipeline`
-      );
-
-      // Trigger mailto link for owner copy
-      setTimeout(() => {
-        window.location.href = `mailto:info@eliteentertainment.com.au?subject=${emailSubject}&body=${emailBody}`;
-      }, 600);
-
       const btn = form.querySelector('button[type="submit"]');
       const originalText = btn ? btn.textContent : 'Send Enquiry';
 
@@ -396,13 +382,35 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.disabled = true;
       }
 
-      setTimeout(() => {
+      // Email both inboxes via FormSubmit (AJAX) + keep admin CRM copy
+      (async () => {
+        try {
+          await fetch('https://formsubmit.co/ajax/info@eeevents.com.au', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({
+              name,
+              email,
+              phone: phone || '—',
+              _subject: '[Elite Enquiry] Quote form · ' + service + ' · ' + name,
+              _template: 'table',
+              _captcha: 'false',
+              service: artistType ? (service + ' · ' + artistType) : service,
+              eventDate: date || '—',
+              message: message || '—',
+              leadId: newInquiry.id,
+              source: 'Homepage quote form'
+            })
+          });
+        } catch (err) {
+          console.warn('Email delivery deferred — lead saved in admin CRM', err);
+        }
+
         if (btn) {
-          btn.textContent = '✓ Enquiry Sent & Emailed!';
+          btn.textContent = '✓ Enquiry Sent!';
           btn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
           btn.style.color = '#fff';
         }
-
         setTimeout(() => {
           if (btn) {
             btn.textContent = originalText;
@@ -412,7 +420,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
           form.reset();
         }, 2800);
-      }, 900);
+      })();
     });
   }
 
@@ -511,16 +519,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ─── AUTOCOMPLETE & DIRECT PAGE REDIRECT SEARCH ─── */
   const searchSuggestions = [
-    { name: "Wedding Band Hire", url: "artists-bands.html" },
-    { name: "Wedding DJ Hire", url: "artists-djs.html" },
-    { name: "Corporate Band Hire", url: "artists-bands.html" },
-    { name: "Corporate DJ Hire", url: "artists-djs.html" },
-    { name: "Party Band Hire", url: "artists-bands.html" },
-    { name: "Party DJ Hire", url: "artists-djs.html" },
+    { name: "DJ's & Karaoke", url: "category-djs-karaoke.html" },
+    { name: "Specialty & Family Entertainment", url: "category-specialty.html" },
+    { name: "Multicultural Country Comedy", url: "category-multicultural.html" },
+    { name: "Live Bands Celebrities Stage Shows", url: "category-live-bands.html" },
+    { name: "Wedding Band Hire", url: "category-live-bands.html" },
+    { name: "Wedding DJ Hire", url: "category-djs-karaoke.html" },
+    { name: "Corporate Band Hire", url: "category-live-bands.html" },
+    { name: "Corporate DJ Hire", url: "category-djs-karaoke.html" },
+    { name: "Party Band Hire", url: "category-live-bands.html" },
+    { name: "Party DJ Hire", url: "category-djs-karaoke.html" },
+    { name: "Tribute Stage Shows", url: "category-live-bands.html" },
+    { name: "Classical Entertainment", url: "category-specialty.html" },
+    { name: "Children's Entertainment", url: "category-specialty.html" },
+    { name: "Comedians", url: "category-multicultural.html" },
+    { name: "Country Artists", url: "category-multicultural.html" },
     { name: "Solo Acoustic Artists", url: "artists-solo.html" },
     { name: "Duo Artists", url: "artists-duo.html" },
-    { name: "Tribute Shows & Acts", url: "artists-tributes.html" },
-    { name: "Classical & Jazz Ensembles", url: "artists-jazz.html" },
     { name: "Luxury Car Hire", url: "luxury-car-hire.html" },
     { name: "Luxury Yacht Hire", url: "luxury-yacht-hire.html" },
     { name: "Models & Dancers", url: "models-dancers.html" },
@@ -571,21 +586,55 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-    // Search: prefer direct page match, else filter on-page cards
+    // Search: prefer category / act match, else filter on-page cards
     const performRedirectSearch = () => {
       const query = searchInputEl.value.toLowerCase().trim();
       const genre = genreSelect ? genreSelect.value.toLowerCase().trim() : '';
       const artistQ = artistInput ? artistInput.value.toLowerCase().trim() : '';
       if (!query && !genre && !artistQ) return;
 
+      const categoryRoutes = {
+        dj: 'category-djs-karaoke.html',
+        band: 'category-live-bands.html',
+        comedy: 'category-multicultural.html',
+        classical: 'category-specialty.html',
+        multicultural: 'category-multicultural.html'
+      };
+      if (genre && categoryRoutes[genre] && !query && !artistQ) {
+        window.location.href = categoryRoutes[genre];
+        return;
+      }
+
+      // Match known act names from full roster data
+      if (window.ELITE_CATEGORY_LIST) {
+        const needle = (query || artistQ).toLowerCase();
+        if (needle) {
+          for (let i = 0; i < window.ELITE_CATEGORY_LIST.length; i++) {
+            const cat = window.ELITE_CATEGORY_LIST[i];
+            for (let s = 0; s < cat.sections.length; s++) {
+              const hit = cat.sections[s].acts.find(a => a.name.toLowerCase().includes(needle) || needle.includes(a.name.toLowerCase().split(' ')[0]));
+              if (hit) {
+                window.location.href = cat.slug + '?act=' + encodeURIComponent(hit.name);
+                return;
+              }
+            }
+          }
+        }
+      }
+
       if (query) {
         const directMatch = searchSuggestions.find(item =>
           item.name.toLowerCase().includes(query) || query.includes(item.name.toLowerCase().split(' ')[0])
         );
-        if (directMatch && !genre && !artistQ) {
+        if (directMatch && !artistQ) {
           window.location.href = directMatch.url;
           return;
         }
+      }
+
+      if (genre && categoryRoutes[genre]) {
+        window.location.href = categoryRoutes[genre];
+        return;
       }
 
       executeSearch(query, genre, artistQ);
@@ -616,7 +665,6 @@ document.addEventListener('DOMContentLoaded', function () {
   
   const btnOpenLogin = document.getElementById('nav-btn-login');
   const btnOpenSignup = document.getElementById('nav-btn-signup');
-  const btnOpenSignupHero = document.querySelector('.vendor-callout-card .btn');
   const btnOpenClientNav = document.getElementById('nav-btn-client');
 
   const btnCloseLogin = document.getElementById('login-modal-close');
@@ -632,11 +680,12 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   const btnOpenHeroSignup = document.getElementById('hero-btn-vendor-signup');
+  const btnVendorCallout = document.getElementById('vendor-callout-btn');
 
   if (btnOpenLogin) btnOpenLogin.addEventListener('click', (e) => { e.preventDefault(); openModal(loginOverlay); });
   if (btnOpenSignup) btnOpenSignup.addEventListener('click', (e) => { e.preventDefault(); openModal(signupOverlay); });
-  if (btnOpenSignupHero) btnOpenSignupHero.addEventListener('click', (e) => { e.preventDefault(); openModal(signupOverlay); });
   if (btnOpenHeroSignup) btnOpenHeroSignup.addEventListener('click', (e) => { e.preventDefault(); openModal(signupOverlay); });
+  if (btnVendorCallout) btnVendorCallout.addEventListener('click', (e) => { e.preventDefault(); openModal(signupOverlay); });
   if (btnOpenClientNav) btnOpenClientNav.addEventListener('click', (e) => { e.preventDefault(); openModal(clientOverlay); });
 
   if (btnCloseLogin) btnCloseLogin.addEventListener('click', () => closeModal(loginOverlay));
@@ -682,18 +731,50 @@ document.addEventListener('DOMContentLoaded', function () {
       localStorage.setItem('elite_clients', JSON.stringify(clients));
 
       const submitBtn = clientForm.querySelector('button[type="submit"]');
-      submitBtn.textContent = '✓ Schedule Registered!';
-      submitBtn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
-      submitBtn.style.color = '#fff';
+      const originalClientBtn = submitBtn ? submitBtn.textContent : 'Register Consultation Call';
+      if (submitBtn) {
+        submitBtn.textContent = 'Sending…';
+        submitBtn.disabled = true;
+      }
 
-      setTimeout(() => {
-        submitBtn.textContent = 'Register Consultation Call';
-        submitBtn.style.background = '';
-        submitBtn.style.color = '';
-        clientForm.reset();
-        closeModal(clientOverlay);
-        alert('Your consultation request has been logged. An advisor will contact you shortly.');
-      }, 1800);
+      (async () => {
+        try {
+          await fetch('https://formsubmit.co/ajax/info@eeevents.com.au', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({
+              name, email, phone,
+              _subject: '[Elite Consultation] ' + name,
+              _template: 'table',
+              _captcha: 'false',
+              eventDate: date || '—',
+              budget: budget || '—',
+              message: message || '—',
+              leadId: newClient.id,
+              source: 'Consultation modal'
+            })
+          });
+        } catch (err) {
+          console.warn('Consultation email deferred — saved in admin', err);
+        }
+
+        if (submitBtn) {
+          submitBtn.textContent = '✓ Schedule Registered!';
+          submitBtn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
+          submitBtn.style.color = '#fff';
+        }
+        setTimeout(() => {
+          if (submitBtn) {
+            submitBtn.textContent = originalClientBtn;
+            submitBtn.style.background = '';
+            submitBtn.style.color = '';
+            submitBtn.disabled = false;
+          }
+          clientForm.reset();
+          closeModal(clientOverlay);
+          alert('Consultation logged in Super Admin and emailed to info@eeevents.com.au.');
+        }, 1600);
+      })();
     });
   }
 
@@ -1480,7 +1561,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <span style="font-family:'Cormorant Garamond',serif; font-size:0.6rem; letter-spacing:0.18em; color:var(--gold); display:block; text-transform:uppercase;">Artist Hire Enquiry</span>
           </div>
           <h3 style="margin-bottom:0.5rem; color:var(--white); text-align:center;" id="hire-modal-artist-title">Book Artist</h3>
-          <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem; text-align:center;">Fill out the form below to receive a direct quote. Your enquiry will be logged in the CRM &amp; emailed to info@eliteentertainment.com.au.</p>
+          <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem; text-align:center;">Fill out the form below to receive a direct quote. Your enquiry will be logged in the CRM &amp; emailed to info@eeevents.com.au.</p>
           
           <form id="artist-hire-form" style="display:flex; flex-direction:column; gap:1rem; text-align:left;">
             <input type="hidden" id="hire-artist-name" />
@@ -1550,7 +1631,7 @@ document.addEventListener('DOMContentLoaded', function () {
         inquiries.unshift(newInquiry);
         localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
 
-        // Construct prefilled mailto draft to info@eliteentertainment.com.au
+        // Construct prefilled mailto draft to info@eeevents.com.au
         const subject = encodeURIComponent(`NEW ARTIST HIRE ENQUIRY: ${artist}`);
         const body = encodeURIComponent(
           `Hi Elite Entertainment Team,\n\n` +
@@ -1565,9 +1646,9 @@ document.addEventListener('DOMContentLoaded', function () {
           `Submitted via Elite Entertainment Website`
         );
 
-        window.location.href = `mailto:info@eliteentertainment.com.au?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:info@eeevents.com.au?subject=${subject}&body=${body}`;
 
-        alert(`Thank you ${userName}! Your hire request for ${artist} has been registered and emailed to info@eliteentertainment.com.au.`);
+        alert(`Thank you ${userName}! Your hire request for ${artist} has been registered and emailed to info@eeevents.com.au.`);
         modal.classList.remove('active');
       });
     }

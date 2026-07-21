@@ -1258,7 +1258,7 @@
   "acn": "698 991 481",
   "asicDate": "12/06/2026",
   "contactPhone": "+61 417 221 111",
-  "contactEmail": "info@eliteentertainment.com.au",
+  "contactEmail": "info@eeevents.com.au",
   "contactAddress": "Sydney | Melbourne | Brisbane | Gold Coast"
 };
 

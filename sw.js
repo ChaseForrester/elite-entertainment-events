@@ -2,23 +2,24 @@
    ELITE ENTERTAINMENT — PWA Service Worker
 ═══════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'elite-events-v2';
+const CACHE_NAME = 'elite-events-v3-categories';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './admin.html',
+  './category-djs-karaoke.html',
+  './category-specialty.html',
+  './category-multicultural.html',
+  './category-live-bands.html',
+  './categories-data.js',
+  './category-page.js',
+  './category-form.js',
   './artists-bands.html',
   './artists-djs.html',
   './artists-duo.html',
   './artists-jazz.html',
   './artists-solo.html',
   './artists-tributes.html',
-  './multicultural.html',
-  './comedians.html',
-  './country.html',
-  './children.html',
-  './specialty.html',
-  './roving.html',
   './corporate.html',
   './event-djs.html',
   './luxury-car-hire.html',
@@ -42,12 +43,10 @@ const ASSETS_TO_CACHE = [
   './images/trio.jpg',
   './images/duo.jpg',
   './images/solo.jpg',
-  './images/artists/guy-sebastian.jpg',
-  './images/artists/jessica-mauboy.jpg',
-  './images/artists/ricki-lee.jpg',
-  './images/artists/jason-owen.jpg',
-  './images/artists/anh-do.jpg',
-  './images/artists/george-kapiniaris.jpg',
+  './images/categories/djs-karaoke.png',
+  './images/categories/specialty-family.png',
+  './images/categories/multicultural-country-comedy.png',
+  './images/categories/live-bands-stage.png',
   './images/artists/wiggles.jpg'
 ];
 

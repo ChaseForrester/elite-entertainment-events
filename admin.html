@@ -316,14 +316,15 @@
   <div id="auth-overlay">
     <div class="auth-card">
       <div class="db-logo" style="align-items:center; margin-bottom:2rem;">
-        <span class="db-logo-main">ELITE</span>
+        <img src="images/brand/logo-icon.png" alt="Elite Entertainment and Events" style="width:min(160px,50vw);height:auto;margin-bottom:0.75rem;filter:drop-shadow(0 0 18px rgba(200,168,76,0.35));" />
         <span class="db-logo-sub">Super Admin CMS Portal</span>
       </div>
       <h2>Super Admin Login</h2>
-      <p>Enter administrator credentials to manage artists, content, and leads</p>
+      <p>Enter administrator credentials to manage artists, images, content &amp; leads</p>
+      <p style="font-size:0.72rem;color:var(--gold);margin:-1rem 0 1.5rem;letter-spacing:0.04em;">Demo login pre-filled below · Email &amp; password shown in the fields</p>
       <div class="auth-input-group">
         <label>Email Address</label>
-        <input type="email" id="auth-user" placeholder="admin@eliteentertainment.com.au" value="admin@eliteentertainment.com.au" />
+        <input type="email" id="auth-user" placeholder="info@eeevents.com.au" value="info@eeevents.com.au" />
       </div>
       <div class="auth-input-group" style="margin-bottom:2.5rem;">
         <label>Password</label>
@@ -340,9 +341,12 @@
     <div class="container">
       <!-- HEADER -->
       <div class="dashboard-header">
-        <div class="db-logo">
-          <span class="db-logo-main">ELITE</span>
-          <span class="db-logo-sub">SUPER ADMIN CMS &bull; ENTERTAINMENT &amp; EVENTS</span>
+        <div class="db-logo" style="display:flex;align-items:center;gap:1rem;">
+          <img src="images/brand/logo-icon.png" alt="" width="52" height="52" style="border-radius:12px;box-shadow:0 0 16px rgba(200,168,76,0.3);" />
+          <div>
+            <span class="db-logo-main" style="font-size:1.6rem;">SUPER ADMIN</span>
+            <span class="db-logo-sub">CMS · ELITE ENTERTAINMENT &amp; EVENTS</span>
+          </div>
         </div>
         <div style="display:flex; gap:1rem; flex-wrap:wrap;">
           <button class="btn btn-outline" id="btn-reset-cms" style="border-color:rgba(200,168,76,0.3); color:var(--gold);">Reset CMS Defaults</button>
@@ -672,7 +676,7 @@
         const email = (userField.value || '').trim().toLowerCase();
         const pass = passField.value || '';
         // Accept demo credentials or any previously authenticated session
-        if ((email === 'admin@eliteentertainment.com.au' && pass === 'admin123') || (email && pass)) {
+        if ((email === 'info@eeevents.com.au' && pass === 'admin123') || (email && pass)) {
           localStorage.setItem('elite_admin_authed', 'true');
           authOverlay.classList.add('hidden');
           renderDashboard();
