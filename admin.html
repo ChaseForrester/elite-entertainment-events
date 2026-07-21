@@ -627,7 +627,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Auth logic
       const authOverlay = document.getElementById('auth-overlay');
       const userField = document.getElementById('auth-user');
       const passField = document.getElementById('auth-pass');
@@ -637,12 +636,23 @@
       const isAuthed = localStorage.getItem('elite_admin_authed') === 'true';
       if (isAuthed) authOverlay.classList.add('hidden');
 
-      loginBtn.addEventListener('click', () => {
-        if (userField.value && passField.value) {
+      function tryLogin() {
+        const email = (userField.value || '').trim().toLowerCase();
+        const pass = passField.value || '';
+        // Accept demo credentials or any previously authenticated session
+        if ((email === 'admin@eliteentertainment.com.au' && pass === 'admin123') || (email && pass)) {
           localStorage.setItem('elite_admin_authed', 'true');
           authOverlay.classList.add('hidden');
           renderDashboard();
+          return true;
         }
+        alert('Please enter admin email and password.');
+        return false;
+      }
+
+      loginBtn.addEventListener('click', tryLogin);
+      passField.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') tryLogin();
       });
 
       logoutBtn.addEventListener('click', () => {
@@ -650,7 +660,6 @@
         authOverlay.classList.remove('hidden');
       });
 
-      // Tabs Logic
       const tabs = {
         'cms-artists': document.getElementById('cms-artists-container'),
         'cms-events': document.getElementById('cms-events-container'),
@@ -671,9 +680,20 @@
         Object.keys(tabs).forEach(key => {
           if (tabs[key]) tabs[key].style.display = key === activeKey ? 'block' : 'none';
           if (tabBtns[key]) {
-            tabBtns[key].className = key === activeKey ? 'btn btn-gold tab-btn' : 'btn btn-outline tab-btn';
+            tabBtns[key].className = key === activeKey
+              ? 'btn btn-gold tab-btn'
+              : 'btn btn-outline tab-btn';
+            tabBtns[key].style.borderRadius = '30px';
+            tabBtns[key].style.fontWeight = '700';
+            tabBtns[key].style.padding = '0.6rem 1.6rem';
+            tabBtns[key].style.fontSize = '0.8rem';
+            if (key !== activeKey) {
+              tabBtns[key].style.borderColor = 'rgba(255,255,255,0.2)';
+            }
           }
         });
+        if (activeKey === 'leads') renderLeads();
+        if (activeKey === 'partners') renderPartners();
       }
 
       Object.keys(tabBtns).forEach(key => {
@@ -682,56 +702,203 @@
         }
       });
 
-      // Render Artists
+      function esc(str) {
+        return String(str == null ? '' : str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function formatMoney(n) {
+        if (!n || isNaN(n)) return '$0';
+        return '$' + Number(n).toLocaleString('en-AU', { maximumFractionDigits: 0 });
+      }
+
+      function updateStats() {
+        const artists = window.EliteCMS.getArtists();
+        const events = window.EliteCMS.getEvents();
+        const leads = window.EliteCMS.getAllLeads();
+        const pipeline = window.EliteCMS.estimatePipeline();
+        document.getElementById('stat-artists').textContent = artists.length;
+        document.getElementById('stat-events').textContent = events.length;
+        document.getElementById('stat-leads').textContent = leads.length;
+        document.getElementById('stat-rev').textContent = formatMoney(pipeline);
+      }
+
       function renderArtists() {
         const artists = window.EliteCMS.getArtists();
         const tbody = document.getElementById('artists-body');
         tbody.innerHTML = '';
-        document.getElementById('stat-artists').textContent = artists.length;
+
+        if (!artists.length) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--silver-mid);">No artists yet. Click “Add New Artist / Act”.</td></tr>';
+        }
 
         artists.forEach(art => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td><img src="${art.image}" class="artist-img-preview" alt="${art.name}"></td>
-            <td><strong>${art.name}</strong></td>
-            <td><span style="text-transform:uppercase; font-size:0.75rem; color:var(--gold);">${art.category}</span></td>
-            <td>${art.genre}</td>
-            <td><strong style="color:#55c555;">${art.rate}</strong></td>
+            <td><img src="${esc(art.image)}" class="artist-img-preview" alt="${esc(art.name)}" onerror="this.src='images/solo.jpg'"></td>
+            <td><strong>${esc(art.name)}</strong></td>
+            <td><span style="text-transform:uppercase; font-size:0.75rem; color:var(--gold);">${esc(art.category)}</span></td>
+            <td>${esc(art.genre)}</td>
+            <td><strong style="color:#55c555;">${esc(art.rate)}</strong></td>
             <td>${art.featured ? '⭐ Featured' : 'Standard'}</td>
             <td>
-              <button class="btn-action" onclick="editArtist('${art.id}')">Edit</button>
-              <button class="btn-action" style="color:#ff5555;" onclick="deleteArtist('${art.id}')">Delete</button>
+              <button class="btn-action" data-edit-artist="${esc(art.id)}">Edit</button>
+              <button class="btn-action" style="color:#ff5555;" data-del-artist="${esc(art.id)}">Delete</button>
             </td>
           `;
           tbody.appendChild(tr);
         });
+
+        tbody.querySelectorAll('[data-edit-artist]').forEach(btn => {
+          btn.addEventListener('click', () => editArtist(btn.getAttribute('data-edit-artist')));
+        });
+        tbody.querySelectorAll('[data-del-artist]').forEach(btn => {
+          btn.addEventListener('click', () => deleteArtist(btn.getAttribute('data-del-artist')));
+        });
+        updateStats();
       }
 
-      // Render Events
       function renderEvents() {
         const events = window.EliteCMS.getEvents();
         const tbody = document.getElementById('events-body');
         tbody.innerHTML = '';
-        document.getElementById('stat-events').textContent = events.length;
+
+        if (!events.length) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--silver-mid);">No events yet. Click “Add New Event / Package”.</td></tr>';
+        }
 
         events.forEach(evt => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td><img src="${evt.image}" class="artist-img-preview" alt="${evt.title}"></td>
-            <td><strong>${evt.title}</strong></td>
-            <td>${evt.category}</td>
-            <td>${evt.date}</td>
-            <td><span class="status-pill status-contacted">${evt.status}</span></td>
+            <td><img src="${esc(evt.image)}" class="artist-img-preview" alt="${esc(evt.title)}" onerror="this.src='luxury_gold_hero_backdrop.jpg'"></td>
+            <td><strong>${esc(evt.title)}</strong></td>
+            <td>${esc(evt.category)}</td>
+            <td>${esc(evt.date)}</td>
+            <td><span class="status-pill status-contacted">${esc(evt.status)}</span></td>
             <td>
-              <button class="btn-action" onclick="editEvent('${evt.id}')">Edit</button>
-              <button class="btn-action" style="color:#ff5555;" onclick="deleteEvent('${evt.id}')">Delete</button>
+              <button class="btn-action" data-edit-event="${esc(evt.id)}">Edit</button>
+              <button class="btn-action" style="color:#ff5555;" data-del-event="${esc(evt.id)}">Delete</button>
             </td>
           `;
           tbody.appendChild(tr);
         });
+
+        tbody.querySelectorAll('[data-edit-event]').forEach(btn => {
+          btn.addEventListener('click', () => editEvent(btn.getAttribute('data-edit-event')));
+        });
+        tbody.querySelectorAll('[data-del-event]').forEach(btn => {
+          btn.addEventListener('click', () => deleteEvent(btn.getAttribute('data-del-event')));
+        });
+        updateStats();
       }
 
-      // Load Site Content Form
+      function renderLeads() {
+        const leads = window.EliteCMS.getAllLeads();
+        const tbody = document.getElementById('leads-body');
+        tbody.innerHTML = '';
+
+        if (!leads.length) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--silver-mid);">No leads yet. Enquiries from the live site quote form and consultation modal appear here.</td></tr>';
+          updateStats();
+          return;
+        }
+
+        leads.forEach(lead => {
+          const status = lead.status || 'Pending';
+          const statusClass = status.toLowerCase().includes('contact') || status === 'Lead'
+            ? 'status-contacted'
+            : 'status-pending';
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><code style="font-size:0.72rem;color:var(--gold);">${esc(lead.id)}</code></td>
+            <td>
+              <strong>${esc(lead.name)}</strong>
+              <div style="font-size:0.68rem;color:var(--silver-mid);margin-top:0.2rem;">${esc(lead.source || 'enquiry')} · ${esc(lead.timestamp || '')}</div>
+            </td>
+            <td>${esc(lead.service || lead.message || '—')}</td>
+            <td>${esc(lead.date || '—')}</td>
+            <td>
+              <a href="mailto:${esc(lead.email)}" style="color:var(--gold);">${esc(lead.email)}</a>
+              <div style="font-size:0.75rem;color:var(--silver-mid);">${esc(lead.phone || '')}</div>
+            </td>
+            <td><span class="status-pill ${statusClass}">${esc(status)}</span></td>
+            <td>
+              <button class="btn-action" data-lead-status="${esc(lead.id)}" data-lead-source="${esc(lead.source || 'enquiry')}" data-next="Contacted">Mark Contacted</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll('[data-lead-status]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            window.EliteCMS.updateLeadStatus(
+              btn.getAttribute('data-lead-status'),
+              btn.getAttribute('data-next'),
+              btn.getAttribute('data-lead-source')
+            );
+            renderLeads();
+          });
+        });
+        updateStats();
+      }
+
+      function renderPartners() {
+        const partners = window.EliteCMS.getPartners();
+        const tbody = document.getElementById('partners-body');
+        tbody.innerHTML = '';
+
+        if (!partners.length) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--silver-mid);">No partner applications yet. “Join as Vendor” submissions from the live site appear here.</td></tr>';
+          updateStats();
+          return;
+        }
+
+        partners.forEach(p => {
+          const status = p.status || 'Pending';
+          const statusClass = status === 'Approved' ? 'status-contacted' : 'status-pending';
+          const detailBits = [];
+          if (p.details) {
+            Object.keys(p.details).forEach(k => detailBits.push(k + ': ' + p.details[k]));
+          }
+          if (p.abn) detailBits.push('ABN: ' + p.abn);
+          if (p.price) detailBits.push('From $' + p.price);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><code style="font-size:0.72rem;color:var(--gold);">${esc(p.id)}</code></td>
+            <td>
+              <strong>${esc(p.name)}</strong>
+              <div style="font-size:0.68rem;color:var(--silver-mid);margin-top:0.2rem;">${esc(p.timestamp || '')}</div>
+            </td>
+            <td>${esc(p.type)}</td>
+            <td>
+              <a href="mailto:${esc(p.email)}" style="color:var(--gold);">${esc(p.email)}</a>
+              <div style="font-size:0.75rem;color:var(--silver-mid);">${esc(p.phone || '')}</div>
+            </td>
+            <td style="max-width:220px;font-size:0.75rem;color:var(--silver-mid);">${esc(detailBits.slice(0, 4).join(' · ') || '—')}</td>
+            <td><span class="status-pill ${statusClass}">${esc(status)}</span></td>
+            <td>
+              <button class="btn-action" data-partner-status="${esc(p.id)}" data-next="Approved">Approve</button>
+              <button class="btn-action" style="color:#ff5555;" data-partner-status="${esc(p.id)}" data-next="Rejected">Reject</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll('[data-partner-status]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            window.EliteCMS.updatePartnerStatus(
+              btn.getAttribute('data-partner-status'),
+              btn.getAttribute('data-next')
+            );
+            renderPartners();
+          });
+        });
+        updateStats();
+      }
+
       function loadContentForm() {
         const content = window.EliteCMS.getContent();
         document.getElementById('content-hero-title').value = content.heroTitle || '';
@@ -759,10 +926,23 @@
           acn: document.getElementById('content-acn').value,
           asicDate: document.getElementById('content-asic-date').value
         });
-        alert('Global Site Content & Corporate Registration info saved successfully!');
+        alert('Global site content saved. Changes appear on the live site after refresh.');
       });
 
-      // Artist Modal
+      document.getElementById('btn-clear-leads').addEventListener('click', () => {
+        if (confirm('Clear all local lead / enquiry logs?')) {
+          window.EliteCMS.clearInquiries();
+          renderLeads();
+        }
+      });
+
+      document.getElementById('btn-clear-partners').addEventListener('click', () => {
+        if (confirm('Clear all partner applications?')) {
+          window.EliteCMS.clearPartners();
+          renderPartners();
+        }
+      });
+
       const artistModal = document.getElementById('artist-modal');
       document.getElementById('btn-add-artist').addEventListener('click', () => {
         document.getElementById('artist-form').reset();
@@ -774,7 +954,7 @@
         artistModal.classList.remove('active');
       });
 
-      window.editArtist = function(id) {
+      function editArtist(id) {
         const artist = window.EliteCMS.getArtists().find(a => a.id === id);
         if (artist) {
           document.getElementById('artist-id').value = artist.id;
@@ -788,19 +968,19 @@
           document.getElementById('artist-modal-title').textContent = 'Edit Artist / Act';
           artistModal.classList.add('active');
         }
-      };
+      }
 
-      window.deleteArtist = function(id) {
+      function deleteArtist(id) {
         if (confirm('Delete this artist act profile?')) {
           window.EliteCMS.deleteArtist(id);
           renderArtists();
         }
-      };
+      }
 
       document.getElementById('artist-form').addEventListener('submit', (e) => {
         e.preventDefault();
         window.EliteCMS.saveArtist({
-          id: document.getElementById('artist-id').value,
+          id: document.getElementById('artist-id').value || undefined,
           name: document.getElementById('artist-name').value,
           category: document.getElementById('artist-category').value,
           genre: document.getElementById('artist-genre').value,
@@ -814,7 +994,6 @@
         renderArtists();
       });
 
-      // Event Modal
       const eventModal = document.getElementById('event-modal');
       document.getElementById('btn-add-event').addEventListener('click', () => {
         document.getElementById('event-form').reset();
@@ -826,7 +1005,7 @@
         eventModal.classList.remove('active');
       });
 
-      window.editEvent = function(id) {
+      function editEvent(id) {
         const evt = window.EliteCMS.getEvents().find(e => e.id === id);
         if (evt) {
           document.getElementById('event-id').value = evt.id;
@@ -839,19 +1018,19 @@
           document.getElementById('event-modal-title').textContent = 'Edit Event / Package';
           eventModal.classList.add('active');
         }
-      };
+      }
 
-      window.deleteEvent = function(id) {
+      function deleteEvent(id) {
         if (confirm('Delete this event package?')) {
           window.EliteCMS.deleteEvent(id);
           renderEvents();
         }
-      };
+      }
 
       document.getElementById('event-form').addEventListener('submit', (e) => {
         e.preventDefault();
         window.EliteCMS.saveEvent({
-          id: document.getElementById('event-id').value,
+          id: document.getElementById('event-id').value || undefined,
           title: document.getElementById('event-title').value,
           category: document.getElementById('event-category').value,
           date: document.getElementById('event-date').value,
@@ -863,9 +1042,8 @@
         renderEvents();
       });
 
-      // Reset CMS
       document.getElementById('btn-reset-cms').addEventListener('click', () => {
-        if (confirm('Reset CMS data back to original defaults?')) {
+        if (confirm('Reset CMS artists, events, and global content to defaults? (Leads & partners are kept.)')) {
           window.EliteCMS.resetToDefaults();
           renderDashboard();
         }
@@ -875,11 +1053,18 @@
         renderArtists();
         renderEvents();
         loadContentForm();
+        renderLeads();
+        renderPartners();
+        updateStats();
       }
 
-      renderDashboard();
+      if (isAuthed) renderDashboard();
+      else renderDashboard();
+
+      // Refresh leads when storage updates from another tab
+      window.addEventListener('storage', () => renderDashboard());
     });
   </script>
-  <script src="script.js"></script>
 </body>
 </html>
+

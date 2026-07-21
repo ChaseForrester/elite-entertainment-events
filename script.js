@@ -190,29 +190,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
-  if (searchBtn) {
-    searchBtn.addEventListener('click', () => {
-      executeSearch(
-        searchInput.value.toLowerCase().trim(),
-        genreSelect.value.toLowerCase().trim(),
-        artistInput.value.toLowerCase().trim()
-      );
-    });
-
-    [searchInput, artistInput].forEach(input => {
-      if (input) {
-        input.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            executeSearch(
-              searchInput.value.toLowerCase().trim(),
-              genreSelect.value.toLowerCase().trim(),
-              artistInput.value.toLowerCase().trim()
-            );
-          }
-        });
-      }
-    });
-  }
+  // Search button / Enter handled below in redirect + filter pipeline
+  // (avoids double-binding the same control)
 
   // Global function for Popular Tag clicks
   window.filterByTag = function(tag) {
@@ -230,31 +209,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ─── STICKY HEADER ─── */
   const header = document.getElementById('site-header');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 60) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  });
+  if (header) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }, { passive: true });
+  }
 
   /* ─── MOBILE NAV TOGGLE ─── */
   const navToggle = document.getElementById('nav-toggle');
   const mainNav   = document.getElementById('main-nav');
 
-  navToggle.addEventListener('click', () => {
-    mainNav.classList.toggle('open');
+  const closeMobileNav = () => {
+    if (!mainNav || !navToggle) return;
+    mainNav.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
     const spans = navToggle.querySelectorAll('span');
-    if (mainNav.classList.contains('open')) {
-      spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-      spans[1].style.opacity   = '0';
-      spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-    } else {
-      spans[0].style.transform = '';
-      spans[1].style.opacity   = '';
-      spans[2].style.transform = '';
-    }
-  });
+    if (spans[0]) spans[0].style.transform = '';
+    if (spans[1]) spans[1].style.opacity = '';
+    if (spans[2]) spans[2].style.transform = '';
+  };
+
+  if (navToggle && mainNav) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = mainNav.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      const spans = navToggle.querySelectorAll('span');
+      if (isOpen) {
+        if (spans[0]) spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        if (spans[1]) spans[1].style.opacity = '0';
+        if (spans[2]) spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+      } else {
+        closeMobileNav();
+      }
+    });
+
+    mainNav.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        if (window.innerWidth <= 900) closeMobileNav();
+      });
+    });
+  }
 
   /* ─── MOBILE DROPDOWN TOGGLE ─── */
   const hasDropdowns = document.querySelectorAll('.has-dropdown > a');
@@ -268,31 +266,41 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* ─── CLOSE NAV ON LINK CLICK ─── */
-  mainNav.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      if (window.innerWidth <= 900) {
-        mainNav.classList.remove('open');
-        const spans = navToggle.querySelectorAll('span');
-        spans[0].style.transform = '';
-        spans[1].style.opacity   = '';
-        spans[2].style.transform = '';
-      }
-    });
-  });
-
   /* ─── BACK TO TOP ─── */
   const backToTop = document.getElementById('back-to-top');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 400) {
-      backToTop.classList.add('visible');
-    } else {
-      backToTop.classList.remove('visible');
-    }
-  });
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  if (backToTop) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    }, { passive: true });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ─── HERO EVENT VIDEO ─── */
+  const heroVideo = document.getElementById('hero-event-video');
+  if (heroVideo) {
+    heroVideo.muted = true;
+    heroVideo.playsInline = true;
+    const tryPlay = () => {
+      const p = heroVideo.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          // Autoplay blocked — keep poster/fallback image visible
+          heroVideo.classList.add('video-blocked');
+        });
+      }
+    };
+    if (heroVideo.readyState >= 2) tryPlay();
+    else heroVideo.addEventListener('loadeddata', tryPlay, { once: true });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) tryPlay();
+    });
+  }
 
   /* ─── SCROLL REVEAL ─── */
   const revealEls = document.querySelectorAll(
@@ -316,19 +324,32 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   revealEls.forEach(el => revealObserver.observe(el));
-  /* ─── FORM SUBMIT ─── */
+  /* ─── FORM SUBMIT (wired to Admin CRM / elite_inquiries) ─── */
   const form = document.getElementById('quote-form');
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      // Extract form values
-      const name = document.getElementById('form-name').value;
-      const email = document.getElementById('form-email').value;
-      const phone = document.getElementById('form-phone').value;
-      const date = document.getElementById('form-date').value;
-      const service = document.getElementById('form-service').value;
-      const message = document.getElementById('form-message').value;
+      const nameEl = document.getElementById('form-name');
+      const emailEl = document.getElementById('form-email');
+      const phoneEl = document.getElementById('form-phone');
+      const dateEl = document.getElementById('form-date');
+      const serviceEl = document.getElementById('form-service');
+      const messageEl = document.getElementById('form-message');
+      const artistEl = document.getElementById('form-artist-type');
+
+      const name = nameEl ? nameEl.value.trim() : '';
+      const email = emailEl ? emailEl.value.trim() : '';
+      const phone = phoneEl ? phoneEl.value.trim() : '';
+      const date = dateEl ? dateEl.value : '';
+      const service = serviceEl ? serviceEl.value : '';
+      const artistType = artistEl ? artistEl.value : '';
+      const message = messageEl ? messageEl.value.trim() : '';
+
+      if (!name || !email || !service) {
+        alert('Please complete name, email, and event type.');
+        return;
+      }
 
       const newInquiry = {
         id: 'INQ-' + Date.now().toString().slice(-5),
@@ -336,36 +357,62 @@ document.addEventListener('DOMContentLoaded', function () {
         email,
         phone,
         date,
-        service,
+        service: artistType ? (service + ' · ' + artistType) : service,
         message,
         status: 'Pending',
         timestamp: new Date().toLocaleString()
       };
 
-      // Save to localStorage
       const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
       inquiries.unshift(newInquiry);
       localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
 
-      const btn = form.querySelector('button[type="submit"]');
-      const originalText = btn.textContent;
+      // Dispatch prefilled email to owner's inbox (info@eliteentertainment.com.au)
+      const emailSubject = encodeURIComponent(`NEW EVENT ENQUIRY: ${service} - ${name}`);
+      const emailBody = encodeURIComponent(
+        `Hi Elite Entertainment Team,\n\n` +
+        `You have received a new event enquiry from the website:\n\n` +
+        `Client Name: ${name}\n` +
+        `Email: ${email}\n` +
+        `Phone: ${phone || 'Not provided'}\n` +
+        `Event Date: ${date || 'Not specified'}\n` +
+        `Event Service: ${service}\n` +
+        `Artist Preference: ${artistType || 'Not specified'}\n\n` +
+        `Message / Details:\n${message || 'No additional notes provided'}\n\n` +
+        `---\n` +
+        `Recorded in Super Admin Lead Pipeline`
+      );
 
-      btn.textContent = 'Sending…';
-      btn.disabled = true;
+      // Trigger mailto link for owner copy
+      setTimeout(() => {
+        window.location.href = `mailto:info@eliteentertainment.com.au?subject=${emailSubject}&body=${emailBody}`;
+      }, 600);
+
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn ? btn.textContent : 'Send Enquiry';
+
+      if (btn) {
+        btn.textContent = 'Sending…';
+        btn.disabled = true;
+      }
 
       setTimeout(() => {
-        btn.textContent = '✓ Enquiry Sent!';
-        btn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
-        btn.style.color = '#fff';
+        if (btn) {
+          btn.textContent = '✓ Enquiry Sent & Emailed!';
+          btn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
+          btn.style.color = '#fff';
+        }
 
         setTimeout(() => {
-          btn.textContent = originalText;
-          btn.style.background = '';
-          btn.style.color = '';
-          btn.disabled = false;
+          if (btn) {
+            btn.textContent = originalText;
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.disabled = false;
+          }
           form.reset();
-        }, 3000);
-      }, 1500);
+        }, 2800);
+      }, 900);
     });
   }
 
@@ -524,37 +571,42 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-    // Direct page redirect on search click or Enter key
+    // Search: prefer direct page match, else filter on-page cards
     const performRedirectSearch = () => {
       const query = searchInputEl.value.toLowerCase().trim();
-      if (!query) return;
+      const genre = genreSelect ? genreSelect.value.toLowerCase().trim() : '';
+      const artistQ = artistInput ? artistInput.value.toLowerCase().trim() : '';
+      if (!query && !genre && !artistQ) return;
 
-      // Check for exact or close matches in suggestions
-      const directMatch = searchSuggestions.find(item => 
-        item.name.toLowerCase().includes(query) || query.includes(item.name.toLowerCase())
-      );
-
-      if (directMatch) {
-        window.location.href = directMatch.url;
-      } else {
-        // Fallback to in-page section scrolling
-        if (typeof executeSearch === 'function') {
-          executeSearch(query);
+      if (query) {
+        const directMatch = searchSuggestions.find(item =>
+          item.name.toLowerCase().includes(query) || query.includes(item.name.toLowerCase().split(' ')[0])
+        );
+        if (directMatch && !genre && !artistQ) {
+          window.location.href = directMatch.url;
+          return;
         }
       }
+
+      executeSearch(query, genre, artistQ);
     };
 
     if (searchBtnEl) {
       searchBtnEl.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         performRedirectSearch();
       });
     }
 
-    searchInputEl.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        performRedirectSearch();
-      }
+    [searchInputEl, artistInput].forEach(input => {
+      if (!input) return;
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          performRedirectSearch();
+        }
+      });
     });
   }
   /* ─── MODAL CONTROLS (LOGIN & SIGNUP & CLIENT) ─── */
@@ -1281,26 +1333,61 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ─── DYNAMIC CMS CONTENT POPULATION ─── */
-  if (window.EliteCMS) {
+  function applyCmsContent() {
+    if (!window.EliteCMS) return;
     const siteContent = window.EliteCMS.getContent();
-    
-    // Update Hero elements if present
-    const heroTitleEl = document.querySelector('.hero-title-main, .hero h1');
-    if (heroTitleEl && siteContent.heroTitle) {
-      heroTitleEl.textContent = siteContent.heroTitle;
+
+    // Prefer explicit data-cms hooks so we don't clobber designed hero markup
+    document.querySelectorAll('[data-cms]').forEach(el => {
+      const key = el.getAttribute('data-cms');
+      if (!key || siteContent[key] == null) return;
+      if (key === 'heroTitle') {
+        // Keep accent span if present
+        const accent = el.querySelector('.hero-title-accent');
+        if (accent) {
+          el.childNodes.forEach(n => {
+            if (n.nodeType === 3) n.textContent = '';
+          });
+          // Insert text before accent
+          const text = String(siteContent.heroTitle).replace(/marketplace/i, '').trim() || siteContent.heroTitle;
+          if (!el.querySelector('.cms-title-text')) {
+            const span = document.createElement('span');
+            span.className = 'cms-title-text';
+            span.textContent = text + ' ';
+            el.insertBefore(span, accent);
+          } else {
+            el.querySelector('.cms-title-text').textContent = text + ' ';
+          }
+        } else {
+          el.textContent = siteContent.heroTitle;
+        }
+      } else {
+        el.textContent = siteContent[key];
+      }
+    });
+
+    // Contact chips from CMS
+    if (siteContent.contactPhone) {
+      document.querySelectorAll('a[href^="tel:"]').forEach(a => {
+        if (a.closest('.topbar') || a.closest('.contact-info-item') || a.closest('.mobile-contact-info') || a.closest('.footer-col')) {
+          a.textContent = siteContent.contactPhone;
+          a.href = 'tel:' + siteContent.contactPhone.replace(/\s+/g, '');
+        }
+      });
     }
-    const heroSubEl = document.querySelector('.hero-sub, .hero p');
-    if (heroSubEl && siteContent.heroSubtitle) {
-      heroSubEl.textContent = siteContent.heroSubtitle;
+    if (siteContent.contactEmail) {
+      document.querySelectorAll('a[href^="mailto:info@"]').forEach(a => {
+        a.textContent = a.textContent.includes('@') ? siteContent.contactEmail : a.textContent;
+        a.href = 'mailto:' + siteContent.contactEmail;
+      });
     }
 
-    // Dynamic Artist cards population on index.html / artist pages if .artist-grid container exists
+    // Dynamic Artist cards on category pages (id=artists-grid / .artist-grid)
     const artistGrid = document.getElementById('artists-grid') || document.querySelector('.artist-grid');
-    if (artistGrid) {
-      // Determine page category if applicable from body dataset or title
-      const pageCategory = document.body.dataset.category || null;
+    if (artistGrid && document.body.dataset.category) {
+      const pageCategory = document.body.dataset.category;
       const cmsArtists = window.EliteCMS.getArtists(pageCategory);
-      
+
       if (cmsArtists && cmsArtists.length > 0) {
         artistGrid.innerHTML = '';
         cmsArtists.forEach(art => {
@@ -1308,21 +1395,165 @@ document.addEventListener('DOMContentLoaded', function () {
           card.className = 'artist-card service-card';
           card.innerHTML = `
             <div class="artist-img-wrap" style="position:relative; overflow:hidden; border-radius:12px; margin-bottom:1.2rem;">
-              <img src="${art.image}" alt="${art.name}" style="width:100%; height:260px; object-fit:cover; transition:var(--transition);" />
+              <img src="${art.image}" alt="${art.name}" style="width:100%; height:260px; object-fit:cover; transition:var(--transition);" loading="lazy" />
               <div style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.75); border:1px solid var(--gold); color:var(--gold); padding:0.25rem 0.75rem; border-radius:20px; font-size:0.65rem; font-weight:700; text-transform:uppercase;">${art.rate}</div>
             </div>
             <h3 style="font-family:var(--font-heading); font-size:1.6rem; color:var(--white); margin-bottom:0.3rem;">${art.name}</h3>
             <p style="color:var(--gold); font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.6rem;">${art.genre}</p>
             <p style="font-size:0.85rem; color:var(--silver-light); line-height:1.6; margin-bottom:1.2rem;">${art.bio}</p>
-            <a href="#booking" class="btn btn-outline btn-full" onclick="openBookingModal('${art.name}')">Book ${art.name} &rarr;</a>
+            <button class="btn btn-gold btn-full" onclick="openBookingModal('${art.name.replace(/'/g, "\\'")}', '${art.category}')">Hire ${art.name} &rarr;</button>
           `;
           artistGrid.appendChild(card);
         });
       }
     }
+
+    // Homepage: inject featured CMS artists into a featured strip
+    const featuredMount = document.getElementById('cms-featured-artists');
+    if (featuredMount && window.EliteCMS.getArtists) {
+      const allArt = window.EliteCMS.getArtists();
+      const featured = allArt.filter(a => a.featured).slice(0, 8);
+      if (featured.length) {
+        featuredMount.innerHTML = featured.map(art => `
+          <article class="featured-artist-card" style="background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.25); border-radius:12px; padding:1.2rem; text-align:left;">
+            <div class="featured-artist-img" style="background-image:url('${art.image}'); height:200px; background-size:cover; background-position:center; border-radius:8px; margin-bottom:1rem;"></div>
+            <div class="featured-artist-body">
+              <h4 style="color:var(--white); font-family:var(--font-heading); font-size:1.4rem; margin-bottom:0.2rem;">${art.name}</h4>
+              <p class="featured-artist-genre" style="color:var(--gold); font-size:0.72rem; text-transform:uppercase; margin-bottom:0.4rem;">${art.genre}</p>
+              <p class="featured-artist-rate" style="color:#55c555; font-weight:700; font-size:0.85rem; margin-bottom:0.8rem;">${art.rate}</p>
+              <button class="btn btn-gold btn-sm btn-full" onclick="openBookingModal('${art.name.replace(/'/g, "\\'")}', '${art.category}')">Hire ${art.name} &rarr;</button>
+            </div>
+          </article>
+        `).join('');
+      }
+    }
+  }
+
+  /* ─── GLOBAL ARTIST HIRING MODAL & EMAIL DISPATCH ─── */
+  window.openBookingModal = function (artistName, categoryName) {
+    let modal = document.getElementById('artist-hire-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'artist-hire-modal';
+      modal.className = 'custom-modal-overlay';
+      modal.innerHTML = `
+        <div class="custom-modal-card">
+          <button class="modal-close-btn" onclick="document.getElementById('artist-hire-modal').classList.remove('active')">&times;</button>
+          <div style="text-align:center; margin-bottom:1.5rem;">
+            <span style="font-family:'Montserrat',sans-serif; font-weight:800; font-size:1.8rem; color:var(--white); letter-spacing:-0.02em;">ELITE</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:0.6rem; letter-spacing:0.18em; color:var(--gold); display:block; text-transform:uppercase;">Artist Hire Enquiry</span>
+          </div>
+          <h3 style="margin-bottom:0.5rem; color:var(--white); text-align:center;" id="hire-modal-artist-title">Book Artist</h3>
+          <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem; text-align:center;">Fill out the form below to receive a direct quote. Your enquiry will be logged in the CRM &amp; emailed to info@eliteentertainment.com.au.</p>
+          
+          <form id="artist-hire-form" style="display:flex; flex-direction:column; gap:1rem; text-align:left;">
+            <input type="hidden" id="hire-artist-name" />
+            <input type="hidden" id="hire-artist-category" />
+            
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Full Name *</label>
+              <input type="text" id="hire-user-name" required placeholder="e.g. Sarah Jenkins" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+              <div>
+                <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Email Address *</label>
+                <input type="email" id="hire-user-email" required placeholder="sarah@example.com" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+              </div>
+              <div>
+                <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Phone Number *</label>
+                <input type="tel" id="hire-user-phone" required placeholder="+61 400 000 000" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+              <div>
+                <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Event Date</label>
+                <input type="date" id="hire-event-date" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+              </div>
+              <div>
+                <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Estimated Budget ($)</label>
+                <input type="number" id="hire-event-budget" placeholder="3000" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Event Location / Special Requests</label>
+              <textarea id="hire-event-message" placeholder="Venue location, guest count, acoustic or full band setup..." style="width:100%; height:70px; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none; resize:none;"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-gold" style="width:100%; border-radius:30px; padding:0.75rem; font-weight:700; margin-top:0.5rem;">Submit Hire Request &rarr;</button>
+          </form>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      document.getElementById('artist-hire-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const artist = document.getElementById('hire-artist-name').value;
+        const userName = document.getElementById('hire-user-name').value.trim();
+        const userEmail = document.getElementById('hire-user-email').value.trim();
+        const userPhone = document.getElementById('hire-user-phone').value.trim();
+        const eventDate = document.getElementById('hire-event-date').value;
+        const budget = document.getElementById('hire-event-budget').value;
+        const message = document.getElementById('hire-event-message').value.trim();
+
+        const newInquiry = {
+          id: 'INQ-' + Date.now().toString().slice(-5),
+          name: userName,
+          email: userEmail,
+          phone: userPhone,
+          date: eventDate,
+          service: 'Artist Hire: ' + artist,
+          message: `Budget: $${budget || 'N/A'} | Notes: ${message}`,
+          status: 'Pending',
+          timestamp: new Date().toLocaleString()
+        };
+
+        const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
+        inquiries.unshift(newInquiry);
+        localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
+
+        // Construct prefilled mailto draft to info@eliteentertainment.com.au
+        const subject = encodeURIComponent(`NEW ARTIST HIRE ENQUIRY: ${artist}`);
+        const body = encodeURIComponent(
+          `Hi Elite Entertainment Team,\n\n` +
+          `I would like to hire ${artist} for an upcoming event.\n\n` +
+          `--- CLIENT DETAILS ---\n` +
+          `Name: ${userName}\n` +
+          `Email: ${userEmail}\n` +
+          `Phone: ${userPhone}\n` +
+          `Event Date: ${eventDate || 'TBD'}\n` +
+          `Budget: $${budget || 'N/A'}\n\n` +
+          `--- EVENT NOTES ---\n${message || 'None'}\n\n` +
+          `Submitted via Elite Entertainment Website`
+        );
+
+        window.location.href = `mailto:info@eliteentertainment.com.au?subject=${subject}&body=${body}`;
+
+        alert(`Thank you ${userName}! Your hire request for ${artist} has been registered and emailed to info@eliteentertainment.com.au.`);
+        modal.classList.remove('active');
+      });
+    }
+
+    document.getElementById('hire-artist-name').value = artistName || 'Featured Act';
+    document.getElementById('hire-artist-category').value = categoryName || '';
+    document.getElementById('hire-modal-artist-title').textContent = 'Book ' + (artistName || 'Artist');
+    modal.classList.add('active');
+  };
+
+  applyCmsContent();
+  window.addEventListener('elite-cms-synced', applyCmsContent);
+
+  // Pause marquees when reduced motion preferred
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.ticket-marquee-track, .clients-track').forEach(el => {
+      el.style.animation = 'none';
+    });
   }
 
 });
+
 
 
 

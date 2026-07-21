@@ -1,0 +1,16 @@
+# Elite Entertainment & Events — Australia
+User-agent: *
+Allow: /
+Disallow: /admin.html
+
+Sitemap: https://eliteentertainment.com.au/sitemap.xml
+
+# Common search / SEM crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /

@@ -2,7 +2,7 @@
    ELITE ENTERTAINMENT — PWA Service Worker
 ═══════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'elite-events-v1';
+const CACHE_NAME = 'elite-events-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -13,6 +13,12 @@ const ASSETS_TO_CACHE = [
   './artists-jazz.html',
   './artists-solo.html',
   './artists-tributes.html',
+  './multicultural.html',
+  './comedians.html',
+  './country.html',
+  './children.html',
+  './specialty.html',
+  './roving.html',
   './corporate.html',
   './event-djs.html',
   './luxury-car-hire.html',
@@ -35,7 +41,14 @@ const ASSETS_TO_CACHE = [
   './images/party-band.jpg',
   './images/trio.jpg',
   './images/duo.jpg',
-  './images/solo.jpg'
+  './images/solo.jpg',
+  './images/artists/guy-sebastian.jpg',
+  './images/artists/jessica-mauboy.jpg',
+  './images/artists/ricki-lee.jpg',
+  './images/artists/jason-owen.jpg',
+  './images/artists/anh-do.jpg',
+  './images/artists/george-kapiniaris.jpg',
+  './images/artists/wiggles.jpg'
 ];
 
 // Install Event
