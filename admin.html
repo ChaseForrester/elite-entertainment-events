@@ -462,6 +462,22 @@
             <label>Operating Regions / Address</label>
             <input type="text" id="content-address" />
           </div>
+          <div class="auth-input-group">
+            <label>Registered Legal Entity Name</label>
+            <input type="text" id="content-legal-name" />
+          </div>
+          <div class="auth-input-group">
+            <label>ABN (Australian Business Number)</label>
+            <input type="text" id="content-abn" />
+          </div>
+          <div class="auth-input-group">
+            <label>ACN (Australian Company Number)</label>
+            <input type="text" id="content-acn" />
+          </div>
+          <div class="auth-input-group">
+            <label>ASIC Registration Date</label>
+            <input type="text" id="content-asic-date" />
+          </div>
         </div>
       </div>
 
@@ -724,6 +740,10 @@
         document.getElementById('content-phone').value = content.contactPhone || '';
         document.getElementById('content-email').value = content.contactEmail || '';
         document.getElementById('content-address').value = content.contactAddress || '';
+        document.getElementById('content-legal-name').value = content.companyLegalName || 'ELITE ENTERTAINMENT & EVENTS PTY LTD';
+        document.getElementById('content-abn').value = content.abn || '17 698 991 481';
+        document.getElementById('content-acn').value = content.acn || '698 991 481';
+        document.getElementById('content-asic-date').value = content.asicDate || '12/06/2026';
       }
 
       document.getElementById('btn-save-content').addEventListener('click', () => {
@@ -733,9 +753,13 @@
           heroBackdrop: document.getElementById('content-hero-banner').value,
           contactPhone: document.getElementById('content-phone').value,
           contactEmail: document.getElementById('content-email').value,
-          contactAddress: document.getElementById('content-address').value
+          contactAddress: document.getElementById('content-address').value,
+          companyLegalName: document.getElementById('content-legal-name').value,
+          abn: document.getElementById('content-abn').value,
+          acn: document.getElementById('content-acn').value,
+          asicDate: document.getElementById('content-asic-date').value
         });
-        alert('Global Site Content saved successfully!');
+        alert('Global Site Content & Corporate Registration info saved successfully!');
       });
 
       // Artist Modal

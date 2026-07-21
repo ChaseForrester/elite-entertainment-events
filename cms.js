@@ -136,7 +136,11 @@
     heroTitle: 'ELITE ENTERTAINMENT',
     heroSubtitle: 'UNRIVALLED ENTERTAINMENT FOR EXTRAORDINARY EVENTS',
     heroBackdrop: 'hero_banner.png',
-    contactPhone: '+61 400 000 000',
+    companyLegalName: 'ELITE ENTERTAINMENT & EVENTS PTY LTD',
+    abn: '17 698 991 481',
+    acn: '698 991 481',
+    asicDate: '12/06/2026',
+    contactPhone: '+61 417 221 111',
     contactEmail: 'info@eliteentertainment.com.au',
     contactAddress: 'Sydney | Melbourne | Brisbane | Gold Coast'
   };
