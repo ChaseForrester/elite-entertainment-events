@@ -447,8 +447,17 @@
             <input type="text" id="content-hero-subtitle" />
           </div>
           <div class="auth-input-group">
-            <label>Hero Banner Image Path / URL</label>
-            <input type="text" id="content-hero-banner" />
+            <label>Hero Banner Image Path / Upload</label>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <input type="text" id="content-hero-banner" style="flex:1;" />
+              <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
+                📷 Upload Hero
+                <input type="file" id="content-hero-banner-file" accept="image/*" style="display:none;" />
+              </label>
+            </div>
+            <div style="margin-top:0.5rem; text-align:center;">
+              <img id="hero-img-preview" src="" alt="Hero preview" style="max-height:100px; border-radius:8px; border:1px solid var(--gold); display:none; margin:0 auto;" />
+            </div>
           </div>
           <div class="auth-input-group">
             <label>Contact Phone Number</label>
@@ -561,16 +570,39 @@
           <input type="text" id="artist-genre" placeholder="e.g. Soul / Pop / High Energy" required />
         </div>
         <div class="auth-input-group">
-          <label>Picture Image URL</label>
-          <input type="text" id="artist-image" placeholder="https://images.unsplash.com/..." required />
+          <label>Picture Image URL / Upload</label>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            <input type="text" id="artist-image" placeholder="https://images.unsplash.com/..." style="flex:1;" required />
+            <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
+              📷 Upload Image
+              <input type="file" id="artist-image-file" accept="image/*" style="display:none;" />
+            </label>
+          </div>
+          <div style="margin-top:0.5rem; text-align:center;">
+            <img id="artist-img-preview" src="" alt="Thumbnail preview" style="max-height:120px; border-radius:8px; border:1px solid var(--gold); display:none; margin:0 auto;" />
+          </div>
+        </div>
+        <div class="auth-input-group">
+          <label>YouTube Video Link (Optional)</label>
+          <input type="text" id="artist-youtube" placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." />
+          <span style="font-size:0.7rem; color:var(--silver-dark); display:block; margin-top:0.25rem;">Adding a YouTube link creates a live video preview on the artist card.</span>
         </div>
         <div class="auth-input-group">
           <label>Starting Rate / Price</label>
           <input type="text" id="artist-rate" placeholder="e.g. $2,500+" required />
         </div>
         <div class="auth-input-group">
-          <label>Bio / Description</label>
-          <textarea id="artist-bio" rows="3" required></textarea>
+          <label>Bio / Description (Rich Text Editor)</label>
+          <div class="rich-toolbar" style="display:flex; gap:0.3rem; margin-bottom:0.4rem; background:rgba(255,255,255,0.05); padding:0.4rem; border-radius:6px; border:1px solid rgba(255,255,255,0.1); flex-wrap:wrap;">
+            <button type="button" class="btn-tb" onclick="execRichCommand('bold')" title="Bold" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><b>B</b></button>
+            <button type="button" class="btn-tb" onclick="execRichCommand('italic')" title="Italic" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><i>I</i></button>
+            <button type="button" class="btn-tb" onclick="execRichCommand('underline')" title="Underline" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><u>U</u></button>
+            <button type="button" class="btn-tb" onclick="execRichCommand('insertUnorderedList')" title="Bullet List" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">• List</button>
+            <button type="button" class="btn-tb" onclick="promptRichLink()" title="Link" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">🔗 Link</button>
+            <button type="button" class="btn-tb" onclick="execRichCommand('removeFormat')" title="Clear" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">Clear</button>
+          </div>
+          <div id="artist-bio-editor" contenteditable="true" style="min-height:100px; padding:0.75rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:var(--white); outline:none; line-height:1.6;"></div>
+          <input type="hidden" id="artist-bio" />
         </div>
         <div class="auth-input-group" style="display:flex; align-items:center; gap:0.5rem;">
           <input type="checkbox" id="artist-featured" style="width:auto;" />
@@ -943,10 +975,61 @@
         }
       });
 
+      // Rich Text & Image Uploader Helper Functions
+      window.execRichCommand = function (cmd, val = null) {
+        document.execCommand(cmd, false, val);
+      };
+      window.promptRichLink = function () {
+        const url = prompt('Enter link URL (e.g. website or YouTube video):', 'https://');
+        if (url) window.execRichCommand('createLink', url);
+      };
+
+      function attachImageUploader(fileInputId, urlInputId, previewImgId) {
+        const fileInput = document.getElementById(fileInputId);
+        const urlInput = document.getElementById(urlInputId);
+        const previewImg = previewImgId ? document.getElementById(previewImgId) : null;
+
+        if (fileInput) {
+          fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function (evt) {
+                const dataUrl = evt.target.result;
+                if (urlInput) urlInput.value = dataUrl;
+                if (previewImg) {
+                  previewImg.src = dataUrl;
+                  previewImg.style.display = 'block';
+                }
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        }
+
+        if (urlInput && previewImg) {
+          urlInput.addEventListener('input', () => {
+            const val = urlInput.value.trim();
+            if (val) {
+              previewImg.src = val;
+              previewImg.style.display = 'block';
+            } else {
+              previewImg.style.display = 'none';
+            }
+          });
+        }
+      }
+
+      attachImageUploader('artist-image-file', 'artist-image', 'artist-img-preview');
+      attachImageUploader('content-hero-banner-file', 'content-hero-banner', 'hero-img-preview');
+
       const artistModal = document.getElementById('artist-modal');
       document.getElementById('btn-add-artist').addEventListener('click', () => {
         document.getElementById('artist-form').reset();
         document.getElementById('artist-id').value = '';
+        document.getElementById('artist-bio-editor').innerHTML = '';
+        document.getElementById('artist-youtube').value = '';
+        document.getElementById('artist-img-preview').style.display = 'none';
         document.getElementById('artist-modal-title').textContent = 'Add New Artist / Act';
         artistModal.classList.add('active');
       });
@@ -961,10 +1044,20 @@
           document.getElementById('artist-name').value = artist.name;
           document.getElementById('artist-category').value = artist.category;
           document.getElementById('artist-genre').value = artist.genre;
-          document.getElementById('artist-image').value = artist.image;
+          document.getElementById('artist-image').value = artist.image || '';
+          document.getElementById('artist-youtube').value = artist.youtubeUrl || '';
           document.getElementById('artist-rate').value = artist.rate;
-          document.getElementById('artist-bio').value = artist.bio;
+          document.getElementById('artist-bio-editor').innerHTML = artist.bio || '';
+          document.getElementById('artist-bio').value = artist.bio || '';
           document.getElementById('artist-featured').checked = !!artist.featured;
+
+          if (artist.image) {
+            document.getElementById('artist-img-preview').src = artist.image;
+            document.getElementById('artist-img-preview').style.display = 'block';
+          } else {
+            document.getElementById('artist-img-preview').style.display = 'none';
+          }
+
           document.getElementById('artist-modal-title').textContent = 'Edit Artist / Act';
           artistModal.classList.add('active');
         }
@@ -979,14 +1072,16 @@
 
       document.getElementById('artist-form').addEventListener('submit', (e) => {
         e.preventDefault();
+        const bioHtml = document.getElementById('artist-bio-editor').innerHTML.trim();
         window.EliteCMS.saveArtist({
           id: document.getElementById('artist-id').value || undefined,
           name: document.getElementById('artist-name').value,
           category: document.getElementById('artist-category').value,
           genre: document.getElementById('artist-genre').value,
           image: document.getElementById('artist-image').value,
+          youtubeUrl: document.getElementById('artist-youtube').value.trim(),
           rate: document.getElementById('artist-rate').value,
-          bio: document.getElementById('artist-bio').value,
+          bio: bioHtml || document.getElementById('artist-bio').value,
           featured: document.getElementById('artist-featured').checked,
           tags: [document.getElementById('artist-category').value]
         });

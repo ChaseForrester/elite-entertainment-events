@@ -1393,6 +1393,7 @@ document.addEventListener('DOMContentLoaded', function () {
         cmsArtists.forEach(art => {
           const card = document.createElement('div');
           card.className = 'artist-card service-card';
+          const ytBtn = art.youtubeUrl ? `<button class="btn btn-outline btn-full" style="margin-bottom:0.5rem; border-color:rgba(255,80,80,0.6); color:#ff6b6b;" onclick="openVideoModal('${art.youtubeUrl.replace(/'/g, "\\'")}', '${art.name.replace(/'/g, "\\'")}')">▶ Watch Video Preview</button>` : '';
           card.innerHTML = `
             <div class="artist-img-wrap" style="position:relative; overflow:hidden; border-radius:12px; margin-bottom:1.2rem;">
               <img src="${art.image}" alt="${art.name}" style="width:100%; height:260px; object-fit:cover; transition:var(--transition);" loading="lazy" />
@@ -1400,7 +1401,8 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
             <h3 style="font-family:var(--font-heading); font-size:1.6rem; color:var(--white); margin-bottom:0.3rem;">${art.name}</h3>
             <p style="color:var(--gold); font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.6rem;">${art.genre}</p>
-            <p style="font-size:0.85rem; color:var(--silver-light); line-height:1.6; margin-bottom:1.2rem;">${art.bio}</p>
+            <div class="artist-rich-bio" style="font-size:0.85rem; color:var(--silver-light); line-height:1.6; margin-bottom:1.2rem;">${art.bio}</div>
+            ${ytBtn}
             <button class="btn btn-gold btn-full" onclick="openBookingModal('${art.name.replace(/'/g, "\\'")}', '${art.category}')">Hire ${art.name} &rarr;</button>
           `;
           artistGrid.appendChild(card);
@@ -1414,20 +1416,54 @@ document.addEventListener('DOMContentLoaded', function () {
       const allArt = window.EliteCMS.getArtists();
       const featured = allArt.filter(a => a.featured).slice(0, 8);
       if (featured.length) {
-        featuredMount.innerHTML = featured.map(art => `
+        featuredMount.innerHTML = featured.map(art => {
+          const ytBtn = art.youtubeUrl ? `<button class="btn btn-outline btn-sm btn-full" style="margin-bottom:0.4rem; border-color:rgba(255,80,80,0.6); color:#ff6b6b; font-size:0.7rem;" onclick="openVideoModal('${art.youtubeUrl.replace(/'/g, "\\'")}', '${art.name.replace(/'/g, "\\'")}')">▶ Watch Video</button>` : '';
+          return `
           <article class="featured-artist-card" style="background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.25); border-radius:12px; padding:1.2rem; text-align:left;">
             <div class="featured-artist-img" style="background-image:url('${art.image}'); height:200px; background-size:cover; background-position:center; border-radius:8px; margin-bottom:1rem;"></div>
             <div class="featured-artist-body">
               <h4 style="color:var(--white); font-family:var(--font-heading); font-size:1.4rem; margin-bottom:0.2rem;">${art.name}</h4>
               <p class="featured-artist-genre" style="color:var(--gold); font-size:0.72rem; text-transform:uppercase; margin-bottom:0.4rem;">${art.genre}</p>
               <p class="featured-artist-rate" style="color:#55c555; font-weight:700; font-size:0.85rem; margin-bottom:0.8rem;">${art.rate}</p>
+              ${ytBtn}
               <button class="btn btn-gold btn-sm btn-full" onclick="openBookingModal('${art.name.replace(/'/g, "\\'")}', '${art.category}')">Hire ${art.name} &rarr;</button>
             </div>
           </article>
-        `).join('');
+        `;
+        }).join('');
       }
     }
   }
+
+  /* ─── YOUTUBE VIDEO PREVIEW MODAL ─── */
+  window.openVideoModal = function (youtubeUrl, title) {
+    let videoModal = document.getElementById('video-preview-modal');
+    if (!videoModal) {
+      videoModal = document.createElement('div');
+      videoModal.id = 'video-preview-modal';
+      videoModal.className = 'custom-modal-overlay';
+      videoModal.innerHTML = `
+        <div class="custom-modal-card" style="max-width:720px; width:90%; padding:1.5rem;">
+          <button class="modal-close-btn" onclick="document.getElementById('video-preview-modal').classList.remove('active'); document.getElementById('video-modal-iframe').src=''">&times;</button>
+          <h3 style="color:var(--white); font-family:var(--font-heading); font-size:1.5rem; margin-bottom:1rem; text-align:center;" id="video-modal-title">Watch Performance Preview</h3>
+          <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:10px; border:1px solid var(--gold);">
+            <iframe id="video-modal-iframe" src="" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(videoModal);
+    }
+
+    let embedUrl = youtubeUrl;
+    const match = youtubeUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+    if (match && match[1]) {
+      embedUrl = `https://www.youtube.com/embed/${match[1]}?autoplay=1`;
+    }
+
+    document.getElementById('video-modal-title').textContent = title ? (`Watch ${title} Preview`) : 'Video Performance Preview';
+    document.getElementById('video-modal-iframe').src = embedUrl;
+    videoModal.classList.add('active');
+  };
 
   /* ─── GLOBAL ARTIST HIRING MODAL & EMAIL DISPATCH ─── */
   window.openBookingModal = function (artistName, categoryName) {
