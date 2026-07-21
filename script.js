@@ -292,20 +292,28 @@ document.addEventListener('DOMContentLoaded', function () {
   const heroVideo = document.getElementById('hero-event-video');
   if (heroVideo) {
     heroVideo.muted = true;
+    heroVideo.defaultMuted = true;
     heroVideo.playsInline = true;
-    const tryPlay = () => {
-      const p = heroVideo.play();
-      if (p && typeof p.catch === 'function') {
-        p.catch(() => {
-          // Autoplay blocked — keep poster/fallback image visible
-          heroVideo.classList.add('video-blocked');
+
+    const startVideo = () => {
+      heroVideo.muted = true;
+      const playPromise = heroVideo.play();
+      if (playPromise && typeof playPromise.then === 'function') {
+        playPromise.then(() => {
+          heroVideo.classList.remove('video-blocked');
+        }).catch(() => {
+          // Retry on next interaction
         });
       }
     };
-    if (heroVideo.readyState >= 2) tryPlay();
-    else heroVideo.addEventListener('loadeddata', tryPlay, { once: true });
+
+    startVideo();
+    ['click', 'touchstart', 'mousemove', 'scroll'].forEach(evt => {
+      window.addEventListener(evt, startVideo, { once: true, passive: true });
+    });
+
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) tryPlay();
+      if (!document.hidden) startVideo();
     });
   }
 
