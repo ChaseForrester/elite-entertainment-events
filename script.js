@@ -3,215 +3,112 @@
 ═══════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', function () {
+try {
 
-  /* ─── LOADING OVERLAY & CANVAS FIREWORKS ─── */
-  const loader = document.getElementById('loading-screen');
-  const canvas = document.getElementById('fireworks-canvas');
-  
-  if (canvas && loader) {
-    const ctx = canvas.getContext('2d');
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+  /* Intro animation removed — page loads immediately */
 
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
+  /* ─── CARD LOOP VIDEOS (services + premium add-ons) ─── */
+  (function initCardLoopVideos() {
+    const videos = Array.from(document.querySelectorAll('.card-loop-video'));
+    if (!videos.length) return;
 
-    class Particle {
-      constructor(x, y, color) {
-        this.x = x;
-        this.y = y;
-        this.color = color;
-        this.angle = Math.random() * Math.PI * 2;
-        this.speed = Math.random() * 4 + 1;
-        this.friction = 0.95;
-        this.gravity = 0.08;
-        this.alpha = 1;
-        this.decay = Math.random() * 0.015 + 0.01;
-      }
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-        ctx.restore();
-      }
-      update() {
-        this.speed *= this.friction;
-        this.x += Math.cos(this.angle) * this.speed;
-        this.y += Math.sin(this.angle) * this.speed + this.gravity;
-        this.alpha -= this.decay;
-      }
-    }
+    const forcePlay = (v) => {
+      try {
+        v.muted = true;
+        v.defaultMuted = true;
+        v.playsInline = true;
+        v.setAttribute('muted', '');
+        v.setAttribute('playsinline', '');
+        const p = v.play();
+        if (p && typeof p.catch === 'function') p.catch(function () {});
+      } catch (e) {}
+    };
 
-    class Firework {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = height;
-        this.targetY = Math.random() * (height * 0.5);
-        this.speed = Math.random() * 5 + 4;
-        this.particles = [];
-        // Luxury gold shades
-        const golds = ['#c9a84c', '#f3e5ab', '#8a6f27', '#ffffff', '#e8c86b'];
-        this.color = golds[Math.floor(Math.random() * golds.length)];
-      }
-      draw() {
-        if (this.speed > 0) {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-          ctx.fillStyle = this.color;
-          ctx.fill();
-        }
-        this.particles.forEach(p => p.draw());
-      }
-      update() {
-        if (this.speed > 0) {
-          this.y -= this.speed;
-          if (this.y <= this.targetY) {
-            this.speed = 0;
-            this.explode();
-          }
-        }
-        this.particles.forEach((p, index) => {
-          p.update();
-          if (p.alpha <= 0) {
-            this.particles.splice(index, 1);
+    videos.forEach(forcePlay);
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          const v = entry.target;
+          if (entry.isIntersecting) forcePlay(v);
+          else {
+            try { v.pause(); } catch (e) {}
           }
         });
-      }
-      explode() {
-        for (let i = 0; i < 40; i++) {
-          this.particles.push(new Particle(this.x, this.y, this.color));
-        }
-      }
+      }, { rootMargin: '80px', threshold: 0.15 });
+      videos.forEach(function (v) { io.observe(v); });
     }
 
-    const fireworks = [];
-    let animationId;
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) videos.forEach(forcePlay);
+    });
+  })();
 
-    function loop() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-      ctx.fillRect(0, 0, width, height);
-
-      if (Math.random() < 0.08) {
-        fireworks.push(new Firework());
-      }
-
-      fireworks.forEach((fw, index) => {
-        fw.update();
-        fw.draw();
-        if (fw.speed === 0 && fw.particles.length === 0) {
-          fireworks.splice(index, 1);
-        }
-      });
-
-      animationId = requestAnimationFrame(loop);
-    }
-
-    loop();
-
-    // Fade out loading screen after 2.4s
-    setTimeout(() => {
-      loader.classList.add('fade-out');
-      setTimeout(() => {
-        cancelAnimationFrame(animationId);
-        loader.remove();
-      }, 800);
-    }, 2400);
-  }
-
-  /* ─── FLOATING HERO SEARCH FILTER ─── */
+  /* ─── HERO SEARCH (artists / folders / hire) ─── */
   const searchBtn = document.getElementById('hero-search-btn');
   const searchInput = document.getElementById('hero-search-input');
   const genreSelect = document.getElementById('hero-genre-select');
-  const artistInput = document.getElementById('hero-artist-input');
+  const artistInput = document.getElementById('hero-artist-input'); // optional legacy field
 
-  const executeSearch = (queryKeyword = '', queryGenre = '', queryArtist = '') => {
-    let matchedServiceCount = 0;
-    let matchedArtistCount = 0;
+  /** Filter homepage roster tiles by keyword and scroll to matches */
+  const executeSearch = (queryKeyword = '') => {
+    const q = String(queryKeyword || '').toLowerCase().trim();
+    const folders = document.querySelectorAll('.home-folder-block');
+    let anyFolder = false;
 
-    // Filter services
-    document.querySelectorAll('.service-card').forEach(card => {
-      const text = card.textContent.toLowerCase();
-      const matchKeyword = !queryKeyword || text.includes(queryKeyword);
-      const matchGenre = !queryGenre || text.includes(queryGenre);
-      
-      if (matchKeyword && matchGenre) {
-        card.style.display = '';
-        card.style.borderColor = (queryKeyword || queryGenre) ? 'var(--gold)' : '';
-        card.style.boxShadow = (queryKeyword || queryGenre) ? 'var(--shadow-gold)' : '';
-        matchedServiceCount++;
-      } else {
-        card.style.display = 'none';
-      }
+    folders.forEach((block) => {
+      const tiles = block.querySelectorAll('.home-act-tile');
+      let visibleInFolder = 0;
+      tiles.forEach((tile) => {
+        const text = (tile.textContent || '').toLowerCase();
+        const show = !q || text.includes(q);
+        tile.style.display = show ? '' : 'none';
+        if (show) visibleInFolder++;
+      });
+      const more = block.querySelector('.home-act-more');
+      if (more) more.style.display = q ? 'none' : '';
+      const showFolder = !q || visibleInFolder > 0 || (block.textContent || '').toLowerCase().includes(q);
+      block.style.display = showFolder ? '' : 'none';
+      if (showFolder) anyFolder = true;
     });
 
-    // Filter offers
-    document.querySelectorAll('.offer-card').forEach(card => {
-      const text = card.textContent.toLowerCase();
-      const matchKeyword = !queryKeyword || text.includes(queryKeyword);
-      const matchGenre = !queryGenre || text.includes(queryGenre);
-
-      if (matchKeyword && matchGenre) {
-        card.style.display = '';
-        card.style.borderColor = (queryKeyword || queryGenre) ? 'var(--gold)' : '';
-        matchedServiceCount++;
-      } else {
-        card.style.display = 'none';
-      }
+    // Soft-highlight matching service / offer cards without hiding the page
+    document.querySelectorAll('.service-card, .offer-card').forEach((card) => {
+      const text = (card.textContent || '').toLowerCase();
+      const hit = q && text.includes(q);
+      card.style.borderColor = hit ? 'var(--gold)' : '';
+      card.style.boxShadow = hit ? 'var(--shadow-gold)' : '';
     });
 
-    // Filter artists
-    document.querySelectorAll('.artist-card').forEach(card => {
-      const text = card.textContent.toLowerCase();
-      const matchKeyword = !queryKeyword || text.includes(queryKeyword);
-      const matchGenre = !queryGenre || text.includes(queryGenre);
-      const matchArtistName = !queryArtist || text.includes(queryArtist);
-
-      if (matchKeyword && matchGenre && matchArtistName) {
-        card.style.display = '';
-        card.style.borderColor = (queryKeyword || queryGenre || queryArtist) ? 'var(--gold)' : '';
-        matchedArtistCount++;
-      } else {
-        card.style.display = 'none';
-      }
-    });
-
-    // Scroll
-    if (queryKeyword || queryGenre || queryArtist) {
-      if (matchedServiceCount > 0) {
-        document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
-      } else if (matchedArtistCount > 0) {
-        document.getElementById('artists').scrollIntoView({ behavior: 'smooth' });
-      }
+    if (q) {
+      try {
+        const cats = document.getElementById('categories');
+        if (cats && anyFolder) cats.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        else if (document.getElementById('services')) {
+          document.getElementById('services').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } catch (err) { /* ignore */ }
     }
   };
 
-  // Search button / Enter handled below in redirect + filter pipeline
-  // (avoids double-binding the same control)
-
-  // Global function for Popular Tag clicks
-  window.filterByTag = function(tag) {
+  window.filterByTag = function (tag) {
     const routes = {
-      weddings: 'category-live-bands.html',
-      bands: 'category-live-bands.html',
-      tributes: 'category-live-bands.html',
-      djs: 'category-djs-karaoke.html',
-      solo: 'category-live-bands.html',
-      jazz: 'category-specialty.html',
-      corporate: 'category-live-bands.html'
+      weddings: 'weddings.html',
+      bands: 'folder.html?id=party-bands',
+      tributes: 'folder.html?id=tribute-acts',
+      djs: 'folder.html?id=djs-karaoke',
+      solo: 'folder.html?id=solo-acts',
+      jazz: 'folder.html?id=classical-entertainment',
+      corporate: 'corporate.html',
+      car: 'luxury-car-hire.html',
+      yacht: 'luxury-yacht-hire.html',
+      security: 'security.html'
     };
     if (routes[tag]) {
       window.location.href = routes[tag];
       return;
     }
-    if (tag === 'car') executeSearch('car');
-    else if (tag === 'yacht') executeSearch('yacht');
-    else if (tag === 'security') executeSearch('security');
-    else executeSearch(tag);
+    executeSearch(tag);
   };
 
   /* ─── STICKY HEADER ─── */
@@ -256,14 +153,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     mainNav.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', () => {
-        if (window.innerWidth <= 900) closeMobileNav();
+        // Don't close when expanding a dropdown parent on mobile
+        if (window.innerWidth <= 900 && !a.parentElement.classList.contains('has-dropdown')) {
+          closeMobileNav();
+        }
       });
     });
   }
 
-  /* ─── MOBILE DROPDOWN TOGGLE ─── */
-  const hasDropdowns = document.querySelectorAll('.has-dropdown > a');
+  /* ─── MOBILE DROPDOWN TOGGLE (skip if site-nav already bound) ─── */
+  const hasDropdowns = document.querySelectorAll('.has-dropdown > a:not([data-ddBound])');
   hasDropdowns.forEach(link => {
+    if (link.dataset.ddBound) return;
+    link.dataset.ddBound = '1';
     link.addEventListener('click', (e) => {
       if (window.innerWidth <= 900) {
         e.preventDefault();
@@ -288,34 +190,137 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ─── HERO EVENT VIDEO ─── */
-  const heroVideo = document.getElementById('hero-event-video');
-  if (heroVideo) {
-    heroVideo.muted = true;
-    heroVideo.defaultMuted = true;
-    heroVideo.playsInline = true;
+  /* ─── HERO YOUTUBE BACKGROUND (always muted, no audio/music) ─── */
+  (function initHeroYoutubeBg() {
+    const iframe = document.getElementById('hero-yt-iframe');
+    if (!iframe) return;
+    // Reinforce mute via YouTube IFrame API postMessage (autoplay policies + no sound)
+    function postMute() {
+      try {
+        const win = iframe.contentWindow;
+        if (!win) return;
+        win.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
+        win.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [0] }), '*');
+        win.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
+      } catch (e) {}
+    }
+    iframe.addEventListener('load', function () {
+      postMute();
+      setTimeout(postMute, 800);
+      setTimeout(postMute, 2500);
+    });
+    // Re-mute if user returns to tab (some browsers resume audio on focus)
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) postMute();
+    });
+  })();
 
-    const startVideo = () => {
-      heroVideo.muted = true;
-      const playPromise = heroVideo.play();
-      if (playPromise && typeof playPromise.then === 'function') {
-        playPromise.then(() => {
-          heroVideo.classList.remove('video-blocked');
-        }).catch(() => {
-          // Retry on next interaction
+  /* ─── HERO MULTI-EVENT VIDEO REEL (legacy mp4 slides — no-op if none) ─── */
+  (function initHeroVideoReel() {
+    const slides = Array.from(document.querySelectorAll('[data-hero-slide]'));
+    const photoShow = document.getElementById('hero-photo-slideshow');
+    if (!slides.length) return;
+
+    let idx = 0;
+    let rotating = false;
+    let videoWorking = false;
+
+    function forceMute(v) {
+      v.muted = true;
+      v.defaultMuted = true;
+      v.setAttribute('muted', '');
+      v.playsInline = true;
+      v.setAttribute('playsinline', '');
+      v.setAttribute('webkit-playsinline', '');
+    }
+
+    function showPhotoFallback() {
+      if (!photoShow) return;
+      photoShow.hidden = false;
+      slides.forEach(v => {
+        v.classList.remove('is-active');
+        try { v.pause(); } catch (e) {}
+      });
+      const photos = photoShow.querySelectorAll('.hero-photo-slide');
+      if (!photos.length) return;
+      let pi = 0;
+      photos.forEach(p => p.classList.remove('is-active'));
+      photos[0].classList.add('is-active');
+      setInterval(() => {
+        photos[pi].classList.remove('is-active');
+        pi = (pi + 1) % photos.length;
+        photos[pi].classList.add('is-active');
+      }, 4500);
+    }
+
+    function activate(i) {
+      slides.forEach((v, n) => {
+        forceMute(v);
+        if (n === i) {
+          v.classList.add('is-active');
+          const p = v.play();
+          if (p && typeof p.catch === 'function') {
+            p.catch(() => {});
+          }
+        } else {
+          v.classList.remove('is-active');
+          try { v.pause(); v.currentTime = 0; } catch (e) {}
+        }
+      });
+    }
+
+    function startRotation() {
+      if (rotating) return;
+      rotating = true;
+      videoWorking = true;
+      activate(0);
+      setInterval(() => {
+        idx = (idx + 1) % slides.length;
+        activate(idx);
+      }, 8000);
+    }
+
+    slides.forEach(forceMute);
+
+    // Preload all sources
+    slides.forEach(v => { try { v.load(); } catch (e) {} });
+
+    const first = slides[0];
+    const tryStart = () => {
+      forceMute(first);
+      first.classList.add('is-active');
+      const p = first.play();
+      if (p && typeof p.then === 'function') {
+        p.then(startRotation).catch(() => {
+          // User-gesture retry
+          const unlock = () => {
+            forceMute(first);
+            first.play().then(startRotation).catch(showPhotoFallback);
+          };
+          ['click', 'touchstart', 'keydown', 'scroll'].forEach(evt => {
+            window.addEventListener(evt, unlock, { once: true, passive: true });
+          });
+          // If still blocked after a moment, photo slideshow
+          setTimeout(() => {
+            if (!videoWorking) showPhotoFallback();
+          }, 3000);
         });
+      } else {
+        startRotation();
       }
     };
 
-    startVideo();
-    ['click', 'touchstart', 'mousemove', 'scroll'].forEach(evt => {
-      window.addEventListener(evt, startVideo, { once: true, passive: true });
-    });
+    if (first.readyState >= 2) tryStart();
+    else {
+      first.addEventListener('canplay', tryStart, { once: true });
+      first.addEventListener('loadeddata', tryStart, { once: true });
+      setTimeout(tryStart, 600);
+    }
 
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) startVideo();
+      if (!document.hidden && videoWorking) activate(idx);
     });
-  }
+  })();
 
   /* ─── SCROLL REVEAL ─── */
   const revealEls = document.querySelectorAll(
@@ -415,7 +420,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (btn) {
-          btn.textContent = '✓ Enquiry Sent!';
+          btn.textContent = 'Enquiry Sent!';
           btn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
           btn.style.color = '#fff';
         }
@@ -525,127 +530,152 @@ document.addEventListener('DOMContentLoaded', function () {
 
   counters.forEach(c => counterObserver.observe(c));
 
-  /* ─── AUTOCOMPLETE & DIRECT PAGE REDIRECT SEARCH ─── */
-  const searchSuggestions = [
-    { name: "DJ's & Karaoke", url: "category-djs-karaoke.html" },
-    { name: "Specialty & Family Entertainment", url: "category-specialty.html" },
-    { name: "Multicultural Country Comedy", url: "category-multicultural.html" },
-    { name: "Live Bands Celebrities Stage Shows", url: "category-live-bands.html" },
-    { name: "Wedding Band Hire", url: "category-live-bands.html" },
-    { name: "Wedding DJ Hire", url: "category-djs-karaoke.html" },
-    { name: "Corporate Band Hire", url: "category-live-bands.html" },
-    { name: "Corporate DJ Hire", url: "category-djs-karaoke.html" },
-    { name: "Party Band Hire", url: "category-live-bands.html" },
-    { name: "Party DJ Hire", url: "category-djs-karaoke.html" },
-    { name: "Tribute Stage Shows", url: "category-live-bands.html" },
-    { name: "Classical Entertainment", url: "category-specialty.html" },
-    { name: "Children's Entertainment", url: "category-specialty.html" },
-    { name: "Comedians", url: "category-multicultural.html" },
-    { name: "Country Artists", url: "category-multicultural.html" },
-    { name: "Solo Acoustic Artists", url: "artists-solo.html" },
-    { name: "Duo Artists", url: "artists-duo.html" },
-    { name: "Luxury Car Hire", url: "luxury-car-hire.html" },
-    { name: "Luxury Yacht Hire", url: "luxury-yacht-hire.html" },
-    { name: "Models & Dancers", url: "models-dancers.html" },
-    { name: "Security & Guard Services", url: "security.html" }
-  ];
+  /* ─── AUTOCOMPLETE WITH ARTIST IMAGES ─── */
+  function buildSearchIndex() {
+    const items = [];
+    if (window.ELITE_FOLDERS) {
+      window.ELITE_FOLDERS.forEach(folder => {
+        if (!folder || !folder.acts || !folder.acts.length) return;
+        items.push({
+          type: 'folder',
+          name: folder.name,
+          style: folder.count + ' acts',
+          image: folder.cover,
+          url: folder.slug
+        });
+        folder.acts.forEach(act => {
+          items.push({
+            type: 'act',
+            name: act.name,
+            style: act.style || folder.name,
+            bio: act.bio || '',
+            image: act.image || folder.cover,
+            url: 'artist.html?folder=' + encodeURIComponent(folder.id) + '&act=' + encodeURIComponent(act.name),
+            folder: folder.name
+          });
+        });
+      });
+    }
+    // Service pages
+    [
+      { name: 'Weddings', url: 'weddings.html', style: 'Event package', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=200&q=80' },
+      { name: 'Corporate Events', url: 'corporate.html', style: 'Event package', image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=200&q=80' },
+      { name: 'Private Parties', url: 'private-parties.html', style: 'Event package', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=200&q=80' },
+      { name: 'Luxury Car Hire', url: 'luxury-car-hire.html', style: 'Luxury hire', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=200&q=80' },
+      { name: 'Luxury Yacht Hire', url: 'luxury-yacht-hire.html', style: 'Luxury hire', image: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&w=200&q=80' },
+      { name: 'Models & Dancers', url: 'models-dancers.html', style: 'Talent', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=200&q=80' },
+      { name: 'Security & Crowd Control', url: 'security.html', style: 'Support', image: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=200&q=80' },
+      { name: 'Stage, Sound & Lighting', url: 'stage-sound-lighting.html', style: 'Production hire', image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=200&q=80' }
+    ].forEach(s => items.push(Object.assign({ type: 'service' }, s)));
+    return items;
+  }
 
+  const searchIndex = buildSearchIndex();
   const searchInputEl = document.getElementById('hero-search-input');
   const dropdownEl = document.getElementById('search-autocomplete-dropdown');
   const searchBtnEl = document.getElementById('hero-search-btn');
 
+  function renderAutocomplete(val) {
+    if (!dropdownEl) return;
+    dropdownEl.innerHTML = '';
+    if (!val || val.length < 1) {
+      dropdownEl.style.display = 'none';
+      return;
+    }
+    const q = val.toLowerCase();
+    const matches = searchIndex.filter(item =>
+      item.name.toLowerCase().includes(q) ||
+      (item.style && item.style.toLowerCase().includes(q)) ||
+      (item.folder && item.folder.toLowerCase().includes(q)) ||
+      (item.bio && item.bio.toLowerCase().includes(q))
+    ).slice(0, 10);
+
+    if (!matches.length) {
+      dropdownEl.style.display = 'none';
+      return;
+    }
+
+    matches.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'autocomplete-item autocomplete-item--media';
+      div.setAttribute('role', 'option');
+      const imgSrc = item.image || 'images/brand/logo-nav-icon.png';
+      div.innerHTML =
+        '<div class="ac-thumb"><img src="' + imgSrc + '" alt="" loading="lazy" onerror="this.src=\'images/brand/logo-nav-icon.png\'" /></div>' +
+        '<div class="ac-meta">' +
+          '<div class="ac-name">' + item.name + '</div>' +
+          '<div class="ac-style">' + (item.style || item.type) + (item.folder ? ' · ' + item.folder : '') + '</div>' +
+        '</div>' +
+        '<span class="ac-tag">' + (item.type === 'act' ? 'Artist' : item.type === 'folder' ? 'Category' : 'Service') + '</span>';
+      div.addEventListener('click', () => {
+        searchInputEl.value = item.name;
+        dropdownEl.style.display = 'none';
+        window.location.href = item.url;
+      });
+      dropdownEl.appendChild(div);
+    });
+    dropdownEl.style.display = 'block';
+  }
+
   if (searchInputEl && dropdownEl) {
-    // Show suggestions on typing
     searchInputEl.addEventListener('input', () => {
-      const val = searchInputEl.value.toLowerCase().trim();
-      dropdownEl.innerHTML = '';
-      
-      if (!val) {
-        dropdownEl.style.display = 'none';
-        return;
-      }
-
-      const matches = searchSuggestions.filter(item => 
-        item.name.toLowerCase().includes(val)
-      );
-
-      if (matches.length > 0) {
-        matches.forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'autocomplete-item';
-          div.textContent = item.name;
-          div.addEventListener('click', () => {
-            searchInputEl.value = item.name;
-            dropdownEl.style.display = 'none';
-            window.location.href = item.url;
-          });
-          dropdownEl.appendChild(div);
-        });
-        dropdownEl.style.display = 'block';
-      } else {
-        dropdownEl.style.display = 'none';
-      }
+      renderAutocomplete(searchInputEl.value.trim());
+    });
+    searchInputEl.addEventListener('focus', () => {
+      if (searchInputEl.value.trim()) renderAutocomplete(searchInputEl.value.trim());
     });
 
-    // Hide dropdown on click outside
     document.addEventListener('click', (e) => {
       if (!searchInputEl.contains(e.target) && !dropdownEl.contains(e.target)) {
         dropdownEl.style.display = 'none';
       }
     });
 
-    // Search: prefer category / act match, else filter on-page cards
     const performRedirectSearch = () => {
-      const query = searchInputEl.value.toLowerCase().trim();
-      const genre = genreSelect ? genreSelect.value.toLowerCase().trim() : '';
-      const artistQ = artistInput ? artistInput.value.toLowerCase().trim() : '';
-      if (!query && !genre && !artistQ) return;
+      const query = searchInputEl.value.trim();
+      const genre = genreSelect ? genreSelect.value.trim() : '';
+      if (!query && !genre) return;
 
-      const categoryRoutes = {
-        dj: 'category-djs-karaoke.html',
-        band: 'category-live-bands.html',
-        comedy: 'category-multicultural.html',
-        classical: 'category-specialty.html',
-        multicultural: 'category-multicultural.html'
-      };
-      if (genre && categoryRoutes[genre] && !query && !artistQ) {
-        window.location.href = categoryRoutes[genre];
+      // Category dropdown: jump straight to folder or hire page
+      if (genre.indexOf('folder:') === 0) {
+        window.location.href = 'folder.html?id=' + encodeURIComponent(genre.slice(7));
+        return;
+      }
+      if (genre.indexOf('page:') === 0) {
+        window.location.href = genre.slice(5);
         return;
       }
 
-      // Match known act names from full roster data
-      if (window.ELITE_CATEGORY_LIST) {
-        const needle = (query || artistQ).toLowerCase();
-        if (needle) {
-          for (let i = 0; i < window.ELITE_CATEGORY_LIST.length; i++) {
-            const cat = window.ELITE_CATEGORY_LIST[i];
-            for (let s = 0; s < cat.sections.length; s++) {
-              const hit = cat.sections[s].acts.find(a => a.name.toLowerCase().includes(needle) || needle.includes(a.name.toLowerCase().split(' ')[0]));
-              if (hit) {
-                window.location.href = cat.slug + '?act=' + encodeURIComponent(hit.name);
-                return;
-              }
-            }
+      const needle = query.toLowerCase();
+      if (needle && window.ELITE_FOLDERS) {
+        for (let i = 0; i < window.ELITE_FOLDERS.length; i++) {
+          const folder = window.ELITE_FOLDERS[i];
+          if (folder.name.toLowerCase().includes(needle)) {
+            window.location.href = folder.slug;
+            return;
+          }
+          const hit = folder.acts.find(a =>
+            a.name.toLowerCase().includes(needle) ||
+            (a.style && a.style.toLowerCase().includes(needle))
+          );
+          if (hit) {
+            window.location.href = 'artist.html?folder=' + encodeURIComponent(folder.id) + '&act=' + encodeURIComponent(hit.name);
+            return;
           }
         }
       }
 
-      if (query) {
-        const directMatch = searchSuggestions.find(item =>
-          item.name.toLowerCase().includes(query) || query.includes(item.name.toLowerCase().split(' ')[0])
-        );
-        if (directMatch && !artistQ) {
-          window.location.href = directMatch.url;
-          return;
-        }
-      }
-
-      if (genre && categoryRoutes[genre]) {
-        window.location.href = categoryRoutes[genre];
+      const idxHit = searchIndex.find(item =>
+        item.name.toLowerCase().includes(needle) ||
+        (item.style && item.style.toLowerCase().includes(needle))
+      );
+      if (idxHit) {
+        window.location.href = idxHit.url;
         return;
       }
 
-      executeSearch(query, genre, artistQ);
+      // Fall back to filtering homepage roster in place
+      executeSearch(needle);
     };
 
     if (searchBtnEl) {
@@ -653,6 +683,14 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         e.stopPropagation();
         performRedirectSearch();
+      });
+    }
+
+    if (genreSelect) {
+      genreSelect.addEventListener('change', () => {
+        if (genreSelect.value && !searchInputEl.value.trim()) {
+          performRedirectSearch();
+        }
       });
     }
 
@@ -767,7 +805,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (submitBtn) {
-          submitBtn.textContent = '✓ Schedule Registered!';
+          submitBtn.textContent = 'Schedule Registered!';
           submitBtn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
           submitBtn.style.color = '#fff';
         }
@@ -799,6 +837,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const dynamicContainer = document.getElementById('dynamic-fields-container');
 
   const updateDynamicFields = () => {
+    if (!typeSelector || !dynamicContainer) return;
     const selectedType = typeSelector.value;
     dynamicContainer.innerHTML = '';
 
@@ -1040,7 +1079,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (photoInput && photoStatus) {
     photoInput.addEventListener('change', () => {
       if (photoInput.files.length > 0) {
-        photoStatus.textContent = '✓ ' + photoInput.files[0].name;
+        photoStatus.textContent = '' + photoInput.files[0].name;
         photoStatus.style.color = 'var(--gold)';
       }
     });
@@ -1051,7 +1090,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (certInput && certStatus) {
     certInput.addEventListener('change', () => {
       if (certInput.files.length > 0) {
-        certStatus.textContent = '✓ ' + certInput.files[0].name;
+        certStatus.textContent = '' + certInput.files[0].name;
         certStatus.style.color = 'var(--gold)';
       }
     });
@@ -1193,7 +1232,7 @@ document.addEventListener('DOMContentLoaded', function () {
       localStorage.setItem('elite_partners', JSON.stringify(partners));
 
       const submitBtn = document.getElementById('btn-signup-submit');
-      submitBtn.textContent = '✓ Submitted!';
+      submitBtn.textContent = 'Submitted!';
       submitBtn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
       submitBtn.style.color = '#fff';
 
@@ -1326,16 +1365,16 @@ document.addEventListener('DOMContentLoaded', function () {
         <div style="flex-grow:1; text-align:left; display:flex; flex-direction:column; justify-content:center;">
           <h4 style="color:var(--white); font-size:1.05rem; margin-bottom:0.3rem; font-weight:600;">${evt.artist}</h4>
           <p style="font-size:0.78rem; color:var(--silver-light); margin-bottom:0; display:flex; align-items:center; gap:0.5rem;">
-            <span>📍 ${evt.venue}</span>
+            <span>${evt.venue}</span>
             <span style="color:rgba(255,255,255,0.15);">|</span>
-            <a href="${evt.mapUrl}" target="_blank" style="color:var(--gold); text-decoration:none; font-weight:600; font-size:0.75rem;">Directions &rarr;</a>
+            <a href="${evt.mapUrl}" target="_blank" style="color:var(--gold); text-decoration:none; font-weight:600; font-size:0.75rem;">Directions</a>
           </p>
         </div>
       `;
 
       const btnHtml = evt.soldOut 
         ? `<button disabled style="background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05); border-radius:30px; padding:0.55rem 1.4rem; font-size:0.72rem; font-weight:700; cursor:not-allowed;">SOLD OUT</button>`
-        : `<a href="#" onclick="alert('Securing connection with ticketing agent...'); return false;" class="btn btn-gold" style="border-radius:30px; padding:0.55rem 1.4rem; font-size:0.72rem; font-weight:700; text-transform:none; box-shadow:none;">Buy Tickets &rarr;</a>`;
+        : `<a href="#" onclick="alert('Securing connection with ticketing agent...'); return false;" class="btn btn-gold" style="border-radius:30px; padding:0.55rem 1.4rem; font-size:0.72rem; font-weight:700; text-transform:none; box-shadow:none;">Buy Tickets</a>`;
 
       row.innerHTML = `
         <div style="display:flex; align-items:center; flex-grow:1; flex-wrap:wrap;">
@@ -1381,9 +1420,38 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   let deferredPrompt;
+  const PWA_TOAST_KEY = 'elite_pwa_install_dismissed';
+
+  function hasDismissedPwaToast() {
+    try {
+      return localStorage.getItem(PWA_TOAST_KEY) === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function dismissPwaToast() {
+    try {
+      localStorage.setItem(PWA_TOAST_KEY, '1');
+    } catch (e) { /* ignore */ }
+  }
+
+  function isAppAlreadyInstalled() {
+    try {
+      if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+      if (window.navigator.standalone === true) return true; // iOS Safari
+    } catch (e) { /* ignore */ }
+    return false;
+  }
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
+
+    // Only show once — skip if already dismissed, installed, or toast already on page
+    if (hasDismissedPwaToast() || isAppAlreadyInstalled()) return;
+    if (document.getElementById('pwa-install-toast')) return;
+
     const installToast = document.createElement('div');
     installToast.id = 'pwa-install-toast';
     installToast.style.cssText = `
@@ -1413,12 +1481,25 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.appendChild(installToast);
 
     document.getElementById('pwa-install-btn').addEventListener('click', () => {
+      dismissPwaToast();
       installToast.remove();
-      deferredPrompt.prompt();
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt = null;
+      }
     });
     document.getElementById('pwa-close-btn').addEventListener('click', () => {
+      dismissPwaToast();
       installToast.remove();
     });
+  });
+
+  // If user installs (or already installed), never show again
+  window.addEventListener('appinstalled', () => {
+    dismissPwaToast();
+    deferredPrompt = null;
+    const t = document.getElementById('pwa-install-toast');
+    if (t) t.remove();
   });
 
   /* ─── DYNAMIC CMS CONTENT POPULATION ─── */
@@ -1671,11 +1752,17 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('elite-cms-synced', applyCmsContent);
 
   // Pause marquees when reduced motion preferred
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll('.ticket-marquee-track, .clients-track').forEach(el => {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.ticket-marquee-track, .clients-track, .venue-marquee-track').forEach(el => {
       el.style.animation = 'none';
     });
   }
+
+} catch (eliteScriptErr) {
+  if (typeof console !== 'undefined' && console.warn) {
+    console.warn('Elite script.js non-fatal error:', eliteScriptErr);
+  }
+}
 
 });
 

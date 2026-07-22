@@ -1,0 +1,252 @@
+/* Multi-step service forms — responsive + calendar date fields */
+.sf-wrap {
+  margin-top: 2.5rem;
+  max-width: 760px;
+  margin-inline: auto;
+  width: 100%;
+  padding-inline: 0;
+  box-sizing: border-box;
+}
+.sf-card {
+  background: var(--black-3, #0d0d0d);
+  border: 1px solid rgba(200,168,76,0.22);
+  border-radius: 16px;
+  padding: 2rem 1.75rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35), 0 0 24px rgba(200,168,76,0.08);
+  box-sizing: border-box;
+  width: 100%;
+}
+.sf-title {
+  font-family: var(--font-heading, Georgia, serif);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 300;
+  color: #fff;
+  margin: 0 0 0.4rem;
+  line-height: 1.2;
+}
+.sf-sub {
+  font-size: 0.85rem;
+  color: var(--silver-mid, #aaa);
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+.sf-sub strong { color: var(--gold, #c9a84c); }
+.sf-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.35rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sf-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: rgba(255,255,255,0.06);
+  color: #aaa;
+  border: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+.sf-dot.is-active {
+  background: linear-gradient(135deg, #8a6f27, #e8c86b, #c9a84c);
+  color: #000;
+  border-color: transparent;
+}
+.sf-dot.is-done {
+  background: rgba(200,168,76,0.2);
+  color: #c9a84c;
+  border-color: rgba(200,168,76,0.4);
+}
+.sf-dot-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #777;
+  margin-right: 0.35rem;
+}
+.sf-dot-label.is-active { color: #c9a84c; }
+.sf-dot-label.is-done { color: #bbb; }
+.sf-dot-line {
+  width: 18px;
+  height: 1px;
+  background: rgba(255,255,255,0.12);
+  margin: 0 0.15rem;
+}
+.sf-step-title {
+  font-size: 1rem;
+  color: #fff;
+  margin: 0 0 1.1rem;
+  font-weight: 600;
+}
+
+/* Responsive field grid */
+.sf-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.15rem 1rem;
+}
+.sf-fields .form-group {
+  margin-bottom: 1.1rem;
+  min-width: 0;
+}
+.sf-fields .form-group--full,
+.sf-fields .form-group--select,
+.sf-fields textarea {
+  grid-column: 1 / -1;
+}
+.sf-fields .form-group--select {
+  grid-column: 1 / -1;
+}
+
+.sf-form.quote-form {
+  background: transparent;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.sf-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.sf-form .form-group label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--silver-light, #ddd);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sf-form .form-group input,
+.sf-form .form-group select,
+.sf-form .form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.92rem;
+  min-height: 46px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  color-scheme: dark;
+}
+.sf-form .form-group input:focus,
+.sf-form .form-group select:focus,
+.sf-form .form-group textarea:focus {
+  border-color: rgba(200,168,76,0.7);
+  box-shadow: 0 0 0 3px rgba(200,168,76,0.12);
+}
+.sf-form .form-group textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+.sf-form .form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23c9a84c' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.2rem;
+}
+
+/* Calendar date fields */
+.form-group--date {
+  position: relative;
+}
+.sf-date-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.sf-date-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c9a84c;
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+.sf-date-input,
+.sf-form input[type="date"].sf-date-input {
+  padding-left: 2.65rem !important;
+  cursor: pointer;
+  min-height: 48px;
+  font-variant-numeric: tabular-nums;
+}
+.sf-date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.85;
+  filter: invert(0.85) sepia(0.6) saturate(3) hue-rotate(5deg);
+  width: 1.15rem;
+  height: 1.15rem;
+}
+.sf-date-hint {
+  margin: 0.15rem 0 0;
+  font-size: 0.62rem;
+  color: #777;
+  letter-spacing: 0.04em;
+}
+
+.sf-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+.sf-actions .btn {
+  min-width: 140px;
+  border-radius: 30px;
+  text-transform: none;
+  min-height: 46px;
+}
+
+/* Cart page date fields share calendar look */
+.cart-item-fields input[type="date"] {
+  color-scheme: dark;
+  min-height: 40px;
+  cursor: pointer;
+}
+.cart-item-fields input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.9;
+  filter: invert(0.85) sepia(0.6) saturate(3) hue-rotate(5deg);
+}
+
+@media (max-width: 640px) {
+  .sf-wrap { margin-top: 1.75rem; max-width: 100%; }
+  .sf-card { padding: 1.25rem 1rem; border-radius: 14px; }
+  .sf-fields { grid-template-columns: 1fr; gap: 0; }
+  .sf-fields .form-group--date,
+  .sf-fields .form-group { grid-column: 1 / -1; }
+  .sf-dot-label { display: none; }
+  .sf-dot-line { width: 12px; }
+  .sf-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .sf-actions .btn { width: 100%; min-width: 0; }
+  .sf-form .form-group input,
+  .sf-form .form-group select,
+  .sf-form .form-group textarea {
+    font-size: 16px; /* prevent iOS zoom */
+    min-height: 48px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .sf-card { padding: 1.5rem 1.25rem; }
+}

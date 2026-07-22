@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Operations Console</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background:#050505; color:#eee; font-family:Montserrat,sans-serif; margin:0; }
+    .ops-wrap { max-width:1100px; margin:0 auto; padding:2rem 1.25rem 4rem; }
+    .ops-auth, .ops-dash { display:none; }
+    .ops-auth.is-on, .ops-dash.is-on { display:block; }
+    .ops-card { background:#0d0d0d; border:1px solid rgba(200,168,76,.25); border-radius:16px; padding:1.5rem; margin-bottom:1.25rem; }
+    .ops-card h2 { font-family:'Cormorant Garamond',serif; font-weight:400; margin:0 0 1rem; color:#fff; }
+    .ops-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    @media(max-width:720px){ .ops-grid{ grid-template-columns:1fr; } }
+    label { display:block; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#c9a84c; margin:0 0 .35rem; }
+    input, textarea, select { width:100%; box-sizing:border-box; padding:.7rem .8rem; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:#fff; font-family:inherit; margin-bottom:.85rem; }
+    textarea { min-height:90px; resize:vertical; }
+    .ops-top { display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem; align-items:center; margin-bottom:1.5rem; }
+    .ops-top h1 { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:1.8rem; margin:0; }
+    .ops-note { font-size:.78rem; color:#999; line-height:1.5; }
+    .ops-status { font-size:.8rem; color:#c9a84c; min-height:1.2em; margin:.5rem 0; }
+    table { width:100%; border-collapse:collapse; font-size:.78rem; }
+    th, td { text-align:left; padding:.55rem .4rem; border-bottom:1px solid rgba(255,255,255,.06); vertical-align:top; }
+    th { color:#c9a84c; font-size:.65rem; letter-spacing:.08em; text-transform:uppercase; }
+    .btn-row { display:flex; flex-wrap:wrap; gap:.5rem; }
+  </style>
+</head>
+<body>
+  <div class="ops-wrap">
+    <div class="ops-auth is-on" id="ops-auth">
+      <div class="ops-card" style="max-width:420px;margin:4rem auto;">
+        <h2>Operations Console</h2>
+        <p class="ops-note">Restricted access. Unauthorised use is prohibited.</p>
+        <label for="ops-email">Email</label>
+        <input id="ops-email" type="email" autocomplete="username" placeholder="info@eeevents.com.au" />
+        <label for="ops-pass">Password</label>
+        <input id="ops-pass" type="password" autocomplete="current-password" />
+        <div class="btn-row">
+          <button type="button" class="btn btn-gold" id="ops-login">Sign in</button>
+          <a class="btn btn-outline" href="admin.html">Legacy dashboard</a>
+        </div>
+        <p class="ops-status" id="ops-auth-status"></p>
+      </div>
+    </div>
+
+    <div class="ops-dash" id="ops-dash">
+      <div class="ops-top">
+        <h1>Super Admin</h1>
+        <div class="btn-row">
+          <a class="btn btn-outline" href="index.html">View site</a>
+          <a class="btn btn-outline" href="admin.html">CRM / Artists</a>
+          <button type="button" class="btn btn-outline" id="ops-logout">Log out</button>
+        </div>
+      </div>
+      <p class="ops-note">Edits save to browser storage and sync to Firebase <code>site_content/main</code> when available. Multi-enquiries and client messages appear below from local + Firestore.</p>
+
+      <div class="ops-card">
+        <h2>Homepage hero video</h2>
+        <div class="ops-grid">
+          <div>
+            <label>Hero video 1 URL</label>
+            <input id="c-heroVideo1" type="url" placeholder="https://…mp4" />
+          </div>
+          <div>
+            <label>Hero video 2 URL</label>
+            <input id="c-heroVideo2" type="url" placeholder="https://…mp4" />
+          </div>
+          <div>
+            <label>Hero video 3 URL</label>
+            <input id="c-heroVideo3" type="url" placeholder="https://…mp4" />
+          </div>
+          <div>
+            <label>Hero poster image URL</label>
+            <input id="c-heroPoster" type="url" />
+          </div>
+        </div>
+        <label>Hero title</label>
+        <input id="c-heroTitle" type="text" />
+        <label>Hero subtitle</label>
+        <input id="c-heroSubtitle" type="text" />
+        <div class="btn-row">
+          <button type="button" class="btn btn-gold" id="ops-save-content">Save site content to Firebase</button>
+        </div>
+        <p class="ops-status" id="ops-content-status"></p>
+      </div>
+
+      <div class="ops-card">
+        <h2>Company &amp; insurance</h2>
+        <div class="ops-grid">
+          <div><label>Legal name</label><input id="c-companyLegalName" type="text" /></div>
+          <div><label>ABN</label><input id="c-abn" type="text" /></div>
+          <div><label>ACN</label><input id="c-acn" type="text" /></div>
+          <div><label>ASIC registration date</label><input id="c-asicDate" type="text" /></div>
+          <div><label>Phone</label><input id="c-contactPhone" type="text" /></div>
+          <div><label>Email</label><input id="c-contactEmail" type="email" /></div>
+        </div>
+        <label>Public liability note</label>
+        <textarea id="c-publicLiability"></textarea>
+        <label>Workers compensation note</label>
+        <textarea id="c-workersComp"></textarea>
+        <label>Service areas</label>
+        <input id="c-contactAddress" type="text" />
+      </div>
+
+      <div class="ops-card">
+        <h2>Inbound multi-enquiries</h2>
+        <p class="ops-note">From multi-enquiry cart + service forms (localStorage + optional Firestore <code>inquiries</code>).</p>
+        <div style="overflow:auto;"><table><thead><tr><th>When</th><th>Name</th><th>Service</th><th>Message</th></tr></thead><tbody id="ops-inq-body"></tbody></table></div>
+      </div>
+
+      <div class="ops-card">
+        <h2>Client messages &amp; consultations</h2>
+        <div style="overflow:auto;"><table><thead><tr><th>When</th><th>Client</th><th>Type</th><th>Detail</th></tr></thead><tbody id="ops-client-body"></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="cms.js"></script>
+  <script>
+  (function () {
+    initEliteFirebase && initEliteFirebase();
+    var auth = document.getElementById('ops-auth');
+    var dash = document.getElementById('ops-dash');
+    var FIELDS = ['heroVideo1','heroVideo2','heroVideo3','heroPoster','heroTitle','heroSubtitle','companyLegalName','abn','acn','asicDate','contactPhone','contactEmail','contactAddress','publicLiability','workersComp'];
+
+    function showDash() {
+      auth.classList.remove('is-on');
+      dash.classList.add('is-on');
+      loadContent();
+      loadInquiries();
+      loadClientFeed();
+    }
+
+    function loadContent() {
+      if (!window.EliteCMS) return;
+      var c = EliteCMS.getContent();
+      FIELDS.forEach(function (k) {
+        var el = document.getElementById('c-' + k);
+        if (el) el.value = c[k] || '';
+      });
+    }
+
+    function loadInquiries() {
+      var body = document.getElementById('ops-inq-body');
+      var rows = [];
+      try { rows = JSON.parse(localStorage.getItem('elite_inquiries') || '[]'); } catch (e) {}
+      body.innerHTML = rows.slice(0, 40).map(function (r) {
+        return '<tr><td>' + (r.timestamp || '') + '</td><td>' + (r.name || '') + '<br><span style="color:#888">' + (r.email || '') + '</span></td><td>' + (r.service || '') + '</td><td style="white-space:pre-wrap;max-width:320px;">' + (r.message || '').slice(0, 280) + '</td></tr>';
+      }).join('') || '<tr><td colspan="4">No enquiries yet.</td></tr>';
+    }
+
+    function loadClientFeed() {
+      var body = document.getElementById('ops-client-body');
+      var rows = [];
+      try { rows = JSON.parse(localStorage.getItem('elite_client_feed') || '[]'); } catch (e) {}
+      function paint(list) {
+        body.innerHTML = list.slice(0, 50).map(function (r) {
+          return '<tr><td>' + (r.at || '') + '</td><td>' + (r.client || '') + '</td><td>' + (r.type || '') + '</td><td style="white-space:pre-wrap;max-width:320px;">' + (r.detail || '') + '</td></tr>';
+        }).join('') || '<tr><td colspan="4">No client activity yet.</td></tr>';
+      }
+      paint(rows);
+      try {
+        if (window.EliteFirebase && EliteFirebase.db) {
+          EliteFirebase.db.collection('client_feed').orderBy('at', 'desc').limit(40).get().then(function (snap) {
+            var remote = [];
+            snap.forEach(function (d) { remote.push(d.data()); });
+            if (remote.length) paint(remote);
+          }).catch(function () {});
+        }
+      } catch (e) {}
+    }
+
+    document.getElementById('ops-login').onclick = function () {
+      var email = (document.getElementById('ops-email').value || '').trim().toLowerCase();
+      var pass = document.getElementById('ops-pass').value || '';
+      var st = document.getElementById('ops-auth-status');
+      if (email === 'info@eeevents.com.au' && pass === 'admin123') {
+        localStorage.setItem('elite_admin_authed', 'true');
+        showDash();
+        return;
+      }
+      if (window.EliteFirebase && EliteFirebase.auth) {
+        st.textContent = 'Signing in with Firebase…';
+        EliteFirebase.auth.signInWithEmailAndPassword(email, pass).then(function () {
+          localStorage.setItem('elite_admin_authed', 'true');
+          showDash();
+        }).catch(function () {
+          st.textContent = 'Auth failed. Use Super Admin credentials or Firebase user.';
+        });
+      } else {
+        st.textContent = 'Use info@eeevents.com.au / admin123 for local Super Admin.';
+      }
+    };
+
+    document.getElementById('ops-logout').onclick = function () {
+      localStorage.removeItem('elite_admin_authed');
+      try { if (EliteFirebase && EliteFirebase.auth) EliteFirebase.auth.signOut(); } catch (e) {}
+      dash.classList.remove('is-on');
+      auth.classList.add('is-on');
+    };
+
+    document.getElementById('ops-save-content').onclick = function () {
+      if (!window.EliteCMS) return;
+      var payload = {};
+      FIELDS.forEach(function (k) {
+        var el = document.getElementById('c-' + k);
+        if (el) payload[k] = el.value.trim();
+      });
+      EliteCMS.saveContent(payload);
+      EliteCMS.applyHeroVideos();
+      document.getElementById('ops-content-status').textContent = 'Saved locally and pushed to Firebase (if connected).';
+    };
+
+    if (localStorage.getItem('elite_admin_authed') === 'true') showDash();
+  })();
+  </script>
+</body>
+</html>

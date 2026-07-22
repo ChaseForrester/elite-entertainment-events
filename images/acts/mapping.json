@@ -1,0 +1,576 @@
+{
+  "celebrity-bands-and-artists::Guy Sebastian": {
+    "section": "celebrity-bands-and-artists",
+    "name": "Guy Sebastian",
+    "image": "images/acts/celebrity-bands-and-artists/guy-sebastian.webp",
+    "score": 1.0,
+    "source": "Guy Sebastian.webp"
+  },
+  "celebrity-bands-and-artists::Jessica Mauboy": {
+    "section": "celebrity-bands-and-artists",
+    "name": "Jessica Mauboy",
+    "image": "images/acts/celebrity-bands-and-artists/jessica-mauboy.webp",
+    "score": 1.0,
+    "source": "Jessica Mauboy.webp"
+  },
+  "celebrity-bands-and-artists::Anthony Callea": {
+    "section": "celebrity-bands-and-artists",
+    "name": "Anthony Callea",
+    "image": "images/acts/celebrity-bands-and-artists/anthony-callea.png",
+    "score": 1.0,
+    "source": "Anthony Callea .png"
+  },
+  "celebrity-bands-and-artists::Dami Im": {
+    "section": "celebrity-bands-and-artists",
+    "name": "Dami Im",
+    "image": "images/acts/celebrity-bands-and-artists/dami-im.webp",
+    "score": 1.0,
+    "source": "Dami Im.webp"
+  },
+  "celebrity-bands-and-artists::Mark Vincent": {
+    "section": "celebrity-bands-and-artists",
+    "name": "Mark Vincent",
+    "image": "images/acts/celebrity-bands-and-artists/mark-vincent.png",
+    "score": 1.0,
+    "source": "Mark Vincent.png"
+  },
+  "celebrity-bands-and-artists::Casey Donovan": {
+    "section": "celebrity-bands-and-artists",
+    "name": "Casey Donovan",
+    "image": "images/acts/celebrity-bands-and-artists/casey-donovan.webp",
+    "score": 1.0,
+    "source": "Casey Donovan.webp"
+  },
+  "celebrity-bands-and-artists::Justice Crew": {
+    "section": "celebrity-bands-and-artists",
+    "name": "Justice Crew",
+    "image": "images/acts/celebrity-bands-and-artists/justice-crew.jpg",
+    "score": 1.0,
+    "source": "Justice Crew,.jpeg"
+  },
+  "celebrity-bands-and-artists::Ricki-Lee Coulter": {
+    "section": "celebrity-bands-and-artists",
+    "name": "Ricki-Lee Coulter",
+    "image": "images/acts/celebrity-bands-and-artists/ricki-lee-coulter.webp",
+    "score": 1.0,
+    "source": "Ricki-Lee Coulter.webp"
+  },
+  "bands::Jelly Bean Jam": {
+    "section": "bands",
+    "name": "Jelly Bean Jam",
+    "image": "images/acts/bands/jelly-bean-jam.jpg",
+    "score": 1.0,
+    "source": "Jelly Bean Jam.jpg"
+  },
+  "bands::Brown Sugar": {
+    "section": "bands",
+    "name": "Brown Sugar",
+    "image": "images/acts/bands/brown-sugar.webp",
+    "score": 1.0,
+    "source": "Brown Sugar Band.webp"
+  },
+  "bands::High Rollers": {
+    "section": "bands",
+    "name": "High Rollers",
+    "image": "images/acts/bands/high-rollers.jpg",
+    "score": 1.0,
+    "source": "High Rollers Band.jpg"
+  },
+  "bands::Mesa Groove": {
+    "section": "bands",
+    "name": "Mesa Groove",
+    "image": "images/acts/bands/mesa-groove.jpg",
+    "score": 1.0,
+    "source": "Mesa Groove Band.jpg"
+  },
+  "bands::Let's Groove": {
+    "section": "bands",
+    "name": "Let's Groove",
+    "image": "images/acts/bands/let-s-groove.jpg",
+    "score": 1.0,
+    "source": "Let\u2019s Groove.jpeg"
+  },
+  "soloists-duos-trios::David Agius": {
+    "section": "soloists-duos-trios",
+    "name": "David Agius",
+    "image": "images/acts/soloists-duos-trios/david-agius.jpg",
+    "score": 1.0,
+    "source": "David Agius Solo.jpeg"
+  },
+  "soloists-duos-trios::Zoltan": {
+    "section": "soloists-duos-trios",
+    "name": "Zoltan",
+    "image": null,
+    "score": 0.3157894736842105,
+    "source": null
+  },
+  "soloists-duos-trios::Marco - Soloist": {
+    "section": "soloists-duos-trios",
+    "name": "Marco - Soloist",
+    "image": "images/acts/soloists-duos-trios/marco-soloist.jpg",
+    "score": 1.0,
+    "source": "Marco Solo.jpeg"
+  },
+  "soloists-duos-trios::Jo Elms": {
+    "section": "soloists-duos-trios",
+    "name": "Jo Elms",
+    "image": "images/acts/soloists-duos-trios/jo-elms.jpg",
+    "score": 1.0,
+    "source": "Jo Elms solo.jpeg"
+  },
+  "soloists-duos-trios::AM 2 PM Duo": {
+    "section": "soloists-duos-trios",
+    "name": "AM 2 PM Duo",
+    "image": "images/acts/soloists-duos-trios/am-2-pm-duo.jpg",
+    "score": 1.0,
+    "source": "AM 2 PM Duo.jpeg"
+  },
+  "soloists-duos-trios::Flava Duo": {
+    "section": "soloists-duos-trios",
+    "name": "Flava Duo",
+    "image": "images/acts/soloists-duos-trios/flava-duo.webp",
+    "score": 1.0,
+    "source": "Flava Duo.webp"
+  },
+  "soloists-duos-trios::The Hype Boys Trio": {
+    "section": "soloists-duos-trios",
+    "name": "The Hype Boys Trio",
+    "image": "images/acts/soloists-duos-trios/the-hype-boys-trio.png",
+    "score": 1.0,
+    "source": "The Hype Boys Trio.png"
+  },
+  "soloists-duos-trios::Geoff Zhang Duo": {
+    "section": "soloists-duos-trios",
+    "name": "Geoff Zhang Duo",
+    "image": "images/acts/soloists-duos-trios/geoff-zhang-duo.jpg",
+    "score": 1.0,
+    "source": "Geoff Zhang Duo.jpg"
+  },
+  "soloists-duos-trios::Wild Cats Trio": {
+    "section": "soloists-duos-trios",
+    "name": "Wild Cats Trio",
+    "image": "images/acts/soloists-duos-trios/wild-cats-trio.jpg",
+    "score": 1.0,
+    "source": "WIld Cats Trio.jpg"
+  },
+  "stage-shows::The Pink Show": {
+    "section": "stage-shows",
+    "name": "The Pink Show",
+    "image": "images/acts/stage-shows/the-pink-show.png",
+    "score": 1.0,
+    "source": "The Pink Show.png"
+  },
+  "stage-shows::Kick \u2013 The INXS Show": {
+    "section": "stage-shows",
+    "name": "Kick \u2013 The INXS Show",
+    "image": "images/acts/stage-shows/kick-the-inxs-show.jpg",
+    "score": 1.0,
+    "source": "Kick \u2013 The INXS Show.jpeg"
+  },
+  "stage-shows::ABBAlanche": {
+    "section": "stage-shows",
+    "name": "ABBAlanche",
+    "image": "images/acts/stage-shows/abbalanche.jpg",
+    "score": 1.0,
+    "source": "ABBAlanche.jpg"
+  },
+  "stage-shows::The BEATnix Show": {
+    "section": "stage-shows",
+    "name": "The BEATnix Show",
+    "image": "images/acts/stage-shows/the-beatnix-show.jpg",
+    "score": 1.0,
+    "source": "The BEATnix Show.jpeg"
+  },
+  "stage-shows::Audio Vixen": {
+    "section": "stage-shows",
+    "name": "Audio Vixen",
+    "image": "images/acts/stage-shows/audio-vixen.jpg",
+    "score": 1.0,
+    "source": "Audio Vixen.jpg"
+  },
+  "stage-shows::Sing Little Sister": {
+    "section": "stage-shows",
+    "name": "Sing Little Sister",
+    "image": null,
+    "score": 0.2777777777777778,
+    "source": null
+  },
+  "stage-shows::The Robertson Bros.": {
+    "section": "stage-shows",
+    "name": "The Robertson Bros.",
+    "image": "images/acts/stage-shows/the-robertson-bros.jpg",
+    "score": 1.0,
+    "source": "The Robertson Bros.jpeg"
+  },
+  "multicultural-entertainment::Chinese Dance Spectacular": {
+    "section": "multicultural-entertainment",
+    "name": "Chinese Dance Spectacular",
+    "image": "images/acts/multicultural-entertainment/chinese-dance-spectacular.jpg",
+    "score": 1.0,
+    "source": "Chinese Dance Spectacular.jpg"
+  },
+  "multicultural-entertainment::The Mandarin Band": {
+    "section": "multicultural-entertainment",
+    "name": "The Mandarin Band",
+    "image": "images/acts/multicultural-entertainment/the-mandarin-band.jpg",
+    "score": 1.0,
+    "source": "The Mandarin Band.jpg"
+  },
+  "multicultural-entertainment::An Italian Affair": {
+    "section": "multicultural-entertainment",
+    "name": "An Italian Affair",
+    "image": null,
+    "score": 0.36363636363636365,
+    "source": null
+  },
+  "multicultural-entertainment::Salsa Kings": {
+    "section": "multicultural-entertainment",
+    "name": "Salsa Kings",
+    "image": "images/acts/multicultural-entertainment/salsa-kings.jpg",
+    "score": 1.0,
+    "source": "Salsa Kings.jpg"
+  },
+  "multicultural-entertainment::Paradise Greek Band": {
+    "section": "multicultural-entertainment",
+    "name": "Paradise Greek Band",
+    "image": "images/acts/multicultural-entertainment/paradise-greek-band.jpg",
+    "score": 1.0,
+    "source": "Paradise Greek Band.jpg"
+  },
+  "multicultural-entertainment::M7 Filipino Band": {
+    "section": "multicultural-entertainment",
+    "name": "M7 Filipino Band",
+    "image": "images/acts/multicultural-entertainment/m7-filipino-band.jpg",
+    "score": 1.0,
+    "source": "M7 Filipino Band.jpg"
+  },
+  "multicultural-entertainment::Utah Lebanese Belly Dancers": {
+    "section": "multicultural-entertainment",
+    "name": "Utah Lebanese Belly Dancers",
+    "image": "images/acts/multicultural-entertainment/utah-lebanese-belly-dancers.jpg",
+    "score": 1.0,
+    "source": "Utah Lebanese Belly Dancers.jpeg"
+  },
+  "multicultural-entertainment::The Oriental Show featuring Lily Cheng": {
+    "section": "multicultural-entertainment",
+    "name": "The Oriental Show featuring Lily Cheng",
+    "image": null,
+    "score": 0.34782608695652173,
+    "source": null
+  },
+  "multicultural-entertainment::Chinese Lion Dancers": {
+    "section": "multicultural-entertainment",
+    "name": "Chinese Lion Dancers",
+    "image": "images/acts/multicultural-entertainment/chinese-lion-dancers.avif",
+    "score": 1.0,
+    "source": "Chinese Lion Dancers.avif"
+  },
+  "multicultural-entertainment::Maggie Chung": {
+    "section": "multicultural-entertainment",
+    "name": "Maggie Chung",
+    "image": "images/acts/multicultural-entertainment/maggie-chung.webp",
+    "score": 1.0,
+    "source": "Maggie Chung.webp"
+  },
+  "multicultural-entertainment::Thailand Dancers": {
+    "section": "multicultural-entertainment",
+    "name": "Thailand Dancers",
+    "image": "images/acts/multicultural-entertainment/thailand-dancers.jpg",
+    "score": 1.0,
+    "source": "Thailand Dancers.jpeg"
+  },
+  "multicultural-entertainment::Zeffe Lebanese Drummers": {
+    "section": "multicultural-entertainment",
+    "name": "Zeffe Lebanese Drummers",
+    "image": "images/acts/multicultural-entertainment/zeffe-lebanese-drummers.jpg",
+    "score": 1.0,
+    "source": "Zeffe Lebanese Drummers.jpg"
+  },
+  "multicultural-entertainment::Gonzalo Porta Latin Spectacular": {
+    "section": "multicultural-entertainment",
+    "name": "Gonzalo Porta Latin Spectacular",
+    "image": "images/acts/multicultural-entertainment/gonzalo-porta-latin-spectacular.jpg",
+    "score": 1.0,
+    "source": "Gonzalo Porta Latin Spectacular.jpeg"
+  },
+  "country::Melinda Schneider": {
+    "section": "country",
+    "name": "Melinda Schneider",
+    "image": "images/acts/country/melinda-schneider.webp",
+    "score": 1.0,
+    "source": "Melinda Schneider,.webp"
+  },
+  "country::Adam Brand": {
+    "section": "country",
+    "name": "Adam Brand",
+    "image": "images/acts/country/adam-brand.jpg",
+    "score": 1.0,
+    "source": "Adam Brand.jpeg"
+  },
+  "country::Beccy Cole": {
+    "section": "country",
+    "name": "Beccy Cole",
+    "image": "images/acts/country/beccy-cole.webp",
+    "score": 1.0,
+    "source": "Beccy Cole.webp"
+  },
+  "country::Jason Owen": {
+    "section": "country",
+    "name": "Jason Owen",
+    "image": "images/acts/country/jason-owen.jpg",
+    "score": 1.0,
+    "source": "Jason Owen.jpg"
+  },
+  "comedians::Vince Sorrenti": {
+    "section": "comedians",
+    "name": "Vince Sorrenti",
+    "image": "images/acts/comedians/vince-sorrenti.jpg",
+    "score": 1.0,
+    "source": "Vince Sorrenti.jpg"
+  },
+  "comedians::Joe Avati": {
+    "section": "comedians",
+    "name": "Joe Avati",
+    "image": "images/acts/comedians/joe-avati.png",
+    "score": 1.0,
+    "source": "Joe Avati.png"
+  },
+  "comedians::Anh Do": {
+    "section": "comedians",
+    "name": "Anh Do",
+    "image": "images/acts/comedians/anh-do.jpg",
+    "score": 1.0,
+    "source": "Anh Do.jpg"
+  },
+  "comedians::George Kapiniaris": {
+    "section": "comedians",
+    "name": "George Kapiniaris",
+    "image": "images/acts/comedians/george-kapiniaris.jpg",
+    "score": 1.0,
+    "source": "George Kapiniaris.jpg"
+  },
+  "childrens-entertainment::The Smurfs Show": {
+    "section": "childrens-entertainment",
+    "name": "The Smurfs Show",
+    "image": "images/acts/childrens-entertainment/the-smurfs-show.jpg",
+    "score": 1.0,
+    "source": "The Smurf Show.jpg"
+  },
+  "childrens-entertainment::The Wiggles": {
+    "section": "childrens-entertainment",
+    "name": "The Wiggles",
+    "image": "images/acts/childrens-entertainment/the-wiggles.jpg",
+    "score": 1.0,
+    "source": "The Wiggles.jpg"
+  },
+  "childrens-entertainment::Magic to the Max Childrens Show": {
+    "section": "childrens-entertainment",
+    "name": "Magic to the Max Childrens Show",
+    "image": "images/acts/childrens-entertainment/magic-to-the-max-childrens-show.jpg",
+    "score": 1.0,
+    "source": "Magic to the Max Childrens Show.jpeg"
+  },
+  "childrens-entertainment::The Magical World of Crazy Science": {
+    "section": "childrens-entertainment",
+    "name": "The Magical World of Crazy Science",
+    "image": "images/acts/childrens-entertainment/the-magical-world-of-crazy-science.jpg",
+    "score": 1.0,
+    "source": "The Magical World of Crazy Science.jpg"
+  },
+  "classical-entertainment::Mimosa Duo": {
+    "section": "classical-entertainment",
+    "name": "Mimosa Duo",
+    "image": "images/acts/classical-entertainment/mimosa-duo.jpg",
+    "score": 1.0,
+    "source": "Mimosa Duo.jpg"
+  },
+  "classical-entertainment::Gaetano Bonfante": {
+    "section": "classical-entertainment",
+    "name": "Gaetano Bonfante",
+    "image": "images/acts/classical-entertainment/gaetano-bonfante.jpg",
+    "score": 1.0,
+    "source": "Gaetano Bonfante.jpeg"
+  },
+  "classical-entertainment::Bocelli & Brightman": {
+    "section": "classical-entertainment",
+    "name": "Bocelli & Brightman",
+    "image": "images/acts/classical-entertainment/bocelli-and-brightman.jpg",
+    "score": 1.0,
+    "source": "Bocelli & Brightman.jpeg"
+  },
+  "classical-entertainment::A Night at the Proms": {
+    "section": "classical-entertainment",
+    "name": "A Night at the Proms",
+    "image": "images/acts/classical-entertainment/a-night-at-the-proms.jpg",
+    "score": 1.0,
+    "source": "A Night at the Proms.jpg"
+  },
+  "classical-entertainment::String Sirens": {
+    "section": "classical-entertainment",
+    "name": "String Sirens",
+    "image": "images/acts/classical-entertainment/string-sirens.jpg",
+    "score": 1.0,
+    "source": "String Sirens,.jpg"
+  },
+  "classical-entertainment::Apollo Strings": {
+    "section": "classical-entertainment",
+    "name": "Apollo Strings",
+    "image": "images/acts/classical-entertainment/apollo-strings.jpg",
+    "score": 1.0,
+    "source": "Apollo Strings.jpeg"
+  },
+  "classical-entertainment::Vixen Strings": {
+    "section": "classical-entertainment",
+    "name": "Vixen Strings",
+    "image": "images/acts/classical-entertainment/vixen-strings.jpg",
+    "score": 1.0,
+    "source": "Vixen Strings.jpg"
+  },
+  "seasonal-specialty-entertainment::Jingle Bellies Christmas": {
+    "section": "seasonal-specialty-entertainment",
+    "name": "Jingle Bellies Christmas",
+    "image": "images/acts/seasonal-specialty-entertainment/jingle-bellies-christmas.jpg",
+    "score": 1.0,
+    "source": "Jingle Bellies.jpeg"
+  },
+  "seasonal-specialty-entertainment::Mrs Claus Christmas": {
+    "section": "seasonal-specialty-entertainment",
+    "name": "Mrs Claus Christmas",
+    "image": "images/acts/seasonal-specialty-entertainment/mrs-claus-christmas.jpg",
+    "score": 1.0,
+    "source": "Mrs Claus Christmas.jpeg"
+  },
+  "seasonal-specialty-entertainment::Santa Claus Christmas": {
+    "section": "seasonal-specialty-entertainment",
+    "name": "Santa Claus Christmas",
+    "image": "images/acts/seasonal-specialty-entertainment/santa-claus-christmas.avif",
+    "score": 1.0,
+    "source": "Santa Claus Christmas.avif"
+  },
+  "seasonal-specialty-entertainment::Ian Cooper St. Patrick's Day": {
+    "section": "seasonal-specialty-entertainment",
+    "name": "Ian Cooper St. Patrick's Day",
+    "image": null,
+    "score": 0.3582089552238806,
+    "source": null
+  },
+  "seasonal-specialty-entertainment::Easter Bunny Easter": {
+    "section": "seasonal-specialty-entertainment",
+    "name": "Easter Bunny Easter",
+    "image": "images/acts/seasonal-specialty-entertainment/easter-bunny-easter.webp",
+    "score": 1.0,
+    "source": "Easter Bunny Easter.webp"
+  },
+  "seasonal-specialty-entertainment::Australia Day & NAIDOC": {
+    "section": "seasonal-specialty-entertainment",
+    "name": "Australia Day & NAIDOC",
+    "image": "images/acts/seasonal-specialty-entertainment/australia-day-and-naidoc.avif",
+    "score": 1.0,
+    "source": "Australia Day & NAIDOC.avif"
+  },
+  "seasonal-specialty-entertainment::The Bavarians Oom Pa Pa Band Oktoberfest": {
+    "section": "seasonal-specialty-entertainment",
+    "name": "The Bavarians Oom Pa Pa Band Oktoberfest",
+    "image": "images/acts/seasonal-specialty-entertainment/the-bavarians-oom-pa-pa-band-oktoberfest.jpg",
+    "score": 1.0,
+    "source": "The Bavarians Oom Pa Pa Band Oktoberfest.jpeg"
+  },
+  "roving-entertainment::Julie Accordion": {
+    "section": "roving-entertainment",
+    "name": "Julie Accordion",
+    "image": "images/acts/roving-entertainment/julie-accordion.jpg",
+    "score": 1.0,
+    "source": "Julie Accordion.jpeg"
+  },
+  "roving-entertainment::Ian Cooper Irish Jig Music": {
+    "section": "roving-entertainment",
+    "name": "Ian Cooper Irish Jig Music",
+    "image": "images/acts/roving-entertainment/ian-cooper-irish-jig-music.jpg",
+    "score": 1.0,
+    "source": "Ian Cooper Irish Jig Music.jpeg"
+  },
+  "roving-entertainment::Brendan the Roving Magician": {
+    "section": "roving-entertainment",
+    "name": "Brendan the Roving Magician",
+    "image": "images/acts/roving-entertainment/brendan-the-roving-magician.jpg",
+    "score": 1.0,
+    "source": "Brendan the Roving Magician.jpeg"
+  },
+  "roving-entertainment::Julie & Tony Italian": {
+    "section": "roving-entertainment",
+    "name": "Julie & Tony Italian",
+    "image": null,
+    "score": 0.3783783783783784,
+    "source": null
+  },
+  "roving-entertainment::Asian Grace Stilt Walking": {
+    "section": "roving-entertainment",
+    "name": "Asian Grace Stilt Walking",
+    "image": "images/acts/roving-entertainment/asian-grace-stilt-walking.webp",
+    "score": 1.0,
+    "source": "Asian Grace Stilt WalkingAsian Grace Stilt Walking.webp"
+  },
+  "roving-entertainment::Kenny Chinese Juggler": {
+    "section": "roving-entertainment",
+    "name": "Kenny Chinese Juggler",
+    "image": "images/acts/roving-entertainment/kenny-chinese-juggler.webp",
+    "score": 1.0,
+    "source": "Kenny Chinese Juggler.webp"
+  },
+  "roving-entertainment::Neo Chinese Change Face Artist": {
+    "section": "roving-entertainment",
+    "name": "Neo Chinese Change Face Artist",
+    "image": "images/acts/roving-entertainment/neo-chinese-change-face-artist.webp",
+    "score": 1.0,
+    "source": "Neo Chinese Change Face Artist.webp"
+  },
+  "roving-entertainment::Thai Roving Dancers": {
+    "section": "roving-entertainment",
+    "name": "Thai Roving Dancers",
+    "image": "images/acts/roving-entertainment/thai-roving-dancers.jpg",
+    "score": 1.0,
+    "source": "Thai Roving Dancers.jpeg"
+  },
+  "roving-entertainment::Samba Brazilian Dancers": {
+    "section": "roving-entertainment",
+    "name": "Samba Brazilian Dancers",
+    "image": "images/acts/roving-entertainment/samba-brazilian-dancers.jpg",
+    "score": 1.0,
+    "source": "Samba Brazilian Dancers.jpg"
+  },
+  "djs-karaoke::Dean the Karaoke Man": {
+    "section": "djs-karaoke",
+    "name": "Dean the Karaoke Man",
+    "image": "images/acts/djs-karaoke/dean-the-karaoke-man.jpg",
+    "score": 1.0,
+    "source": "Dean the Karaoke Man.jpeg"
+  },
+  "djs-karaoke::DJ Chad": {
+    "section": "djs-karaoke",
+    "name": "DJ Chad",
+    "image": "images/acts/djs-karaoke/dj-chad.jpg",
+    "score": 1.0,
+    "source": "DJ Chad.jpeg"
+  },
+  "djs-karaoke::DJ James Mack": {
+    "section": "djs-karaoke",
+    "name": "DJ James Mack",
+    "image": "images/acts/djs-karaoke/dj-james-mack.webp",
+    "score": 1.0,
+    "source": "DJ James Mack.webp"
+  },
+  "djs-karaoke::DJ Nick Field": {
+    "section": "djs-karaoke",
+    "name": "DJ Nick Field",
+    "image": "images/acts/djs-karaoke/dj-nick-field.jpg",
+    "score": 1.0,
+    "source": "DJ Nick Field.jpeg"
+  },
+  "djs-karaoke::App Based DJ": {
+    "section": "djs-karaoke",
+    "name": "App Based DJ",
+    "image": "images/acts/djs-karaoke/app-based-dj.png",
+    "score": 1.0,
+    "source": "App Logo .png"
+  }
+}

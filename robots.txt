@@ -14,3 +14,6 @@ Allow: /
 
 User-agent: Googlebot-Image
 Allow: /
+
+Disallow: /ops-console.html
+Disallow: /admin.html

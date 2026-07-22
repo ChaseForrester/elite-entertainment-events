@@ -74,14 +74,15 @@
     "id": "mark-vincent",
     "name": "Mark Vincent",
     "category": "celebrity",
-    "genre": "Classical / Opera Tenor",
-    "image": "images/solo.jpg",
+    "genre": "Solo Performer · Classical / Opera Tenor",
+    "image": "images/acts/celebrity-bands-and-artists/mark-vincent.jpg",
     "rate": "$8,500+",
-    "bio": "Australia's premier classical crossover tenor bringing operatic elegance to VIP celebrations.",
+    "bio": "Australian operatic tenor and solo performer — powerful, emotive vocals for formal dinners, ceremonies, galas and premium private events.",
     "featured": false,
     "tags": [
-      "Celebrity",
-      "Opera"
+      "Solo",
+      "Opera",
+      "Tenor"
     ]
   },
   {
@@ -196,20 +197,6 @@
     "tags": [
       "Bands",
       "Cover Band"
-    ]
-  },
-  {
-    "id": "david-agius",
-    "name": "David Agius",
-    "category": "solos",
-    "genre": "Acoustic Guitar & Vocalist",
-    "image": "images/solo.jpg",
-    "rate": "$950+",
-    "bio": "Versatile acoustic guitarist and vocalist specializing in romantic ceremony songs and cocktail tunes.",
-    "featured": true,
-    "tags": [
-      "Solo",
-      "Acoustic"
     ]
   },
   {
@@ -339,16 +326,17 @@
     ]
   },
   {
-    "id": "abbalanche",
-    "name": "ABBALanche",
+    "id": "fabba",
+    "name": "FABBA",
     "category": "tributes",
     "genre": "ABBA Tribute Show",
-    "image": "images/party-band.jpg",
-    "rate": "$4,000+",
-    "bio": "Multi-award winning ABBA tribute show with authentic costumes and harmony singing.",
+    "image": "images/acts/stage-shows/fabba.jpg",
+    "rate": "POA",
+    "bio": "Australia's memorable ABBA show (est. 1996) — hits, costumes and Mamma Mia–style theatrics. fabba.com.au",
     "featured": true,
     "tags": [
       "Tribute",
+      "ABBA",
       "Disco"
     ]
   },
@@ -392,20 +380,6 @@
     "tags": [
       "Tribute",
       "Pop"
-    ]
-  },
-  {
-    "id": "robertson-bros",
-    "name": "The Robertson Bros",
-    "category": "tributes",
-    "genre": "Variety TV Show",
-    "image": "images/party-band.jpg",
-    "rate": "$5,000+",
-    "bio": "Retro TV variety show featuring 60s and 70s rock 'n' roll classics.",
-    "featured": true,
-    "tags": [
-      "Show",
-      "Retro"
     ]
   },
   {
@@ -1253,10 +1227,17 @@
   "heroTitle": "ELITE ENTERTAINMENT",
   "heroSubtitle": "UNRIVALLED ENTERTAINMENT FOR EXTRAORDINARY EVENTS",
   "heroBackdrop": "hero_banner.png",
+  "heroVideo1": "https://assets.mixkit.co/videos/4275/4275-720.mp4",
+  "heroVideo2": "https://assets.mixkit.co/videos/41764/41764-720.mp4",
+  "heroVideo3": "https://assets.mixkit.co/videos/4210/4210-720.mp4",
+  "heroPoster": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=60",
+  "introVideo": "videos/elite-intro-animation.mp4",
   "companyLegalName": "ELITE ENTERTAINMENT & EVENTS PTY LTD",
   "abn": "17 698 991 481",
   "acn": "698 991 481",
   "asicDate": "12/06/2026",
+  "publicLiability": "Public Liability Insurance held — certificates available on request for tender and venue compliance.",
+  "workersComp": "Workers compensation cover as required for contracted personnel.",
   "contactPhone": "+61 417 221 111",
   "contactEmail": "info@eeevents.com.au",
   "contactAddress": "Sydney | Melbourne | Brisbane | Gold Coast"
@@ -1267,45 +1248,95 @@
       this.init();
     }
 
+    seedIfEmpty(key, defaults) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw || raw === '[]' || raw === '{}') {
+          localStorage.setItem(key, JSON.stringify(defaults));
+        } else if (key === STORAGE_KEYS.CONTENT) {
+          // merge new default keys without wiping admin edits
+          const cur = JSON.parse(raw);
+          localStorage.setItem(key, JSON.stringify(Object.assign({}, defaults, cur)));
+        }
+      } catch (e) {
+        localStorage.setItem(key, JSON.stringify(defaults));
+      }
+    }
+
     init() {
-      localStorage.setItem(STORAGE_KEYS.ARTISTS, JSON.stringify(DEFAULT_ARTISTS));
-      localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(DEFAULT_EVENTS));
-      localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(DEFAULT_CATEGORIES));
-      localStorage.setItem(STORAGE_KEYS.CONTENT, JSON.stringify(DEFAULT_CONTENT));
+      this.seedIfEmpty(STORAGE_KEYS.ARTISTS, DEFAULT_ARTISTS);
+      this.seedIfEmpty(STORAGE_KEYS.EVENTS, DEFAULT_EVENTS);
+      this.seedIfEmpty(STORAGE_KEYS.CATEGORIES, DEFAULT_CATEGORIES);
+      this.seedIfEmpty(STORAGE_KEYS.CONTENT, DEFAULT_CONTENT);
       this.syncFirestore();
+      this.applyHeroVideos();
+    }
+
+    applyHeroVideos() {
+      try {
+        const c = this.getContent();
+        const slides = document.querySelectorAll('[data-hero-slide] source, video[data-hero-slide] source');
+        const videos = [c.heroVideo1, c.heroVideo2, c.heroVideo3].filter(Boolean);
+        const nodes = document.querySelectorAll('video[data-hero-slide]');
+        nodes.forEach(function (vid, i) {
+          if (!videos[i]) return;
+          var src = vid.querySelector('source');
+          if (src && src.getAttribute('src') !== videos[i]) {
+            src.setAttribute('src', videos[i]);
+            try { vid.load(); } catch (e) {}
+          }
+          if (c.heroPoster) vid.setAttribute('poster', c.heroPoster);
+        });
+      } catch (e) {}
     }
 
     syncFirestore() {
-      if (window.firebase && window.firebase.firestore) {
-        try {
-          const db = firebase.firestore();
-          db.collection('site_content').doc('main').get().then(doc => {
-            if (doc.exists) {
-              const data = doc.data();
-              if (data.artists) localStorage.setItem(STORAGE_KEYS.ARTISTS, JSON.stringify(data.artists));
-              if (data.events) localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(data.events));
-              if (data.content) localStorage.setItem(STORAGE_KEYS.CONTENT, JSON.stringify(data.content));
+      var self = this;
+      function pull(db) {
+        db.collection('site_content').doc('main').get().then(function (doc) {
+          if (doc.exists) {
+            var data = doc.data() || {};
+            if (data.artists) localStorage.setItem(STORAGE_KEYS.ARTISTS, JSON.stringify(data.artists));
+            if (data.events) localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(data.events));
+            if (data.categories) localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(data.categories));
+            if (data.content) {
+              var merged = Object.assign({}, DEFAULT_CONTENT, data.content);
+              localStorage.setItem(STORAGE_KEYS.CONTENT, JSON.stringify(merged));
             }
-          }).catch(err => console.log('Firestore sync notice:', err.message));
-        } catch (e) {
-          console.warn('Firestore offline fallback active.');
+            self.applyHeroVideos();
+            window.dispatchEvent(new CustomEvent('elite-cms-synced'));
+          }
+        }).catch(function (err) { console.log('Firestore sync notice:', err.message); });
+      }
+      try {
+        if (window.EliteFirebase && window.EliteFirebase.db) {
+          pull(window.EliteFirebase.db);
+        } else if (window.firebase && window.firebase.firestore) {
+          pull(firebase.firestore());
         }
+      } catch (e) {
+        console.warn('Firestore offline fallback active.');
       }
     }
 
     pushToFirestore() {
-      if (window.firebase && window.firebase.firestore) {
-        try {
-          const db = firebase.firestore();
-          db.collection('site_content').doc('main').set({
-            artists: this.getArtists(),
-            events: this.getEvents(),
-            categories: this.getCategories(),
-            content: this.getContent(),
-            updatedAt: new Date().toISOString()
-          }).catch(err => console.warn('Firestore update warning:', err));
-        } catch (e) {}
-      }
+      try {
+        var payload = {
+          artists: this.getArtists(),
+          events: this.getEvents(),
+          categories: this.getCategories(),
+          content: this.getContent(),
+          updatedAt: new Date().toISOString()
+        };
+        if (window.EliteFirebase && window.EliteFirebase.db) {
+          window.EliteFirebase.db.collection('site_content').doc('main').set(payload, { merge: true })
+            .catch(function (err) { console.warn('Firestore update warning:', err); });
+        } else if (window.firebase && window.firebase.firestore) {
+          firebase.firestore().collection('site_content').doc('main').set(payload, { merge: true })
+            .catch(function (err) { console.warn('Firestore update warning:', err); });
+        }
+        // also mirror multi-enquiries & clients collections handled elsewhere
+      } catch (e) {}
     }
 
     /* ─── ARTIST CMS METHODS ─── */

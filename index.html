@@ -87,6 +87,7 @@
     "sameAs": [
       "https://www.facebook.com/",
       "https://www.instagram.com/",
+      "https://www.linkedin.com/company/elite-entertainment-and-events",
       "https://www.youtube.com/"
     ],
     "hasOfferCatalog": {
@@ -131,25 +132,12 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://eliteentertainment.com.au/" },
       { "@type": "ListItem", "position": 2, "name": "Weddings", "item": "https://eliteentertainment.com.au/weddings.html" },
       { "@type": "ListItem", "position": 3, "name": "Corporate", "item": "https://eliteentertainment.com.au/corporate.html" },
-      { "@type": "ListItem", "position": 4, "name": "Artists", "item": "https://eliteentertainment.com.au/#artists" }
+      { "@type": "ListItem", "position": 4, "name": "Categories", "item": "https://eliteentertainment.com.au/#categories" }
     ]
   }
   </script>
 </head>
-<body>
-
-  <!-- ══════════════════════════════════════════
-       LOADING / PRELOADER OVERLAY
-  ══════════════════════════════════════════ -->
-  <div id="loading-screen" class="loading-screen">
-    <canvas id="fireworks-canvas"></canvas>
-    <div class="loading-content">
-      <img class="loading-brand-logo" src="images/brand/logo-icon.png" alt="Elite Entertainment and Events" width="200" height="175" />
-      <div class="loading-bar-wrap">
-        <div class="loading-bar"></div>
-      </div>
-    </div>
-  </div>
+<body class="page-home">
 
   <!-- ══════════════════════════════════════════
        TOP BAR
@@ -167,15 +155,18 @@
         </span>
         <a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>
       </div>
-      <div class="topbar-right">
-        <a href="#" aria-label="Facebook">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+      <div class="topbar-right topbar-socials">
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
         </a>
-        <a href="#" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>
         </a>
-        <a href="#" aria-label="YouTube">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#080808" stroke="none"/></svg>
+        <a href="https://www.linkedin.com/company/elite-entertainment-and-events" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#080808" stroke="none"/></svg>
         </a>
       </div>
     </div>
@@ -195,7 +186,6 @@
         <ul>
           <li><a href="#categories">Categories</a></li>
           <li><a href="#services">Services</a></li>
-          <li><a href="#artists">Artists</a></li>
           <li><a href="corporate.html">Corporate</a></li>
           <li><a href="weddings.html">Weddings</a></li>
           <li><a href="#" id="nav-btn-signup" style="color: var(--gold); font-weight:700;">Join as Vendor</a></li>
@@ -228,22 +218,18 @@
   <section class="hero hero-events" id="home">
     <div class="hero-video-wrap" aria-hidden="true">
       <img class="hero-video-fallback" src="luxury_gold_hero_backdrop.jpg" alt="" />
-      <video
-        class="hero-video"
-        id="hero-event-video"
-        autoplay
-        loop
-        muted
-        playsinline
-        preload="auto"
-        poster="luxury_gold_hero_backdrop.jpg"
-      >
-        <!-- Event / crowd / party footage (multiple fallbacks) -->
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-crowd-of-people-dancing-at-a-party-4275-large.mp4" type="video/mp4" />
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-people-dancing-at-a-party-4275-large.mp4" type="video/mp4" />
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-crowd-clapping-at-a-concert-4271-large.mp4" type="video/mp4" />
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-concert-crowd-raising-hands-under-stage-lights-41764-large.mp4" type="video/mp4" />
-      </video>
+      <!-- YouTube full-bleed background — always muted (no music/audio) -->
+      <div class="hero-yt-bg" id="hero-yt-bg">
+        <iframe
+          id="hero-yt-iframe"
+          title="Elite Entertainment hero background"
+          src="https://www.youtube-nocookie.com/embed/3phv3tGTSZQ?autoplay=1&amp;mute=1&amp;controls=0&amp;playsinline=1&amp;rel=0&amp;modestbranding=1&amp;loop=1&amp;playlist=3phv3tGTSZQ&amp;showinfo=0&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;cc_load_policy=0&amp;enablejsapi=1&amp;origin=https://elite-entertain-events.web.app"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+          loading="eager"
+        ></iframe>
+      </div>
       <div class="hero-video-overlay"></div>
       <div class="hero-video-vignette"></div>
       <div class="hero-scanlines" aria-hidden="true"></div>
@@ -251,18 +237,6 @@
     </div>
 
     <div class="container hero-events-inner">
-      <div class="hero-events-top">
-        <div class="hero-live-pill">
-          <span class="hero-live-dot"></span>
-          Live events · Australia-wide
-        </div>
-        <p class="hero-badge hero-badge-center">
-          <span class="badge-line"></span>
-          Elite Entertainment &amp; Events
-          <span class="badge-line"></span>
-        </p>
-      </div>
-
       <div class="hero-copy hero-events-copy">
         <h1 class="hero-title hero-title-main">
           Unforgettable <span class="hero-title-accent">Events</span><br />
@@ -280,7 +254,7 @@
         </div>
         <div class="hero-stat-divider"></div>
         <div class="hero-stat">
-          <strong>80+</strong>
+          <strong>130+</strong>
           <span>Named acts on roster</span>
         </div>
         <div class="hero-stat-divider"></div>
@@ -290,51 +264,85 @@
         </div>
         <div class="hero-stat-divider"></div>
         <div class="hero-stat">
-          <strong>5★</strong>
+          <strong>5-star</strong>
           <span>Client rated</span>
         </div>
       </div>
 
-      <!-- Search -->
-      <div class="search-capsule-container">
-        <div class="search-bar-floating search-bar-capsule">
-          <div class="search-field search-field-primary">
-            <label for="hero-search-input">What event entertainment do you need?</label>
-            <input type="text" id="hero-search-input" placeholder="Guy Sebastian, wedding DJ, tribute show, karaoke…" autocomplete="off" />
+      <!-- Search: find artists, folders & hire services -->
+      <div class="hero-search" role="search">
+        <div class="hero-search-bar">
+          <div class="hero-search-field hero-search-field--query">
+            <span class="hero-search-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            </span>
+            <div class="hero-search-field-body">
+              <label for="hero-search-input">Search</label>
+              <input type="search" id="hero-search-input" placeholder="Artist, act, or service…" autocomplete="off" enterkeyhint="search" />
+            </div>
             <div id="search-autocomplete-dropdown" class="autocomplete-dropdown" role="listbox"></div>
           </div>
-          <div class="search-field search-field-genre">
-            <label for="hero-genre-select">Category</label>
-            <select id="hero-genre-select">
-              <option value="">All categories</option>
-              <option value="dj">DJ's &amp; Karaoke</option>
-              <option value="band">Live Bands &amp; Stage</option>
-              <option value="comedy">Comedy / Country</option>
-              <option value="classical">Classical / Kids</option>
-              <option value="multicultural">Multicultural</option>
-            </select>
+          <div class="hero-search-divider" aria-hidden="true"></div>
+          <div class="hero-search-field hero-search-field--category">
+            <span class="hero-search-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h13"/></svg>
+            </span>
+            <div class="hero-search-field-body">
+              <label for="hero-genre-select">Category</label>
+              <select id="hero-genre-select">
+                <option value="">All categories</option>
+                <optgroup label="Artist rosters">
+                  <option value="folder:celebrity-bands-and-artists">Celebrity Bands &amp; Artists</option>
+                  <option value="folder:party-bands">Party Bands</option>
+                  <option value="folder:solo-acts">Solo Acts</option>
+                  <option value="folder:duos">Duos</option>
+                  <option value="folder:trios">Trios</option>
+                  <option value="folder:tribute-acts">Tribute Acts</option>
+                  <option value="folder:production-shows">Production Shows</option>
+                  <option value="folder:dance-troupes-mcs">Dance Troupes &amp; MCs</option>
+                  <option value="folder:stage-shows">Stage Shows</option>
+                  <option value="folder:multicultural-entertainment">Multicultural Entertainment</option>
+                  <option value="folder:country">Country</option>
+                  <option value="folder:comedians">Comedians</option>
+                  <option value="folder:childrens-entertainment">Children's Entertainment</option>
+                  <option value="folder:classical-entertainment">Classical Entertainment</option>
+                  <option value="folder:seasonal-specialty-entertainment">Seasonal &amp; Specialty</option>
+                  <option value="folder:roving-entertainment">Roving Entertainment</option>
+                  <option value="folder:djs-karaoke">DJ's &amp; Karaoke</option>
+                </optgroup>
+                <optgroup label="Events &amp; hire">
+                  <option value="page:weddings.html">Weddings</option>
+                  <option value="page:corporate.html">Corporate Events</option>
+                  <option value="page:private-parties.html">Private Parties</option>
+                  <option value="page:luxury-car-hire.html">Luxury Car Hire</option>
+                  <option value="page:luxury-yacht-hire.html">Luxury Yacht Hire</option>
+                  <option value="page:models-dancers.html">Models &amp; Dancers</option>
+                  <option value="page:security.html">Security</option>
+                  <option value="page:stage-sound-lighting.html">Stage, Sound &amp; Lighting</option>
+                </optgroup>
+              </select>
+            </div>
           </div>
-          <div class="search-field search-field-artist">
-            <label for="hero-artist-input">Artist / Act</label>
-            <input type="text" id="hero-artist-input" placeholder="e.g. Jessica Mauboy" />
-          </div>
-          <button class="search-btn search-btn-round" id="hero-search-btn" aria-label="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" style="width:20px;height:20px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <button class="hero-search-submit" id="hero-search-btn" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <span>Search</span>
           </button>
         </div>
       </div>
 
-      <!-- Event type pills → category pages -->
-      <div class="hero-event-pills" role="navigation" aria-label="Browse event categories">
-        <a class="hero-pill" href="category-djs-karaoke.html">DJ's &amp; Karaoke</a>
-        <a class="hero-pill" href="category-live-bands.html">Celebrity &amp; Bands</a>
-        <a class="hero-pill" href="category-live-bands.html">Stage Shows</a>
-        <a class="hero-pill" href="category-multicultural.html">Multicultural</a>
-        <a class="hero-pill" href="category-multicultural.html">Country &amp; Comedy</a>
-        <a class="hero-pill" href="category-specialty.html">Kids &amp; Classical</a>
-        <a class="hero-pill" href="category-specialty.html">Roving Acts</a>
+      <!-- Event type pills all folder names -->
+            <div class="hero-event-pills" role="navigation" aria-label="Browse entertainment folders" id="hero-folder-pills">
+        <a class="hero-pill" href="#home-folder-party-bands">Party Bands</a>
+        <a class="hero-pill" href="#home-folder-duos">Duos</a>
+        <a class="hero-pill" href="#home-folder-solo-acts">Solo Acts</a>
+        <a class="hero-pill" href="#home-folder-tribute-acts">Tribute Acts</a>
+        <a class="hero-pill" href="#home-folder-production-shows">Production Shows</a>
+        <a class="hero-pill" href="#home-folder-dance-troupes-mcs">Dance Troupes &amp; MCs</a>
+        <a class="hero-pill" href="#home-folder-celebrity-bands-and-artists">Celebrities</a>
+        <a class="hero-pill" href="#home-folder-djs-karaoke">DJ's &amp; Karaoke</a>
         <a class="hero-pill" href="weddings.html">Weddings</a>
         <a class="hero-pill" href="corporate.html">Corporate</a>
+        <a class="hero-pill" href="private-parties.html">Private Parties</a>
         <a class="hero-pill" href="#contact">Get a Quote</a>
       </div>
 
@@ -387,7 +395,7 @@
     <div class="ticket-marquee" role="presentation">
       <div class="ticket-marquee-track">
         <div class="ticket-logo"><span class="tl-ticketek">TICKETEK</span></div>
-        <div class="ticket-logo"><span class="tl-ticketmaster">ticketmaster<span class="tl-star">★</span></span></div>
+        <div class="ticket-logo"><span class="tl-ticketmaster">ticketmaster</span></div>
         <div class="ticket-logo"><span class="tl-livenation">LIVE NATION</span></div>
         <div class="ticket-logo"><span class="tl-eventbrite">eventbrite</span></div>
         <div class="ticket-logo"><span class="tl-humanitix">Humanitix</span></div>
@@ -398,7 +406,7 @@
         <div class="ticket-logo"><span class="tl-ticketek">TIXTOGO</span></div>
         <!-- Duplicate set for seamless infinite scroll -->
         <div class="ticket-logo" aria-hidden="true"><span class="tl-ticketek">TICKETEK</span></div>
-        <div class="ticket-logo" aria-hidden="true"><span class="tl-ticketmaster">ticketmaster<span class="tl-star">★</span></span></div>
+        <div class="ticket-logo" aria-hidden="true"><span class="tl-ticketmaster">ticketmaster</span></div>
         <div class="ticket-logo" aria-hidden="true"><span class="tl-livenation">LIVE NATION</span></div>
         <div class="ticket-logo" aria-hidden="true"><span class="tl-eventbrite">eventbrite</span></div>
         <div class="ticket-logo" aria-hidden="true"><span class="tl-humanitix">Humanitix</span></div>
@@ -417,12 +425,34 @@
   <section class="categories-showcase" id="categories">
     <div class="container">
       <div class="section-header">
-        <div class="section-eyebrow">Our Categories</div>
-        <h2 class="section-title">Entertainment Categories</h2>
+        <div class="section-eyebrow">Artists</div>
+        <h2 class="section-title">Browse Our Artists</h2>
         <div class="gold-divider"></div>
-        <p class="categories-intro">Four flagship rosters — DJs &amp; karaoke, specialty &amp; family, multicultural &amp; comedy, and live bands &amp; stage shows. Tap a category to browse acts and enquire. Every form hits Super Admin and emails <strong>info@eeevents.com.au</strong>.</p>
+        <p class="categories-intro">Choose a roster below, open an artist profile, or enquire. All enquiries go to Super Admin and <strong>info@eeevents.com.au</strong>.</p>
       </div>
-      <div id="elite-category-cards" class="cat-cards-grid" aria-label="Entertainment categories"></div>
+      <!-- Jump chips -->
+                        <nav class="home-roster-jump" id="home-roster-jump" aria-label="Jump to category">
+        <a class="folder-chip" href="#home-folder-celebrity-bands-and-artists">Celebrities</a>
+        <a class="folder-chip" href="#home-folder-solo-acts">Solos</a>
+        <a class="folder-chip" href="#home-folder-duos">Duos</a>
+        <a class="folder-chip" href="#home-folder-trios">Trios</a>
+        <a class="folder-chip" href="#home-folder-party-bands">Party Bands</a>
+        <a class="folder-chip" href="#home-folder-tribute-acts">Tribute</a>
+        <a class="folder-chip" href="#home-folder-production-shows">Production Shows</a>
+        <a class="folder-chip" href="#home-folder-dance-troupes-mcs">Dance Troupes</a>
+        <a class="folder-chip" href="#home-folder-mcs">MCs &amp; Hosts</a>
+        <a class="folder-chip" href="#home-folder-djs-karaoke">DJ's &amp; Karaoke</a>
+        <a class="folder-chip" href="#home-folder-instrumentals">Instrumentalists</a>
+        <a class="folder-chip" href="#home-folder-stage-shows">Stage Shows</a>
+        <a class="folder-chip" href="#home-folder-multicultural-entertainment">Multicultural</a>
+        <a class="folder-chip" href="#home-folder-country">Country</a>
+        <a class="folder-chip" href="#home-folder-comedians">Comedians</a>
+        <a class="folder-chip" href="#home-folder-childrens-entertainment">Children's Entertainment</a>
+        <a class="folder-chip" href="#home-folder-classical-entertainment">Classical Entertainment</a>
+        <a class="folder-chip" href="#home-folder-seasonal-specialty-entertainment">Seasonal &amp; Specialty</a>
+        <a class="folder-chip" href="#home-folder-roving-entertainment">Roving Entertainment</a>
+      </nav>
+      <div id="elite-category-cards" class="home-roster" aria-label="Entertainment rosters with photos"></div>
     </div>
   </section>
 
@@ -439,7 +469,11 @@
 
       <div class="services-grid">
         <div class="service-card" id="card-weddings">
-          <div class="service-img-container" style="background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop');">
+          <div class="service-img-container">
+            <!-- Mixkit: aerial couple dancing at a wedding reception -->
+            <video class="card-loop-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;w=800&amp;q=60">
+              <source src="https://assets.mixkit.co/videos/5380/5380-720.mp4" type="video/mp4" />
+            </video>
             <div class="service-overlay"></div>
           </div>
           <div class="service-card-content">
@@ -450,7 +484,11 @@
         </div>
 
         <div class="service-card" id="card-corporate">
-          <div class="service-img-container" style="background-image: url('https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=600&auto=format&fit=crop');">
+          <div class="service-img-container">
+            <!-- Mixkit: audience at a business conference -->
+            <video class="card-loop-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&amp;fit=crop&amp;w=800&amp;q=60">
+              <source src="https://assets.mixkit.co/videos/13192/13192-720.mp4" type="video/mp4" />
+            </video>
             <div class="service-overlay"></div>
           </div>
           <div class="service-card-content">
@@ -461,7 +499,11 @@
         </div>
 
         <div class="service-card" id="card-private-parties">
-          <div class="service-img-container" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600&auto=format&fit=crop');">
+          <div class="service-img-container">
+            <!-- Mixkit: dancing under party lights -->
+            <video class="card-loop-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&amp;fit=crop&amp;w=800&amp;q=60">
+              <source src="https://assets.mixkit.co/videos/42230/42230-720.mp4" type="video/mp4" />
+            </video>
             <div class="service-overlay"></div>
           </div>
           <div class="service-card-content">
@@ -480,28 +522,59 @@
       </div>
       <div class="offers-grid offers-grid--addons">
         <div class="offer-card">
-          <div class="offer-img" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop');"></div>
+          <div class="offer-img offer-img--video">
+            <!-- Mixkit: red sports car on the open road -->
+            <video class="card-loop-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&amp;fit=crop&amp;w=600&amp;q=60">
+              <source src="https://assets.mixkit.co/videos/52427/52427-720.mp4" type="video/mp4" />
+            </video>
+          </div>
           <h3>Luxury Car Hire</h3>
           <p>Rolls-Royce, Bentley &amp; limousine hires with professional chauffeurs.</p>
           <a href="luxury-car-hire.html" class="offer-btn">Learn More &rarr;</a>
         </div>
         <div class="offer-card">
-          <div class="offer-img" style="background-image: url('https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=400&auto=format&fit=crop');"></div>
+          <div class="offer-img offer-img--video">
+            <!-- Mixkit: large yacht sailing -->
+            <video class="card-loop-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&amp;fit=crop&amp;w=600&amp;q=60">
+              <source src="https://assets.mixkit.co/videos/47193/47193-720.mp4" type="video/mp4" />
+            </video>
+          </div>
           <h3>Luxury Yacht Hire</h3>
           <p>Private superyacht charters and premium cruises on Sydney Harbour.</p>
           <a href="luxury-yacht-hire.html" class="offer-btn">Learn More &rarr;</a>
         </div>
         <div class="offer-card">
-          <div class="offer-img" style="background-image: url('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop');"></div>
+          <div class="offer-img offer-img--video">
+            <!-- Mixkit: stage dancer performance -->
+            <video class="card-loop-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&amp;fit=crop&amp;w=600&amp;q=60">
+              <source src="https://assets.mixkit.co/videos/51274/51274-720.mp4" type="video/mp4" />
+            </video>
+          </div>
           <h3>Models &amp; Dancers</h3>
           <p>Commercial models, hostesses and high-energy stage dancers.</p>
           <a href="models-dancers.html" class="offer-btn">Learn More &rarr;</a>
         </div>
         <div class="offer-card">
-          <div class="offer-img" style="background-image: url('https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=400&auto=format&fit=crop');"></div>
+          <div class="offer-img offer-img--video">
+            <!-- Mixkit: security / control-room monitoring -->
+            <video class="card-loop-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&amp;fit=crop&amp;w=600&amp;q=60">
+              <source src="https://assets.mixkit.co/videos/23103/23103-720.mp4" type="video/mp4" />
+            </video>
+          </div>
           <h3>Security &amp; Crowd Control</h3>
           <p>Licensed guards, VIP bodyguards and crowd control for private functions.</p>
           <a href="security.html" class="offer-btn">Learn More &rarr;</a>
+        </div>
+        <div class="offer-card">
+          <div class="offer-img offer-img--video">
+            <!-- Mixkit: stage lighting rig -->
+            <video class="card-loop-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&amp;fit=crop&amp;w=600&amp;q=60">
+              <source src="https://assets.mixkit.co/videos/25473/25473-720.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <h3>Stage, Sound &amp; Lighting</h3>
+          <p>Concert PA, LED walls, uplights and full production packages for any venue.</p>
+          <a href="stage-sound-lighting.html" class="offer-btn">Learn More &rarr;</a>
         </div>
       </div>
 
@@ -513,7 +586,7 @@
             <p>Join Elite Entertainment and grow your bookings with pre-qualified event leads.</p>
           </div>
         </div>
-        <button type="button" class="btn btn-gold" id="vendor-callout-btn" style="border-radius:30px; text-transform:none;">List Your Business →</button>
+        <button type="button" class="btn btn-gold" id="vendor-callout-btn" style="border-radius:30px; text-transform:none;">List Your Business</button>
       </div>
     </div>
   </section>
@@ -573,21 +646,6 @@
           <p>Sit back &amp; enjoy world-class premium live entertainment delivered perfectly.</p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════
-       FEATURED ACTS (CMS)
-  ══════════════════════════════════════════ -->
-  <section class="artists-section" id="artists">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-eyebrow">Featured Acts</div>
-        <h2 class="section-title">Spotlight Performers</h2>
-        <div class="gold-divider"></div>
-        <p class="categories-intro">Managed live from Super Admin. Browse the full 80-act rosters in <a href="#categories" style="color:var(--gold);">Categories</a>.</p>
-      </div>
-      <div id="cms-featured-artists" class="cms-featured-grid" aria-live="polite"></div>
     </div>
   </section>
 
@@ -659,6 +717,43 @@
           <div class="client-logo"><span style="font-family:'Montserrat', sans-serif; font-weight:500; font-size:0.92rem; letter-spacing:0.08em; color:var(--white);">UNIVERSAL MUSIC</span></div>
           <div class="client-logo"><span style="font-family:'Montserrat', sans-serif; font-weight:800; font-size:1rem; color:var(--white);">MUSHROOM</span></div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       VENUE PARTNERS — INFINITE MARQUEE
+  ══════════════════════════════════════════ -->
+  <section class="venue-marquee-section" id="venue-partners" aria-label="Venue partners">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Proudly Entertaining</div>
+        <h2 class="section-title">Clubs &amp; Venues</h2>
+        <div class="gold-divider"></div>
+        <p class="categories-intro" style="margin-top:0.5rem;">Live entertainment delivered across Sydney’s premier clubs and venues.</p>
+      </div>
+    </div>
+    <div class="ticket-marquee venue-marquee" role="presentation">
+      <div class="ticket-marquee-track venue-marquee-track">
+        <div class="venue-logo"><img src="images/partners/penrith-panthers.png" alt="Penrith Panthers Club" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.add('is-text');this.parentElement.innerHTML='<span>PENRITH PANTHERS</span>';" /><span class="venue-logo-fallback">PENRITH PANTHERS</span></div>
+        <div class="venue-logo is-text"><span>JUNIORS KINGSFORD</span></div>
+        <div class="venue-logo is-text"><span>BLACKTOWN WORKERS</span></div>
+        <div class="venue-logo is-text"><span>MOUNTIES GROUP</span></div>
+        <div class="venue-logo is-text"><span>WPT LEAGUE</span></div>
+        <div class="venue-logo"><img src="images/partners/bankstown-rsl.png" alt="Bankstown RSL" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.add('is-text');this.parentElement.innerHTML='<span>BANKSTOWN RSL</span>';" /><span class="venue-logo-fallback">BANKSTOWN RSL</span></div>
+        <div class="venue-logo is-text"><span>CABRAVALE CLUB RESORT</span></div>
+        <div class="venue-logo is-text"><span>REVESBY WORKERS CLUB</span></div>
+        <div class="venue-logo is-text"><span>ST JOHN'S BOWLING CLUB</span></div>
+        <!-- duplicate for seamless loop -->
+        <div class="venue-logo" aria-hidden="true"><img src="images/partners/penrith-panthers.png" alt="" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.add('is-text');this.parentElement.innerHTML='<span>PENRITH PANTHERS</span>';" /><span class="venue-logo-fallback">PENRITH PANTHERS</span></div>
+        <div class="venue-logo is-text" aria-hidden="true"><span>JUNIORS KINGSFORD</span></div>
+        <div class="venue-logo is-text" aria-hidden="true"><span>BLACKTOWN WORKERS</span></div>
+        <div class="venue-logo is-text" aria-hidden="true"><span>MOUNTIES GROUP</span></div>
+        <div class="venue-logo is-text" aria-hidden="true"><span>WPT LEAGUE</span></div>
+        <div class="venue-logo" aria-hidden="true"><img src="images/partners/bankstown-rsl.png" alt="" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.add('is-text');this.parentElement.innerHTML='<span>BANKSTOWN RSL</span>';" /><span class="venue-logo-fallback">BANKSTOWN RSL</span></div>
+        <div class="venue-logo is-text" aria-hidden="true"><span>CABRAVALE CLUB RESORT</span></div>
+        <div class="venue-logo is-text" aria-hidden="true"><span>REVESBY WORKERS CLUB</span></div>
+        <div class="venue-logo is-text" aria-hidden="true"><span>ST JOHN'S BOWLING CLUB</span></div>
       </div>
     </div>
   </section>
@@ -920,32 +1015,37 @@
       <div class="container footer-top-inner">
         <div class="footer-brand">
           <a href="index.html" class="brand-link brand-link--footer">
-            <img class="brand-logo brand-logo--footer" src="images/brand/logo-icon.png" alt="Elite Entertainment and Events" width="280" height="62" loading="lazy" />
+            <img class="brand-logo brand-logo--footer" src="images/brand/logo-footer.png" alt="Elite Entertainment and Events" width="280" height="110" loading="lazy" />
           </a>
           <p>Australia's premier entertainment agency delivering world-class acts for over 40 years. Your perfect event starts here.</p>
           <p style="margin-top:0.5rem;font-size:0.72rem;color:var(--silver-dark);"><strong>ELITE ENTERTAINMENT &amp; EVENTS PTY LTD</strong> &nbsp;|&nbsp; ABN: 17 698 991 481 &nbsp;|&nbsp; ACN: 698 991 481 &nbsp;|&nbsp; ASIC Reg: 12/06/2026</p>
           <div class="footer-socials">
-            <a href="#" aria-label="Facebook">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
             </a>
-            <a href="#" aria-label="Instagram">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>
             </a>
-            <a href="#" aria-label="YouTube">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0a0a0a" stroke="none"/></svg>
+            <a href="https://www.linkedin.com/company/elite-entertainment-and-events" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0a0a0a" stroke="none"/></svg>
             </a>
           </div>
         </div>
 
-        <div class="footer-col">
+                <div class="footer-col">
           <h4>Categories</h4>
           <ul>
-            <li><a href="category-djs-karaoke.html">DJ's &amp; Karaoke</a></li>
-            <li><a href="category-specialty.html">Specialty &amp; Family</a></li>
-            <li><a href="category-multicultural.html">Multicultural · Country · Comedy</a></li>
-            <li><a href="category-live-bands.html">Live Bands &amp; Stage Shows</a></li>
-            <li><a href="artists-djs.html">DJs (legacy)</a></li>
-            <li><a href="artists-bands.html">Bands (legacy)</a></li>
+            <li><a href="#home-folder-party-bands">Party Bands</a></li>
+            <li><a href="#home-folder-solo-acts">Solo Acts</a></li>
+            <li><a href="#home-folder-duos">Duos</a></li>
+            <li><a href="#home-folder-tribute-acts">Tribute Acts</a></li>
+            <li><a href="#home-folder-production-shows">Production Shows</a></li>
+            <li><a href="#home-folder-dance-troupes-mcs">Dance Troupes &amp; MCs</a></li>
+            <li><a href="#home-folder-djs-karaoke">DJ's &amp; Karaoke</a></li>
+            <li><a href="#categories">All rosters</a></li>
           </ul>
         </div>
 
@@ -985,12 +1085,13 @@
       <div class="container footer-bottom-inner">
         <p>&copy; 2026 ELITE ENTERTAINMENT &amp; EVENTS PTY LTD (ACN: 698 991 481 | ABN: 17 698 991 481). All rights reserved.</p>
         <div class="footer-bottom-links">
-          <a href="#contact">Privacy Policy</a>
-          <a href="#contact">Terms of Service</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="refund-policy.html">Refund Policy</a>
+          <a href="legal.html">Legal Centre</a>
           <a href="weddings.html">Weddings</a>
           <a href="corporate.html">Corporate</a>
-          <a href="#artists">Artists</a>
-          <a href="admin.html">Admin</a>
+          <a href="index.html#categories">Artists</a>
         </div>
       </div>
     </div>
@@ -1264,6 +1365,7 @@
   <script src="categories-data.js"></script>
   <script src="category-page.js"></script>
   <script src="category-form.js"></script>
+  <script src="site-nav.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

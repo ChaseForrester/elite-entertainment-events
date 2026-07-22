@@ -2,7 +2,7 @@
    ELITE ENTERTAINMENT — PWA Service Worker
 ═══════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'elite-events-v3-categories';
+const CACHE_NAME = 'elite-events-v78-roving-order';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -22,6 +22,9 @@ const ASSETS_TO_CACHE = [
   './artists-tributes.html',
   './corporate.html',
   './event-djs.html',
+  './event-packages-data.js',
+  './event-packages.js',
+  './event-packages.css',
   './luxury-car-hire.html',
   './luxury-yacht-hire.html',
   './models-dancers.html',
@@ -34,11 +37,18 @@ const ASSETS_TO_CACHE = [
   './style.css',
   './script.js',
   './cms.js',
+  './service-form.js',
+  './service-form.css',
+  './site-nav.js',
   './manifest.webmanifest',
   './favicon.ico',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
+  './images/brand/logo-icon.png',
+  './images/brand/logo-nav-icon.png',
+  './images/brand/logo-loading.png',
+  './images/brand/logo-footer.png',
   './images/party-band.jpg',
   './images/trio.jpg',
   './images/duo.jpg',

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Client Portal | Elite Entertainment &amp; Events</title>
+  <meta name="description" content="Elite client portal — save event details, message Super Admin, and book a consultation." />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="service-form.css" />
+  <link rel="stylesheet" href="cart.css" />
+  <style>
+    .client-shell { max-width: 880px; margin: 0 auto; }
+    .client-tabs { display:flex; flex-wrap:wrap; gap:.4rem; margin:0 0 1.25rem; }
+    .client-tabs button {
+      appearance:none; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.03);
+      color:#ccc; border-radius:999px; padding:.5rem 1rem; font-size:.75rem; font-weight:700;
+      letter-spacing:.06em; text-transform:uppercase; cursor:pointer; font-family:inherit;
+    }
+    .client-tabs button.is-on { background:linear-gradient(135deg,#8a6f27,#c9a84c); color:#0a0a0a; border-color:transparent; }
+    .client-panel { display:none; }
+    .client-panel.is-on { display:block; }
+    .client-card { background:#0d0d0d; border:1px solid rgba(200,168,76,.18); border-radius:16px; padding:1.35rem; margin-bottom:1rem; }
+    .client-card h3 { margin:0 0 .85rem; font-family:'Cormorant Garamond',serif; font-weight:400; color:#fff; font-size:1.4rem; }
+    .client-msg { font-size:.82rem; color:#999; margin:.5rem 0 0; min-height:1.2em; }
+    .client-msg.ok { color:#8fd18f; }
+    .client-msg.err { color:#ff8a8a; }
+    .thread { max-height:280px; overflow:auto; display:flex; flex-direction:column; gap:.55rem; margin-bottom:1rem; }
+    .bubble { padding:.7rem .85rem; border-radius:12px; font-size:.82rem; line-height:1.45; max-width:90%; }
+    .bubble.me { align-self:flex-end; background:rgba(200,168,76,.15); border:1px solid rgba(200,168,76,.25); color:#eee; }
+    .bubble.admin { align-self:flex-start; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:#ddd; }
+    .bubble time { display:block; font-size:.65rem; color:#777; margin-top:.35rem; }
+  </style>
+</head>
+<body class="catalogue-page">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-left">
+        <a href="tel:+61417221111">+61 417 221 111</a>
+        <span class="topbar-sep">|</span>
+        <a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>
+      </div>
+    </div>
+  </div>
+  <header class="site-header scrolled" id="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" class="brand-link"><img class="brand-logo brand-logo--nav" src="images/brand/logo-icon.png" alt="Elite" width="52" height="52" /></a>
+      </div>
+      <nav class="main-nav" id="main-nav"></nav>
+      <div class="header-actions">
+        <a href="multi-enquiry.html" class="btn btn-gold header-cta">Multi-enquiry</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <section class="cat-page-head">
+    <div class="container">
+      <p class="section-eyebrow">Client portal</p>
+      <h1>Your Elite account</h1>
+      <p class="cat-page-sub">Save event details, message Super Admin, and book a consultation with date &amp; time.</p>
+    </div>
+  </section>
+
+  <section class="detail-content">
+    <div class="container client-shell">
+      <!-- Auth -->
+      <div class="client-card" id="client-auth-card">
+        <h3>Sign in or register</h3>
+        <div class="form-group"><label for="cl-email">Email</label><input id="cl-email" type="email" /></div>
+        <div class="form-group"><label for="cl-pass">Password</label><input id="cl-pass" type="password" /></div>
+        <div class="form-group"><label for="cl-name">Full name (register)</label><input id="cl-name" type="text" placeholder="Optional for login" /></div>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+          <button type="button" class="btn btn-gold" id="cl-login">Sign in</button>
+          <button type="button" class="btn btn-outline" id="cl-register">Create account</button>
+        </div>
+        <p class="client-msg" id="cl-auth-msg"></p>
+        <p class="client-msg">Works offline with a local secure profile; Firebase Auth is used when available.</p>
+      </div>
+
+      <div id="client-app" hidden>
+        <div class="client-tabs" role="tablist">
+          <button type="button" class="is-on" data-tab="profile">Profile</button>
+          <button type="button" data-tab="consult">Book consultation</button>
+          <button type="button" data-tab="messages">Message Super Admin</button>
+          <button type="button" data-tab="cart">My multi-enquiry</button>
+          <button type="button" id="cl-logout">Log out</button>
+        </div>
+
+        <div class="client-panel is-on" id="tab-profile">
+          <div class="client-card">
+            <h3>Saved event profile</h3>
+            <div class="form-group"><label>Full name</label><input id="pf-name" type="text" /></div>
+            <div class="form-group"><label>Phone</label><input id="pf-phone" type="tel" /></div>
+            <div class="form-group"><label>Company</label><input id="pf-company" type="text" /></div>
+            <div class="form-group"><label>Usual venues / cities</label><input id="pf-venues" type="text" /></div>
+            <div class="form-group"><label>Notes for Elite</label><textarea id="pf-notes" rows="3"></textarea></div>
+            <button type="button" class="btn btn-gold" id="pf-save">Save profile</button>
+            <p class="client-msg" id="pf-msg"></p>
+          </div>
+        </div>
+
+        <div class="client-panel" id="tab-consult">
+          <div class="client-card">
+            <h3>Book a consultation</h3>
+            <div class="form-group"><label>Preferred date</label><input id="cs-date" type="date" /></div>
+            <div class="form-group"><label>Preferred time</label><input id="cs-time" type="time" /></div>
+            <div class="form-group"><label>Timezone</label>
+              <select id="cs-tz">
+                <option>Australia/Sydney</option>
+                <option>Australia/Melbourne</option>
+                <option>Australia/Brisbane</option>
+                <option>Australia/Perth</option>
+                <option>Australia/Adelaide</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Mode</label>
+              <select id="cs-mode">
+                <option>Phone call</option>
+                <option>Video conference</option>
+                <option>In person (Sydney)</option>
+              </select>
+            </div>
+            <div class="form-group"><label>What do you want to discuss?</label><textarea id="cs-brief" rows="3"></textarea></div>
+            <button type="button" class="btn btn-gold" id="cs-book">Request consultation</button>
+            <p class="client-msg" id="cs-msg"></p>
+          </div>
+        </div>
+
+        <div class="client-panel" id="tab-messages">
+          <div class="client-card">
+            <h3>Direct line to Super Admin</h3>
+            <div class="thread" id="cl-thread"></div>
+            <div class="form-group"><label>Message</label><textarea id="cl-message" rows="3" placeholder="Ask about availability, packages, multi-hire…"></textarea></div>
+            <button type="button" class="btn btn-gold" id="cl-send">Send message</button>
+            <p class="client-msg" id="cl-msg-status"></p>
+          </div>
+        </div>
+
+        <div class="client-panel" id="tab-cart">
+          <div class="client-card">
+            <h3>Multi-enquiry cart</h3>
+            <p class="client-msg">Items you added across the site appear on the multi-enquiry page.</p>
+            <p id="cl-cart-summary" style="white-space:pre-wrap;color:#ccc;font-size:.85rem;"></p>
+            <a class="btn btn-gold" href="multi-enquiry.html">Open multi-enquiry</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p>&copy; 2026 ELITE ENTERTAINMENT &amp; EVENTS PTY LTD · <a href="legal.html">Legal centre</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="elite-cart.js"></script>
+  <script src="site-nav.js"></script>
+  <script src="client-portal.js"></script>
+</body>
+</html>

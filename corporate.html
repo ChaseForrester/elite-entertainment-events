@@ -2,207 +2,177 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prestige Corporate Events | Elite Entertainment & Events</title>
-  <meta name="description" content="High-end custom live music and state-of-the-art production for conferences, awards dinners, galas, and product launches." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Corporate Event Entertainment | Elite Entertainment &amp; Events</title>
+  <meta name="description" content="Celebrity talent, corporate bands, DJs, awards MCs, comedy and production shows. Mix packages in one multi-enquiry. Quote-based." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="service-form.css" />
+  <link rel="stylesheet" href="event-packages.css" />
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#c9a84c" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 </head>
-<body>
+<body class="catalogue-page">
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <div class="container topbar-inner">
       <div class="topbar-left">
-        <span class="topbar-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.09a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
-        </span>
         <a href="tel:+61417221111">+61 417 221 111</a>
         <span class="topbar-sep">|</span>
-        <span class="topbar-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </span>
         <a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>
       </div>
       <div class="topbar-right">
-        <a href="#" aria-label="Facebook">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-        </a>
-        <a href="#" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>
-        </a>
-        <a href="#" aria-label="YouTube">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#080808" stroke="none"/></svg>
-        </a>
+        <span style="font-size:0.72rem;color:var(--silver-mid);">Corporate entertainment · Australia</span>
       </div>
     </div>
   </div>
 
-  <!-- HEADER -->
-  <header class="site-header scrolled">
+  <header class="site-header scrolled" id="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="index.html" class="brand-link" aria-label="Elite Entertainment and Events — Home">
-          <img class="brand-logo brand-logo--nav" src="images/brand/logo-icon.png" alt="Elite Entertainment and Events" width="52" height="52" decoding="async" />
+        <a href="index.html" class="brand-link" aria-label="Home">
+          <img class="brand-logo brand-logo--nav" src="images/brand/logo-icon.png" alt="Elite Entertainment" width="52" height="52" decoding="async" />
         </a>
       </div>
-
-      <nav class="main-nav" id="main-nav">
-        <ul>
-          <li><a href="index.html#home">Home</a></li>
-          <li class="has-dropdown">
-            <a href="index.html#artists">Artists ▾</a>
-            <ul class="dropdown">
-              <li><a href="artists-solo.html">Solo Artists</a></li>
-              <li><a href="artists-duo.html">Duos</a></li>
-              <li><a href="artists-bands.html">Trios &amp; Bands</a></li>
-              <li><a href="artists-djs.html">DJs</a></li>
-              <li><a href="artists-tributes.html">Tribute Acts</a></li>
-              <li><a href="artists-jazz.html">Classical &amp; Jazz</a></li>
-            </ul>
-          </li>
-          <li class="has-dropdown">
-            <a href="index.html#services">Services ▾</a>
-            <ul class="dropdown">
-              <li><a href="weddings.html">Weddings</a></li>
-              <li><a href="corporate.html">Corporate Events</a></li>
-              <li><a href="private-parties.html">Parties &amp; Events</a></li>
-            </ul>
-          </li>
-          <li><a href="index.html#clients">Clients</a></li>
-          <li><a href="index.html#company">Company</a></li>
-          <li><a href="index.html#contact">Contact</a></li>
-        </ul>
-      </nav>
-
+      <nav class="main-nav" id="main-nav" aria-label="Primary"></nav>
       <div class="header-actions">
-        <a href="index.html#contact" class="btn btn-gold">Get a Quote</a>
+        <a href="#event-enquiry" class="btn btn-gold header-cta">Get a Quote</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="main-nav">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="detail-hero" style="background-image: linear-gradient(180deg, rgba(3,3,3,0.85) 0%, rgba(3,3,3,0.98) 100%), url('https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200&auto=format&fit=crop'); background-size: cover; background-position: center; padding-block: 10rem 6rem;">
+  <section class="cat-page-head">
     <div class="container">
-      <div class="section-eyebrow">Our Portfolio</div>
-      <h1>Prestige Corporate Events</h1>
-      <div class="gold-divider" style="margin-bottom: 1.5rem;"></div>
-      <p style="font-size: 1.1rem; max-width: 700px;">High-end custom live music and state-of-the-art production for conferences, awards dinners, galas, and product launches.</p>
+      <p class="section-eyebrow">Corporate entertainment</p>
+      <h1>Corporate Events</h1>
+      <p class="cat-page-sub"><span id="event-hero-count">8</span> packages · galas, launches &amp; awards · mix packages in one enquiry</p>
     </div>
   </section>
 
-  <!-- CONTENT -->
-  <section class="detail-content">
-    <div class="container" style="max-width: 800px;">
-      
-        <div class="doc-card" style="margin-bottom: 2rem; background: var(--black-3); padding: 2.5rem; border: 1px solid rgba(200, 168, 76, 0.12);">
-          <div class="doc-card-icon" style="color: var(--gold); font-size: 2.2rem; flex-shrink: 0;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 32px; height: 32px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+  <section class="cat-howto">
+    <div class="container">
+      <ol class="cat-howto-steps">
+        <li><strong>1. Browse</strong><span>Filter by type or search packages</span></li>
+        <li><strong>2. Select</strong><span>Tap <em>Add to multi-enquiry</em> on each package</span></li>
+        <li><strong>3. Enquire</strong><span>Open the form below and submit one quote</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="detail-content cat-main" id="elite-event-packages" data-event-key="corporate">
+    <div class="container">
+      <div class="event-toolbar cat-toolbar">
+        <div class="event-search-row">
+          <div class="event-search">
+            <svg class="event-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" id="event-search" placeholder="Search celebrity, band, MC, comedy…" autocomplete="off" aria-label="Search corporate packages" />
           </div>
-          <div class="doc-card-body">
-            <h3 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 300; color: var(--white); margin-bottom: 0.8rem;">Awards & Galas</h3>
-            <p style="font-size: 0.9rem; color: var(--silver-mid); margin-bottom: 1.5rem; line-height: 1.8;">Grand walk-on stingers, feature fanfares, and full-production show bands playing premium dance hits for executive guests.</p>
-            <a href="index.html#contact" class="btn btn-gold btn-sm">Enquire Now</a>
-          </div>
+          <div class="event-count" id="event-count">Loading…</div>
         </div>
-        
-        <div class="doc-card" style="margin-bottom: 2rem; background: var(--black-3); padding: 2.5rem; border: 1px solid rgba(200, 168, 76, 0.12);">
-          <div class="doc-card-icon" style="color: var(--gold); font-size: 2.2rem; flex-shrink: 0;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 32px; height: 32px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-          <div class="doc-card-body">
-            <h3 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 300; color: var(--white); margin-bottom: 0.8rem;">Product Launches</h3>
-            <p style="font-size: 0.9rem; color: var(--silver-mid); margin-bottom: 1.5rem; line-height: 1.8;">Modern high-fashion DJs, live saxophonists, and ambient percussionists creating custom-tailored sonic landscapes.</p>
-            <a href="index.html#contact" class="btn btn-gold btn-sm">Enquire Now</a>
-          </div>
+        <div class="event-types" id="event-types" role="toolbar" aria-label="Package type filters"></div>
+      </div>
+      <div class="event-grid" id="event-grid" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="cat-selection-panel" id="event-selection-panel" hidden>
+    <div class="container">
+      <div class="cat-selection-box">
+        <div>
+          <h3>Your corporate packages</h3>
+          <ul id="event-selection-list" class="cat-selection-list"></ul>
         </div>
-        
-        <div class="doc-card" style="margin-bottom: 2rem; background: var(--black-3); padding: 2.5rem; border: 1px solid rgba(200, 168, 76, 0.12);">
-          <div class="doc-card-icon" style="color: var(--gold); font-size: 2.2rem; flex-shrink: 0;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 32px; height: 32px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-          <div class="doc-card-body">
-            <h3 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 300; color: var(--white); margin-bottom: 0.8rem;">End-of-Year Celebrations</h3>
-            <p style="font-size: 0.9rem; color: var(--silver-mid); margin-bottom: 1.5rem; line-height: 1.8;">Themed tribute acts, high-energy party bands, and concert-grade sound & lighting systems to reward your employees.</p>
-            <a href="index.html#contact" class="btn btn-gold btn-sm">Enquire Now</a>
-          </div>
+        <div class="cat-selection-btns">
+          <button type="button" class="btn btn-outline" data-action="clear">Clear all</button>
+          <a href="#event-enquiry" class="btn btn-gold" data-action="bar-enquire">Continue to form</a>
         </div>
-        
-      <div class="back-btn-wrap">
-        <a href="index.html" class="btn btn-outline">&larr; Back to Main Page</a>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <section class="detail-content" id="event-enquiry">
+    <div class="container">
+      <div class="cat-form-block">
+        <h2 class="cat-form-heading">Book corporate entertainment</h2>
+        <p class="cat-form-lead">Selected packages fill the form automatically. Mix headline talent, bands, DJs and production in one enquiry.</p>
+        <div id="event-form-selected" class="talent-form-selected" hidden></div>
+        <div class="sf-wrap" data-service-form="corporate"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="event-selection-bar" id="event-selection-bar" aria-live="polite">
+    <div class="event-selection-inner">
+      <div class="event-selection-info">
+        <strong>0 packages selected</strong>
+        <span>Tap Add to multi-enquiry on cards above</span>
+      </div>
+      <div class="event-selection-actions">
+        <button type="button" class="btn btn-outline" data-action="clear">Clear</button>
+        <button type="button" class="btn btn-gold" data-action="bar-enquire">Go to form</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="site-footer">
     <div class="footer-top">
       <div class="container footer-top-inner">
         <div class="footer-brand">
           <div class="logo">
-        <a href="index.html" class="brand-link" aria-label="Elite Entertainment and Events — Home">
-          <img class="brand-logo brand-logo--nav" src="images/brand/logo-icon.png" alt="Elite Entertainment and Events" width="52" height="52" decoding="async" />
-        </a>
-      </div>
+            <a href="index.html" class="brand-link" aria-label="Home">
+              <img class="brand-logo brand-logo--footer" src="images/brand/logo-footer.png" alt="Elite Entertainment" width="280" height="110" decoding="async" />
+            </a>
+          </div>
           <p>Australia's premier entertainment agency delivering world-class acts for over 40 years.</p>
-          <p style="margin-top:0.5rem;font-size:0.72rem;color:var(--silver-dark);"><strong>ELITE ENTERTAINMENT &amp; EVENTS PTY LTD</strong> &nbsp;|&nbsp; ABN: 17 698 991 481 &nbsp;|&nbsp; ACN: 698 991 481 &nbsp;|&nbsp; ASIC Reg: 12/06/2026</p>
+          <p style="margin-top:0.5rem;font-size:0.72rem;color:var(--silver-dark);"><strong>ELITE ENTERTAINMENT &amp; EVENTS PTY LTD</strong> &nbsp;|&nbsp; ABN: 17 698 991 481 &nbsp;|&nbsp; ACN: 698 991 481</p>
         </div>
-
         <div class="footer-col">
           <h4>Artists</h4>
           <ul>
-            <li><a href="artists-solo.html">Solo Artists</a></li>
-            <li><a href="artists-duo.html">Duos</a></li>
-            <li><a href="artists-bands.html">Trios &amp; Bands</a></li>
-            <li><a href="artists-djs.html">DJs</a></li>
-            <li><a href="artists-tributes.html">Tribute Acts</a></li>
-            <li><a href="artists-jazz.html">Classical &amp; Jazz</a></li>
+            <li><a href="index.html#categories">Browse all artists</a></li>
+            <li><a href="folder.html?id=party-bands">Party Bands</a></li>
+            <li><a href="folder.html?id=djs-karaoke">DJs &amp; Karaoke</a></li>
+            <li><a href="models-dancers.html">Models &amp; Dancers</a></li>
           </ul>
         </div>
-
         <div class="footer-col">
-          <h4>Services</h4>
+          <h4>Hire</h4>
           <ul>
-            <li><a href="weddings.html">Wedding Band Hire</a></li>
-            <li><a href="corporate.html">Corporate Band Hire</a></li>
-            <li><a href="private-parties.html">Party Band Hire</a></li>
+            <li><a href="luxury-car-hire.html">Luxury Car Hire</a></li>
+            <li><a href="luxury-yacht-hire.html">Luxury Yacht Hire</a></li>
+            <li><a href="security.html">Security</a></li>
+            <li><a href="stage-sound-lighting.html">Stage, Sound &amp; Lighting</a></li>
+            <li><a href="weddings.html">Weddings</a></li>
+            <li><a href="corporate.html">Corporate</a></li>
           </ul>
         </div>
-
         <div class="footer-col">
           <h4>Contact</h4>
           <ul>
             <li><a href="tel:+61417221111">+61 417 221 111</a></li>
-            <li><a href="mailto:info@eeevents.com.au">Email Us</a></li>
+            <li><a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a></li>
             <li><span>Sydney, NSW</span></li>
           </ul>
         </div>
       </div>
     </div>
-
     <div class="footer-bottom">
       <div class="container footer-bottom-inner">
-        <p>&copy; 2026 ELITE ENTERTAINMENT &amp; EVENTS PTY LTD (ACN: 698 991 481 | ABN: 17 698 991 481). All rights reserved.</p>
+        <p>&copy; 2026 ELITE ENTERTAINMENT &amp; EVENTS PTY LTD. All rights reserved.</p>
       </div>
     </div>
   </footer>
 
-  <script>
-    // Simple script to toggle dropdown on mobile/tablet menu click
-    document.querySelectorAll('.has-dropdown > a').forEach(link => {{
-      link.addEventListener('click', (e) => {{
-        if (window.innerWidth <= 900) {{
-          e.preventDefault();
-          link.parentElement.classList.toggle('open');
-        }}
-      }});
-    }});
-  </script>
+  <script src="event-packages-data.js"></script>
+  <script src="event-packages.js"></script>
+  <script src="service-form.js"></script>
+  <script src="site-nav.js"></script>
   <script src="cms.js"></script>
   <script src="script.js"></script>
 </body>

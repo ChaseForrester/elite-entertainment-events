@@ -1,0 +1,72 @@
+.legal-wrap { max-width: 900px; margin: 0 auto; }
+.legal-meta { font-size: 0.8rem; color: #999; line-height: 1.55; margin: 0 0 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.legal-lead { font-size: 0.95rem; color: #ccc; line-height: 1.65; margin: 0 0 1.5rem; }
+.legal-accordion { display: flex; flex-direction: column; gap: 0.55rem; }
+.legal-item {
+  border: 1px solid rgba(200,168,76,0.18);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+  overflow: hidden;
+}
+.legal-item summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 1rem 1.15rem;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #fff;
+  position: relative;
+  padding-right: 2.5rem;
+}
+.legal-item summary::-webkit-details-marker { display: none; }
+.legal-item summary::after {
+  content: '';
+  position: absolute;
+  right: 1.1rem;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #c9a84c;
+  border-bottom: 2px solid #c9a84c;
+  transform: translateY(-65%) rotate(45deg);
+  transition: transform 0.2s;
+}
+.legal-item[open] summary::after {
+  transform: translateY(-35%) rotate(225deg);
+}
+.legal-item-body { padding: 0 1.15rem 1.15rem; }
+.legal-item-body p {
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #bdbdbd;
+}
+.legal-item-body p:last-child { margin-bottom: 0; }
+.legal-foot { margin-top: 2rem; font-size: 0.78rem; color: #777; line-height: 1.55; }
+.legal-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.legal-hub-card {
+  display: block;
+  padding: 1.15rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(200,168,76,0.2);
+  background: rgba(0,0,0,0.35);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.legal-hub-card:hover { border-color: rgba(200,168,76,0.55); transform: translateY(-2px); }
+.legal-hub-card h3 { margin: 0 0 0.35rem; font-size: 1.05rem; color: #fff; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; }
+.legal-hub-card p { margin: 0; font-size: 0.78rem; color: #999; line-height: 1.4; }
+.legal-card-plain {
+  padding: 1.25rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(200,168,76,0.05);
+}
+.legal-card-plain h3 { margin: 0 0 0.75rem; color: #c9a84c; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.legal-card-plain ul { margin: 0; padding-left: 1.1rem; color: #ccc; font-size: 0.88rem; line-height: 1.65; }
+.legal-card-plain li { margin-bottom: 0.35rem; }

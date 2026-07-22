@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Artist Profile | Elite Entertainment &amp; Events</title>
+  <meta name="description" content="Book entertainment with Elite Entertainment &amp; Events Australia." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:site_name" content="Elite Entertainment & Events" />
+  <meta property="og:title" content="Artist Profile | Elite Entertainment" id="og-title" />
+  <meta property="og:description" content="" id="og-desc" />
+  <meta property="og:image" content="" id="og-image" />
+  <meta property="og:url" content="" id="og-url" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#c9a84c" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="service-form.css" />
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-left">
+        <a href="tel:+61417221111">+61 417 221 111</a>
+        <span class="topbar-sep">|</span>
+        <a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>
+      </div>
+      <div class="topbar-right">
+        <a href="index.html#categories">All Categories</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header scrolled" id="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" class="brand-link" aria-label="Elite Entertainment and Events — Home">
+          <img class="brand-logo brand-logo--nav" src="images/brand/logo-nav-icon.png" alt="Elite Entertainment and Events" width="50" height="50" />
+        </a>
+      </div>
+      <nav class="main-nav" id="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#categories">Categories</a></li>
+          <li><a href="#artist-enquire" style="color:var(--gold);font-weight:700;">Enquire</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a href="#artist-enquire" class="btn btn-gold header-cta" style="border-radius:30px;text-transform:none;">Book This Act</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="artist-profile" id="artist-profile">
+    <div class="container artist-profile-grid">
+      <div class="artist-profile-media">
+        <div class="artist-profile-photo-wrap">
+          <img id="artist-photo" src="images/brand/logo-icon.png" alt="" />
+        </div>
+      </div>
+      <div class="artist-profile-content">
+        <p class="section-eyebrow" id="artist-category">Category</p>
+        <h1 id="artist-name">Artist</h1>
+        <p class="artist-style-pill" id="artist-style"></p>
+        <div class="gold-divider" style="margin:1rem 0 1.25rem;"></div>
+        <p class="artist-full-bio" id="artist-bio"></p>
+
+        <div class="artist-share-bar" aria-label="Share this profile">
+          <span class="artist-share-label">Share profile</span>
+          <a class="artist-share-btn artist-share-fb" id="share-facebook" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            Facebook
+          </a>
+          <a class="artist-share-btn artist-share-email" id="share-email" href="#" aria-label="Share by email">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email
+          </a>
+          <button type="button" class="artist-share-btn artist-share-copy" id="share-copy" aria-label="Copy profile link">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            <span id="share-copy-label">Copy URL</span>
+          </button>
+        </div>
+
+        <div class="artist-profile-actions">
+          <a href="#artist-enquire" class="btn btn-gold" style="border-radius:30px;text-transform:none;">Enquire about this act</a>
+          <a href="index.html#categories" class="btn btn-outline" style="border-radius:30px;text-transform:none;" id="artist-back-folder">Back to roster</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="cat-enquiry" id="artist-enquire" style="margin:3rem auto 4rem; max-width:1100px;">
+      <div class="container">
+        <div class="cat-enquiry-grid">
+          <div class="cat-enquiry-copy">
+            <p class="section-eyebrow" style="text-align:left;">Book this act</p>
+            <h2 class="section-title" style="text-align:left;">Request a Quote</h2>
+            <div class="gold-divider" style="margin-left:0;"></div>
+            <p>Enquiry is saved to Super Admin and emailed to <strong>info@eeevents.com.au</strong>.</p>
+            <p class="cat-enquiry-phones">
+              <a href="tel:+61417221111">+61 417 221 111</a><br />
+              <a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>
+            </p>
+          </div>
+          <form class="quote-form category-enquiry-form" data-category="" novalidate>
+            <input type="hidden" id="cat-category" name="category" value="" />
+            <input type="hidden" id="cat-act" name="act" value="" />
+            <p id="cat-act-label" class="cat-act-chip"></p>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cat-name">Full Name *</label>
+                <input type="text" id="cat-name" required autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label for="cat-email">Email *</label>
+                <input type="email" id="cat-email" required autocomplete="email" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cat-phone">Phone</label>
+                <input type="tel" id="cat-phone" autocomplete="tel" />
+              </div>
+              <div class="form-group">
+                <label for="cat-date">Event Date</label>
+                <input type="date" id="cat-date" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cat-guests">Guests</label>
+                <input type="text" id="cat-guests" />
+              </div>
+              <div class="form-group">
+                <label for="cat-budget">Budget (AUD)</label>
+                <input type="text" id="cat-budget" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cat-venue">Venue</label>
+              <input type="text" id="cat-venue" />
+            </div>
+            <div class="form-group">
+              <label for="cat-message">Details</label>
+              <textarea id="cat-message" rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn btn-gold btn-full">Send Enquiry</button>
+            <p class="cat-form-status" id="cat-form-status" hidden></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p>&copy; 2026 ELITE ENTERTAINMENT &amp; EVENTS PTY LTD.</p>
+        <div class="footer-bottom-links">
+          <a href="index.html">Home</a>
+          <a href="index.html#categories">Categories</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="categories-data.js"></script>
+  <script src="category-form.js"></script>
+  <script src="artist-profile.js"></script>
+  <script>
+    document.getElementById('nav-toggle')?.addEventListener('click', function () {
+      document.getElementById('main-nav')?.classList.toggle('open');
+    });
+  </script>
+  <script src="site-nav.js"></script>
+</body>
+</html>

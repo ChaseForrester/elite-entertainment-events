@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Stage, Sound &amp; Lighting Hire | Elite Entertainment &amp; Events</title>
+  <meta name="description" content="Hire stage decks, PA systems, LED walls, moving lights and full production packages for Australian events. Multi-item quotes, no public prices." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="service-form.css" />
+  <link rel="stylesheet" href="production.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#c9a84c" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+</head>
+<body class="catalogue-page">
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-left">
+        <a href="tel:+61417221111">+61 417 221 111</a>
+        <span class="topbar-sep">|</span>
+        <a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>
+      </div>
+      <div class="topbar-right">
+        <span style="font-size:0.72rem;color:var(--silver-mid);">Production hire · Australia</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header scrolled" id="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" class="brand-link" aria-label="Home">
+          <img class="brand-logo brand-logo--nav" src="images/brand/logo-icon.png" alt="Elite Entertainment" width="52" height="52" decoding="async" />
+        </a>
+      </div>
+      <nav class="main-nav" id="main-nav" aria-label="Primary"></nav>
+      <div class="header-actions">
+        <a href="#production-enquiry" class="btn btn-gold header-cta">Get a Quote</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="main-nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="cat-page-head">
+    <div class="container">
+      <p class="section-eyebrow">Production hire</p>
+      <h1>Stage, Sound &amp; Lighting</h1>
+      <p class="cat-page-sub"><span id="production-hero-count">25+</span> packages · PA, LED, stages, movers · multi-item hire · no public prices</p>
+    </div>
+  </section>
+
+  <section class="cat-howto">
+    <div class="container">
+      <ol class="cat-howto-steps">
+        <li><strong>1. Browse</strong><span>Filter Sound, Lighting, Stage, Video or Packages</span></li>
+        <li><strong>2. Select</strong><span>Set quantity for each item you need</span></li>
+        <li><strong>3. Enquire</strong><span>One form for your full production mix</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="detail-content cat-main" id="elite-production">
+    <div class="container">
+      <div class="production-toolbar cat-toolbar">
+        <div class="production-search-row">
+          <div class="production-search">
+            <svg class="production-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" id="production-search" placeholder="Search PA, LED wall, uplights, stage…" autocomplete="off" aria-label="Search production hire" />
+          </div>
+          <div class="production-count" id="production-count">Loading…</div>
+        </div>
+        <div class="production-types" id="production-types" role="toolbar" aria-label="Category filters"></div>
+      </div>
+      <div class="production-grid" id="production-grid" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="cat-selection-panel" id="production-selection-panel" hidden>
+    <div class="container">
+      <div class="cat-selection-box">
+        <div>
+          <h3>Your production mix</h3>
+          <ul id="production-selection-list" class="cat-selection-list"></ul>
+        </div>
+        <div class="cat-selection-btns">
+          <button type="button" class="btn btn-outline" data-action="clear">Clear all</button>
+          <a href="#production-enquiry" class="btn btn-gold" data-action="bar-enquire">Continue to form</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="detail-content" id="production-enquiry">
+    <div class="container">
+      <div class="cat-form-block">
+        <h2 class="cat-form-heading">Book stage, sound &amp; lighting</h2>
+        <p class="cat-form-lead">Selected gear and quantities appear in the form. Build a full package — PA + lights + stage — in one enquiry.</p>
+        <div id="production-form-selected" class="talent-form-selected" hidden></div>
+        <div class="sf-wrap" data-service-form="production"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="production-selection-bar" id="production-selection-bar" aria-live="polite">
+    <div class="production-selection-inner">
+      <div class="production-selection-info">
+        <strong>0 items selected</strong>
+        <span>Set quantities on cards above</span>
+      </div>
+      <div class="production-selection-actions">
+        <button type="button" class="btn btn-outline" data-action="clear">Clear</button>
+        <button type="button" class="btn btn-gold" data-action="bar-enquire">Go to form</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="container footer-top-inner">
+        <div class="footer-brand">
+          <div class="logo">
+            <a href="index.html" class="brand-link" aria-label="Home">
+              <img class="brand-logo brand-logo--footer" src="images/brand/logo-footer.png" alt="Elite Entertainment" width="280" height="110" decoding="async" />
+            </a>
+          </div>
+          <p>Australia's premier entertainment agency delivering world-class acts for over 40 years.</p>
+          <p style="margin-top:0.5rem;font-size:0.72rem;color:var(--silver-dark);"><strong>ELITE ENTERTAINMENT &amp; EVENTS PTY LTD</strong> &nbsp;|&nbsp; ABN: 17 698 991 481 &nbsp;|&nbsp; ACN: 698 991 481</p>
+        </div>
+        <div class="footer-col">
+          <h4>Artists</h4>
+          <ul>
+            <li><a href="index.html#categories">Browse all artists</a></li>
+            <li><a href="folder.html?id=party-bands">Party Bands</a></li>
+            <li><a href="folder.html?id=djs-karaoke">DJs &amp; Karaoke</a></li>
+            <li><a href="models-dancers.html">Models &amp; Dancers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Hire</h4>
+          <ul>
+            <li><a href="luxury-car-hire.html">Luxury Car Hire</a></li>
+            <li><a href="luxury-yacht-hire.html">Luxury Yacht Hire</a></li>
+            <li><a href="security.html">Security</a></li>
+            <li><a href="stage-sound-lighting.html">Stage, Sound &amp; Lighting</a></li>
+            <li><a href="weddings.html">Weddings</a></li>
+            <li><a href="corporate.html">Corporate</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:+61417221111">+61 417 221 111</a></li>
+            <li><a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a></li>
+            <li><span>Sydney, NSW</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p>&copy; 2026 ELITE ENTERTAINMENT &amp; EVENTS PTY LTD. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="production-data.js"></script>
+  <script src="production.js"></script>
+  <script src="service-form.js"></script>
+  <script src="site-nav.js"></script>
+  <script src="cms.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

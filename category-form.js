@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   Category enquiry forms → Admin CRM + email
+   Category enquiry forms Admin CRM + email
    Email: info@eeevents.com.au
 ═══════════════════════════════════════════════════ */
 (function () {
@@ -136,7 +136,7 @@
       });
 
       if (adminOk && mailResult.ok) {
-        setStatus(statusEl, '✓ Enquiry sent! It’s in the Super Admin CRM and emailed to info@eeevents.com.au. We’ll reply shortly.', 'success');
+        setStatus(statusEl, 'Enquiry sent! It’s in the Super Admin CRM and emailed to info@eeevents.com.au. We’ll reply shortly.', 'success');
         form.reset();
         // restore category/act hidden defaults
         const catField = document.getElementById('cat-category');
@@ -144,7 +144,7 @@
         const actField = document.getElementById('cat-act');
         if (actField && form.dataset.act) actField.value = form.dataset.act;
       } else if (adminOk && !mailResult.ok) {
-        setStatus(statusEl, '✓ Saved to Admin CRM. Email delivery needs a one-time FormSubmit confirmation — check info@eeevents.com.au (and spam) and click “Confirm email”. Your lead is still safe in admin.', 'warn');
+        setStatus(statusEl, 'Saved to Admin CRM. Email delivery needs a one-time FormSubmit confirmation — check info@eeevents.com.au (and spam) and click “Confirm email”. Your lead is still safe in admin.', 'warn');
       } else {
         setStatus(statusEl, 'Something went wrong. Please call +61 417 221 111 or email info@eeevents.com.au directly.', 'error');
       }
@@ -174,8 +174,32 @@
     emails: { primary: EMAIL_PRIMARY }
   };
 
+  function enhanceDateInputs() {
+    var d = new Date();
+    var min = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    document.querySelectorAll('input[type="date"]').forEach(function (el) {
+      if (!el.getAttribute('min')) el.setAttribute('min', min);
+      el.classList.add('sf-date-input');
+      el.style.colorScheme = 'dark';
+      el.style.cursor = 'pointer';
+      // Wrap with calendar icon if not already wrapped
+      if (el.parentElement && !el.parentElement.classList.contains('sf-date-wrap')) {
+        var wrap = document.createElement('div');
+        wrap.className = 'sf-date-wrap';
+        el.parentNode.insertBefore(wrap, el);
+        wrap.appendChild(el);
+        var icon = document.createElement('span');
+        icon.className = 'sf-date-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+        wrap.insertBefore(icon, el);
+      }
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('form.category-enquiry-form').forEach(bindCategoryForm);
+    enhanceDateInputs();
 
     document.querySelectorAll('[data-enquire-act]').forEach(function (btn) {
       btn.addEventListener('click', function (e) {

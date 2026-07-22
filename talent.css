@@ -1,0 +1,561 @@
+/* ── Models & Dancers talent catalogue ── */
+.talent-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.75rem;
+  margin-top: 1.75rem;
+}
+.talent-hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.talent-hero-stat strong {
+  font-family: var(--font-display, "Bebas Neue", sans-serif);
+  font-size: 1.75rem;
+  letter-spacing: 0.04em;
+  color: var(--gold, #c9a84c);
+  line-height: 1;
+}
+.talent-hero-stat span {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--silver-mid, #aaa);
+}
+
+.talent-toolbar {
+  position: sticky;
+  top: 72px;
+  z-index: 40;
+  background: rgba(8, 8, 8, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(200, 168, 76, 0.15);
+  padding: 1rem 0 1.1rem;
+  margin-bottom: 1.75rem;
+}
+.talent-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+.talent-search {
+  flex: 1 1 220px;
+  min-width: 0;
+  position: relative;
+}
+.talent-search input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(200, 168, 76, 0.22);
+  border-radius: 999px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.75rem 1.1rem 0.75rem 2.6rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.talent-search input:focus {
+  border-color: rgba(200, 168, 76, 0.55);
+  box-shadow: 0 0 0 3px rgba(200, 168, 76, 0.12);
+}
+.talent-search input::placeholder { color: #777; }
+.talent-search-icon {
+  position: absolute;
+  left: 0.95rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--gold, #c9a84c);
+  pointer-events: none;
+  opacity: 0.85;
+}
+.talent-count {
+  font-size: 0.78rem;
+  color: #999;
+  white-space: nowrap;
+}
+.talent-count strong { color: var(--gold, #c9a84c); }
+
+.talent-styles {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200, 168, 76, 0.4) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.talent-style-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-width: 74px;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: #ccc;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s, box-shadow 0.2s;
+  font-family: inherit;
+}
+.talent-style-btn:hover {
+  border-color: rgba(200, 168, 76, 0.35);
+  background: rgba(200, 168, 76, 0.06);
+  transform: translateY(-1px);
+}
+.talent-style-btn.is-active {
+  border-color: rgba(200, 168, 76, 0.65);
+  background: linear-gradient(160deg, rgba(200, 168, 76, 0.18), rgba(200, 168, 76, 0.05));
+  box-shadow: 0 0 18px rgba(200, 168, 76, 0.12);
+  color: #fff;
+}
+.talent-style-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(200, 168, 76, 0.1);
+}
+.talent-style-btn.is-active .talent-style-icon {
+  background: rgba(200, 168, 76, 0.22);
+}
+.talent-style-name {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  max-width: 80px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.talent-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+.talent-group-chip {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #bbb;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.talent-group-chip:hover {
+  border-color: rgba(200, 168, 76, 0.4);
+  color: #eee;
+}
+.talent-group-chip.is-active {
+  background: linear-gradient(135deg, #8a6f27, #c9a84c);
+  border-color: transparent;
+  color: #0a0a0a;
+}
+
+.talent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.35rem;
+}
+.talent-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3.5rem 1rem;
+  color: #888;
+  border: 1px dashed rgba(200, 168, 76, 0.25);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.talent-empty strong {
+  display: block;
+  color: #ddd;
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+}
+
+.talent-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--black-3, #0d0d0d);
+  border: 1px solid rgba(200, 168, 76, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+.talent-card:hover {
+  border-color: rgba(200, 168, 76, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 28px rgba(200, 168, 76, 0.08);
+}
+.talent-card.is-selected {
+  border-color: rgba(200, 168, 76, 0.75);
+  box-shadow: 0 0 0 1px rgba(200, 168, 76, 0.35), 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+.talent-card-media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #111;
+}
+.talent-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s ease;
+}
+.talent-card:hover .talent-card-media img {
+  transform: scale(1.05);
+}
+.talent-card-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--gold, #c9a84c);
+  border: 1px solid rgba(200, 168, 76, 0.35);
+  backdrop-filter: blur(6px);
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.talent-card-group {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.28rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.talent-card-check {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: all 0.2s;
+  pointer-events: none;
+}
+.talent-card.is-selected .talent-card-check {
+  background: linear-gradient(135deg, #8a6f27, #e8c86b);
+  border-color: transparent;
+  color: #0a0a0a;
+}
+.talent-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.1rem 1.15rem 1.2rem;
+  gap: 0.55rem;
+}
+.talent-card-loc {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold, #c9a84c);
+}
+.talent-card-title {
+  font-family: var(--font-heading, "Cormorant Garamond", Georgia, serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+  line-height: 1.15;
+}
+.talent-card-cat {
+  font-size: 0.75rem;
+  color: #888;
+  margin: -0.15rem 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.talent-card-summary {
+  font-size: 0.82rem;
+  color: var(--silver-mid, #aaa);
+  line-height: 1.55;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.talent-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 0.55rem;
+  padding: 0.65rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.talent-spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+  min-width: 0;
+}
+.talent-spec dt {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #666;
+  margin: 0;
+}
+.talent-spec dd {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #e8e8e8;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.talent-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.talent-tag {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #999;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.talent-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.3rem;
+}
+.talent-card-actions .btn {
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.76rem;
+  padding: 0.65rem 0.7rem;
+}
+.talent-select-btn.is-on {
+  background: linear-gradient(135deg, #8a6f27, #c9a84c) !important;
+  color: #0a0a0a !important;
+  border-color: transparent !important;
+}
+
+.talent-selection-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  transform: translateY(110%);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.talent-selection-bar.is-visible {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.talent-selection-inner {
+  max-width: 960px;
+  margin: 0 auto 1rem;
+  padding: 0.9rem 1.15rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  background: rgba(12, 12, 12, 0.96);
+  border: 1px solid rgba(200, 168, 76, 0.4);
+  border-radius: 16px;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(200, 168, 76, 0.1);
+  backdrop-filter: blur(12px);
+}
+.talent-selection-info {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.talent-selection-info strong {
+  display: block;
+  color: #fff;
+  font-size: 0.95rem;
+}
+.talent-selection-info span {
+  font-size: 0.78rem;
+  color: #999;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.talent-selection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.talent-selection-actions .btn {
+  font-size: 0.8rem;
+  padding: 0.65rem 1rem;
+}
+
+.talent-form-selected {
+  margin-bottom: 1.25rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(200, 168, 76, 0.25);
+  background: rgba(200, 168, 76, 0.06);
+}
+.talent-form-selected h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold, #c9a84c);
+}
+.talent-form-selected ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.talent-form-selected li {
+  font-size: 0.78rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(200, 168, 76, 0.2);
+  color: #eee;
+}
+
+.talent-intro {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.talent-intro-card {
+  padding: 1.25rem 1.35rem;
+  border-radius: 14px;
+  background: var(--black-3, #0d0d0d);
+  border: 1px solid rgba(200, 168, 76, 0.12);
+}
+.talent-intro-card h3 {
+  font-family: var(--font-heading, Georgia, serif);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #fff;
+  margin: 0 0 0.4rem;
+}
+.talent-intro-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--silver-mid, #aaa);
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .talent-toolbar {
+    top: 56px;
+    padding: 0.65rem 0 0.75rem;
+  }
+  .talent-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .talent-card-title { font-size: 1.05rem; }
+  .talent-card-summary {
+    -webkit-line-clamp: 2;
+    font-size: 0.72rem;
+  }
+  .talent-specs { display: none; }
+  .talent-card-actions {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .talent-card-actions .btn {
+    font-size: 0.68rem;
+    padding: 0.55rem 0.5rem;
+  }
+  .talent-card-media { aspect-ratio: 3 / 4; }
+  .talent-style-btn {
+    min-width: 64px;
+    padding: 0.4rem 0.45rem;
+  }
+  .talent-selection-inner {
+    margin: 0 0.5rem 0.65rem;
+    border-radius: 12px;
+    padding: 0.75rem 0.85rem;
+  }
+  .talent-selection-actions {
+    width: 100%;
+  }
+  .talent-selection-actions .btn {
+    flex: 1;
+    font-size: 0.72rem;
+    padding: 0.6rem 0.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .talent-grid { grid-template-columns: 1fr; }
+}
+
+body.has-talent-selection .site-footer {
+  padding-bottom: 6rem;
+}
+
+.talent-card-actions .btn {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}

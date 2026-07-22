@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Multi-Enquiry | Elite Entertainment &amp; Events</title>
+  <meta name="description" content="Combine artists, cars, yachts, security, production and talent into one Elite multi-enquiry with full booking detail." />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="service-form.css" />
+  <link rel="stylesheet" href="cart.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#c9a84c" />
+</head>
+<body class="catalogue-page page-multi-enquiry">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-left">
+        <a href="tel:+61417221111">+61 417 221 111</a>
+        <span class="topbar-sep">|</span>
+        <a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>
+      </div>
+    </div>
+  </div>
+  <header class="site-header scrolled" id="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" class="brand-link"><img class="brand-logo brand-logo--nav" src="images/brand/logo-icon.png" alt="Elite" width="52" height="52" /></a>
+      </div>
+      <nav class="main-nav" id="main-nav"></nav>
+      <div class="header-actions">
+        <a href="client.html" class="btn btn-outline header-cta">Client Login</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <section class="cat-page-head">
+    <div class="container">
+      <p class="section-eyebrow">Cross-site hire</p>
+      <h1>Multi-Enquiry Cart</h1>
+      <p class="cat-page-sub">Every item you added shows its photo and details. Fill in dates, people, hours and notes so we itemise your package correctly — then submit once.</p>
+    </div>
+  </section>
+
+  <section class="detail-content">
+    <div class="container cart-page-wrap">
+      <div id="cart-list-mount"></div>
+
+      <div class="cat-form-block" style="margin-top:2rem;" id="service-multi-form">
+        <h2 class="cat-form-heading">Submit multi-enquiry</h2>
+        <p class="cat-form-lead">Your cart fills the form with every line item, image source, dates, people and notes. Super Admin receives the full package list + FormSubmit email to info@eeevents.com.au.</p>
+        <div class="sf-wrap" data-service-form="multi"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p>&copy; 2026 ELITE ENTERTAINMENT &amp; EVENTS PTY LTD (ABN 17 698 991 481). <a href="legal.html">Legal</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="back-to-top" type="button" aria-label="Back to top">↑</button>
+
+  <script src="elite-cart.js"></script>
+  <script src="service-form.js"></script>
+  <script src="site-nav.js"></script>
+  <script src="cms.js"></script>
+  <script src="script.js"></script>
+  <script>
+  (function () {
+    var PLACEHOLDER = 'images/brand/logo-icon.png';
+
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function todayISO() {
+      var d = new Date();
+      var m = String(d.getMonth() + 1).padStart(2, '0');
+      var day = String(d.getDate()).padStart(2, '0');
+      return d.getFullYear() + '-' + m + '-' + day;
+    }
+    function field(cartId, key, label, type, value, extra) {
+      var id = 'cf-' + cartId + '-' + key;
+      var common = 'data-field="' + esc(key) + '" data-cart-id="' + esc(cartId) + '" id="' + esc(id) + '"';
+      if (type === 'textarea') {
+        return '<div style="grid-column:1/-1"><label for="' + esc(id) + '">' + esc(label) + '</label>' +
+          '<textarea ' + common + ' rows="2" placeholder="' + esc(extra || '') + '">' + esc(value || '') + '</textarea></div>';
+      }
+      if (type === 'date') {
+        return '<div><label for="' + esc(id) + '">' + esc(label) + '</label>' +
+          '<input type="date" ' + common + ' value="' + esc(value || '') + '" min="' + todayISO() + '" /></div>';
+      }
+      return '<div><label for="' + esc(id) + '">' + esc(label) + '</label>' +
+        '<input type="' + esc(type || 'text') + '" ' + common + ' value="' + esc(value || '') + '" placeholder="' + esc(extra || '') + '" /></div>';
+    }
+
+    function itemCard(x) {
+      var img = x.image || PLACEHOLDER;
+      var kind = (window.EliteCart && EliteCart.kindLabel) ? EliteCart.kindLabel(x.kind) : (x.kind || 'Item');
+      var fields = '';
+      // Kind-aware field labels so hire details are meticulous
+      var guestsLabel = 'People / guests';
+      var hoursLabel = 'Hours / duration';
+      if (x.kind === 'vehicle') {
+        guestsLabel = 'Passengers / seats needed';
+        hoursLabel = 'Hire hours (or full day)';
+      } else if (x.kind === 'yacht') {
+        guestsLabel = 'Guests on board';
+        hoursLabel = 'Charter hours / days';
+      } else if (x.kind === 'security') {
+        guestsLabel = 'Staff count needed';
+        hoursLabel = 'Shift hours';
+      } else if (x.kind === 'production') {
+        guestsLabel = 'Units / rooms / systems';
+        hoursLabel = 'Bump-in to bump-out hours';
+      } else if (x.kind === 'artist' || x.kind === 'talent') {
+        guestsLabel = 'Audience / event size';
+        hoursLabel = 'Set length / call time hours';
+      }
+
+      fields =
+        field(x.cartId, 'date', 'Start / event date', 'date', x.date) +
+        field(x.cartId, 'endDate', 'End date (if multi-day)', 'date', x.endDate) +
+        field(x.cartId, 'days', 'How many days', 'number', x.days, 'e.g. 1') +
+        field(x.cartId, 'hours', hoursLabel, 'text', x.hours, 'e.g. 4 hours, 8pm–12am') +
+        field(x.cartId, 'guests', guestsLabel, 'text', x.guests, 'e.g. 120 guests') +
+        field(x.cartId, 'location', 'Venue / location', 'text', x.location, 'Suburb or venue name') +
+        field(x.cartId, 'notes', 'Notes for this item', 'textarea', x.notes, 'Access, rider, colour, special requests…');
+
+      return (
+        '<li class="cart-item" data-id="' + esc(x.cartId) + '">' +
+          '<div class="cart-item-img">' +
+            '<img src="' + esc(img) + '" alt="' + esc(x.name) + '" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'' + PLACEHOLDER + '\'" />' +
+          '</div>' +
+          '<div class="cart-item-body">' +
+            '<span class="cart-item-kind">' + esc(kind) + '</span>' +
+            '<p class="cart-item-name">' + esc(x.name) + '</p>' +
+            (x.meta ? '<p class="cart-item-meta">' + esc(x.meta) + '</p>' : '') +
+            (x.summary ? '<p class="cart-item-summary">' + esc(x.summary) + '</p>' : '') +
+            (x.href ? '<p style="margin:0 0 0.65rem;"><a class="cart-item-link" href="' + esc(x.href) + '">View source page</a></p>' : '') +
+            '<div class="cart-item-fields">' + fields + '</div>' +
+            '<div class="cart-item-actions">' +
+              '<span class="qty-wrap"><label for="qty-' + esc(x.cartId) + '">Qty</label>' +
+                '<input id="qty-' + esc(x.cartId) + '" type="number" min="1" max="500" value="' + (x.qty || 1) + '" data-qty="' + esc(x.cartId) + '" aria-label="Quantity" />' +
+              '</span>' +
+              '<button type="button" class="btn btn-outline btn-sm" data-remove="' + esc(x.cartId) + '">Remove</button>' +
+            '</div>' +
+          '</div>' +
+        '</li>'
+      );
+    }
+
+    function render() {
+      var mount = document.getElementById('cart-list-mount');
+      if (!mount || !window.EliteCart) return;
+      var items = EliteCart.load();
+      if (!items.length) {
+        mount.innerHTML =
+          '<div class="cart-empty">' +
+            '<strong style="display:block;color:#ddd;margin-bottom:0.4rem;">Cart is empty</strong>' +
+            'Browse artists, cars, yachts, talent, security or production and tap <em>Add to multi-enquiry</em>.' +
+            '<div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;">' +
+              '<a class="btn btn-outline btn-sm" href="index.html#categories">Artists</a>' +
+              '<a class="btn btn-outline btn-sm" href="luxury-car-hire.html">Cars</a>' +
+              '<a class="btn btn-outline btn-sm" href="luxury-yacht-hire.html">Yachts</a>' +
+              '<a class="btn btn-outline btn-sm" href="models-dancers.html">Models / dancers</a>' +
+              '<a class="btn btn-outline btn-sm" href="security.html">Security</a>' +
+              '<a class="btn btn-outline btn-sm" href="stage-sound-lighting.html">Stage / sound</a>' +
+            '</div>' +
+          '</div>';
+        syncForm(items);
+        return;
+      }
+      mount.innerHTML =
+        '<p class="cart-page-count" style="margin:0 0 1rem;color:#999;font-size:0.85rem;">' +
+          '<strong style="color:#e8c86b;">' + items.length + '</strong> line item' + (items.length === 1 ? '' : 's') +
+          ' · <strong style="color:#e8c86b;">' + EliteCart.count() + '</strong> total units — fill booking fields below for each item' +
+        '</p>' +
+        '<ul class="cart-list">' + items.map(itemCard).join('') + '</ul>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;">' +
+          '<button type="button" class="btn btn-outline" id="cart-clear">Clear cart</button>' +
+          '<a class="btn btn-gold" href="#service-multi-form">Continue to form</a>' +
+        '</div>';
+      syncForm(items);
+    }
+
+    function syncForm(items) {
+      var ta = document.getElementById('sf-cart');
+      if (ta && window.EliteCart) ta.value = EliteCart.summaryText();
+      var q = document.getElementById('sf-quantity');
+      if (q && items) q.value = items.length + ' line items · ' + EliteCart.count() + ' total units';
+    }
+
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t) return;
+      var removeBtn = t.closest ? t.closest('[data-remove]') : null;
+      if (removeBtn) {
+        EliteCart.remove(removeBtn.getAttribute('data-remove'));
+        render();
+        return;
+      }
+      if (t.id === 'cart-clear') {
+        if (window.confirm('Clear the entire multi-enquiry cart?')) {
+          EliteCart.clear();
+          render();
+        }
+      }
+    });
+
+    document.addEventListener('change', function (e) {
+      var t = e.target;
+      if (!t) return;
+      if (t.getAttribute && t.getAttribute('data-qty')) {
+        EliteCart.setQty(t.getAttribute('data-qty'), t.value);
+        syncForm(EliteCart.load());
+        return;
+      }
+      if (t.getAttribute && t.getAttribute('data-field') && t.getAttribute('data-cart-id')) {
+        var fields = {};
+        fields[t.getAttribute('data-field')] = t.value;
+        EliteCart.update(t.getAttribute('data-cart-id'), fields);
+        syncForm(EliteCart.load());
+      }
+    });
+
+    // Live-type notes / text fields without waiting for blur-only change
+    document.addEventListener('input', function (e) {
+      var t = e.target;
+      if (!t || !t.getAttribute) return;
+      if (t.getAttribute('data-field') && t.getAttribute('data-cart-id')) {
+        var fields = {};
+        fields[t.getAttribute('data-field')] = t.value;
+        EliteCart.update(t.getAttribute('data-cart-id'), fields);
+        // Debounce form sync lightly
+        clearTimeout(window._cartSyncT);
+        window._cartSyncT = setTimeout(function () { syncForm(EliteCart.load()); }, 200);
+      }
+    });
+
+    window.addEventListener('elite-cart-changed', function () {
+      // Avoid full re-render while typing in fields (would steal focus)
+      if (document.activeElement && document.activeElement.getAttribute && document.activeElement.getAttribute('data-field')) {
+        syncForm(EliteCart.load());
+        return;
+      }
+      if (document.activeElement && document.activeElement.getAttribute && document.activeElement.getAttribute('data-qty')) {
+        syncForm(EliteCart.load());
+        return;
+      }
+      render();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      render();
+      var mo = new MutationObserver(function () { syncForm(EliteCart.load()); });
+      var wrap = document.querySelector('[data-service-form="multi"]');
+      if (wrap) mo.observe(wrap, { childList: true, subtree: true });
+    });
+  })();
+  </script>
+</body>
+</html>

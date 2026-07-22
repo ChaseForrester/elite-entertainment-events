@@ -1,0 +1,1066 @@
+{
+  "folders": [
+    {
+      "id": "celebrity-bands-and-artists",
+      "name": "Celebrity Bands and Artists",
+      "short": "Guy Sebastian, Jessica Mauboy, Anthony Callea and more headline talent.",
+      "slug": "folder.html?id=celebrity-bands-and-artists",
+      "cover": "images/acts/celebrity-bands-and-artists/guy-sebastian.webp",
+      "count": 8,
+      "acts": [
+        {
+          "name": "Guy Sebastian",
+          "style": "Celebrity Bands and Artists",
+          "image": "images/acts/celebrity-bands-and-artists/guy-sebastian.webp"
+        },
+        {
+          "name": "Jessica Mauboy",
+          "style": "Celebrity Bands and Artists",
+          "image": "images/acts/celebrity-bands-and-artists/jessica-mauboy.webp"
+        },
+        {
+          "name": "Anthony Callea",
+          "style": "Celebrity Bands and Artists",
+          "image": "images/acts/celebrity-bands-and-artists/anthony-callea.png"
+        },
+        {
+          "name": "Dami Im",
+          "style": "Celebrity Bands and Artists",
+          "image": "images/acts/celebrity-bands-and-artists/dami-im.webp"
+        },
+        {
+          "name": "Mark Vincent",
+          "style": "Celebrity Bands and Artists",
+          "image": "images/acts/celebrity-bands-and-artists/mark-vincent.png"
+        },
+        {
+          "name": "Casey Donovan",
+          "style": "Celebrity Bands and Artists",
+          "image": "images/acts/celebrity-bands-and-artists/casey-donovan.webp"
+        },
+        {
+          "name": "Justice Crew",
+          "style": "Celebrity Bands and Artists",
+          "image": "images/acts/celebrity-bands-and-artists/justice-crew.jpg"
+        },
+        {
+          "name": "Ricki-Lee Coulter",
+          "style": "Celebrity Bands and Artists",
+          "image": "images/acts/celebrity-bands-and-artists/ricki-lee-coulter.webp"
+        }
+      ]
+    },
+    {
+      "id": "bands",
+      "name": "Bands",
+      "short": "High-energy party and cover bands for weddings and corporate events.",
+      "slug": "folder.html?id=bands",
+      "cover": "images/acts/bands/jelly-bean-jam.jpg",
+      "count": 5,
+      "acts": [
+        {
+          "name": "Jelly Bean Jam",
+          "style": "Bands",
+          "image": "images/acts/bands/jelly-bean-jam.jpg"
+        },
+        {
+          "name": "Brown Sugar",
+          "style": "Bands",
+          "image": "images/acts/bands/brown-sugar.webp"
+        },
+        {
+          "name": "High Rollers",
+          "style": "Bands",
+          "image": "images/acts/bands/high-rollers.jpg"
+        },
+        {
+          "name": "Mesa Groove",
+          "style": "Bands",
+          "image": "images/acts/bands/mesa-groove.jpg"
+        },
+        {
+          "name": "Let's Groove",
+          "style": "Bands",
+          "image": "images/acts/bands/let-s-groove.jpg"
+        }
+      ]
+    },
+    {
+      "id": "soloists-duos-trios",
+      "name": "Soloists, Duos, Trios",
+      "short": "Intimate solos, polished duos and dynamic trios for any venue.",
+      "slug": "folder.html?id=soloists-duos-trios",
+      "cover": "images/acts/soloists-duos-trios/david-agius.jpg",
+      "count": 9,
+      "acts": [
+        {
+          "name": "David Agius",
+          "style": "Soloists, Duos, Trios",
+          "image": "images/acts/soloists-duos-trios/david-agius.jpg"
+        },
+        {
+          "name": "Zoltan",
+          "style": "Soloists, Duos, Trios"
+        },
+        {
+          "name": "Marco - Soloist",
+          "style": "Soloists, Duos, Trios",
+          "image": "images/acts/soloists-duos-trios/marco-soloist.jpg"
+        },
+        {
+          "name": "Jo Elms",
+          "style": "Soloists, Duos, Trios",
+          "image": "images/acts/soloists-duos-trios/jo-elms.jpg"
+        },
+        {
+          "name": "AM 2 PM Duo",
+          "style": "Soloists, Duos, Trios",
+          "image": "images/acts/soloists-duos-trios/am-2-pm-duo.jpg"
+        },
+        {
+          "name": "Flava Duo",
+          "style": "Soloists, Duos, Trios",
+          "image": "images/acts/soloists-duos-trios/flava-duo.webp"
+        },
+        {
+          "name": "The Hype Boys Trio",
+          "style": "Soloists, Duos, Trios",
+          "image": "images/acts/soloists-duos-trios/the-hype-boys-trio.png"
+        },
+        {
+          "name": "Geoff Zhang Duo",
+          "style": "Soloists, Duos, Trios",
+          "image": "images/acts/soloists-duos-trios/geoff-zhang-duo.jpg"
+        },
+        {
+          "name": "Wild Cats Trio",
+          "style": "Soloists, Duos, Trios",
+          "image": "images/acts/soloists-duos-trios/wild-cats-trio.jpg"
+        }
+      ]
+    },
+    {
+      "id": "stage-shows",
+      "name": "Stage Shows",
+      "short": "Tribute spectaculars and full production stage shows.",
+      "slug": "folder.html?id=stage-shows",
+      "cover": "images/acts/stage-shows/the-pink-show.png",
+      "count": 7,
+      "acts": [
+        {
+          "name": "The Pink Show",
+          "style": "Stage Shows",
+          "image": "images/acts/stage-shows/the-pink-show.png"
+        },
+        {
+          "name": "Kick – The INXS Show",
+          "style": "Stage Shows",
+          "image": "images/acts/stage-shows/kick-the-inxs-show.jpg"
+        },
+        {
+          "name": "ABBAlanche",
+          "style": "Stage Shows",
+          "image": "images/acts/stage-shows/abbalanche.jpg"
+        },
+        {
+          "name": "The BEATnix Show",
+          "style": "Stage Shows",
+          "image": "images/acts/stage-shows/the-beatnix-show.jpg"
+        },
+        {
+          "name": "Audio Vixen",
+          "style": "Stage Shows",
+          "image": "images/acts/stage-shows/audio-vixen.jpg"
+        },
+        {
+          "name": "Sing Little Sister",
+          "style": "Stage Shows"
+        },
+        {
+          "name": "The Robertson Bros.",
+          "style": "Stage Shows",
+          "image": "images/acts/stage-shows/the-robertson-bros.jpg"
+        }
+      ]
+    },
+    {
+      "id": "multicultural-entertainment",
+      "name": "Multicultural Entertainment",
+      "short": "Cultural dance, world bands and international show acts.",
+      "slug": "folder.html?id=multicultural-entertainment",
+      "cover": "images/acts/multicultural-entertainment/chinese-dance-spectacular.jpg",
+      "count": 13,
+      "acts": [
+        {
+          "name": "Chinese Dance Spectacular",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/chinese-dance-spectacular.jpg"
+        },
+        {
+          "name": "The Mandarin Band",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/the-mandarin-band.jpg"
+        },
+        {
+          "name": "An Italian Affair",
+          "style": "Multicultural Entertainment"
+        },
+        {
+          "name": "Salsa Kings",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/salsa-kings.jpg"
+        },
+        {
+          "name": "Paradise Greek Band",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/paradise-greek-band.jpg"
+        },
+        {
+          "name": "M7 Filipino Band",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/m7-filipino-band.jpg"
+        },
+        {
+          "name": "Utah Lebanese Belly Dancers",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/utah-lebanese-belly-dancers.jpg"
+        },
+        {
+          "name": "The Oriental Show featuring Lily Cheng",
+          "style": "Multicultural Entertainment"
+        },
+        {
+          "name": "Chinese Lion Dancers",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/chinese-lion-dancers.avif"
+        },
+        {
+          "name": "Maggie Chung",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/maggie-chung.webp"
+        },
+        {
+          "name": "Thailand Dancers",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/thailand-dancers.jpg"
+        },
+        {
+          "name": "Zeffe Lebanese Drummers",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/zeffe-lebanese-drummers.jpg"
+        },
+        {
+          "name": "Gonzalo Porta Latin Spectacular",
+          "style": "Multicultural Entertainment",
+          "image": "images/acts/multicultural-entertainment/gonzalo-porta-latin-spectacular.jpg"
+        }
+      ]
+    },
+    {
+      "id": "country",
+      "name": "Country",
+      "short": "Australian country stars for festivals, dinners and private events.",
+      "slug": "folder.html?id=country",
+      "cover": "images/acts/country/melinda-schneider.webp",
+      "count": 4,
+      "acts": [
+        {
+          "name": "Melinda Schneider",
+          "style": "Country",
+          "image": "images/acts/country/melinda-schneider.webp"
+        },
+        {
+          "name": "Adam Brand",
+          "style": "Country",
+          "image": "images/acts/country/adam-brand.jpg"
+        },
+        {
+          "name": "Beccy Cole",
+          "style": "Country",
+          "image": "images/acts/country/beccy-cole.webp"
+        },
+        {
+          "name": "Jason Owen",
+          "style": "Country",
+          "image": "images/acts/country/jason-owen.jpg"
+        }
+      ]
+    },
+    {
+      "id": "comedians",
+      "name": "Comedians",
+      "short": "Headline stand-up and corporate comedy talent.",
+      "slug": "folder.html?id=comedians",
+      "cover": "images/acts/comedians/vince-sorrenti.jpg",
+      "count": 4,
+      "acts": [
+        {
+          "name": "Vince Sorrenti",
+          "style": "Comedians",
+          "image": "images/acts/comedians/vince-sorrenti.jpg"
+        },
+        {
+          "name": "Joe Avati",
+          "style": "Comedians",
+          "image": "images/acts/comedians/joe-avati.png"
+        },
+        {
+          "name": "Anh Do",
+          "style": "Comedians",
+          "image": "images/acts/comedians/anh-do.jpg"
+        },
+        {
+          "name": "George Kapiniaris",
+          "style": "Comedians",
+          "image": "images/acts/comedians/george-kapiniaris.jpg"
+        }
+      ]
+    },
+    {
+      "id": "childrens-entertainment",
+      "name": "Children's Entertainment",
+      "short": "Family shows, kids characters and interactive entertainment.",
+      "slug": "folder.html?id=childrens-entertainment",
+      "cover": "images/acts/childrens-entertainment/the-smurfs-show.jpg",
+      "count": 4,
+      "acts": [
+        {
+          "name": "The Smurfs Show",
+          "style": "Children's Entertainment",
+          "image": "images/acts/childrens-entertainment/the-smurfs-show.jpg"
+        },
+        {
+          "name": "The Wiggles",
+          "style": "Children's Entertainment",
+          "image": "images/acts/childrens-entertainment/the-wiggles.jpg"
+        },
+        {
+          "name": "Magic to the Max Childrens Show",
+          "style": "Children's Entertainment",
+          "image": "images/acts/childrens-entertainment/magic-to-the-max-childrens-show.jpg"
+        },
+        {
+          "name": "The Magical World of Crazy Science",
+          "style": "Children's Entertainment",
+          "image": "images/acts/childrens-entertainment/the-magical-world-of-crazy-science.jpg"
+        }
+      ]
+    },
+    {
+      "id": "classical-entertainment",
+      "name": "Classical Entertainment",
+      "short": "String ensembles, classical soloists and orchestral showcases.",
+      "slug": "folder.html?id=classical-entertainment",
+      "cover": "images/acts/classical-entertainment/mimosa-duo.jpg",
+      "count": 7,
+      "acts": [
+        {
+          "name": "Mimosa Duo",
+          "style": "Classical Entertainment",
+          "image": "images/acts/classical-entertainment/mimosa-duo.jpg"
+        },
+        {
+          "name": "Gaetano Bonfante",
+          "style": "Classical Entertainment",
+          "image": "images/acts/classical-entertainment/gaetano-bonfante.jpg"
+        },
+        {
+          "name": "Bocelli & Brightman",
+          "style": "Classical Entertainment",
+          "image": "images/acts/classical-entertainment/bocelli-and-brightman.jpg"
+        },
+        {
+          "name": "A Night at the Proms",
+          "style": "Classical Entertainment",
+          "image": "images/acts/classical-entertainment/a-night-at-the-proms.jpg"
+        },
+        {
+          "name": "String Sirens",
+          "style": "Classical Entertainment",
+          "image": "images/acts/classical-entertainment/string-sirens.jpg"
+        },
+        {
+          "name": "Apollo Strings",
+          "style": "Classical Entertainment",
+          "image": "images/acts/classical-entertainment/apollo-strings.jpg"
+        },
+        {
+          "name": "Vixen Strings",
+          "style": "Classical Entertainment",
+          "image": "images/acts/classical-entertainment/vixen-strings.jpg"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-specialty-entertainment",
+      "name": "Seasonal & Specialty Entertainment",
+      "short": "Christmas, Easter, Australia Day, Oktoberfest and themed acts.",
+      "slug": "folder.html?id=seasonal-specialty-entertainment",
+      "cover": "images/acts/seasonal-specialty-entertainment/jingle-bellies-christmas.jpg",
+      "count": 7,
+      "acts": [
+        {
+          "name": "Jingle Bellies Christmas",
+          "style": "Seasonal & Specialty",
+          "image": "images/acts/seasonal-specialty-entertainment/jingle-bellies-christmas.jpg"
+        },
+        {
+          "name": "Mrs Claus Christmas",
+          "style": "Seasonal & Specialty",
+          "image": "images/acts/seasonal-specialty-entertainment/mrs-claus-christmas.jpg"
+        },
+        {
+          "name": "Santa Claus Christmas",
+          "style": "Seasonal & Specialty",
+          "image": "images/acts/seasonal-specialty-entertainment/santa-claus-christmas.avif"
+        },
+        {
+          "name": "Ian Cooper St. Patrick's Day",
+          "style": "Seasonal & Specialty"
+        },
+        {
+          "name": "Easter Bunny Easter",
+          "style": "Seasonal & Specialty",
+          "image": "images/acts/seasonal-specialty-entertainment/easter-bunny-easter.webp"
+        },
+        {
+          "name": "Australia Day & NAIDOC",
+          "style": "Seasonal & Specialty",
+          "image": "images/acts/seasonal-specialty-entertainment/australia-day-and-naidoc.avif"
+        },
+        {
+          "name": "The Bavarians Oom Pa Pa Band Oktoberfest",
+          "style": "Seasonal & Specialty",
+          "image": "images/acts/seasonal-specialty-entertainment/the-bavarians-oom-pa-pa-band-oktoberfest.jpg"
+        }
+      ]
+    },
+    {
+      "id": "roving-entertainment",
+      "name": "Roving Entertainment",
+      "short": "Stilt walkers, magicians, jugglers and roaming performers.",
+      "slug": "folder.html?id=roving-entertainment",
+      "cover": "images/acts/roving-entertainment/julie-accordion.jpg",
+      "count": 9,
+      "acts": [
+        {
+          "name": "Julie Accordion",
+          "style": "Roving Entertainment",
+          "image": "images/acts/roving-entertainment/julie-accordion.jpg"
+        },
+        {
+          "name": "Ian Cooper Irish Jig Music",
+          "style": "Roving Entertainment",
+          "image": "images/acts/roving-entertainment/ian-cooper-irish-jig-music.jpg"
+        },
+        {
+          "name": "Brendan the Roving Magician",
+          "style": "Roving Entertainment",
+          "image": "images/acts/roving-entertainment/brendan-the-roving-magician.jpg"
+        },
+        {
+          "name": "Julie & Tony Italian",
+          "style": "Roving Entertainment"
+        },
+        {
+          "name": "Asian Grace Stilt Walking",
+          "style": "Roving Entertainment",
+          "image": "images/acts/roving-entertainment/asian-grace-stilt-walking.webp"
+        },
+        {
+          "name": "Kenny Chinese Juggler",
+          "style": "Roving Entertainment",
+          "image": "images/acts/roving-entertainment/kenny-chinese-juggler.webp"
+        },
+        {
+          "name": "Neo Chinese Change Face Artist",
+          "style": "Roving Entertainment",
+          "image": "images/acts/roving-entertainment/neo-chinese-change-face-artist.webp"
+        },
+        {
+          "name": "Thai Roving Dancers",
+          "style": "Roving Entertainment",
+          "image": "images/acts/roving-entertainment/thai-roving-dancers.jpg"
+        },
+        {
+          "name": "Samba Brazilian Dancers",
+          "style": "Roving Entertainment",
+          "image": "images/acts/roving-entertainment/samba-brazilian-dancers.jpg"
+        }
+      ]
+    },
+    {
+      "id": "djs-karaoke",
+      "name": "DJ's & Karaoke",
+      "short": "Wedding DJs, party DJs, karaoke hosts and CrowdDJ.",
+      "slug": "folder.html?id=djs-karaoke",
+      "cover": "images/acts/djs-karaoke/dean-the-karaoke-man.jpg",
+      "count": 5,
+      "acts": [
+        {
+          "name": "Dean the Karaoke Man",
+          "style": "DJ's & Karaoke",
+          "image": "images/acts/djs-karaoke/dean-the-karaoke-man.jpg"
+        },
+        {
+          "name": "DJ Chad",
+          "style": "DJ's & Karaoke",
+          "image": "images/acts/djs-karaoke/dj-chad.jpg"
+        },
+        {
+          "name": "DJ James Mack",
+          "style": "DJ's & Karaoke",
+          "image": "images/acts/djs-karaoke/dj-james-mack.webp"
+        },
+        {
+          "name": "DJ Nick Field",
+          "style": "DJ's & Karaoke",
+          "image": "images/acts/djs-karaoke/dj-nick-field.jpg"
+        },
+        {
+          "name": "App Based DJ",
+          "style": "CrowdDJ",
+          "image": "images/acts/djs-karaoke/app-based-dj.png"
+        }
+      ]
+    }
+  ],
+  "categories": {
+    "djs-karaoke": {
+      "id": "djs-karaoke",
+      "slug": "category-djs-karaoke.html",
+      "title": "DJ's & Karaoke",
+      "eyebrow": "DJ'S & KARAOKE",
+      "short": "Wedding DJs, party DJs, karaoke hosts and CrowdDJ.",
+      "description": "Professional DJs and karaoke entertainment across Australia.",
+      "image": "images/acts/djs-karaoke/dean-the-karaoke-man.jpg",
+      "seoTitle": "DJ's & Karaoke Hire Australia | Elite Entertainment",
+      "seoDescription": "Wedding DJs, party DJs, karaoke hosts and CrowdDJ.",
+      "sections": [
+        {
+          "name": "DJ'S & KARAOKE",
+          "acts": [
+            {
+              "name": "Dean the Karaoke Man",
+              "style": "DJ's & Karaoke",
+              "image": "images/acts/djs-karaoke/dean-the-karaoke-man.jpg"
+            },
+            {
+              "name": "DJ Chad",
+              "style": "DJ's & Karaoke",
+              "image": "images/acts/djs-karaoke/dj-chad.jpg"
+            },
+            {
+              "name": "DJ James Mack",
+              "style": "DJ's & Karaoke",
+              "image": "images/acts/djs-karaoke/dj-james-mack.webp"
+            },
+            {
+              "name": "DJ Nick Field",
+              "style": "DJ's & Karaoke",
+              "image": "images/acts/djs-karaoke/dj-nick-field.jpg"
+            },
+            {
+              "name": "App Based DJ",
+              "style": "CrowdDJ",
+              "image": "images/acts/djs-karaoke/app-based-dj.png"
+            }
+          ]
+        }
+      ],
+      "folderIds": [
+        "djs-karaoke"
+      ]
+    },
+    "specialty": {
+      "id": "specialty",
+      "slug": "category-specialty.html",
+      "title": "Specialty & Family Entertainment",
+      "eyebrow": "CHILDREN'S · CLASSICAL · SEASONAL · ROVING",
+      "short": "Kids, classical, seasonal and roving entertainment.",
+      "description": "Specialty and family entertainment Australia-wide.",
+      "image": "images/acts/childrens-entertainment/the-smurfs-show.jpg",
+      "seoTitle": "Specialty & Family Entertainment | Elite Entertainment",
+      "seoDescription": "Children’s, classical, seasonal and roving acts.",
+      "sections": [
+        {
+          "name": "CHILDREN'S ENTERTAINMENT",
+          "acts": [
+            {
+              "name": "The Smurfs Show",
+              "style": "Children's Entertainment",
+              "image": "images/acts/childrens-entertainment/the-smurfs-show.jpg"
+            },
+            {
+              "name": "The Wiggles",
+              "style": "Children's Entertainment",
+              "image": "images/acts/childrens-entertainment/the-wiggles.jpg"
+            },
+            {
+              "name": "Magic to the Max Childrens Show",
+              "style": "Children's Entertainment",
+              "image": "images/acts/childrens-entertainment/magic-to-the-max-childrens-show.jpg"
+            },
+            {
+              "name": "The Magical World of Crazy Science",
+              "style": "Children's Entertainment",
+              "image": "images/acts/childrens-entertainment/the-magical-world-of-crazy-science.jpg"
+            }
+          ]
+        },
+        {
+          "name": "CLASSICAL ENTERTAINMENT",
+          "acts": [
+            {
+              "name": "Mimosa Duo",
+              "style": "Classical Entertainment",
+              "image": "images/acts/classical-entertainment/mimosa-duo.jpg"
+            },
+            {
+              "name": "Gaetano Bonfante",
+              "style": "Classical Entertainment",
+              "image": "images/acts/classical-entertainment/gaetano-bonfante.jpg"
+            },
+            {
+              "name": "Bocelli & Brightman",
+              "style": "Classical Entertainment",
+              "image": "images/acts/classical-entertainment/bocelli-and-brightman.jpg"
+            },
+            {
+              "name": "A Night at the Proms",
+              "style": "Classical Entertainment",
+              "image": "images/acts/classical-entertainment/a-night-at-the-proms.jpg"
+            },
+            {
+              "name": "String Sirens",
+              "style": "Classical Entertainment",
+              "image": "images/acts/classical-entertainment/string-sirens.jpg"
+            },
+            {
+              "name": "Apollo Strings",
+              "style": "Classical Entertainment",
+              "image": "images/acts/classical-entertainment/apollo-strings.jpg"
+            },
+            {
+              "name": "Vixen Strings",
+              "style": "Classical Entertainment",
+              "image": "images/acts/classical-entertainment/vixen-strings.jpg"
+            }
+          ]
+        },
+        {
+          "name": "SEASONAL & SPECIALTY ENTERTAINMENT",
+          "acts": [
+            {
+              "name": "Jingle Bellies Christmas",
+              "style": "Seasonal & Specialty",
+              "image": "images/acts/seasonal-specialty-entertainment/jingle-bellies-christmas.jpg"
+            },
+            {
+              "name": "Mrs Claus Christmas",
+              "style": "Seasonal & Specialty",
+              "image": "images/acts/seasonal-specialty-entertainment/mrs-claus-christmas.jpg"
+            },
+            {
+              "name": "Santa Claus Christmas",
+              "style": "Seasonal & Specialty",
+              "image": "images/acts/seasonal-specialty-entertainment/santa-claus-christmas.avif"
+            },
+            {
+              "name": "Ian Cooper St. Patrick's Day",
+              "style": "Seasonal & Specialty"
+            },
+            {
+              "name": "Easter Bunny Easter",
+              "style": "Seasonal & Specialty",
+              "image": "images/acts/seasonal-specialty-entertainment/easter-bunny-easter.webp"
+            },
+            {
+              "name": "Australia Day & NAIDOC",
+              "style": "Seasonal & Specialty",
+              "image": "images/acts/seasonal-specialty-entertainment/australia-day-and-naidoc.avif"
+            },
+            {
+              "name": "The Bavarians Oom Pa Pa Band Oktoberfest",
+              "style": "Seasonal & Specialty",
+              "image": "images/acts/seasonal-specialty-entertainment/the-bavarians-oom-pa-pa-band-oktoberfest.jpg"
+            }
+          ]
+        },
+        {
+          "name": "ROVING ENTERTAINMENT",
+          "acts": [
+            {
+              "name": "Julie Accordion",
+              "style": "Roving Entertainment",
+              "image": "images/acts/roving-entertainment/julie-accordion.jpg"
+            },
+            {
+              "name": "Ian Cooper Irish Jig Music",
+              "style": "Roving Entertainment",
+              "image": "images/acts/roving-entertainment/ian-cooper-irish-jig-music.jpg"
+            },
+            {
+              "name": "Brendan the Roving Magician",
+              "style": "Roving Entertainment",
+              "image": "images/acts/roving-entertainment/brendan-the-roving-magician.jpg"
+            },
+            {
+              "name": "Julie & Tony Italian",
+              "style": "Roving Entertainment"
+            },
+            {
+              "name": "Asian Grace Stilt Walking",
+              "style": "Roving Entertainment",
+              "image": "images/acts/roving-entertainment/asian-grace-stilt-walking.webp"
+            },
+            {
+              "name": "Kenny Chinese Juggler",
+              "style": "Roving Entertainment",
+              "image": "images/acts/roving-entertainment/kenny-chinese-juggler.webp"
+            },
+            {
+              "name": "Neo Chinese Change Face Artist",
+              "style": "Roving Entertainment",
+              "image": "images/acts/roving-entertainment/neo-chinese-change-face-artist.webp"
+            },
+            {
+              "name": "Thai Roving Dancers",
+              "style": "Roving Entertainment",
+              "image": "images/acts/roving-entertainment/thai-roving-dancers.jpg"
+            },
+            {
+              "name": "Samba Brazilian Dancers",
+              "style": "Roving Entertainment",
+              "image": "images/acts/roving-entertainment/samba-brazilian-dancers.jpg"
+            }
+          ]
+        }
+      ],
+      "folderIds": [
+        "childrens-entertainment",
+        "classical-entertainment",
+        "seasonal-specialty-entertainment",
+        "roving-entertainment"
+      ]
+    },
+    "multicultural": {
+      "id": "multicultural",
+      "slug": "category-multicultural.html",
+      "title": "Multicultural · Country · Comedy",
+      "eyebrow": "MULTICULTURAL · COUNTRY · COMEDIANS",
+      "short": "World culture, country stars and comedians.",
+      "description": "Multicultural, country and comedy entertainment.",
+      "image": "images/acts/multicultural-entertainment/chinese-dance-spectacular.jpg",
+      "seoTitle": "Multicultural, Country & Comedy | Elite Entertainment",
+      "seoDescription": "Cultural dance, world bands and international show acts.",
+      "sections": [
+        {
+          "name": "MULTICULTURAL ENTERTAINMENT",
+          "acts": [
+            {
+              "name": "Chinese Dance Spectacular",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/chinese-dance-spectacular.jpg"
+            },
+            {
+              "name": "The Mandarin Band",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/the-mandarin-band.jpg"
+            },
+            {
+              "name": "An Italian Affair",
+              "style": "Multicultural Entertainment"
+            },
+            {
+              "name": "Salsa Kings",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/salsa-kings.jpg"
+            },
+            {
+              "name": "Paradise Greek Band",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/paradise-greek-band.jpg"
+            },
+            {
+              "name": "M7 Filipino Band",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/m7-filipino-band.jpg"
+            },
+            {
+              "name": "Utah Lebanese Belly Dancers",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/utah-lebanese-belly-dancers.jpg"
+            },
+            {
+              "name": "The Oriental Show featuring Lily Cheng",
+              "style": "Multicultural Entertainment"
+            },
+            {
+              "name": "Chinese Lion Dancers",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/chinese-lion-dancers.avif"
+            },
+            {
+              "name": "Maggie Chung",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/maggie-chung.webp"
+            },
+            {
+              "name": "Thailand Dancers",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/thailand-dancers.jpg"
+            },
+            {
+              "name": "Zeffe Lebanese Drummers",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/zeffe-lebanese-drummers.jpg"
+            },
+            {
+              "name": "Gonzalo Porta Latin Spectacular",
+              "style": "Multicultural Entertainment",
+              "image": "images/acts/multicultural-entertainment/gonzalo-porta-latin-spectacular.jpg"
+            }
+          ]
+        },
+        {
+          "name": "COUNTRY",
+          "acts": [
+            {
+              "name": "Melinda Schneider",
+              "style": "Country",
+              "image": "images/acts/country/melinda-schneider.webp"
+            },
+            {
+              "name": "Adam Brand",
+              "style": "Country",
+              "image": "images/acts/country/adam-brand.jpg"
+            },
+            {
+              "name": "Beccy Cole",
+              "style": "Country",
+              "image": "images/acts/country/beccy-cole.webp"
+            },
+            {
+              "name": "Jason Owen",
+              "style": "Country",
+              "image": "images/acts/country/jason-owen.jpg"
+            }
+          ]
+        },
+        {
+          "name": "COMEDIANS",
+          "acts": [
+            {
+              "name": "Vince Sorrenti",
+              "style": "Comedians",
+              "image": "images/acts/comedians/vince-sorrenti.jpg"
+            },
+            {
+              "name": "Joe Avati",
+              "style": "Comedians",
+              "image": "images/acts/comedians/joe-avati.png"
+            },
+            {
+              "name": "Anh Do",
+              "style": "Comedians",
+              "image": "images/acts/comedians/anh-do.jpg"
+            },
+            {
+              "name": "George Kapiniaris",
+              "style": "Comedians",
+              "image": "images/acts/comedians/george-kapiniaris.jpg"
+            }
+          ]
+        }
+      ],
+      "folderIds": [
+        "multicultural-entertainment",
+        "country",
+        "comedians"
+      ]
+    },
+    "live-bands": {
+      "id": "live-bands",
+      "slug": "category-live-bands.html",
+      "title": "Live Bands, Celebrities & Stage Shows",
+      "eyebrow": "CELEBRITY · BANDS · SOLOS · STAGE SHOWS",
+      "short": "Celebrities, bands, solos and stage shows.",
+      "description": "Premier live entertainment Australia-wide.",
+      "image": "images/acts/celebrity-bands-and-artists/guy-sebastian.webp",
+      "seoTitle": "Live Bands & Stage Shows | Elite Entertainment",
+      "seoDescription": "Guy Sebastian, Jessica Mauboy, Anthony Callea and more headline talent.",
+      "sections": [
+        {
+          "name": "CELEBRITY BANDS AND ARTISTS",
+          "acts": [
+            {
+              "name": "Guy Sebastian",
+              "style": "Celebrity Bands and Artists",
+              "image": "images/acts/celebrity-bands-and-artists/guy-sebastian.webp"
+            },
+            {
+              "name": "Jessica Mauboy",
+              "style": "Celebrity Bands and Artists",
+              "image": "images/acts/celebrity-bands-and-artists/jessica-mauboy.webp"
+            },
+            {
+              "name": "Anthony Callea",
+              "style": "Celebrity Bands and Artists",
+              "image": "images/acts/celebrity-bands-and-artists/anthony-callea.png"
+            },
+            {
+              "name": "Dami Im",
+              "style": "Celebrity Bands and Artists",
+              "image": "images/acts/celebrity-bands-and-artists/dami-im.webp"
+            },
+            {
+              "name": "Mark Vincent",
+              "style": "Celebrity Bands and Artists",
+              "image": "images/acts/celebrity-bands-and-artists/mark-vincent.png"
+            },
+            {
+              "name": "Casey Donovan",
+              "style": "Celebrity Bands and Artists",
+              "image": "images/acts/celebrity-bands-and-artists/casey-donovan.webp"
+            },
+            {
+              "name": "Justice Crew",
+              "style": "Celebrity Bands and Artists",
+              "image": "images/acts/celebrity-bands-and-artists/justice-crew.jpg"
+            },
+            {
+              "name": "Ricki-Lee Coulter",
+              "style": "Celebrity Bands and Artists",
+              "image": "images/acts/celebrity-bands-and-artists/ricki-lee-coulter.webp"
+            }
+          ]
+        },
+        {
+          "name": "BANDS",
+          "acts": [
+            {
+              "name": "Jelly Bean Jam",
+              "style": "Bands",
+              "image": "images/acts/bands/jelly-bean-jam.jpg"
+            },
+            {
+              "name": "Brown Sugar",
+              "style": "Bands",
+              "image": "images/acts/bands/brown-sugar.webp"
+            },
+            {
+              "name": "High Rollers",
+              "style": "Bands",
+              "image": "images/acts/bands/high-rollers.jpg"
+            },
+            {
+              "name": "Mesa Groove",
+              "style": "Bands",
+              "image": "images/acts/bands/mesa-groove.jpg"
+            },
+            {
+              "name": "Let's Groove",
+              "style": "Bands",
+              "image": "images/acts/bands/let-s-groove.jpg"
+            }
+          ]
+        },
+        {
+          "name": "SOLOISTS, DUOS, TRIOS",
+          "acts": [
+            {
+              "name": "David Agius",
+              "style": "Soloists, Duos, Trios",
+              "image": "images/acts/soloists-duos-trios/david-agius.jpg"
+            },
+            {
+              "name": "Zoltan",
+              "style": "Soloists, Duos, Trios"
+            },
+            {
+              "name": "Marco - Soloist",
+              "style": "Soloists, Duos, Trios",
+              "image": "images/acts/soloists-duos-trios/marco-soloist.jpg"
+            },
+            {
+              "name": "Jo Elms",
+              "style": "Soloists, Duos, Trios",
+              "image": "images/acts/soloists-duos-trios/jo-elms.jpg"
+            },
+            {
+              "name": "AM 2 PM Duo",
+              "style": "Soloists, Duos, Trios",
+              "image": "images/acts/soloists-duos-trios/am-2-pm-duo.jpg"
+            },
+            {
+              "name": "Flava Duo",
+              "style": "Soloists, Duos, Trios",
+              "image": "images/acts/soloists-duos-trios/flava-duo.webp"
+            },
+            {
+              "name": "The Hype Boys Trio",
+              "style": "Soloists, Duos, Trios",
+              "image": "images/acts/soloists-duos-trios/the-hype-boys-trio.png"
+            },
+            {
+              "name": "Geoff Zhang Duo",
+              "style": "Soloists, Duos, Trios",
+              "image": "images/acts/soloists-duos-trios/geoff-zhang-duo.jpg"
+            },
+            {
+              "name": "Wild Cats Trio",
+              "style": "Soloists, Duos, Trios",
+              "image": "images/acts/soloists-duos-trios/wild-cats-trio.jpg"
+            }
+          ]
+        },
+        {
+          "name": "STAGE SHOWS",
+          "acts": [
+            {
+              "name": "The Pink Show",
+              "style": "Stage Shows",
+              "image": "images/acts/stage-shows/the-pink-show.png"
+            },
+            {
+              "name": "Kick – The INXS Show",
+              "style": "Stage Shows",
+              "image": "images/acts/stage-shows/kick-the-inxs-show.jpg"
+            },
+            {
+              "name": "ABBAlanche",
+              "style": "Stage Shows",
+              "image": "images/acts/stage-shows/abbalanche.jpg"
+            },
+            {
+              "name": "The BEATnix Show",
+              "style": "Stage Shows",
+              "image": "images/acts/stage-shows/the-beatnix-show.jpg"
+            },
+            {
+              "name": "Audio Vixen",
+              "style": "Stage Shows",
+              "image": "images/acts/stage-shows/audio-vixen.jpg"
+            },
+            {
+              "name": "Sing Little Sister",
+              "style": "Stage Shows"
+            },
+            {
+              "name": "The Robertson Bros.",
+              "style": "Stage Shows",
+              "image": "images/acts/stage-shows/the-robertson-bros.jpg"
+            }
+          ]
+        }
+      ],
+      "folderIds": [
+        "celebrity-bands-and-artists",
+        "bands",
+        "soloists-duos-trios",
+        "stage-shows"
+      ]
+    }
+  }
+}
