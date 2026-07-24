@@ -1,9 +1,16 @@
 /* ═══════════════════════════════════════════════════
-   Category enquiry forms Admin CRM + email
-   Email: info@eeevents.com.au
+   Category enquiry forms — Admin CRM + multi-recipient email
+   Recipients via EliteMail (FormSubmit + attachments)
 ═══════════════════════════════════════════════════ */
 (function () {
-  const EMAIL_PRIMARY = 'info@eeevents.com.au';
+  function mail() {
+    return window.EliteMail || null;
+  }
+
+  function recipientsText() {
+    var m = mail();
+    return m ? m.recipientsLabel() : 'stormychaseforrester@gmail.com';
+  }
 
   function val(id) {
     const el = document.getElementById(id);
@@ -22,15 +29,16 @@
     }
   }
 
-  async function emailLead(payload) {
-    // FormSubmit AJAX — first use may require inbox confirmation
-    const body = {
+  async function emailLead(payload, fileInputs) {
+    var m = mail();
+    if (!m) {
+      return { ok: false, error: new Error('EliteMail not loaded') };
+    }
+    return m.sendEnquiry({
       name: payload.name,
       email: payload.email,
       phone: payload.phone || '—',
       _subject: payload.subject,
-      _template: 'table',
-      _captcha: 'false',
       category: payload.category,
       act: payload.act || 'General enquiry',
       eventDate: payload.date || '—',
@@ -40,23 +48,7 @@
       message: payload.message || '—',
       source: payload.source || 'Category page',
       leadId: payload.id
-    };
-
-    try {
-      const res = await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(EMAIL_PRIMARY), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify(body)
-      });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json().catch(() => ({}));
-      return { ok: true, data };
-    } catch (err) {
-      return { ok: false, error: err };
-    }
+    }, fileInputs || []);
   }
 
   function setStatus(el, msg, type) {
@@ -66,9 +58,37 @@
     el.className = 'cat-form-status cat-form-status--' + (type || 'info');
   }
 
+  /** Inject attachment fields into category forms if missing */
+  function ensureAttachmentFields(form) {
+    if (!form || form.querySelector('#cat-attachments')) return;
+    var m = mail();
+    if (!m) return;
+
+    var statusEl = form.querySelector('.cat-form-status') || form.querySelector('#cat-form-status');
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var html = m.fileFieldHtml({
+      id: 'cat-attachments',
+      label: 'Attach docs / images (optional)',
+      accept: 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip',
+      multiple: true,
+      hint: 'Mood boards, floor plans, briefs, photos — max 10MB total. Sent to the full Elite inbox list.'
+    });
+
+    var wrap = document.createElement('div');
+    wrap.innerHTML = html;
+    var node = wrap.firstChild;
+    if (statusEl) form.insertBefore(node, statusEl);
+    else if (submitBtn) form.insertBefore(node, submitBtn);
+    else form.appendChild(node);
+
+    m.bindFileStatus('cat-attachments');
+  }
+
   function bindCategoryForm(form) {
     if (!form || form.dataset.bound === '1') return;
     form.dataset.bound = '1';
+
+    ensureAttachmentFields(form);
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -84,10 +104,20 @@
       const venue = val('cat-venue');
       const budget = val('cat-budget');
       const message = val('cat-message');
+      const fileInput = form.querySelector('#cat-attachments') || document.getElementById('cat-attachments');
+      const files = mail() ? mail().collectFiles(fileInput) : [];
 
       if (!name || !email) {
         setStatus(statusEl, 'Please enter your name and email.', 'error');
         return;
+      }
+
+      if (mail()) {
+        var check = mail().validateFiles(files);
+        if (!check.ok) {
+          setStatus(statusEl, check.error, 'error');
+          return;
+        }
       }
 
       const id = 'CAT-' + Date.now().toString().slice(-6);
@@ -97,18 +127,29 @@
         email,
         phone,
         date,
+        venue,
+        guests,
+        budget,
         service: category + (act ? ' · ' + act : ''),
         message: [
           message,
           guests ? 'Guests: ' + guests : '',
           venue ? 'Venue: ' + venue : '',
-          budget ? 'Budget: ' + budget : ''
+          budget ? 'Budget: ' + budget : '',
+          files.length ? 'Attachments: ' + files.map(function (f) { return f.name; }).join(', ') : ''
         ].filter(Boolean).join('\n'),
-        status: 'Pending',
+        status: 'New Enquiry',
+        kanbanColumn: 'new',
         timestamp: new Date().toLocaleString(),
         source: 'category',
         category,
-        act
+        act,
+        attachmentNames: files.map(function (f) { return f.name; }),
+        attachments: files.map(function (f) {
+          return { name: f.name, type: f.type || 'file', size: f.size || 0, at: new Date().toLocaleString() };
+        }),
+        notes: [],
+        order: Date.now()
       };
 
       const originalBtn = btn ? btn.textContent : '';
@@ -119,6 +160,10 @@
       setStatus(statusEl, 'Saving to admin pipeline and emailing our team…', 'info');
 
       const adminOk = saveToAdmin(lead);
+      try {
+        if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(lead);
+        else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(lead);
+      } catch (crmErr) {}
       const mailResult = await emailLead({
         id,
         name,
@@ -133,20 +178,40 @@
         act,
         subject: '[Elite Enquiry] ' + category + (act ? ' — ' + act : '') + ' · ' + name,
         source: window.location.pathname.split('/').pop() || 'category'
-      });
+      }, fileInput ? [fileInput] : []);
 
       if (adminOk && mailResult.ok) {
-        setStatus(statusEl, 'Enquiry sent! It’s in the Super Admin CRM and emailed to info@eeevents.com.au. We’ll reply shortly.', 'success');
+        setStatus(
+          statusEl,
+          'Enquiry sent! It’s in the Super Admin CRM and emailed to ' + recipientsText() +
+            (files.length ? ' (including ' + files.length + ' attachment' + (files.length > 1 ? 's' : '') + ')' : '') +
+            '. We’ll reply shortly.',
+          'success'
+        );
         form.reset();
-        // restore category/act hidden defaults
         const catField = document.getElementById('cat-category');
         if (catField && form.dataset.category) catField.value = form.dataset.category;
         const actField = document.getElementById('cat-act');
         if (actField && form.dataset.act) actField.value = form.dataset.act;
+        var st = document.getElementById('cat-attachments-status');
+        if (st) {
+          st.textContent = 'No files selected';
+          st.setAttribute('data-empty', 'true');
+        }
       } else if (adminOk && !mailResult.ok) {
-        setStatus(statusEl, 'Saved to Admin CRM. Email delivery needs a one-time FormSubmit confirmation — check info@eeevents.com.au (and spam) and click “Confirm email”. Your lead is still safe in admin.', 'warn');
+        setStatus(
+          statusEl,
+          'Saved to Admin CRM. Email delivery needs a one-time FormSubmit confirmation — check ' +
+            recipientsText() +
+            ' (and spam) and click “Confirm email”. Your lead is still safe in admin.',
+          'warn'
+        );
       } else {
-        setStatus(statusEl, 'Something went wrong. Please call +61 417 221 111 or email info@eeevents.com.au directly.', 'error');
+        setStatus(
+          statusEl,
+          'Something went wrong. Please call +61 417 221 111 or email stormychaseforrester@gmail.com directly.',
+          'error'
+        );
       }
 
       if (btn) {
@@ -171,7 +236,12 @@
   window.EliteCategoryForm = {
     bind: bindCategoryForm,
     prefillAct: prefillAct,
-    emails: { primary: EMAIL_PRIMARY }
+    emails: function () {
+      var m = mail();
+      return m
+        ? { primary: m.EMAIL_PRIMARY, cc: m.EMAIL_CC.slice(), all: m.allRecipients() }
+        : { primary: 'stormychaseforrester@gmail.com', cc: [], all: ['stormychaseforrester@gmail.com'] };
+    }
   };
 
   function enhanceDateInputs() {
@@ -182,7 +252,6 @@
       el.classList.add('sf-date-input');
       el.style.colorScheme = 'dark';
       el.style.cursor = 'pointer';
-      // Wrap with calendar icon if not already wrapped
       if (el.parentElement && !el.parentElement.classList.contains('sf-date-wrap')) {
         var wrap = document.createElement('div');
         wrap.className = 'sf-date-wrap';

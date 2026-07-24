@@ -42,6 +42,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="service-form.css" />
 
   <!-- JSON-LD: EntertainmentBusiness (Australia SEO) -->
   <script type="application/ld+json">
@@ -990,8 +991,16 @@
               <label for="form-message">Event Details</label>
               <textarea id="form-message" name="message" rows="4" placeholder="Tell us about your venue, guest numbers, theme and any special requests..."></textarea>
             </div>
+            <div class="form-group form-group--full elite-file-field">
+              <label for="form-attachments">Attach docs / images (optional)</label>
+              <div class="elite-file-drop">
+                <input type="file" id="form-attachments" name="form-attachments" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" multiple />
+                <p class="elite-file-status" id="form-attachments-status" data-empty="true">No files selected</p>
+              </div>
+              <p class="elite-file-hint">Mood boards, floor plans, briefs, photos — max 10MB total. Files are emailed to the full Elite team.</p>
+            </div>
             <button type="submit" class="btn btn-gold btn-full">Send Enquiry</button>
-            <p class="form-footnote">Leads sync to the Super Admin CRM pipeline automatically.</p>
+            <p class="form-footnote">Leads sync to Super Admin and email the full Elite team (with attachments when provided).</p>
           </form>
         </div>
       </div>
@@ -1111,19 +1120,21 @@
         <span style="font-family:'Cormorant Garamond',serif; font-size:0.65rem; letter-spacing:0.18em; color:var(--gold); display:block; text-transform:uppercase; margin-top:0.5rem;">Super Admin Login</span>
       </div>
       <h3 style="margin-bottom:0.5rem; color:var(--white);">Secure Sign In</h3>
-      <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem;">Access the administrative portal and lead pipelines</p>
+      <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem;">Authorised Super Admin only · sessions expire after 12 hours</p>
       
       <div class="auth-input-group" style="text-align:left; margin-bottom:1.25rem;">
         <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Email Address</label>
-        <input type="email" id="modal-login-email" placeholder="info@eeevents.com.au" style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+        <input type="email" id="modal-login-email" placeholder="your@email.com" autocomplete="username" style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
       </div>
       
-      <div class="auth-input-group" style="text-align:left; margin-bottom:2rem;">
+      <div class="auth-input-group" style="text-align:left; margin-bottom:1.25rem;">
         <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Password</label>
-        <input type="password" id="modal-login-password" placeholder="••••••••" style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
+        <input type="password" id="modal-login-password" placeholder="••••••••" autocomplete="current-password" style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
       </div>
       
       <button class="btn btn-gold" id="modal-btn-login-submit" style="width:100%; border-radius:30px; padding:0.75rem;">Login to Dashboard</button>
+      <button type="button" class="btn btn-outline" id="modal-btn-forgot" style="width:100%; border-radius:30px; padding:0.75rem; margin-top:0.65rem;">Forgot password?</button>
+      <p id="modal-login-status" style="font-size:0.78rem; color:var(--silver-mid); margin:0.85rem 0 0; min-height:1.2em; line-height:1.4;"></p>
     </div>
   </div>
   <!-- ─── VENDOR/BAND SIGNUP MODAL (3-STEP MULTI FORM) ─── -->
@@ -1307,63 +1318,34 @@
       </form>
     </div>
   </div>
-  <!-- Firebase Dependencies for Login Popup -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      projectId: "elite-entertainment-and-events",
-      appId: "1:382118825306:web:de90f67c0aed268eb9f763",
-      databaseURL: "https://elite-entertainment-and-events-default-rtdb.firebaseio.com",
-      storageBucket: "elite-entertainment-and-events.firebasestorage.app",
-      apiKey: "AIzaSyBQh3pFu5Hmiusn791esleiiVKNlcoKIPU",
-      authDomain: "elite-entertainment-and-events.firebaseapp.com",
-      messagingSenderId: "382118825306",
-      projectNumber: "382118825306"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // Login: try Firebase first, then local demo admin credentials
-    document.getElementById('modal-btn-login-submit').addEventListener('click', () => {
-      const email = (document.getElementById('modal-login-email').value || '').trim();
-      const pass = document.getElementById('modal-login-password').value || '';
-      const btn = document.getElementById('modal-btn-login-submit');
-      const original = btn.textContent;
-      btn.textContent = 'Signing in…';
-      btn.disabled = true;
-
-      const goAdmin = () => {
-        localStorage.setItem('elite_admin_authed', 'true');
-        window.location.href = 'admin.html';
-      };
-
-      // Demo / local admin fallback (always works offline)
-      if (email.toLowerCase() === 'info@eeevents.com.au' && pass === 'admin123') {
-        goAdmin();
-        return;
-      }
-
-      signInWithEmailAndPassword(auth, email, pass)
-        .then(() => goAdmin())
-        .catch(() => {
-          if (email && pass) {
-            // Soft fallback so marketplace admin stays usable
-            goAdmin();
-          } else {
-            alert('Please enter email and password.');
-            btn.textContent = original;
-            btn.disabled = false;
-          }
-        });
+  <!-- Super Admin login (hardened) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="elite-admin-auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.initEliteFirebase) initEliteFirebase();
+      if (!window.EliteAdminAuth) return;
+      EliteAdminAuth.bindLoginForm({
+        emailId: 'modal-login-email',
+        passId: 'modal-login-password',
+        submitId: 'modal-btn-login-submit',
+        statusId: 'modal-login-status',
+        forgotId: 'modal-btn-forgot',
+        onSuccess: function () {
+          window.location.href = 'admin.html';
+        }
+      });
     });
   </script>
 
   <script src="cms.js"></script>
   <script src="categories-data.js"></script>
   <script src="category-page.js"></script>
+  <script src="elite-mail.js"></script>
+  <script src="elite-crm-push.js"></script>
   <script src="category-form.js"></script>
   <script src="site-nav.js"></script>
   <script src="script.js"></script>

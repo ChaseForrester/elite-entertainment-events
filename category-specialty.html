@@ -21,6 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="service-form.css" />
 </head>
 <body data-category-page="specialty">
 
@@ -104,7 +105,7 @@
               <p class="section-eyebrow" style="text-align:left;">Book This Category</p>
               <h2 class="section-title" style="text-align:left;">Request a Quote</h2>
               <div class="gold-divider" style="margin-left:0;"></div>
-              <p>Your enquiry is saved to the Super Admin CRM and emailed to <strong>info@eeevents.com.au</strong>. We respond within 24 hours.</p>
+              <p>Your enquiry is saved to the Super Admin CRM and emailed to the full Elite team (with optional docs/images). We respond within 24 hours.</p>
               <ul class="cat-enquiry-bullets">
                 <li>Australia-wide booking</li>
                 <li>Weddings · Corporate · Festivals · Private</li>
@@ -194,6 +195,11 @@
 
   <script src="categories-data.js"></script>
   <script src="category-page.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="elite-mail.js"></script>
+  <script src="elite-crm-push.js"></script>
   <script src="category-form.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {

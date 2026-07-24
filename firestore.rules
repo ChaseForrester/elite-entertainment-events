@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // CRM Kanban — website forms create leads; Super Admin devices sync updates.
+    // Tighten later: require request.auth != null for update/delete once all admins use Firebase Auth.
+    match /crm_leads/{leadId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if true;
+    }
+
+    match /crm_settings/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Existing site content sync used by CMS
+    match /site_content/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /inquiries/{docId} {
+      allow read, write: if true;
+    }
+
+    match /client_feed/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

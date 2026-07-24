@@ -1,4 +1,49 @@
 /* Multi-step service forms — responsive + calendar date fields */
+
+/* Shared file attachment UI (service + category + homepage forms) */
+.elite-file-field {
+  margin-top: 0.35rem;
+}
+.elite-file-drop {
+  position: relative;
+  border: 1px dashed rgba(200, 168, 76, 0.35);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 0.2s, background 0.2s;
+}
+.elite-file-drop:hover {
+  border-color: rgba(200, 168, 76, 0.65);
+  background: rgba(200, 168, 76, 0.06);
+}
+.elite-file-drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+.elite-file-status {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--gold, #c9a84c);
+  font-weight: 600;
+  pointer-events: none;
+  word-break: break-word;
+}
+.elite-file-status[data-empty="true"] {
+  color: var(--silver-mid, #999);
+  font-weight: 500;
+}
+.elite-file-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.72rem;
+  color: var(--silver-mid, #888);
+  line-height: 1.4;
+}
+
 .sf-wrap {
   margin-top: 2.5rem;
   max-width: 760px;

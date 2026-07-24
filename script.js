@@ -347,6 +347,9 @@ try {
   /* ─── FORM SUBMIT (wired to Admin CRM / elite_inquiries) ─── */
   const form = document.getElementById('quote-form');
   if (form) {
+    if (window.EliteMail) {
+      try { window.EliteMail.bindFileStatus('form-attachments'); } catch (e) {}
+    }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -357,6 +360,7 @@ try {
       const serviceEl = document.getElementById('form-service');
       const messageEl = document.getElementById('form-message');
       const artistEl = document.getElementById('form-artist-type');
+      const attachEl = document.getElementById('form-attachments');
 
       const name = nameEl ? nameEl.value.trim() : '';
       const email = emailEl ? emailEl.value.trim() : '';
@@ -365,10 +369,19 @@ try {
       const service = serviceEl ? serviceEl.value : '';
       const artistType = artistEl ? artistEl.value : '';
       const message = messageEl ? messageEl.value.trim() : '';
+      const files = window.EliteMail ? window.EliteMail.collectFiles(attachEl) : [];
 
       if (!name || !email || !service) {
         alert('Please complete name, email, and event type.');
         return;
+      }
+
+      if (window.EliteMail && files.length) {
+        const check = window.EliteMail.validateFiles(files);
+        if (!check.ok) {
+          alert(check.error);
+          return;
+        }
       }
 
       const newInquiry = {
@@ -378,14 +391,25 @@ try {
         phone,
         date,
         service: artistType ? (service + ' · ' + artistType) : service,
-        message,
-        status: 'Pending',
-        timestamp: new Date().toLocaleString()
+        message: message + (files.length ? '\nAttachments: ' + files.map(function (f) { return f.name; }).join(', ') : ''),
+        status: 'New Enquiry',
+        kanbanColumn: 'new',
+        timestamp: new Date().toLocaleString(),
+        attachmentNames: files.map(function (f) { return f.name; }),
+        attachments: files.map(function (f) {
+          return { name: f.name, type: f.type || 'file', size: f.size || 0, at: new Date().toLocaleString() };
+        }),
+        notes: [],
+        order: Date.now()
       };
 
       const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
       inquiries.unshift(newInquiry);
       localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
+      try {
+        if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(newInquiry);
+        else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(newInquiry);
+      } catch (crmErr) {}
 
       const btn = form.querySelector('button[type="submit"]');
       const originalText = btn ? btn.textContent : 'Send Enquiry';
@@ -395,26 +419,22 @@ try {
         btn.disabled = true;
       }
 
-      // Email both inboxes via FormSubmit (AJAX) + keep admin CRM copy
+      // Email full team via EliteMail (FormSubmit + CC list + attachments)
       (async () => {
         try {
-          await fetch('https://formsubmit.co/ajax/info@eeevents.com.au', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({
+          if (window.EliteMail) {
+            await window.EliteMail.sendEnquiry({
               name,
               email,
               phone: phone || '—',
               _subject: '[Elite Enquiry] Quote form · ' + service + ' · ' + name,
-              _template: 'table',
-              _captcha: 'false',
               service: artistType ? (service + ' · ' + artistType) : service,
               eventDate: date || '—',
-              message: message || '—',
+              message: newInquiry.message || '—',
               leadId: newInquiry.id,
               source: 'Homepage quote form'
-            })
-          });
+            }, attachEl ? [attachEl] : []);
+          }
         } catch (err) {
           console.warn('Email delivery deferred — lead saved in admin CRM', err);
         }
@@ -432,6 +452,11 @@ try {
             btn.disabled = false;
           }
           form.reset();
+          var st = document.getElementById('form-attachments-status');
+          if (st) {
+            st.textContent = 'No files selected';
+            st.setAttribute('data-empty', 'true');
+          }
         }, 2800);
       })();
     });
@@ -775,6 +800,18 @@ try {
       const clients = JSON.parse(localStorage.getItem('elite_clients') || '[]');
       clients.unshift(newClient);
       localStorage.setItem('elite_clients', JSON.stringify(clients));
+      try {
+        const crmLead = Object.assign({}, newClient, {
+          service: 'Consultation',
+          kanbanColumn: 'new',
+          status: 'New Enquiry',
+          source: 'consultation',
+          priority: 'normal',
+          order: Date.now()
+        });
+        if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(crmLead);
+        else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(crmLead);
+      } catch (crmErr) {}
 
       const submitBtn = clientForm.querySelector('button[type="submit"]');
       const originalClientBtn = submitBtn ? submitBtn.textContent : 'Register Consultation Call';
@@ -785,21 +822,17 @@ try {
 
       (async () => {
         try {
-          await fetch('https://formsubmit.co/ajax/info@eeevents.com.au', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({
+          if (window.EliteMail) {
+            await window.EliteMail.sendEnquiry({
               name, email, phone,
               _subject: '[Elite Consultation] ' + name,
-              _template: 'table',
-              _captcha: 'false',
               eventDate: date || '—',
               budget: budget || '—',
               message: message || '—',
               leadId: newClient.id,
               source: 'Consultation modal'
-            })
-          });
+            });
+          }
         } catch (err) {
           console.warn('Consultation email deferred — saved in admin', err);
         }
@@ -818,7 +851,8 @@ try {
           }
           clientForm.reset();
           closeModal(clientOverlay);
-          alert('Consultation logged in Super Admin and emailed to info@eeevents.com.au.');
+          var who = window.EliteMail ? window.EliteMail.recipientsLabel() : 'the Elite team';
+          alert('Consultation logged in Super Admin and emailed to ' + who + '.');
         }, 1600);
       })();
     });
@@ -1201,9 +1235,23 @@ try {
         details.corporate = document.getElementById('spec-corporate').value;
       }
 
-      // Read files if selected
+      // Read files if selected — names for CRM, real File objects for email attachments
       const photoFile = photoInput && photoInput.files.length > 0 ? photoInput.files[0].name : 'Not provided';
       const certFile = certInput && certInput.files.length > 0 ? certInput.files[0].name : 'Not provided';
+      const attachInputs = [];
+      if (photoInput && photoInput.files && photoInput.files.length) attachInputs.push(photoInput);
+      if (certInput && certInput.files && certInput.files.length) attachInputs.push(certInput);
+
+      if (window.EliteMail && attachInputs.length) {
+        const allFiles = attachInputs.reduce(function (acc, inp) {
+          return acc.concat(window.EliteMail.collectFiles(inp));
+        }, []);
+        const check = window.EliteMail.validateFiles(allFiles);
+        if (!check.ok) {
+          alert(check.error);
+          return;
+        }
+      }
 
       const abn = document.getElementById('signup-abn').value;
       const price = document.getElementById('signup-price').value;
@@ -1232,27 +1280,89 @@ try {
       localStorage.setItem('elite_partners', JSON.stringify(partners));
 
       const submitBtn = document.getElementById('btn-signup-submit');
-      submitBtn.textContent = 'Submitted!';
-      submitBtn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
-      submitBtn.style.color = '#fff';
+      const originalSignupText = submitBtn ? submitBtn.textContent : 'Submit Profile';
+      if (submitBtn) {
+        submitBtn.textContent = 'Sending…';
+        submitBtn.disabled = true;
+      }
 
-      setTimeout(() => {
-        submitBtn.textContent = 'Submit Profile';
-        submitBtn.style.background = '';
-        submitBtn.style.color = '';
-        vendorSignupForm.reset();
-        closeModal(signupOverlay);
-        
-        // Reset steps
-        step3.style.display = 'none';
-        step1.style.display = 'block';
-        dot2.style.background = 'rgba(255,255,255,0.1)';
-        dot2.style.color = 'var(--white)';
-        dot3.style.background = 'rgba(255,255,255,0.1)';
-        dot3.style.color = 'var(--white)';
-        
-        alert('Thank you for registering! Our curation team will review your specs and links shortly.');
-      }, 1800);
+      (async () => {
+        let mailOk = false;
+        try {
+          if (window.EliteMail) {
+            const detailLines = Object.keys(details || {}).map(function (k) {
+              return k + ': ' + details[k];
+            }).join('\n');
+            const result = await window.EliteMail.sendEnquiry({
+              name,
+              email,
+              phone: phone || '—',
+              _subject: '[Elite Partner Signup] ' + type + ' · ' + name,
+              partnerType: type,
+              website: link || '—',
+              experience: experience || '—',
+              abn: abn || '—',
+              packagePrice: price || '—',
+              insurance: insurance || '—',
+              photoFile,
+              certFile,
+              specifications: detailLines || '—',
+              leadId: newPartner.id,
+              source: 'Vendor registration wizard',
+              message: 'New partner registration for review.'
+            }, attachInputs);
+            mailOk = !!(result && result.ok);
+          }
+        } catch (err) {
+          console.warn('Partner email deferred — saved in admin partners list', err);
+        }
+
+        if (submitBtn) {
+          submitBtn.textContent = 'Submitted!';
+          submitBtn.style.background = 'linear-gradient(135deg, #2a5a2a, #3a7a3a)';
+          submitBtn.style.color = '#fff';
+        }
+
+        setTimeout(() => {
+          if (submitBtn) {
+            submitBtn.textContent = originalSignupText;
+            submitBtn.style.background = '';
+            submitBtn.style.color = '';
+            submitBtn.disabled = false;
+          }
+          vendorSignupForm.reset();
+          if (photoStatus) {
+            photoStatus.textContent = 'Select Photo file';
+            photoStatus.style.color = '';
+          }
+          if (certStatus) {
+            certStatus.textContent = 'Select Doc file';
+            certStatus.style.color = '';
+          }
+          closeModal(signupOverlay);
+
+          // Reset steps
+          step3.style.display = 'none';
+          step1.style.display = 'block';
+          if (dot2) {
+            dot2.style.background = 'rgba(255,255,255,0.1)';
+            dot2.style.color = 'var(--white)';
+          }
+          if (dot3) {
+            dot3.style.background = 'rgba(255,255,255,0.1)';
+            dot3.style.color = 'var(--white)';
+          }
+
+          var who = window.EliteMail ? window.EliteMail.recipientsLabel() : 'the Elite team';
+          alert(
+            'Thank you for registering! Your profile' +
+            (attachInputs.length ? ' and uploaded files' : '') +
+            ' were saved' +
+            (mailOk ? ' and emailed to ' + who : ' in Super Admin (email may need FormSubmit confirmation)') +
+            '. Our curation team will review shortly.'
+          );
+        }, 1600);
+      })();
     });
   }
 
@@ -1717,28 +1827,56 @@ try {
         };
 
         const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
+        newInquiry.kanbanColumn = 'new';
+        newInquiry.status = 'New Enquiry';
+        newInquiry.priority = 'normal';
+        newInquiry.order = Date.now();
         inquiries.unshift(newInquiry);
         localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
+        try {
+          if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(newInquiry);
+          else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(newInquiry);
+        } catch (crmErr) {}
 
-        // Construct prefilled mailto draft to info@eeevents.com.au
-        const subject = encodeURIComponent(`NEW ARTIST HIRE ENQUIRY: ${artist}`);
-        const body = encodeURIComponent(
-          `Hi Elite Entertainment Team,\n\n` +
-          `I would like to hire ${artist} for an upcoming event.\n\n` +
-          `--- CLIENT DETAILS ---\n` +
-          `Name: ${userName}\n` +
-          `Email: ${userEmail}\n` +
-          `Phone: ${userPhone}\n` +
-          `Event Date: ${eventDate || 'TBD'}\n` +
-          `Budget: $${budget || 'N/A'}\n\n` +
-          `--- EVENT NOTES ---\n${message || 'None'}\n\n` +
-          `Submitted via Elite Entertainment Website`
-        );
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Sending…';
+        }
 
-        window.location.href = `mailto:info@eeevents.com.au?subject=${subject}&body=${body}`;
+        (async () => {
+          let mailOk = false;
+          try {
+            if (window.EliteMail) {
+              const result = await window.EliteMail.sendEnquiry({
+                name: userName,
+                email: userEmail,
+                phone: userPhone || '—',
+                _subject: '[Elite Artist Hire] ' + artist + ' · ' + userName,
+                artist: artist,
+                eventDate: eventDate || 'TBD',
+                budget: budget ? ('$' + budget) : 'N/A',
+                message: message || 'None',
+                leadId: newInquiry.id,
+                source: 'Artist hire modal'
+              });
+              mailOk = !!(result && result.ok);
+            }
+          } catch (err) {
+            console.warn('Artist hire email deferred — saved in admin CRM', err);
+          }
 
-        alert(`Thank you ${userName}! Your hire request for ${artist} has been registered and emailed to info@eeevents.com.au.`);
-        modal.classList.remove('active');
+          var who = window.EliteMail ? window.EliteMail.recipientsLabel() : 'the Elite team';
+          alert(
+            `Thank you ${userName}! Your hire request for ${artist} has been registered` +
+            (mailOk ? ` and emailed to ${who}.` : ' in Super Admin (email may need FormSubmit confirmation).')
+          );
+          modal.classList.remove('active');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Hire Request →';
+          }
+        })();
       });
     }
 

@@ -1,6 +1,13 @@
-/* Multi-step enquiry forms for service pages Admin CRM + info@eeevents.com.au */
+/* Multi-step enquiry forms for service pages — Admin CRM + multi-recipient email + attachments */
 (function () {
-  var EMAIL = 'info@eeevents.com.au';
+  function mail() {
+    return window.EliteMail || null;
+  }
+
+  function recipientsText() {
+    var m = mail();
+    return m ? m.recipientsLabel() : 'stormychaseforrester@gmail.com';
+  }
 
   var CONFIGS = {
     weddings: {
@@ -356,6 +363,28 @@
 
     var step = 0;
     var collected = {};
+    /** Persist selected File objects when navigating multi-step form */
+    var pendingFiles = [];
+
+    function captureAttachments() {
+      var input = document.getElementById('sf-attachments');
+      if (!input || !mail()) return;
+      var files = mail().collectFiles(input);
+      if (files.length) pendingFiles = files;
+    }
+
+    function restoreAttachmentStatus() {
+      var status = document.getElementById('sf-attachments-status');
+      if (!status) return;
+      if (!pendingFiles.length) {
+        status.textContent = 'No files selected';
+        status.setAttribute('data-empty', 'true');
+        return;
+      }
+      status.textContent = pendingFiles.length + ' file' + (pendingFiles.length > 1 ? 's' : '') +
+        ' ready: ' + pendingFiles.map(function (f) { return f.name; }).join(', ');
+      status.removeAttribute('data-empty');
+    }
 
     function render() {
       var s = cfg.steps[step];
@@ -385,13 +414,23 @@
           '<div class="sf-header">' +
             '<p class="section-eyebrow" style="text-align:left;margin-bottom:0.35rem;">Book with Elite</p>' +
             '<h2 class="sf-title">' + cfg.title + '</h2>' +
-            '<p class="sf-sub">Multi-step enquiry · calendars on date fields · saved to Super Admin · emailed to <strong>info@eeevents.com.au</strong></p>' +
+            '<p class="sf-sub">Multi-step enquiry · calendars on date fields · saved to Super Admin · emailed to the full Elite team (with optional file attachments)</p>' +
           '</div>' +
           '<div class="sf-steps" aria-label="Form progress">' + dots + '</div>' +
           fleetPreview +
-          '<form class="sf-form quote-form" id="service-multi-form" novalidate>' +
+          '<form class="sf-form quote-form" id="service-multi-form" novalidate enctype="multipart/form-data">' +
             '<h3 class="sf-step-title">Step ' + (step + 1) + ': ' + s.label + '</h3>' +
-            '<div class="sf-fields">' + fields + '</div>' +
+            '<div class="sf-fields">' + fields +
+              (isLast && mail()
+                ? mail().fileFieldHtml({
+                    id: 'sf-attachments',
+                    label: 'Attach docs / images (optional)',
+                    accept: 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip',
+                    multiple: true,
+                    hint: 'Briefs, floor plans, mood boards, photos, insurance docs — max 10MB total. Files email to the full Elite inbox list.'
+                  })
+                : '') +
+            '</div>' +
             '<div class="sf-actions">' +
               (step > 0 ? '<button type="button" class="btn btn-outline" id="sf-back">Back</button>' : '<span></span>') +
               '<button type="submit" class="btn btn-gold" id="sf-next">' + (isLast ? 'Submit Enquiry' : 'Next Step') + '</button>' +
@@ -472,9 +511,24 @@
       var back = document.getElementById('sf-back');
       if (back) back.addEventListener('click', function () {
         saveStep();
+        captureAttachments();
         step = Math.max(0, step - 1);
         render();
       });
+      if (isLast && mail()) {
+        try {
+          mail().bindFileStatus('sf-attachments');
+          var att = document.getElementById('sf-attachments');
+          if (att) {
+            att.addEventListener('change', function () {
+              pendingFiles = mail().collectFiles(att);
+              restoreAttachmentStatus();
+            });
+          }
+          restoreAttachmentStatus();
+        } catch (bindErr) {}
+      }
+
       if (form) {
         form.addEventListener('submit', function (e) {
           e.preventDefault();
@@ -495,6 +549,7 @@
         var el = document.getElementById(f.id);
         if (el) collected[f.id] = el.value.trim();
       });
+      if (step === cfg.steps.length - 1) captureAttachments();
     }
 
     function validateStep() {
@@ -560,22 +615,54 @@
       if (collected['sf-catering']) {
         service = service + ' · Catering: ' + collected['sf-catering'];
       }
+
+      captureAttachments();
+      var attachInput = document.getElementById('sf-attachments');
+      var liveFiles = mail() ? mail().collectFiles(attachInput) : [];
+      var files = liveFiles.length ? liveFiles : pendingFiles.slice();
+      if (mail() && files.length) {
+        var check = mail().validateFiles(files);
+        if (!check.ok) {
+          if (status) {
+            status.hidden = false;
+            status.className = 'cat-form-status cat-form-status--error';
+            status.textContent = check.error;
+          }
+          return;
+        }
+      }
+
       var msgParts = [];
       Object.keys(collected).forEach(function (k) {
         if (collected[k]) msgParts.push(k.replace('sf-', '') + ': ' + collected[k]);
       });
+      if (files.length) {
+        msgParts.push('attachments: ' + files.map(function (f) { return f.name; }).join(', '));
+      }
       var lead = {
         id: 'SVC-' + Date.now().toString().slice(-6),
         name: name,
         email: email,
         phone: phone,
         date: collected['sf-date'] || '',
+        endDate: collected['sf-end-date'] || '',
+        venue: collected['sf-venue'] || '',
+        guests: collected['sf-guests'] || '',
+        budget: collected['sf-budget'] || '',
+        company: collected['sf-company'] || '',
         service: cfg.title + ' · ' + service,
         message: msgParts.join('\n'),
-        status: 'Pending',
+        status: 'New Enquiry',
+        kanbanColumn: 'new',
         timestamp: new Date().toLocaleString(),
         source: 'service-page',
-        page: key
+        page: key,
+        attachmentNames: files.map(function (f) { return f.name; }),
+        attachments: files.map(function (f) {
+          return { name: f.name, type: f.type || 'file', size: f.size || 0, at: new Date().toLocaleString() };
+        }),
+        notes: [],
+        order: Date.now()
       };
 
       try {
@@ -583,47 +670,59 @@
         inquiries.unshift(lead);
         localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
       } catch (e) {}
+      try {
+        if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(lead);
+        else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(lead);
+      } catch (crmErr) {}
 
       if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
       if (status) {
         status.hidden = false;
         status.className = 'cat-form-status cat-form-status--info';
-        status.textContent = 'Saving to admin and emailing info@eeevents.com.au…';
+        status.textContent = 'Saving to admin and emailing the Elite team…';
       }
 
-      fetch('https://formsubmit.co/ajax/' + encodeURIComponent(EMAIL), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
+      var sendPromise;
+      if (mail()) {
+        // Prefer live input; fall back to retained File objects from multi-step navigation
+        var fileSource = (liveFiles.length && attachInput) ? [attachInput] : files;
+        sendPromise = mail().sendEnquiry({
           name: name,
           email: email,
           phone: phone || '—',
           _subject: '[Elite] ' + cfg.title + ' · ' + name,
-          _template: 'table',
-          _captcha: 'false',
           service: service,
           eventDate: collected['sf-date'] || '—',
           venue: collected['sf-venue'] || '—',
           message: lead.message,
           leadId: lead.id,
           source: key
-        })
-      }).then(function () {
-        if (status) {
-          status.className = 'cat-form-status cat-form-status--success';
-          status.textContent = 'Enquiry sent! Check Super Admin leads and info@eeevents.com.au.';
+        }, fileSource);
+      } else {
+        sendPromise = Promise.resolve({ ok: false, error: new Error('EliteMail missing') });
+      }
+
+      sendPromise.then(function (result) {
+        if (result && result.ok) {
+          if (status) {
+            status.className = 'cat-form-status cat-form-status--success';
+            status.textContent = 'Enquiry sent! Check Super Admin leads and ' + recipientsText() +
+              (files.length ? ' (with ' + files.length + ' attachment' + (files.length > 1 ? 's' : '') + ')' : '') + '.';
+          }
+          if (btn) { btn.textContent = 'Sent'; }
+          if (key === 'multi' && window.EliteCart) { try { window.EliteCart.clear(); } catch (e) {} }
+          collected = {};
+          pendingFiles = [];
+          step = 0;
+          setTimeout(render, 2200);
+        } else {
+          if (status) {
+            status.className = 'cat-form-status cat-form-status--warn';
+            status.textContent = 'Saved to Super Admin. Email may need FormSubmit confirmation — check ' +
+              recipientsText() + ' (and spam) and click “Confirm email”.';
+          }
+          if (btn) { btn.disabled = false; btn.textContent = 'Submit Enquiry'; }
         }
-        if (btn) { btn.textContent = 'Sent'; }
-        if (key === 'multi' && window.EliteCart) { try { window.EliteCart.clear(); } catch (e) {} }
-        collected = {};
-        step = 0;
-        setTimeout(render, 2200);
-      }).catch(function () {
-        if (status) {
-          status.className = 'cat-form-status cat-form-status--warn';
-          status.textContent = 'Saved to Super Admin. Email may need FormSubmit confirmation in info@eeevents.com.au.';
-        }
-        if (btn) { btn.disabled = false; btn.textContent = 'Submit Enquiry'; }
       });
     }
 

@@ -34,14 +34,15 @@
     <div class="ops-auth is-on" id="ops-auth">
       <div class="ops-card" style="max-width:420px;margin:4rem auto;">
         <h2>Operations Console</h2>
-        <p class="ops-note">Restricted access. Unauthorised use is prohibited.</p>
+        <p class="ops-note">Restricted Super Admin access. Sessions expire after 12 hours. Unauthorised use is prohibited.</p>
         <label for="ops-email">Email</label>
-        <input id="ops-email" type="email" autocomplete="username" placeholder="info@eeevents.com.au" />
+        <input id="ops-email" type="email" autocomplete="username" placeholder="your@email.com" />
         <label for="ops-pass">Password</label>
         <input id="ops-pass" type="password" autocomplete="current-password" />
         <div class="btn-row">
           <button type="button" class="btn btn-gold" id="ops-login">Sign in</button>
-          <a class="btn btn-outline" href="admin.html">Legacy dashboard</a>
+          <button type="button" class="btn btn-outline" id="ops-forgot">Forgot password?</button>
+          <a class="btn btn-outline" href="admin.html">CRM dashboard</a>
         </div>
         <p class="ops-status" id="ops-auth-status"></p>
       </div>
@@ -51,8 +52,10 @@
       <div class="ops-top">
         <h1>Super Admin</h1>
         <div class="btn-row">
+          <span id="ops-session-email" class="ops-note" style="margin:0;align-self:center;"></span>
           <a class="btn btn-outline" href="index.html">View site</a>
           <a class="btn btn-outline" href="admin.html">CRM / Artists</a>
+          <a class="btn btn-outline" href="admin.html#account">Change password</a>
           <button type="button" class="btn btn-outline" id="ops-logout">Log out</button>
         </div>
       </div>
@@ -123,6 +126,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="elite-admin-auth.js"></script>
   <script src="cms.js"></script>
   <script>
   (function () {
@@ -134,6 +138,8 @@
     function showDash() {
       auth.classList.remove('is-on');
       dash.classList.add('is-on');
+      var se = document.getElementById('ops-session-email');
+      if (se && window.EliteAdminAuth) se.textContent = EliteAdminAuth.currentEmail() || '';
       loadContent();
       loadInquiries();
       loadClientFeed();
@@ -178,31 +184,31 @@
       } catch (e) {}
     }
 
-    document.getElementById('ops-login').onclick = function () {
-      var email = (document.getElementById('ops-email').value || '').trim().toLowerCase();
-      var pass = document.getElementById('ops-pass').value || '';
-      var st = document.getElementById('ops-auth-status');
-      if (email === 'info@eeevents.com.au' && pass === 'admin123') {
-        localStorage.setItem('elite_admin_authed', 'true');
-        showDash();
-        return;
-      }
-      if (window.EliteFirebase && EliteFirebase.auth) {
-        st.textContent = 'Signing in with Firebase…';
-        EliteFirebase.auth.signInWithEmailAndPassword(email, pass).then(function () {
-          localStorage.setItem('elite_admin_authed', 'true');
+    if (window.EliteAdminAuth) {
+      EliteAdminAuth.bindLoginForm({
+        emailId: 'ops-email',
+        passId: 'ops-pass',
+        submitId: 'ops-login',
+        statusId: 'ops-auth-status',
+        forgotId: 'ops-forgot',
+        onSuccess: function (result) {
           showDash();
-        }).catch(function () {
-          st.textContent = 'Auth failed. Use Super Admin credentials or Firebase user.';
-        });
-      } else {
-        st.textContent = 'Use info@eeevents.com.au / admin123 for local Super Admin.';
-      }
-    };
+          if (result && result.mustChangePassword) {
+            var st = document.getElementById('ops-auth-status');
+            // status is on login card; surface toast on dash
+            alert('You signed in with the bootstrap password. Open CRM → Account / Password and change it now.');
+          }
+        }
+      });
+    }
 
     document.getElementById('ops-logout').onclick = function () {
-      localStorage.removeItem('elite_admin_authed');
-      try { if (EliteFirebase && EliteFirebase.auth) EliteFirebase.auth.signOut(); } catch (e) {}
+      if (window.EliteAdminAuth) EliteAdminAuth.logout();
+      else {
+        localStorage.removeItem('elite_admin_authed');
+        localStorage.removeItem('elite_admin_session_v2');
+        try { if (EliteFirebase && EliteFirebase.auth) EliteFirebase.auth.signOut(); } catch (e) {}
+      }
       dash.classList.remove('is-on');
       auth.classList.add('is-on');
     };
@@ -219,7 +225,7 @@
       document.getElementById('ops-content-status').textContent = 'Saved locally and pushed to Firebase (if connected).';
     };
 
-    if (localStorage.getItem('elite_admin_authed') === 'true') showDash();
+    if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) showDash();
   })();
   </script>
 </body>

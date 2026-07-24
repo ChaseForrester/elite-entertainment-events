@@ -214,21 +214,38 @@
           source: 'client-portal'
         });
         localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
-      } catch (e) {}
-      // email via FormSubmit
-      try {
-        fetch('https://formsubmit.co/ajax/' + encodeURIComponent('info@eeevents.com.au'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
+        try {
+          var crmLead = {
+            id: consult.id,
             name: user.name,
             email: user.email,
+            phone: user.phone || '',
+            date: date,
+            service: 'Client consultation · ' + $('cs-mode').value,
+            message: detail,
+            status: 'New Enquiry',
+            kanbanColumn: 'new',
+            priority: 'normal',
+            timestamp: consult.at,
+            source: 'client-portal',
+            order: Date.now()
+          };
+          if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(crmLead);
+          else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(crmLead);
+        } catch (crmE) {}
+      } catch (e) {}
+      // email full Elite team via EliteMail / FormSubmit
+      try {
+        if (window.EliteMail) {
+          window.EliteMail.sendEnquiry({
+            name: user.name,
+            email: user.email,
+            phone: user.phone || '—',
             _subject: '[Elite Consultation] ' + user.name + ' · ' + date,
-            _template: 'table',
-            _captcha: 'false',
-            consultation: detail
-          })
-        }).catch(function () {});
+            consultation: detail,
+            source: 'client-portal'
+          }).catch(function () {});
+        }
       } catch (e) {}
       msg($('cs-msg'), 'Consultation requested. Super Admin will confirm.', true);
     };
@@ -246,17 +263,16 @@
       renderThread(user);
       pushFeed({ at: m.at, client: user.email, type: 'message', detail: text });
       try {
-        fetch('https://formsubmit.co/ajax/' + encodeURIComponent('info@eeevents.com.au'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
+        if (window.EliteMail) {
+          window.EliteMail.sendEnquiry({
             name: user.name,
             email: user.email,
+            phone: user.phone || '—',
             _subject: '[Elite Client Message] ' + user.name,
-            _captcha: 'false',
-            message: text
-          })
-        }).catch(function () {});
+            message: text,
+            source: 'client-portal'
+          }).catch(function () {});
+        }
       } catch (e) {}
       msg($('cl-msg-status'), 'Message sent to Super Admin.', true);
     };

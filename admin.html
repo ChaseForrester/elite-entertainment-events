@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Elite Super Admin Dashboard | Elite Entertainment &amp; Events</title>
+  <meta name="robots" content="noindex, nofollow" />
   
   <!-- PWA Metadata -->
   <link rel="manifest" href="manifest.webmanifest" />
@@ -265,6 +266,274 @@
       object-fit: cover;
       border: 1px solid var(--gold-dark);
     }
+    tr.artist-row {
+      cursor: pointer;
+    }
+    tr.artist-row:hover td {
+      background: rgba(200, 168, 76, 0.06);
+    }
+    .cell-muted {
+      font-size: 0.72rem;
+      color: var(--silver-mid);
+      max-width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* Kanban CRM */
+    .kanban-wrap {
+      display: flex;
+      gap: 0.85rem;
+      overflow-x: auto;
+      padding: 0.25rem 0 1rem;
+      min-height: 520px;
+      align-items: flex-start;
+    }
+    .kanban-col {
+      flex: 0 0 280px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      max-height: 72vh;
+    }
+    .kanban-col-head {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      position: sticky;
+      top: 0;
+      background: #0d0d0d;
+      border-radius: 14px 14px 0 0;
+      z-index: 1;
+    }
+    .kanban-col-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .kanban-count {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #000;
+      background: var(--gold);
+      border-radius: 999px;
+      min-width: 1.4rem;
+      height: 1.4rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0.4rem;
+    }
+    .kanban-cards {
+      padding: 0.65rem;
+      overflow-y: auto;
+      flex: 1;
+      min-height: 120px;
+    }
+    .kanban-cards.is-dragover {
+      background: rgba(200,168,76,0.08);
+      outline: 1px dashed rgba(200,168,76,0.45);
+      outline-offset: -4px;
+      border-radius: 10px;
+    }
+    .kanban-card {
+      background: #121212;
+      border: 1px solid rgba(200,168,76,0.18);
+      border-radius: 12px;
+      padding: 0.85rem;
+      margin-bottom: 0.65rem;
+      cursor: grab;
+      transition: border-color .15s, transform .15s, box-shadow .15s;
+    }
+    .kanban-card:active { cursor: grabbing; }
+    .kanban-card:hover {
+      border-color: rgba(200,168,76,0.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .kanban-card.is-dragging { opacity: 0.45; transform: scale(0.98); }
+    .kanban-card h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.92rem;
+      color: #fff;
+      font-weight: 700;
+    }
+    .kanban-meta {
+      font-size: 0.72rem;
+      color: #aaa;
+      line-height: 1.45;
+      margin: 0.15rem 0;
+    }
+    .kanban-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.55rem;
+    }
+    .kanban-tag {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.05);
+      color: #ccc;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .kanban-tag.gold {
+      color: var(--gold);
+      border-color: rgba(200,168,76,0.35);
+      background: rgba(200,168,76,0.1);
+    }
+    .kanban-card-actions {
+      display: flex;
+      gap: 0.35rem;
+      margin-top: 0.65rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .crm-toolbar {
+      padding: 0 1.25rem 0.85rem;
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .crm-toolbar select,
+    .crm-toolbar input[type="search"] {
+      padding: 0.65rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      font-family: inherit;
+    }
+    .crm-sync {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #bbb;
+      background: rgba(255,255,255,0.03);
+    }
+    .crm-sync.dot::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #666;
+    }
+    .crm-sync.is-live { color: #8fd18f; border-color: rgba(85,197,85,0.35); }
+    .crm-sync.is-live.dot::before { background: #55c555; box-shadow: 0 0 8px #55c555; }
+    .crm-sync.is-syncing { color: #e8c86b; border-color: rgba(200,168,76,0.35); }
+    .crm-sync.is-syncing.dot::before { background: #c9a84c; }
+    .crm-sync.is-offline { color: #ff8a8a; border-color: rgba(255,100,100,0.3); }
+    .crm-sync.is-offline.dot::before { background: #ff5555; }
+    .assignee-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.68rem;
+      color: #ddd;
+    }
+    .assignee-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.58rem;
+      font-weight: 800;
+      color: #0a0a0a;
+      flex-shrink: 0;
+    }
+    .priority-pill {
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .card-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .quick-assign {
+      width: 100%;
+      margin-top: 0.35rem;
+      padding: 0.35rem 0.45rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.35);
+      color: #ddd;
+      font-size: 0.68rem;
+      font-family: inherit;
+    }
+    .activity-item {
+      font-size: 0.78rem;
+      color: #ccc;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .activity-item time {
+      display: block;
+      font-size: 0.65rem;
+      color: #777;
+      margin-top: 0.2rem;
+    }
+    .lead-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem 1rem;
+    }
+    @media (max-width: 720px) {
+      .lead-detail-grid { grid-template-columns: 1fr; }
+    }
+    .lead-section {
+      margin-top: 1.15rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .lead-section h4 {
+      margin: 0 0 0.65rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .note-item, .attach-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 0.65rem 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      color: #ddd;
+    }
+    .note-item time, .attach-item time {
+      display: block;
+      font-size: 0.65rem;
+      color: #777;
+      margin-top: 0.3rem;
+    }
     /* Modal Styling */
     .admin-modal-overlay {
       position: fixed;
@@ -295,6 +564,9 @@
       overflow-y: auto;
       box-shadow: var(--gold-glow);
     }
+    .admin-modal-body.wide {
+      max-width: 760px;
+    }
     @media (max-width: 900px) {
       .analytics-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -320,17 +592,20 @@
         <span class="db-logo-sub">Super Admin CMS Portal</span>
       </div>
       <h2>Super Admin Login</h2>
-      <p>Enter administrator credentials to manage artists, images, content &amp; leads</p>
-      <p style="font-size:0.72rem;color:var(--gold);margin:-1rem 0 1.5rem;letter-spacing:0.04em;">Demo login pre-filled below · Email &amp; password shown in the fields</p>
+      <p>Enter authorised administrator credentials to manage artists, images, content &amp; leads</p>
+      <p style="font-size:0.72rem;color:var(--silver-mid);margin:-0.5rem 0 1.25rem;line-height:1.45;">Restricted access · sessions expire after 12 hours · change your password after first login</p>
       <div class="auth-input-group">
-        <label>Email Address</label>
-        <input type="email" id="auth-user" placeholder="info@eeevents.com.au" value="info@eeevents.com.au" />
+        <label for="auth-user">Email Address</label>
+        <input type="email" id="auth-user" placeholder="your@email.com" autocomplete="username" />
       </div>
-      <div class="auth-input-group" style="margin-bottom:2.5rem;">
-        <label>Password</label>
-        <input type="password" id="auth-pass" placeholder="••••••••" value="admin123" />
+      <div class="auth-input-group" style="margin-bottom:1.25rem;">
+        <label for="auth-pass">Password</label>
+        <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" />
       </div>
       <button class="btn btn-gold" id="btn-login" style="width:100%;">ACCESS SUPER ADMIN</button>
+      <button type="button" class="btn btn-outline" id="btn-forgot" style="width:100%;margin-top:0.65rem;">Forgot password?</button>
+      <p id="auth-status" style="font-size:0.78rem;min-height:1.2em;margin:0.85rem 0 0;text-align:center;line-height:1.4;"></p>
+      <p style="font-size:0.68rem;color:#666;margin:1rem 0 0;text-align:center;line-height:1.4;">Links: <a href="admin.html" style="color:var(--gold);">admin.html</a> · <a href="ops-console.html" style="color:var(--gold);">ops-console.html</a></p>
     </div>
   </div>
 
@@ -348,10 +623,38 @@
             <span class="db-logo-sub">CMS · ELITE ENTERTAINMENT &amp; EVENTS</span>
           </div>
         </div>
-        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-          <button class="btn btn-outline" id="btn-reset-cms" style="border-color:rgba(200,168,76,0.3); color:var(--gold);">Reset CMS Defaults</button>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+          <span id="admin-session-email" style="font-size:0.72rem;color:var(--gold);letter-spacing:0.04em;"></span>
+          <button class="btn btn-outline" id="btn-account" type="button" style="border-color:rgba(200,168,76,0.3); color:var(--gold);">Account / Password</button>
           <button class="btn btn-outline" id="btn-logout">Logout</button>
+          <a href="ops-console.html" class="btn btn-outline">Ops Console</a>
           <a href="index.html" class="btn btn-gold" target="_blank">View Live Site &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Account / change password -->
+      <div id="admin-account-panel" class="content-card" style="display:none; margin-bottom:1.5rem; padding:1.5rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.2); border-radius:14px;">
+        <h3 style="margin:0 0 0.5rem; font-family:'Cormorant Garamond',serif; font-weight:400; color:#fff;">Account security</h3>
+        <p style="font-size:0.8rem; color:#999; margin:0 0 1rem; line-height:1.5;">Change your Super Admin password. Minimum 10 characters with upper, lower and a number. Applies to local Super Admin login; Firebase password is updated when signed in via Firebase.</p>
+        <p id="admin-bootstrap-hint" style="display:none; font-size:0.78rem; color:#e8c86b; margin:0 0 1rem;">You are still on the bootstrap password. Change it now for production safety.</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; max-width:900px;">
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">Current password</label>
+            <input type="password" id="pwd-current" autocomplete="current-password" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">New password</label>
+            <input type="password" id="pwd-new" autocomplete="new-password" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
+          </div>
+          <div>
+            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">Confirm new password</label>
+            <input type="password" id="pwd-confirm" autocomplete="new-password" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
+          </div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1rem; align-items:center;">
+          <button type="button" class="btn btn-gold" id="pwd-save">Update password</button>
+          <button type="button" class="btn btn-outline" id="pwd-cancel">Close</button>
+          <p id="pwd-status" style="font-size:0.8rem; margin:0; min-height:1.2em;"></p>
         </div>
       </div>
 
@@ -366,29 +669,38 @@
           <div class="analytic-value" id="stat-events" style="color:var(--gold);">0</div>
         </div>
         <div class="analytic-card">
-          <div class="analytic-label">Total Leads</div>
+          <div class="analytic-label">Open Enquiries</div>
           <div class="analytic-value" id="stat-leads">0</div>
         </div>
         <div class="analytic-card">
-          <div class="analytic-label">Revenue Pipeline</div>
-          <div class="analytic-value" id="stat-rev" style="color: #55c555;">$0</div>
+          <div class="analytic-label">Active Pipeline Cards</div>
+          <div class="analytic-value" id="stat-rev" style="color: var(--gold);">0</div>
         </div>
       </div>
 
       <!-- Tab Toggles -->
       <div class="db-tabs" style="display:flex; gap:1rem; margin-bottom:2rem; justify-content:flex-start; width:100%; flex-wrap:wrap;">
-        <button class="btn btn-gold tab-btn" id="tab-btn-cms-artists" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem;">Artists &amp; Performers CMS</button>
-        <button class="btn btn-outline tab-btn" id="tab-btn-cms-events" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Events &amp; Packages CMS</button>
+        <button class="btn btn-gold tab-btn" id="tab-btn-cms-artists" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem;">Artists &amp; Performers</button>
+        <button class="btn btn-outline tab-btn" id="tab-btn-leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">CRM Kanban</button>
+        <button class="btn btn-outline tab-btn" id="tab-btn-cms-events" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Events &amp; Packages</button>
         <button class="btn btn-outline tab-btn" id="tab-btn-cms-content" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Hero &amp; Global Content</button>
-        <button class="btn btn-outline tab-btn" id="tab-btn-leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Lead Pipeline</button>
         <button class="btn btn-outline tab-btn" id="tab-btn-partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Partner Applications</button>
       </div>
 
       <!-- ARTISTS CMS TABLE -->
       <div class="table-container" id="cms-artists-container" style="width:100%;">
         <div class="table-header">
-          <div class="table-title">Artist &amp; Performer Management (All Categories)</div>
+          <div>
+            <div class="table-title">Artists &amp; Performers</div>
+            <p style="margin:0.35rem 0 0;font-size:0.78rem;color:var(--silver-mid);">Click any row to edit photo, details, YouTube, description and SEO meta.</p>
+          </div>
           <button class="btn btn-gold btn-sm" id="btn-add-artist">+ Add New Artist / Act</button>
+        </div>
+        <div style="padding:0 1.5rem 1rem; display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+          <input type="search" id="artist-search" placeholder="Search artists…" style="flex:1; min-width:200px; max-width:360px; padding:0.65rem 0.85rem; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04); color:#fff;" />
+          <select id="artist-filter-category" style="padding:0.65rem 0.85rem; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:#121212; color:#fff;">
+            <option value="">All categories</option>
+          </select>
         </div>
         <div style="overflow-x:auto;">
           <table>
@@ -398,8 +710,9 @@
                 <th>Artist / Act Name</th>
                 <th>Category</th>
                 <th>Genre / Style</th>
-                <th>Rate / Price</th>
-                <th>Featured</th>
+                <th>Description</th>
+                <th>YouTube</th>
+                <th>Meta</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -494,28 +807,38 @@
         </div>
       </div>
 
-      <!-- LEADS TABLE -->
+      <!-- CRM KANBAN -->
       <div class="table-container" id="leads-container" style="display:none; width:100%;">
         <div class="table-header">
-          <div class="table-title">Lead Pipeline</div>
-          <button class="btn btn-outline btn-sm" id="btn-clear-leads" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear Local Logs</button>
+          <div>
+            <div class="table-title">CRM · Enquiry Kanban</div>
+            <p style="margin:0.35rem 0 0;font-size:0.78rem;color:var(--silver-mid);">Realtime multi-device board · assign team members · drag stages · docs, dates &amp; notes on each card.</p>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+            <span class="crm-sync dot" id="crm-sync-badge" title="Sync status">Connecting…</span>
+            <button class="btn btn-gold btn-sm" id="btn-refresh-leads" type="button">Sync now</button>
+            <button class="btn btn-outline btn-sm" id="btn-push-crm" type="button">Push local → cloud</button>
+            <button class="btn btn-outline btn-sm" id="btn-manage-team" type="button">Team</button>
+            <button class="btn btn-outline btn-sm" id="btn-clear-leads" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear local</button>
+          </div>
         </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Client Name</th>
-                <th>Service Needed</th>
-                <th>Event Date</th>
-                <th>Contact Info</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="leads-body"></tbody>
-          </table>
+        <div class="crm-toolbar">
+          <input type="search" id="crm-search" placeholder="Search name, email, service, venue, assignee…" style="flex:1; min-width:220px; max-width:380px;" />
+          <select id="crm-filter-assignee" title="Filter by assignee">
+            <option value="">All assignees</option>
+            <option value="__unassigned__">Unassigned</option>
+            <option value="__mine__">My cards</option>
+          </select>
+          <select id="crm-filter-priority" title="Filter by priority">
+            <option value="">All priorities</option>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="normal">Normal</option>
+            <option value="low">Low</option>
+          </select>
         </div>
+        <div class="kanban-wrap" id="kanban-board" aria-label="Enquiry kanban board"></div>
+        <p id="kanban-empty" style="display:none; text-align:center; padding:2rem; color:var(--silver-mid);">No enquiries yet. Website forms sync here in realtime across devices.</p>
       </div>
 
       <!-- PARTNERS TABLE -->
@@ -547,66 +870,91 @@
 
   <!-- ARTIST EDITOR MODAL -->
   <div class="admin-modal-overlay" id="artist-modal">
-    <div class="admin-modal-body">
+    <div class="admin-modal-body wide">
       <h3 style="font-family:var(--font-heading); font-size:1.8rem; margin-top:0; color:var(--gold);" id="artist-modal-title">Edit Artist / Act</h3>
       <form id="artist-form">
         <input type="hidden" id="artist-id" />
-        <div class="auth-input-group">
-          <label>Act / Artist Name</label>
-          <input type="text" id="artist-name" required />
+        <div class="lead-detail-grid">
+          <div class="auth-input-group">
+            <label>Artist / Act Name</label>
+            <input type="text" id="artist-name" required />
+          </div>
+          <div class="auth-input-group">
+            <label>Category</label>
+            <select id="artist-category" required>
+              <option value="celebrity">Celebrity Artists</option>
+              <option value="bands">Live Bands &amp; Orchestras</option>
+              <option value="djs">DJs &amp; Karaoke</option>
+              <option value="solos">Solo Vocalists</option>
+              <option value="duos">Duos</option>
+              <option value="trios">Trios</option>
+              <option value="jazz">Jazz Ensembles</option>
+              <option value="tributes">Tribute Shows</option>
+              <option value="multicultural">Multicultural</option>
+              <option value="country">Country</option>
+              <option value="comedians">Comedians</option>
+              <option value="children">Children's Entertainment</option>
+              <option value="classical">Classical &amp; Opera</option>
+              <option value="specialty">Seasonal &amp; Specialty</option>
+              <option value="roving">Roving Entertainment</option>
+              <option value="models-dancers">Models &amp; Dancers</option>
+              <option value="corporate">Corporate Gala Acts</option>
+              <option value="weddings">Wedding Specialists</option>
+            </select>
+          </div>
+          <div class="auth-input-group">
+            <label>Genre / Style</label>
+            <input type="text" id="artist-genre" placeholder="e.g. Soul / Pop / High Energy" required />
+          </div>
+          <div class="auth-input-group">
+            <label>YouTube Video</label>
+            <input type="url" id="artist-youtube" placeholder="https://www.youtube.com/watch?v=… or youtu.be/…" />
+          </div>
         </div>
         <div class="auth-input-group">
-          <label>Category</label>
-          <select id="artist-category" required>
-            <option value="bands">Live Bands &amp; Orchestras</option>
-            <option value="djs">VIP &amp; Event DJs</option>
-            <option value="solos">Solo Vocalists &amp; Performers</option>
-            <option value="duos">Acoustic &amp; Electric Duos</option>
-            <option value="jazz">Jazz Ensembles</option>
-            <option value="tributes">Tribute Shows &amp; Concepts</option>
-            <option value="models-dancers">Models &amp; Dancers</option>
-            <option value="corporate">Corporate Gala Acts</option>
-            <option value="weddings">Wedding Specialists</option>
-          </select>
-        </div>
-        <div class="auth-input-group">
-          <label>Genre / Style</label>
-          <input type="text" id="artist-genre" placeholder="e.g. Soul / Pop / High Energy" required />
-        </div>
-        <div class="auth-input-group">
-          <label>Picture Image URL / Upload</label>
+          <label>Photo</label>
           <div style="display:flex; gap:0.5rem; align-items:center;">
-            <input type="text" id="artist-image" placeholder="https://images.unsplash.com/..." style="flex:1;" required />
+            <input type="text" id="artist-image" placeholder="Image path or URL" style="flex:1;" required />
             <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
-              📷 Upload Image
+              Upload Photo
               <input type="file" id="artist-image-file" accept="image/*" style="display:none;" />
             </label>
           </div>
           <div style="margin-top:0.5rem; text-align:center;">
-            <img id="artist-img-preview" src="" alt="Thumbnail preview" style="max-height:120px; border-radius:8px; border:1px solid var(--gold); display:none; margin:0 auto;" />
+            <img id="artist-img-preview" src="" alt="Thumbnail preview" style="max-height:140px; border-radius:8px; border:1px solid var(--gold); display:none; margin:0 auto;" />
           </div>
         </div>
         <div class="auth-input-group">
-          <label>YouTube Video Link (Optional)</label>
-          <input type="text" id="artist-youtube" placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." />
-          <span style="font-size:0.7rem; color:var(--silver-dark); display:block; margin-top:0.25rem;">Adding a YouTube link creates a live video preview on the artist card.</span>
-        </div>
-        <div class="auth-input-group">
-          <label>Starting Rate / Price</label>
-          <input type="text" id="artist-rate" placeholder="e.g. $2,500+" required />
-        </div>
-        <div class="auth-input-group">
-          <label>Bio / Description (Rich Text Editor)</label>
+          <label>Description</label>
           <div class="rich-toolbar" style="display:flex; gap:0.3rem; margin-bottom:0.4rem; background:rgba(255,255,255,0.05); padding:0.4rem; border-radius:6px; border:1px solid rgba(255,255,255,0.1); flex-wrap:wrap;">
             <button type="button" class="btn-tb" onclick="execRichCommand('bold')" title="Bold" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><b>B</b></button>
             <button type="button" class="btn-tb" onclick="execRichCommand('italic')" title="Italic" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><i>I</i></button>
             <button type="button" class="btn-tb" onclick="execRichCommand('underline')" title="Underline" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><u>U</u></button>
             <button type="button" class="btn-tb" onclick="execRichCommand('insertUnorderedList')" title="Bullet List" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">• List</button>
-            <button type="button" class="btn-tb" onclick="promptRichLink()" title="Link" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">🔗 Link</button>
+            <button type="button" class="btn-tb" onclick="promptRichLink()" title="Link" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">Link</button>
             <button type="button" class="btn-tb" onclick="execRichCommand('removeFormat')" title="Clear" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">Clear</button>
           </div>
-          <div id="artist-bio-editor" contenteditable="true" style="min-height:100px; padding:0.75rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:var(--white); outline:none; line-height:1.6;"></div>
+          <div id="artist-bio-editor" contenteditable="true" style="min-height:110px; padding:0.75rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:var(--white); outline:none; line-height:1.6;"></div>
           <input type="hidden" id="artist-bio" />
+        </div>
+        <div class="lead-detail-grid">
+          <div class="auth-input-group">
+            <label>Meta Description (SEO)</label>
+            <textarea id="artist-meta-description" rows="3" placeholder="Short SEO blurb for search / social shares" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:#fff; resize:vertical;"></textarea>
+          </div>
+          <div class="auth-input-group">
+            <label>Meta Image (SEO / social)</label>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <input type="text" id="artist-meta-image" placeholder="Meta/share image path or URL" style="flex:1;" />
+              <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
+                Upload
+                <input type="file" id="artist-meta-image-file" accept="image/*" style="display:none;" />
+              </label>
+            </div>
+            <div style="margin-top:0.5rem; text-align:center;">
+              <img id="artist-meta-img-preview" src="" alt="Meta preview" style="max-height:90px; border-radius:8px; border:1px solid rgba(200,168,76,0.35); display:none; margin:0 auto;" />
+            </div>
+          </div>
         </div>
         <div class="auth-input-group" style="display:flex; align-items:center; gap:0.5rem;">
           <input type="checkbox" id="artist-featured" style="width:auto;" />
@@ -617,6 +965,106 @@
           <button type="button" class="btn btn-outline" id="btn-close-artist-modal" style="flex:1;">Cancel</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- LEAD / ENQUIRY DETAIL MODAL -->
+  <div class="admin-modal-overlay" id="lead-modal">
+    <div class="admin-modal-body wide">
+      <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; flex-wrap:wrap;">
+        <div>
+          <h3 style="font-family:var(--font-heading); font-size:1.7rem; margin:0; color:var(--gold);" id="lead-modal-title">Enquiry</h3>
+          <p id="lead-modal-sub" style="margin:0.35rem 0 0; font-size:0.78rem; color:var(--silver-mid);"></p>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-close-lead-modal">Close</button>
+      </div>
+      <input type="hidden" id="lead-id" />
+      <div class="lead-detail-grid" style="margin-top:1.25rem;">
+        <div class="auth-input-group"><label>Client name</label><input type="text" id="lead-name" /></div>
+        <div class="auth-input-group"><label>Email</label><input type="email" id="lead-email" /></div>
+        <div class="auth-input-group"><label>Phone</label><input type="tel" id="lead-phone" /></div>
+        <div class="auth-input-group"><label>Company</label><input type="text" id="lead-company" /></div>
+        <div class="auth-input-group"><label>Event start date</label><input type="date" id="lead-date" /></div>
+        <div class="auth-input-group"><label>Event end date</label><input type="date" id="lead-end-date" /></div>
+        <div class="auth-input-group"><label>Venue</label><input type="text" id="lead-venue" /></div>
+        <div class="auth-input-group"><label>Guests</label><input type="text" id="lead-guests" /></div>
+        <div class="auth-input-group"><label>Budget</label><input type="text" id="lead-budget" /></div>
+        <div class="auth-input-group">
+          <label>Kanban stage</label>
+          <select id="lead-column"></select>
+        </div>
+        <div class="auth-input-group">
+          <label>Assign to</label>
+          <select id="lead-assignee"></select>
+        </div>
+        <div class="auth-input-group">
+          <label>Priority</label>
+          <select id="lead-priority">
+            <option value="low">Low</option>
+            <option value="normal" selected>Normal</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
+        <div class="auth-input-group"><label>Follow-up due date</label><input type="date" id="lead-due-date" /></div>
+      </div>
+      <div class="auth-input-group"><label>Service / package</label><input type="text" id="lead-service" /></div>
+      <div class="auth-input-group"><label>Message / brief</label><textarea id="lead-message" rows="4" style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:#fff; resize:vertical;"></textarea></div>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem;">
+        <button type="button" class="btn btn-gold" id="btn-save-lead">Save enquiry</button>
+        <button type="button" class="btn btn-outline" id="btn-delete-lead" style="border-color:rgba(255,80,80,0.35); color:#ff8a8a;">Delete</button>
+        <a class="btn btn-outline" id="lead-mailto" href="#">Email client</a>
+        <a class="btn btn-outline" id="lead-mailto-assignee" href="#" style="display:none;">Email assignee</a>
+      </div>
+
+      <div class="lead-section">
+        <h4>Notes</h4>
+        <div id="lead-notes-list"></div>
+        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+          <input type="text" id="lead-note-input" placeholder="Add an internal note…" style="flex:1; padding:0.65rem; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#fff;" />
+          <button type="button" class="btn btn-gold btn-sm" id="btn-add-note">Add note</button>
+        </div>
+      </div>
+
+      <div class="lead-section">
+        <h4>Documents &amp; attachments</h4>
+        <p style="font-size:0.75rem; color:#888; margin:0 0 0.65rem;">Form uploads show as file names (synced across devices). Local previews under 1.5MB stay on this browser; metadata syncs to the team board.</p>
+        <div id="lead-attachments-list"></div>
+        <label class="btn btn-outline btn-sm" style="cursor:pointer; display:inline-flex; margin-top:0.35rem;">
+          + Attach file
+          <input type="file" id="lead-attach-file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" style="display:none;" />
+        </label>
+      </div>
+
+      <div class="lead-section">
+        <h4>Activity</h4>
+        <div id="lead-activity-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAM MANAGEMENT MODAL -->
+  <div class="admin-modal-overlay" id="team-modal">
+    <div class="admin-modal-body wide">
+      <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start;">
+        <div>
+          <h3 style="font-family:var(--font-heading); font-size:1.6rem; margin:0; color:var(--gold);">CRM team</h3>
+          <p style="margin:0.35rem 0 0; font-size:0.78rem; color:#999;">People you can assign cards to. Synced via Firebase across Super Admin devices.</p>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-close-team-modal">Close</button>
+      </div>
+      <div id="team-list" style="margin-top:1.25rem;"></div>
+      <div class="lead-detail-grid" style="margin-top:1rem;">
+        <div class="auth-input-group"><label>Name</label><input type="text" id="team-new-name" placeholder="Full name" /></div>
+        <div class="auth-input-group"><label>Email</label><input type="email" id="team-new-email" placeholder="name@company.com" /></div>
+        <div class="auth-input-group"><label>Role</label><input type="text" id="team-new-role" placeholder="e.g. Sales, Ops" value="Admin" /></div>
+        <div class="auth-input-group"><label>Colour</label><input type="color" id="team-new-color" value="#c9a84c" style="height:42px; padding:0.2rem; background:transparent; border:1px solid rgba(255,255,255,0.12);" /></div>
+      </div>
+      <div style="display:flex; gap:0.75rem; margin-top:0.75rem;">
+        <button type="button" class="btn btn-gold" id="btn-add-team-member">Add team member</button>
+        <button type="button" class="btn btn-outline" id="btn-save-team">Save team to cloud</button>
+      </div>
+      <p id="team-status" style="font-size:0.78rem; min-height:1.2em; margin:0.75rem 0 0;"></p>
     </div>
   </div>
 
@@ -658,41 +1106,99 @@
     </div>
   </div>
 
-  <!-- CMS ENGINE -->
+  <!-- Auth + CMS -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="elite-admin-auth.js"></script>
+  <script src="elite-crm.js"></script>
   <script src="cms.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      if (window.initEliteFirebase) initEliteFirebase();
+
       const authOverlay = document.getElementById('auth-overlay');
-      const userField = document.getElementById('auth-user');
-      const passField = document.getElementById('auth-pass');
-      const loginBtn = document.getElementById('btn-login');
       const logoutBtn = document.getElementById('btn-logout');
+      const accountPanel = document.getElementById('admin-account-panel');
+      const sessionEmailEl = document.getElementById('admin-session-email');
+      const bootstrapHint = document.getElementById('admin-bootstrap-hint');
 
-      const isAuthed = localStorage.getItem('elite_admin_authed') === 'true';
-      if (isAuthed) authOverlay.classList.add('hidden');
-
-      function tryLogin() {
-        const email = (userField.value || '').trim().toLowerCase();
-        const pass = passField.value || '';
-        // Accept demo credentials or any previously authenticated session
-        if ((email === 'info@eeevents.com.au' && pass === 'admin123') || (email && pass)) {
-          localStorage.setItem('elite_admin_authed', 'true');
-          authOverlay.classList.add('hidden');
-          renderDashboard();
-          return true;
+      function enterDashboard(result) {
+        authOverlay.classList.add('hidden');
+        if (sessionEmailEl) {
+          sessionEmailEl.textContent = (window.EliteAdminAuth && EliteAdminAuth.currentEmail())
+            ? ('Signed in as ' + EliteAdminAuth.currentEmail())
+            : '';
         }
-        alert('Please enter admin email and password.');
-        return false;
+        if (bootstrapHint) {
+          const must = (result && result.mustChangePassword) ||
+            (window.EliteAdminAuth && EliteAdminAuth.usingBootstrapPassword());
+          bootstrapHint.style.display = must ? 'block' : 'none';
+          if (must && accountPanel) accountPanel.style.display = 'block';
+        }
+        // Multi-device CRM realtime
+        try {
+          if (window.EliteCRM && EliteCRM.startRealtime) EliteCRM.startRealtime();
+        } catch (e) {}
+        if (typeof populateCrmFilters === 'function') populateCrmFilters();
+        if (typeof updateCrmSyncBadge === 'function') updateCrmSyncBadge();
+        if (typeof renderDashboard === 'function') renderDashboard();
       }
 
-      loginBtn.addEventListener('click', tryLogin);
-      passField.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') tryLogin();
-      });
+      if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) {
+        enterDashboard();
+        if (location.hash === '#account' && accountPanel) {
+          accountPanel.style.display = 'block';
+          accountPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else {
+        authOverlay.classList.remove('hidden');
+      }
+
+      if (window.EliteAdminAuth) {
+        EliteAdminAuth.bindLoginForm({
+          emailId: 'auth-user',
+          passId: 'auth-pass',
+          submitId: 'btn-login',
+          statusId: 'auth-status',
+          forgotId: 'btn-forgot',
+          onSuccess: enterDashboard
+        });
+        EliteAdminAuth.bindChangePasswordForm({
+          currentId: 'pwd-current',
+          nextId: 'pwd-new',
+          confirmId: 'pwd-confirm',
+          submitId: 'pwd-save',
+          statusId: 'pwd-status',
+          onSuccess: function () {
+            if (bootstrapHint) bootstrapHint.style.display = 'none';
+          }
+        });
+      }
+
+      const accountBtn = document.getElementById('btn-account');
+      if (accountBtn) {
+        accountBtn.addEventListener('click', () => {
+          if (!accountPanel) return;
+          accountPanel.style.display = accountPanel.style.display === 'none' ? 'block' : 'none';
+        });
+      }
+      const pwdCancel = document.getElementById('pwd-cancel');
+      if (pwdCancel) {
+        pwdCancel.addEventListener('click', () => {
+          if (accountPanel) accountPanel.style.display = 'none';
+        });
+      }
 
       logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('elite_admin_authed');
+        if (window.EliteAdminAuth) EliteAdminAuth.logout();
+        else {
+          localStorage.removeItem('elite_admin_authed');
+          localStorage.removeItem('elite_admin_session_v2');
+        }
+        if (accountPanel) accountPanel.style.display = 'none';
         authOverlay.classList.remove('hidden');
       });
 
@@ -746,56 +1252,111 @@
           .replace(/"/g, '&quot;');
       }
 
-      function formatMoney(n) {
-        if (!n || isNaN(n)) return '$0';
-        return '$' + Number(n).toLocaleString('en-AU', { maximumFractionDigits: 0 });
+      function stripHtml(html) {
+        const d = document.createElement('div');
+        d.innerHTML = html || '';
+        return (d.textContent || d.innerText || '').trim();
+      }
+
+      function populateArtistCategoryFilter() {
+        const sel = document.getElementById('artist-filter-category');
+        if (!sel || sel.dataset.ready === '1') return;
+        const cats = {};
+        window.EliteCMS.getArtists().forEach(a => {
+          if (a.category) cats[a.category] = true;
+        });
+        Object.keys(cats).sort().forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = c;
+          sel.appendChild(opt);
+        });
+        sel.dataset.ready = '1';
       }
 
       function updateStats() {
         const artists = window.EliteCMS.getArtists();
         const events = window.EliteCMS.getEvents();
-        const leads = window.EliteCMS.getAllLeads();
-        const pipeline = window.EliteCMS.estimatePipeline();
+        const leads = window.EliteCMS.getAllLeads ? window.EliteCMS.getAllLeads() : [];
+        const open = window.EliteCMS.estimatePipeline ? window.EliteCMS.estimatePipeline() : leads.length;
         document.getElementById('stat-artists').textContent = artists.length;
         document.getElementById('stat-events').textContent = events.length;
         document.getElementById('stat-leads').textContent = leads.length;
-        document.getElementById('stat-rev').textContent = formatMoney(pipeline);
+        document.getElementById('stat-rev').textContent = open;
       }
 
       function renderArtists() {
-        const artists = window.EliteCMS.getArtists();
+        populateArtistCategoryFilter();
+        const searchEl = document.getElementById('artist-search');
+        const catEl = document.getElementById('artist-filter-category');
+        const q = ((searchEl && searchEl.value) || '').trim().toLowerCase();
+        const catFilter = (catEl && catEl.value) || '';
+        let artists = window.EliteCMS.getArtists();
+        if (catFilter) artists = artists.filter(a => a.category === catFilter);
+        if (q) {
+          artists = artists.filter(a => {
+            const blob = [a.name, a.category, a.genre, a.bio, a.metaDescription, a.youtubeUrl].join(' ').toLowerCase();
+            return blob.includes(q);
+          });
+        }
         const tbody = document.getElementById('artists-body');
         tbody.innerHTML = '';
 
         if (!artists.length) {
-          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--silver-mid);">No artists yet. Click “Add New Artist / Act”.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--silver-mid);">No artists match. Click “Add New Artist / Act”.</td></tr>';
+          updateStats();
+          return;
         }
 
         artists.forEach(art => {
+          const desc = stripHtml(art.bio || art.metaDescription || '');
           const tr = document.createElement('tr');
+          tr.className = 'artist-row';
+          tr.dataset.artistId = art.id;
           tr.innerHTML = `
             <td><img src="${esc(art.image)}" class="artist-img-preview" alt="${esc(art.name)}" onerror="this.src='images/solo.jpg'"></td>
-            <td><strong>${esc(art.name)}</strong></td>
-            <td><span style="text-transform:uppercase; font-size:0.75rem; color:var(--gold);">${esc(art.category)}</span></td>
-            <td>${esc(art.genre)}</td>
-            <td><strong style="color:#55c555;">${esc(art.rate)}</strong></td>
-            <td>${art.featured ? '⭐ Featured' : 'Standard'}</td>
             <td>
-              <button class="btn-action" data-edit-artist="${esc(art.id)}">Edit</button>
-              <button class="btn-action" style="color:#ff5555;" data-del-artist="${esc(art.id)}">Delete</button>
+              <strong>${esc(art.name)}</strong>
+              ${art.featured ? '<div style="font-size:0.65rem;color:var(--gold);margin-top:0.2rem;">Featured</div>' : ''}
+            </td>
+            <td><span style="text-transform:uppercase; font-size:0.75rem; color:var(--gold);">${esc(art.category)}</span></td>
+            <td>${esc(art.genre || '—')}</td>
+            <td><div class="cell-muted" title="${esc(desc)}">${esc(desc.slice(0, 90) || '—')}${desc.length > 90 ? '…' : ''}</div></td>
+            <td>${art.youtubeUrl ? '<span style="color:var(--gold);font-size:0.75rem;">Yes</span>' : '<span style="color:#666;font-size:0.75rem;">—</span>'}</td>
+            <td>${(art.metaDescription || art.metaImage) ? '<span style="color:var(--gold);font-size:0.75rem;">Set</span>' : '<span style="color:#666;font-size:0.75rem;">—</span>'}</td>
+            <td>
+              <button class="btn-action" data-edit-artist="${esc(art.id)}" type="button">Edit</button>
+              <button class="btn-action" style="color:#ff5555;" data-del-artist="${esc(art.id)}" type="button">Delete</button>
             </td>
           `;
           tbody.appendChild(tr);
         });
 
+        tbody.querySelectorAll('tr.artist-row').forEach(row => {
+          row.addEventListener('click', (e) => {
+            if (e.target.closest('button')) return;
+            editArtist(row.dataset.artistId);
+          });
+        });
         tbody.querySelectorAll('[data-edit-artist]').forEach(btn => {
-          btn.addEventListener('click', () => editArtist(btn.getAttribute('data-edit-artist')));
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            editArtist(btn.getAttribute('data-edit-artist'));
+          });
         });
         tbody.querySelectorAll('[data-del-artist]').forEach(btn => {
-          btn.addEventListener('click', () => deleteArtist(btn.getAttribute('data-del-artist')));
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteArtist(btn.getAttribute('data-del-artist'));
+          });
         });
         updateStats();
       }
+
+      const artistSearch = document.getElementById('artist-search');
+      const artistCatFilter = document.getElementById('artist-filter-category');
+      if (artistSearch) artistSearch.addEventListener('input', () => renderArtists());
+      if (artistCatFilter) artistCatFilter.addEventListener('change', () => renderArtists());
 
       function renderEvents() {
         const events = window.EliteCMS.getEvents();
@@ -831,54 +1392,399 @@
         updateStats();
       }
 
-      function renderLeads() {
-        const leads = window.EliteCMS.getAllLeads();
-        const tbody = document.getElementById('leads-body');
-        tbody.innerHTML = '';
+      let dragLeadId = null;
+      const crmApi = () => window.EliteCRM || window.EliteCMS;
 
-        if (!leads.length) {
-          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--silver-mid);">No leads yet. Enquiries from the live site quote form and consultation modal appear here.</td></tr>';
+      function currentAdminEmail() {
+        return (window.EliteAdminAuth && EliteAdminAuth.currentEmail()) || '';
+      }
+
+      function currentAdminActor() {
+        return currentAdminEmail() || 'Super Admin';
+      }
+
+      function getTeam() {
+        if (window.EliteCRM && EliteCRM.getTeam) return EliteCRM.getTeam();
+        return [];
+      }
+
+      function updateCrmSyncBadge() {
+        const badge = document.getElementById('crm-sync-badge');
+        if (!badge) return;
+        const st = (window.EliteCRM && EliteCRM.getSyncStatus) ? EliteCRM.getSyncStatus() : { online: navigator.onLine, firebase: false };
+        badge.classList.remove('is-live', 'is-syncing', 'is-offline');
+        if (!st.online) {
+          badge.classList.add('is-offline');
+          badge.textContent = 'Offline · local only';
+        } else if (st.syncing) {
+          badge.classList.add('is-syncing');
+          badge.textContent = 'Syncing…';
+        } else if (st.listenersReady || st.lastSyncAt) {
+          badge.classList.add('is-live');
+          const when = st.lastSyncAt ? new Date(st.lastSyncAt).toLocaleTimeString() : '';
+          badge.textContent = when ? ('Live · ' + when) : 'Live sync';
+        } else if (st.firebase) {
+          badge.classList.add('is-syncing');
+          badge.textContent = 'Connecting…';
+        } else {
+          badge.classList.add('is-offline');
+          badge.textContent = 'Local only';
+        }
+        if (st.lastError) badge.title = st.lastError;
+      }
+
+      function populateCrmFilters() {
+        const sel = document.getElementById('crm-filter-assignee');
+        if (!sel) return;
+        const keep = sel.value;
+        const team = getTeam();
+        sel.innerHTML =
+          '<option value="">All assignees</option>' +
+          '<option value="__unassigned__">Unassigned</option>' +
+          '<option value="__mine__">My cards</option>' +
+          team.map(t => '<option value="' + esc(t.email) + '">' + esc(t.name) + '</option>').join('');
+        if (keep) sel.value = keep;
+      }
+
+      function fillAssigneeSelect(selected) {
+        const sel = document.getElementById('lead-assignee');
+        if (!sel) return;
+        const team = getTeam();
+        sel.innerHTML =
+          '<option value="">Unassigned</option>' +
+          team.map(t =>
+            '<option value="' + esc(t.email) + '"' +
+            (String(t.email).toLowerCase() === String(selected || '').toLowerCase() ? ' selected' : '') +
+            '>' + esc(t.name) + ' (' + esc(t.email) + ')</option>'
+          ).join('');
+      }
+
+      function priorityMeta(id) {
+        const list = (window.EliteCRM && EliteCRM.PRIORITIES) || [
+          { id: 'low', label: 'Low', color: '#888' },
+          { id: 'normal', label: 'Normal', color: '#c9a84c' },
+          { id: 'high', label: 'High', color: '#f0a040' },
+          { id: 'urgent', label: 'Urgent', color: '#ff5555' }
+        ];
+        return list.find(p => p.id === id) || list[1];
+      }
+
+      function getCrmFilter() {
+        const crmSearchEl = document.getElementById('crm-search');
+        const q = ((crmSearchEl && crmSearchEl.value) || '').trim().toLowerCase();
+        const assigneeSel = document.getElementById('crm-filter-assignee');
+        const prioritySel = document.getElementById('crm-filter-priority');
+        let assigneeEmail = (assigneeSel && assigneeSel.value) || '';
+        if (assigneeEmail === '__mine__') assigneeEmail = currentAdminEmail();
+        return {
+          q: q,
+          assigneeEmail: assigneeEmail,
+          unassignedOnly: assigneeEmail === '__unassigned__',
+          priority: (prioritySel && prioritySel.value) || ''
+        };
+      }
+
+      function filterLead(lead, f) {
+        if (f.priority && lead.priority !== f.priority) return false;
+        if (f.unassignedOnly) {
+          if (lead.assigneeEmail) return false;
+        } else if (f.assigneeEmail && f.assigneeEmail !== '__unassigned__') {
+          if (String(lead.assigneeEmail || '').toLowerCase() !== String(f.assigneeEmail).toLowerCase()) return false;
+        }
+        if (f.q) {
+          const blob = [
+            lead.name, lead.email, lead.phone, lead.service, lead.message,
+            lead.venue, lead.company, lead.id, lead.source, lead.assigneeName, lead.assigneeEmail
+          ].join(' ').toLowerCase();
+          if (blob.indexOf(f.q) === -1) return false;
+        }
+        return true;
+      }
+
+      function renderLeads() {
+        const board = document.getElementById('kanban-board');
+        const empty = document.getElementById('kanban-empty');
+        const api = crmApi();
+        if (!board || !api || !api.getLeadsByColumn) {
           updateStats();
           return;
         }
+        const f = getCrmFilter();
+        // EliteCRM getLeadsByColumn supports filters; for unassigned use client filter
+        const byCol = api.getLeadsByColumn({
+          q: f.q,
+          priority: f.priority,
+          assigneeEmail: f.unassignedOnly ? '' : f.assigneeEmail
+        });
+        const columns = api.KANBAN_COLUMNS || window.EliteCMS.KANBAN_COLUMNS || [];
+        let total = 0;
+        const team = getTeam();
 
-        leads.forEach(lead => {
-          const status = lead.status || 'Pending';
-          const statusClass = status.toLowerCase().includes('contact') || status === 'Lead'
-            ? 'status-contacted'
-            : 'status-pending';
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td><code style="font-size:0.72rem;color:var(--gold);">${esc(lead.id)}</code></td>
-            <td>
-              <strong>${esc(lead.name)}</strong>
-              <div style="font-size:0.68rem;color:var(--silver-mid);margin-top:0.2rem;">${esc(lead.source || 'enquiry')} · ${esc(lead.timestamp || '')}</div>
-            </td>
-            <td>${esc(lead.service || lead.message || '—')}</td>
-            <td>${esc(lead.date || '—')}</td>
-            <td>
-              <a href="mailto:${esc(lead.email)}" style="color:var(--gold);">${esc(lead.email)}</a>
-              <div style="font-size:0.75rem;color:var(--silver-mid);">${esc(lead.phone || '')}</div>
-            </td>
-            <td><span class="status-pill ${statusClass}">${esc(status)}</span></td>
-            <td>
-              <button class="btn-action" data-lead-status="${esc(lead.id)}" data-lead-source="${esc(lead.source || 'enquiry')}" data-next="Contacted">Mark Contacted</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
+        board.innerHTML = '';
+        columns.forEach(col => {
+          let leads = (byCol[col.id] || []).filter(l => filterLead(l, f));
+          total += leads.length;
+          const colEl = document.createElement('div');
+          colEl.className = 'kanban-col';
+          colEl.dataset.column = col.id;
+          colEl.innerHTML =
+            '<div class="kanban-col-head">' +
+              '<span class="kanban-col-title" style="border-left:3px solid ' + col.color + ';padding-left:0.5rem;">' + esc(col.label) + '</span>' +
+              '<span class="kanban-count">' + leads.length + '</span>' +
+            '</div>' +
+            '<div class="kanban-cards" data-drop-column="' + esc(col.id) + '"></div>';
+          const cards = colEl.querySelector('.kanban-cards');
+
+          leads.forEach(lead => {
+            const attCount = (lead.attachments || []).length;
+            const noteCount = (lead.notes || []).length;
+            const p = priorityMeta(lead.priority || 'normal');
+            const aName = lead.assigneeName || (lead.assigneeEmail && window.EliteCRM ? EliteCRM.teamName(lead.assigneeEmail) : '') || '';
+            const aColor = lead.assigneeEmail && window.EliteCRM ? EliteCRM.teamColor(lead.assigneeEmail) : '#555';
+            const aInit = window.EliteCRM ? EliteCRM.initials(aName || '?') : '?';
+            const card = document.createElement('article');
+            card.className = 'kanban-card';
+            card.draggable = true;
+            card.dataset.leadId = lead.id;
+            card.innerHTML =
+              '<div class="card-top-row">' +
+                '<h4 style="margin:0;flex:1;">' + esc(lead.name) + '</h4>' +
+                '<span class="priority-pill" style="color:' + p.color + ';border-color:' + p.color + '33;">' + esc(p.label) + '</span>' +
+              '</div>' +
+              '<p class="kanban-meta">' + esc(lead.service || 'General enquiry') + '</p>' +
+              '<p class="kanban-meta">' + (lead.date ? ('📅 ' + esc(lead.date)) : '📅 Date TBC') +
+                (lead.dueDate ? (' · ⏰ Due ' + esc(lead.dueDate)) : '') +
+                (lead.venue ? (' · ' + esc(lead.venue)) : '') + '</p>' +
+              '<p class="kanban-meta">' + esc(lead.email || '') + (lead.phone ? (' · ' + esc(lead.phone)) : '') + '</p>' +
+              '<div class="kanban-tags">' +
+                '<span class="kanban-tag gold">' + esc(lead.source || 'web') + '</span>' +
+                (attCount ? '<span class="kanban-tag">' + attCount + ' file' + (attCount > 1 ? 's' : '') + '</span>' : '') +
+                (noteCount ? '<span class="kanban-tag">' + noteCount + ' note' + (noteCount > 1 ? 's' : '') + '</span>' : '') +
+              '</div>' +
+              '<div class="kanban-card-actions">' +
+                (lead.assigneeEmail
+                  ? ('<span class="assignee-chip" title="' + esc(lead.assigneeEmail) + '"><span class="assignee-avatar" style="background:' + aColor + ';">' + esc(aInit) + '</span>' + esc(aName || lead.assigneeEmail) + '</span>')
+                  : '<span class="kanban-meta" style="margin:0;">Unassigned</span>') +
+                '<button type="button" class="btn-action" data-open-lead="' + esc(lead.id) + '">Open</button>' +
+              '</div>' +
+              '<select class="quick-assign" data-quick-assign="' + esc(lead.id) + '" title="Assign team member">' +
+                '<option value="">Assign…</option>' +
+                team.map(t =>
+                  '<option value="' + esc(t.email) + '"' +
+                  (String(t.email).toLowerCase() === String(lead.assigneeEmail || '').toLowerCase() ? ' selected' : '') +
+                  '>' + esc(t.name) + '</option>'
+                ).join('') +
+              '</select>';
+
+            card.addEventListener('dragstart', (e) => {
+              dragLeadId = lead.id;
+              card.classList.add('is-dragging');
+              try { e.dataTransfer.setData('text/plain', lead.id); e.dataTransfer.effectAllowed = 'move'; } catch (err) {}
+            });
+            card.addEventListener('dragend', () => {
+              dragLeadId = null;
+              card.classList.remove('is-dragging');
+              board.querySelectorAll('.kanban-cards').forEach(el => el.classList.remove('is-dragover'));
+            });
+            card.addEventListener('click', (e) => {
+              if (e.target.closest('button') || e.target.closest('select')) return;
+              openLead(lead.id);
+            });
+            const openBtn = card.querySelector('[data-open-lead]');
+            if (openBtn) {
+              openBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openLead(lead.id);
+              });
+            }
+            const qa = card.querySelector('[data-quick-assign]');
+            if (qa) {
+              qa.addEventListener('click', (e) => e.stopPropagation());
+              qa.addEventListener('change', () => {
+                const email = qa.value;
+                if (window.EliteCRM && EliteCRM.assignLead) {
+                  EliteCRM.assignLead(lead.id, email, { actor: currentAdminActor() });
+                } else {
+                  api.saveLead({ id: lead.id, assigneeEmail: email, assigneeName: email });
+                }
+                renderLeads();
+              });
+            }
+            cards.appendChild(card);
+          });
+
+          cards.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            cards.classList.add('is-dragover');
+          });
+          cards.addEventListener('dragleave', () => cards.classList.remove('is-dragover'));
+          cards.addEventListener('drop', (e) => {
+            e.preventDefault();
+            cards.classList.remove('is-dragover');
+            const id = dragLeadId || (e.dataTransfer && e.dataTransfer.getData('text/plain'));
+            if (!id) return;
+            if (window.EliteCRM && EliteCRM.moveLeadToColumn) {
+              EliteCRM.moveLeadToColumn(id, col.id, Date.now(), { actor: currentAdminActor() });
+            } else {
+              api.moveLeadToColumn(id, col.id, Date.now());
+            }
+            renderLeads();
+          });
+
+          board.appendChild(colEl);
         });
 
-        tbody.querySelectorAll('[data-lead-status]').forEach(btn => {
+        if (empty) empty.style.display = total ? 'none' : 'block';
+        updateStats();
+        updateCrmSyncBadge();
+      }
+
+      function fillLeadColumnSelect(selected) {
+        const sel = document.getElementById('lead-column');
+        if (!sel) return;
+        const cols = (crmApi() && crmApi().KANBAN_COLUMNS) || [];
+        sel.innerHTML = cols.map(c =>
+          '<option value="' + esc(c.id) + '"' + (c.id === selected ? ' selected' : '') + '>' + esc(c.label) + '</option>'
+        ).join('');
+      }
+
+      function renderLeadNotes(lead) {
+        const list = document.getElementById('lead-notes-list');
+        if (!list) return;
+        const notes = lead.notes || [];
+        if (!notes.length) {
+          list.innerHTML = '<p style="font-size:0.78rem;color:#777;margin:0;">No notes yet.</p>';
+          return;
+        }
+        list.innerHTML = notes.map(n =>
+          '<div class="note-item">' + esc(n.text) +
+          '<time>' + esc(n.author || 'Admin') + ' · ' + esc(n.at || '') + '</time></div>'
+        ).join('');
+      }
+
+      function renderLeadActivity(lead) {
+        const list = document.getElementById('lead-activity-list');
+        if (!list) return;
+        const acts = lead.activity || [];
+        if (!acts.length) {
+          list.innerHTML = '<p style="font-size:0.78rem;color:#777;margin:0;">No activity yet.</p>';
+          return;
+        }
+        list.innerHTML = acts.slice(0, 30).map(a =>
+          '<div class="activity-item"><strong style="color:var(--gold);text-transform:uppercase;font-size:0.65rem;letter-spacing:0.06em;">' +
+          esc(a.type || 'info') + '</strong> · ' + esc(a.text || '') +
+          '<time>' + esc(a.actor || '') + ' · ' + esc(a.at || '') + '</time></div>'
+        ).join('');
+      }
+
+      function renderLeadAttachments(lead) {
+        const list = document.getElementById('lead-attachments-list');
+        if (!list) return;
+        const atts = lead.attachments || [];
+        if (!atts.length) {
+          list.innerHTML = '<p style="font-size:0.78rem;color:#777;margin:0;">No attachments yet.</p>';
+          return;
+        }
+        list.innerHTML = atts.map(a => {
+          const link = a.dataUrl || a.url || '';
+          const name = a.name || 'file';
+          const open = link
+            ? ('<a href="' + esc(link) + '" target="_blank" rel="noopener" style="color:var(--gold);">' + esc(name) + '</a>')
+            : esc(name);
+          return '<div class="attach-item" style="display:flex;justify-content:space-between;gap:0.75rem;align-items:center;">' +
+            '<div>' + open + '<time>' + esc(a.at || '') + (a.size ? (' · ' + Math.round(a.size / 1024) + 'KB') : '') + '</time></div>' +
+            (a.id ? '<button type="button" class="btn-action" style="color:#ff8a8a;" data-rm-att="' + esc(a.id) + '">Remove</button>' : '') +
+            '</div>';
+        }).join('');
+        list.querySelectorAll('[data-rm-att]').forEach(btn => {
           btn.addEventListener('click', () => {
-            window.EliteCMS.updateLeadStatus(
-              btn.getAttribute('data-lead-status'),
-              btn.getAttribute('data-next'),
-              btn.getAttribute('data-lead-source')
-            );
+            if (window.EliteCRM) EliteCRM.removeLeadAttachment(lead.id, btn.getAttribute('data-rm-att'), { actor: currentAdminActor() });
+            else crmApi().removeLeadAttachment(lead.id, btn.getAttribute('data-rm-att'));
+            openLead(lead.id);
             renderLeads();
           });
         });
-        updateStats();
+      }
+
+      function openLead(id) {
+        const api = crmApi();
+        const lead = api.getAllLeads().find(l => l.id === id);
+        if (!lead) return;
+        document.getElementById('lead-id').value = lead.id;
+        document.getElementById('lead-modal-title').textContent = lead.name || 'Enquiry';
+        document.getElementById('lead-modal-sub').textContent =
+          (lead.id || '') + ' · ' + (lead.source || 'web') + ' · ' + (lead.timestamp || '') +
+          (lead.updatedAt ? (' · updated ' + lead.updatedAt) : '');
+        document.getElementById('lead-name').value = lead.name || '';
+        document.getElementById('lead-email').value = lead.email || '';
+        document.getElementById('lead-phone').value = lead.phone || '';
+        document.getElementById('lead-company').value = lead.company || '';
+        document.getElementById('lead-date').value = lead.date || '';
+        document.getElementById('lead-end-date').value = lead.endDate || '';
+        document.getElementById('lead-venue').value = lead.venue || '';
+        document.getElementById('lead-guests').value = lead.guests || '';
+        document.getElementById('lead-budget').value = lead.budget || '';
+        document.getElementById('lead-service').value = lead.service || '';
+        document.getElementById('lead-message').value = lead.message || '';
+        document.getElementById('lead-priority').value = lead.priority || 'normal';
+        document.getElementById('lead-due-date').value = lead.dueDate || '';
+        fillLeadColumnSelect(lead.kanbanColumn || 'new');
+        fillAssigneeSelect(lead.assigneeEmail || '');
+        const mail = document.getElementById('lead-mailto');
+        if (mail) {
+          mail.href = lead.email
+            ? ('mailto:' + encodeURIComponent(lead.email) + '?subject=' + encodeURIComponent('Re: your Elite Entertainment enquiry'))
+            : '#';
+        }
+        const mailA = document.getElementById('lead-mailto-assignee');
+        if (mailA) {
+          if (lead.assigneeEmail) {
+            mailA.style.display = '';
+            mailA.href = 'mailto:' + encodeURIComponent(lead.assigneeEmail) +
+              '?subject=' + encodeURIComponent('CRM card: ' + (lead.name || lead.id)) +
+              '&body=' + encodeURIComponent('Lead ' + lead.id + '\n' + (lead.service || '') + '\n' + (lead.message || ''));
+          } else {
+            mailA.style.display = 'none';
+          }
+        }
+        renderLeadNotes(lead);
+        renderLeadAttachments(lead);
+        renderLeadActivity(lead);
+        document.getElementById('lead-modal').classList.add('active');
+      }
+
+      function closeLeadModal() {
+        document.getElementById('lead-modal').classList.remove('active');
+      }
+
+      function renderTeamList() {
+        const list = document.getElementById('team-list');
+        if (!list) return;
+        const team = getTeam();
+        if (!team.length) {
+          list.innerHTML = '<p style="color:#888;font-size:0.85rem;">No team members yet.</p>';
+          return;
+        }
+        list.innerHTML = team.map(t =>
+          '<div class="attach-item" style="display:flex;justify-content:space-between;gap:1rem;align-items:center;">' +
+            '<div style="display:flex;gap:0.65rem;align-items:center;">' +
+              '<span class="assignee-avatar" style="background:' + esc(t.color || '#c9a84c') + ';width:28px;height:28px;font-size:0.7rem;">' +
+                esc((window.EliteCRM ? EliteCRM.initials(t.name) : '?')) + '</span>' +
+              '<div><strong style="color:#fff;">' + esc(t.name) + '</strong>' +
+              '<div style="font-size:0.75rem;color:#999;">' + esc(t.email) + ' · ' + esc(t.role || 'Admin') + '</div></div>' +
+            '</div>' +
+            '<button type="button" class="btn-action" style="color:#ff8a8a;" data-rm-team="' + esc(t.id) + '">Remove</button>' +
+          '</div>'
+        ).join('');
+        list.querySelectorAll('[data-rm-team]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-rm-team');
+            const next = getTeam().filter(t => t.id !== id);
+            if (window.EliteCRM) EliteCRM.saveTeam(next);
+            renderTeamList();
+            populateCrmFilters();
+          });
+        });
       }
 
       function renderPartners() {
@@ -966,10 +1872,102 @@
       });
 
       document.getElementById('btn-clear-leads').addEventListener('click', () => {
-        if (confirm('Clear all local lead / enquiry logs?')) {
-          window.EliteCMS.clearInquiries();
+        if (confirm('Clear LOCAL enquiry cache on this device only? Cloud CRM data is kept for other devices.')) {
+          if (window.EliteCRM) EliteCRM.clearInquiries({ skipCloud: true });
+          else window.EliteCMS.clearInquiries();
+          try { localStorage.setItem('elite_clients', '[]'); } catch (e) {}
           renderLeads();
         }
+      });
+      const refreshLeadsBtn = document.getElementById('btn-refresh-leads');
+      if (refreshLeadsBtn) {
+        refreshLeadsBtn.addEventListener('click', () => {
+          if (window.EliteCRM && EliteCRM.pullOnce) {
+            updateCrmSyncBadge();
+            EliteCRM.pullOnce().then(() => {
+              renderLeads();
+              updateCrmSyncBadge();
+            });
+          } else renderLeads();
+        });
+      }
+      const pushCrmBtn = document.getElementById('btn-push-crm');
+      if (pushCrmBtn) {
+        pushCrmBtn.addEventListener('click', () => {
+          if (!window.EliteCRM || !EliteCRM.pushAllLocal) {
+            alert('CRM cloud module not loaded.');
+            return;
+          }
+          pushCrmBtn.disabled = true;
+          pushCrmBtn.textContent = 'Pushing…';
+          EliteCRM.pushAllLocal().then((r) => {
+            pushCrmBtn.disabled = false;
+            pushCrmBtn.textContent = 'Push local → cloud';
+            updateCrmSyncBadge();
+            alert(r && r.ok ? ('Pushed ' + (r.count || 0) + ' enquiries to cloud.') : ('Push failed: ' + ((r && r.error) || 'unknown')));
+          });
+        });
+      }
+      const crmSearch = document.getElementById('crm-search');
+      if (crmSearch) crmSearch.addEventListener('input', () => renderLeads());
+      const crmFilterA = document.getElementById('crm-filter-assignee');
+      const crmFilterP = document.getElementById('crm-filter-priority');
+      if (crmFilterA) crmFilterA.addEventListener('change', () => renderLeads());
+      if (crmFilterP) crmFilterP.addEventListener('change', () => renderLeads());
+
+      // Realtime board refresh
+      window.addEventListener('elite-crm-updated', () => {
+        renderLeads();
+        // Keep open modal in sync if same card
+        const openId = document.getElementById('lead-id') && document.getElementById('lead-id').value;
+        const modal = document.getElementById('lead-modal');
+        if (openId && modal && modal.classList.contains('active')) openLead(openId);
+      });
+      window.addEventListener('elite-crm-sync', () => updateCrmSyncBadge());
+      window.addEventListener('elite-crm-team', () => {
+        populateCrmFilters();
+        renderTeamList();
+      });
+
+      // Team modal
+      const teamModal = document.getElementById('team-modal');
+      document.getElementById('btn-manage-team').addEventListener('click', () => {
+        renderTeamList();
+        teamModal.classList.add('active');
+      });
+      document.getElementById('btn-close-team-modal').addEventListener('click', () => teamModal.classList.remove('active'));
+      teamModal.addEventListener('click', (e) => {
+        if (e.target.id === 'team-modal') teamModal.classList.remove('active');
+      });
+      document.getElementById('btn-add-team-member').addEventListener('click', () => {
+        const name = document.getElementById('team-new-name').value.trim();
+        const email = document.getElementById('team-new-email').value.trim();
+        const role = document.getElementById('team-new-role').value.trim() || 'Admin';
+        const color = document.getElementById('team-new-color').value || '#c9a84c';
+        const st = document.getElementById('team-status');
+        if (!name || !email) {
+          st.textContent = 'Name and email required.';
+          st.style.color = '#ff8a8a';
+          return;
+        }
+        const team = getTeam().slice();
+        team.push({ id: 'tm-' + Date.now().toString(36), name, email, role, color });
+        if (window.EliteCRM) EliteCRM.saveTeam(team);
+        document.getElementById('team-new-name').value = '';
+        document.getElementById('team-new-email').value = '';
+        renderTeamList();
+        populateCrmFilters();
+        st.textContent = 'Member added.';
+        st.style.color = '#8fd18f';
+      });
+      document.getElementById('btn-save-team').addEventListener('click', () => {
+        const st = document.getElementById('team-status');
+        if (!window.EliteCRM) return;
+        EliteCRM.saveTeam(getTeam()).then ? null : null;
+        // saveTeam is sync + cloud
+        st.textContent = 'Team saved locally and pushed to cloud.';
+        st.style.color = '#8fd18f';
+        populateCrmFilters();
       });
 
       document.getElementById('btn-clear-partners').addEventListener('click', () => {
@@ -977,6 +1975,88 @@
           window.EliteCMS.clearPartners();
           renderPartners();
         }
+      });
+
+      // Lead detail modal actions
+      document.getElementById('btn-close-lead-modal').addEventListener('click', closeLeadModal);
+      document.getElementById('lead-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'lead-modal') closeLeadModal();
+      });
+      document.getElementById('btn-save-lead').addEventListener('click', () => {
+        const id = document.getElementById('lead-id').value;
+        if (!id) return;
+        const assigneeEmail = document.getElementById('lead-assignee').value;
+        const colId = document.getElementById('lead-column').value;
+        const cols = (crmApi() && crmApi().KANBAN_COLUMNS) || [];
+        const found = cols.find(function (c) { return c.id === colId; });
+        const payload = {
+          id,
+          name: document.getElementById('lead-name').value.trim(),
+          email: document.getElementById('lead-email').value.trim(),
+          phone: document.getElementById('lead-phone').value.trim(),
+          company: document.getElementById('lead-company').value.trim(),
+          date: document.getElementById('lead-date').value,
+          endDate: document.getElementById('lead-end-date').value,
+          dueDate: document.getElementById('lead-due-date').value,
+          venue: document.getElementById('lead-venue').value.trim(),
+          guests: document.getElementById('lead-guests').value.trim(),
+          budget: document.getElementById('lead-budget').value.trim(),
+          service: document.getElementById('lead-service').value.trim(),
+          message: document.getElementById('lead-message').value.trim(),
+          kanbanColumn: colId,
+          status: found ? found.label : colId,
+          priority: document.getElementById('lead-priority').value,
+          assigneeEmail: assigneeEmail,
+          assigneeName: assigneeEmail && window.EliteCRM ? EliteCRM.teamName(assigneeEmail) : ''
+        };
+        if (window.EliteCRM) EliteCRM.saveLead(payload, { actor: currentAdminActor(), origin: 'admin' });
+        else crmApi().saveLead(payload);
+        openLead(id);
+        renderLeads();
+      });
+      document.getElementById('btn-delete-lead').addEventListener('click', () => {
+        const id = document.getElementById('lead-id').value;
+        if (!id || !confirm('Delete this enquiry on all devices?')) return;
+        if (window.EliteCRM) EliteCRM.deleteLead(id);
+        else crmApi().deleteLead(id);
+        closeLeadModal();
+        renderLeads();
+      });
+      document.getElementById('btn-add-note').addEventListener('click', () => {
+        const id = document.getElementById('lead-id').value;
+        const text = document.getElementById('lead-note-input').value.trim();
+        if (!id || !text) return;
+        const author = currentAdminActor();
+        if (window.EliteCRM) EliteCRM.addLeadNote(id, text, author, { actor: author });
+        else crmApi().addLeadNote(id, text, author);
+        document.getElementById('lead-note-input').value = '';
+        openLead(id);
+        renderLeads();
+      });
+      document.getElementById('lead-attach-file').addEventListener('change', (e) => {
+        const id = document.getElementById('lead-id').value;
+        const file = e.target.files && e.target.files[0];
+        if (!id || !file) return;
+        if (file.size > 1.5 * 1024 * 1024) {
+          alert('Keep admin card attachments under 1.5MB each (browser storage limit). Larger files should be emailed — the card still keeps the file name if you note it.');
+          e.target.value = '';
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function (evt) {
+          const att = {
+            name: file.name,
+            type: file.type || 'file',
+            size: file.size,
+            dataUrl: evt.target.result
+          };
+          if (window.EliteCRM) EliteCRM.addLeadAttachment(id, att, { actor: currentAdminActor() });
+          else crmApi().addLeadAttachment(id, att);
+          e.target.value = '';
+          openLead(id);
+          renderLeads();
+        };
+        reader.readAsDataURL(file);
       });
 
       // Rich Text & Image Uploader Helper Functions
@@ -1025,6 +2105,7 @@
       }
 
       attachImageUploader('artist-image-file', 'artist-image', 'artist-img-preview');
+      attachImageUploader('artist-meta-image-file', 'artist-meta-image', 'artist-meta-img-preview');
       attachImageUploader('content-hero-banner-file', 'content-hero-banner', 'hero-img-preview');
 
       const artistModal = document.getElementById('artist-modal');
@@ -1033,26 +2114,40 @@
         document.getElementById('artist-id').value = '';
         document.getElementById('artist-bio-editor').innerHTML = '';
         document.getElementById('artist-youtube').value = '';
+        document.getElementById('artist-meta-description').value = '';
+        document.getElementById('artist-meta-image').value = '';
         document.getElementById('artist-img-preview').style.display = 'none';
+        document.getElementById('artist-meta-img-preview').style.display = 'none';
         document.getElementById('artist-modal-title').textContent = 'Add New Artist / Act';
         artistModal.classList.add('active');
       });
       document.getElementById('btn-close-artist-modal').addEventListener('click', () => {
         artistModal.classList.remove('active');
       });
+      artistModal.addEventListener('click', (e) => {
+        if (e.target.id === 'artist-modal') artistModal.classList.remove('active');
+      });
 
       function editArtist(id) {
         const artist = window.EliteCMS.getArtists().find(a => a.id === id);
         if (artist) {
           document.getElementById('artist-id').value = artist.id;
-          document.getElementById('artist-name').value = artist.name;
-          document.getElementById('artist-category').value = artist.category;
-          document.getElementById('artist-genre').value = artist.genre;
+          document.getElementById('artist-name').value = artist.name || '';
+          const catSel = document.getElementById('artist-category');
+          if (artist.category && ![...catSel.options].some(o => o.value === artist.category)) {
+            const opt = document.createElement('option');
+            opt.value = artist.category;
+            opt.textContent = artist.category;
+            catSel.appendChild(opt);
+          }
+          catSel.value = artist.category || 'bands';
+          document.getElementById('artist-genre').value = artist.genre || '';
           document.getElementById('artist-image').value = artist.image || '';
           document.getElementById('artist-youtube').value = artist.youtubeUrl || '';
-          document.getElementById('artist-rate').value = artist.rate;
           document.getElementById('artist-bio-editor').innerHTML = artist.bio || '';
           document.getElementById('artist-bio').value = artist.bio || '';
+          document.getElementById('artist-meta-description').value = artist.metaDescription || '';
+          document.getElementById('artist-meta-image').value = artist.metaImage || '';
           document.getElementById('artist-featured').checked = !!artist.featured;
 
           if (artist.image) {
@@ -1060,6 +2155,12 @@
             document.getElementById('artist-img-preview').style.display = 'block';
           } else {
             document.getElementById('artist-img-preview').style.display = 'none';
+          }
+          if (artist.metaImage) {
+            document.getElementById('artist-meta-img-preview').src = artist.metaImage;
+            document.getElementById('artist-meta-img-preview').style.display = 'block';
+          } else {
+            document.getElementById('artist-meta-img-preview').style.display = 'none';
           }
 
           document.getElementById('artist-modal-title').textContent = 'Edit Artist / Act';
@@ -1084,8 +2185,9 @@
           genre: document.getElementById('artist-genre').value,
           image: document.getElementById('artist-image').value,
           youtubeUrl: document.getElementById('artist-youtube').value.trim(),
-          rate: document.getElementById('artist-rate').value,
           bio: bioHtml || document.getElementById('artist-bio').value,
+          metaDescription: document.getElementById('artist-meta-description').value.trim(),
+          metaImage: document.getElementById('artist-meta-image').value.trim(),
           featured: document.getElementById('artist-featured').checked,
           tags: [document.getElementById('artist-category').value]
         });
@@ -1141,13 +2243,6 @@
         renderEvents();
       });
 
-      document.getElementById('btn-reset-cms').addEventListener('click', () => {
-        if (confirm('Reset CMS artists, events, and global content to defaults? (Leads & partners are kept.)')) {
-          window.EliteCMS.resetToDefaults();
-          renderDashboard();
-        }
-      });
-
       function renderDashboard() {
         renderArtists();
         renderEvents();
@@ -1157,11 +2252,15 @@
         updateStats();
       }
 
-      if (isAuthed) renderDashboard();
-      else renderDashboard();
+      // Only load dashboard data when Super Admin session is valid
+      if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) {
+        renderDashboard();
+      }
 
       // Refresh leads when storage updates from another tab
-      window.addEventListener('storage', () => renderDashboard());
+      window.addEventListener('storage', () => {
+        if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) renderDashboard();
+      });
     });
   </script>
 </body>

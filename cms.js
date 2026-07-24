@@ -1356,14 +1356,20 @@
         artist.id = 'artist_' + Date.now();
       }
       const existingIdx = artists.findIndex(a => a.id === artist.id);
+      // Merge so we never wipe fields not present in the editor
+      const merged = existingIdx >= 0
+        ? Object.assign({}, artists[existingIdx], artist, { id: artist.id })
+        : artist;
+      // Keep rate optional for legacy data but never require it
+      if (merged.rate == null) merged.rate = '';
       if (existingIdx >= 0) {
-        artists[existingIdx] = artist;
+        artists[existingIdx] = merged;
       } else {
-        artists.unshift(artist);
+        artists.unshift(merged);
       }
       localStorage.setItem(STORAGE_KEYS.ARTISTS, JSON.stringify(artists));
       this.pushToFirestore();
-      return artist;
+      return merged;
     }
 
     deleteArtist(id) {
@@ -1432,13 +1438,266 @@
     }
 
     resetToDefaults() {
+      // Intentionally kept for emergency recovery only — not exposed in Super Admin UI
       localStorage.setItem(STORAGE_KEYS.ARTISTS, JSON.stringify(DEFAULT_ARTISTS));
       localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(DEFAULT_EVENTS));
       localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(DEFAULT_CATEGORIES));
       localStorage.setItem(STORAGE_KEYS.CONTENT, JSON.stringify(DEFAULT_CONTENT));
       this.pushToFirestore();
     }
+
+    /* ─── CRM / LEAD PIPELINE (Kanban) ─── */
+    static get KANBAN_COLUMNS() {
+      return [
+        { id: 'new', label: 'New Enquiry', color: '#c9a84c' },
+        { id: 'contacted', label: 'Contacted', color: '#6db3f2' },
+        { id: 'quoted', label: 'Quoted', color: '#b48cf2' },
+        { id: 'negotiating', label: 'Negotiating', color: '#f0c060' },
+        { id: 'booked', label: 'Booked / Won', color: '#55c555' },
+        { id: 'lost', label: 'Lost / Closed', color: '#ff6b6b' }
+      ];
+    }
+
+    _readJson(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    _writeJson(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    _normalizeLeadStatus(raw) {
+      const s = String(raw || 'Pending').toLowerCase();
+      if (s.includes('book') || s === 'won' || s === 'confirmed') return 'booked';
+      if (s.includes('lost') || s.includes('reject') || s.includes('closed') || s === 'spam') return 'lost';
+      if (s.includes('negot')) return 'negotiating';
+      if (s.includes('quote') || s.includes('proposal')) return 'quoted';
+      if (s.includes('contact') || s === 'lead' || s === 'in progress') return 'contacted';
+      if (s === 'new' || s.includes('pend')) return 'new';
+      // map unknown custom statuses into closest column
+      return 'new';
+    }
+
+    _statusLabel(columnId) {
+      const col = EliteCMSEngine.KANBAN_COLUMNS.find(c => c.id === columnId);
+      return col ? col.label : columnId;
+    }
+
+    _normalizeLead(raw, sourceHint) {
+      if (!raw || typeof raw !== 'object') return null;
+      const column = raw.kanbanColumn || this._normalizeLeadStatus(raw.status);
+      const attachments = Array.isArray(raw.attachments)
+        ? raw.attachments
+        : (Array.isArray(raw.attachmentNames)
+            ? raw.attachmentNames.map(function (n) {
+                return typeof n === 'string' ? { name: n, type: 'ref' } : n;
+              })
+            : []);
+      return {
+        id: raw.id || ('LEAD-' + Date.now().toString(36)),
+        name: raw.name || 'Unknown',
+        email: raw.email || '',
+        phone: raw.phone || '',
+        date: raw.date || raw.eventDate || '',
+        endDate: raw.endDate || '',
+        service: raw.service || raw.category || '',
+        message: raw.message || '',
+        budget: raw.budget || '',
+        venue: raw.venue || '',
+        guests: raw.guests || '',
+        company: raw.company || '',
+        status: this._statusLabel(column),
+        kanbanColumn: column,
+        notes: Array.isArray(raw.notes) ? raw.notes : [],
+        attachments: attachments,
+        source: raw.source || sourceHint || 'enquiry',
+        page: raw.page || raw.category || '',
+        timestamp: raw.timestamp || raw.at || new Date().toLocaleString(),
+        updatedAt: raw.updatedAt || raw.timestamp || '',
+        order: typeof raw.order === 'number' ? raw.order : Date.now()
+      };
+    }
+
+    getInquiries() {
+      return this._readJson('elite_inquiries', []);
+    }
+
+    getClients() {
+      return this._readJson('elite_clients', []);
+    }
+
+    getPartners() {
+      return this._readJson('elite_partners', []);
+    }
+
+    getAllLeads() {
+      const inquiries = this.getInquiries().map((r) => this._normalizeLead(r, r.source || 'enquiry'));
+      const clients = this.getClients().map((r) => this._normalizeLead(Object.assign({}, r, {
+        service: r.service || 'Consultation',
+        source: r.source || 'consultation'
+      }), 'consultation'));
+      // Merge by id (inquiry wins)
+      const map = {};
+      clients.forEach((l) => { if (l) map[l.id] = l; });
+      inquiries.forEach((l) => { if (l) map[l.id] = l; });
+      return Object.keys(map).map((k) => map[k]).sort((a, b) => {
+        if (a.kanbanColumn === b.kanbanColumn) return (b.order || 0) - (a.order || 0);
+        return 0;
+      });
+    }
+
+    getLeadsByColumn() {
+      const cols = {};
+      EliteCMSEngine.KANBAN_COLUMNS.forEach((c) => { cols[c.id] = []; });
+      this.getAllLeads().forEach((lead) => {
+        const col = cols[lead.kanbanColumn] ? lead.kanbanColumn : 'new';
+        cols[col].push(lead);
+      });
+      Object.keys(cols).forEach((k) => {
+        cols[k].sort((a, b) => (b.order || 0) - (a.order || 0));
+      });
+      return cols;
+    }
+
+    _persistLead(lead) {
+      // Prefer elite_inquiries; if originated as client CRM entry, update there too
+      const inquiries = this.getInquiries();
+      const clients = this.getClients();
+      const iqIdx = inquiries.findIndex((r) => r.id === lead.id);
+      const clIdx = clients.findIndex((r) => r.id === lead.id);
+      const payload = Object.assign({}, lead, {
+        status: lead.status || this._statusLabel(lead.kanbanColumn),
+        updatedAt: new Date().toLocaleString()
+      });
+
+      if (iqIdx >= 0) {
+        inquiries[iqIdx] = Object.assign({}, inquiries[iqIdx], payload);
+        this._writeJson('elite_inquiries', inquiries);
+      } else if (clIdx >= 0) {
+        clients[clIdx] = Object.assign({}, clients[clIdx], payload);
+        this._writeJson('elite_clients', clients);
+      } else {
+        inquiries.unshift(payload);
+        this._writeJson('elite_inquiries', inquiries);
+      }
+
+      // Mirror lightweight CRM doc for ops console / multi-device if Firebase available
+      try {
+        if (window.EliteFirebase && EliteFirebase.db) {
+          EliteFirebase.db.collection('inquiries').doc(String(lead.id)).set(payload, { merge: true }).catch(function () {});
+        }
+      } catch (e) {}
+
+      return payload;
+    }
+
+    saveLead(partial) {
+      if (!partial || !partial.id) {
+        partial = Object.assign({ id: 'CRM-' + Date.now().toString(36) }, partial || {});
+      }
+      const existing = this.getAllLeads().find((l) => l.id === partial.id) || {};
+      const merged = this._normalizeLead(Object.assign({}, existing, partial), partial.source || existing.source);
+      merged.order = typeof partial.order === 'number' ? partial.order : (existing.order || Date.now());
+      return this._persistLead(merged);
+    }
+
+    updateLeadStatus(id, nextStatus, source) {
+      const lead = this.getAllLeads().find((l) => l.id === id);
+      if (!lead) return null;
+      const column = this._normalizeLeadStatus(nextStatus);
+      return this.saveLead(Object.assign({}, lead, {
+        id: id,
+        source: source || lead.source,
+        kanbanColumn: column,
+        status: this._statusLabel(column)
+      }));
+    }
+
+    moveLeadToColumn(id, columnId, order) {
+      const allowed = EliteCMSEngine.KANBAN_COLUMNS.some((c) => c.id === columnId);
+      if (!allowed) return null;
+      const lead = this.getAllLeads().find((l) => l.id === id);
+      if (!lead) return null;
+      return this.saveLead(Object.assign({}, lead, {
+        kanbanColumn: columnId,
+        status: this._statusLabel(columnId),
+        order: typeof order === 'number' ? order : Date.now()
+      }));
+    }
+
+    addLeadNote(id, text, author) {
+      const lead = this.getAllLeads().find((l) => l.id === id);
+      if (!lead) return null;
+      const notes = (lead.notes || []).slice();
+      notes.unshift({
+        id: 'N-' + Date.now().toString(36),
+        text: String(text || '').trim(),
+        author: author || 'Super Admin',
+        at: new Date().toLocaleString()
+      });
+      return this.saveLead(Object.assign({}, lead, { notes: notes }));
+    }
+
+    addLeadAttachment(id, attachment) {
+      const lead = this.getAllLeads().find((l) => l.id === id);
+      if (!lead || !attachment) return null;
+      const attachments = (lead.attachments || []).slice();
+      attachments.push({
+        id: 'A-' + Date.now().toString(36),
+        name: attachment.name || 'file',
+        type: attachment.type || 'file',
+        size: attachment.size || 0,
+        dataUrl: attachment.dataUrl || '',
+        url: attachment.url || '',
+        at: new Date().toLocaleString()
+      });
+      return this.saveLead(Object.assign({}, lead, { attachments: attachments }));
+    }
+
+    removeLeadAttachment(id, attachmentId) {
+      const lead = this.getAllLeads().find((l) => l.id === id);
+      if (!lead) return null;
+      const attachments = (lead.attachments || []).filter((a) => a.id !== attachmentId && a.name !== attachmentId);
+      return this.saveLead(Object.assign({}, lead, { attachments: attachments }));
+    }
+
+    deleteLead(id) {
+      this._writeJson('elite_inquiries', this.getInquiries().filter((r) => r.id !== id));
+      this._writeJson('elite_clients', this.getClients().filter((r) => r.id !== id));
+      try {
+        if (window.EliteFirebase && EliteFirebase.db) {
+          EliteFirebase.db.collection('inquiries').doc(String(id)).delete().catch(function () {});
+        }
+      } catch (e) {}
+    }
+
+    clearInquiries() {
+      this._writeJson('elite_inquiries', []);
+    }
+
+    clearPartners() {
+      this._writeJson('elite_partners', []);
+    }
+
+    updatePartnerStatus(id, status) {
+      const partners = this.getPartners();
+      const idx = partners.findIndex((p) => p.id === id);
+      if (idx < 0) return null;
+      partners[idx].status = status;
+      this._writeJson('elite_partners', partners);
+      return partners[idx];
+    }
+
+    estimatePipeline() {
+      // No public rate card — pipeline count is enquiry volume only
+      return this.getAllLeads().filter((l) => l.kanbanColumn !== 'lost').length;
+    }
   }
 
   window.EliteCMS = new EliteCMSEngine();
+  window.EliteCMS.KANBAN_COLUMNS = EliteCMSEngine.KANBAN_COLUMNS;
 })(window);
