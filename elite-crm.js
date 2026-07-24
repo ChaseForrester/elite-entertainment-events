@@ -385,20 +385,53 @@
     var safe = cloudSafeLead(lead);
     state.syncing = true;
     emit('elite-crm-sync', getSyncStatus());
-    return db.collection(COLLECTION).doc(String(lead.id)).set(safe, { merge: true })
-      .then(function () {
-        state.syncing = false;
-        state.lastSyncAt = nowIso();
-        state.lastError = '';
-        emit('elite-crm-sync', getSyncStatus());
-        return { ok: true };
-      })
-      .catch(function (err) {
-        state.syncing = false;
-        state.lastError = (err && err.message) || 'Cloud save failed';
-        emit('elite-crm-sync', getSyncStatus());
-        return { ok: false, error: state.lastError };
-      });
+    var ref = db.collection(COLLECTION).doc(String(lead.id));
+    var legacy = db.collection('inquiries').doc(String(lead.id));
+    return Promise.all([
+      ref.set(safe, { merge: true }),
+      legacy.set(safe, { merge: true }).catch(function () { return null; })
+    ]).then(function () {
+      state.syncing = false;
+      state.lastSyncAt = nowIso();
+      state.lastError = '';
+      emit('elite-crm-sync', getSyncStatus());
+      return { ok: true };
+    }).catch(function (err) {
+      state.syncing = false;
+      state.lastError = (err && err.message) || 'Cloud save failed';
+      emit('elite-crm-sync', getSyncStatus());
+      return { ok: false, error: state.lastError };
+    });
+  }
+
+  /** Client activity feed for Ops Console */
+  function getClientFeed() {
+    var local = readJson('elite_client_feed', []);
+    // Derive feed rows from CRM leads that are consultations / portal
+    var derived = getAllLeads().filter(function (l) {
+      var s = String(l.source || '').toLowerCase();
+      return s.indexOf('consult') !== -1 || s.indexOf('client') !== -1 || /consultation/i.test(l.service || '');
+    }).map(function (l) {
+      return {
+        id: 'feed_' + l.id,
+        at: l.timestamp || l.updatedAt || '',
+        atIso: l.updatedAtIso || '',
+        client: l.email || l.name || '',
+        type: /message/i.test(l.service || '') ? 'message' : 'consultation',
+        detail: (l.service ? l.service + ' — ' : '') + (l.message || ''),
+        leadId: l.id,
+        name: l.name || ''
+      };
+    });
+    var map = {};
+    local.concat(derived).forEach(function (r) {
+      if (!r) return;
+      var key = r.id || (r.client + '|' + r.at + '|' + r.detail);
+      if (!map[key]) map[key] = r;
+    });
+    return Object.keys(map).map(function (k) { return map[k]; }).sort(function (a, b) {
+      return String(b.atIso || b.at || '').localeCompare(String(a.atIso || a.at || ''));
+    });
   }
 
   function saveLead(partial, opts) {
@@ -849,6 +882,7 @@
     statusLabel: statusLabel
   };
 
+  api.getClientFeed = getClientFeed;
   global.EliteCRM = api;
 
   // Bridge older EliteCMS CRM methods if present
@@ -877,6 +911,7 @@
     cms.deleteLead = function (id) { return deleteLead(id); };
     cms.clearInquiries = function () { return clearInquiries(); };
     cms.estimatePipeline = function () { return estimatePipeline(); };
+    cms.getClientFeed = function () { return getClientFeed(); };
     cms.getPartners = cms.getPartners || function () { return readJson('elite_partners', []); };
     cms.clearPartners = cms.clearPartners || function () { writeJson('elite_partners', []); };
     cms.updatePartnerStatus = cms.updatePartnerStatus || function (id, status) {
@@ -887,12 +922,16 @@
       writeJson('elite_partners', partners);
       return partners[idx];
     };
+    cms._eliteCrmBridged = true;
   }
+
+  global.__eliteBridgeCms = bridgeCms;
 
   if (global.EliteCMS) bridgeCms();
   else {
-    // cms.js may load after this file
     global.addEventListener('DOMContentLoaded', bridgeCms);
     setTimeout(bridgeCms, 0);
+    setTimeout(bridgeCms, 50);
+    setTimeout(bridgeCms, 250);
   }
 })(typeof window !== 'undefined' ? window : this);

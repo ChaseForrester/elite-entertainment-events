@@ -22,13 +22,19 @@
     else localStorage.removeItem(SESSION_KEY);
   }
   function pushFeed(entry) {
+    entry = entry || {};
+    entry.id = entry.id || ('feed_' + Date.now());
+    entry.at = entry.at || new Date().toLocaleString();
+    entry.atIso = entry.atIso || new Date().toISOString();
     var list = [];
     try { list = JSON.parse(localStorage.getItem(FEED_KEY) || '[]'); } catch (e) {}
     list.unshift(entry);
     localStorage.setItem(FEED_KEY, JSON.stringify(list.slice(0, 200)));
     try {
-      if (window.EliteFirebase && EliteFirebase.db) {
-        EliteFirebase.db.collection('client_feed').add(entry).catch(function () {});
+      if (window.EliteCRMPush && EliteCRMPush.pushClientFeed) {
+        EliteCRMPush.pushClientFeed(entry);
+      } else if (window.EliteFirebase && EliteFirebase.db) {
+        EliteFirebase.db.collection('client_feed').doc(String(entry.id)).set(entry, { merge: true }).catch(function () {});
       }
     } catch (e) {}
   }

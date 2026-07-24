@@ -1138,9 +1138,17 @@
           bootstrapHint.style.display = must ? 'block' : 'none';
           if (must && accountPanel) accountPanel.style.display = 'block';
         }
-        // Multi-device CRM realtime
+        // Multi-device CRM realtime — pull cloud leads then refresh stats/board
         try {
+          if (window.__eliteBridgeCms) window.__eliteBridgeCms();
           if (window.EliteCRM && EliteCRM.startRealtime) EliteCRM.startRealtime();
+          if (window.EliteCRM && EliteCRM.pullOnce) {
+            EliteCRM.pullOnce().then(function () {
+              if (typeof updateStats === 'function') updateStats();
+              if (typeof renderLeads === 'function') renderLeads();
+              if (typeof updateCrmSyncBadge === 'function') updateCrmSyncBadge();
+            });
+          }
         } catch (e) {}
         if (typeof populateCrmFilters === 'function') populateCrmFilters();
         if (typeof updateCrmSyncBadge === 'function') updateCrmSyncBadge();
@@ -1277,8 +1285,26 @@
       function updateStats() {
         const artists = window.EliteCMS.getArtists();
         const events = window.EliteCMS.getEvents();
-        const leads = window.EliteCMS.getAllLeads ? window.EliteCMS.getAllLeads() : [];
-        const open = window.EliteCMS.estimatePipeline ? window.EliteCMS.estimatePipeline() : leads.length;
+        // Prefer EliteCRM (cloud-synced); fall back to CMS bridge / localStorage
+        let leads = [];
+        let open = 0;
+        try {
+          if (window.EliteCRM && EliteCRM.getAllLeads) {
+            leads = EliteCRM.getAllLeads() || [];
+            open = EliteCRM.estimatePipeline ? EliteCRM.estimatePipeline() : leads.filter(function (l) {
+              return (l.kanbanColumn || 'new') !== 'lost';
+            }).length;
+          } else if (window.EliteCMS && EliteCMS.getAllLeads) {
+            leads = EliteCMS.getAllLeads() || [];
+            open = EliteCMS.estimatePipeline ? EliteCMS.estimatePipeline() : leads.length;
+          } else {
+            leads = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
+            open = leads.length;
+          }
+        } catch (e) {
+          leads = [];
+          open = 0;
+        }
         document.getElementById('stat-artists').textContent = artists.length;
         document.getElementById('stat-events').textContent = events.length;
         document.getElementById('stat-leads').textContent = leads.length;
@@ -1917,13 +1943,17 @@
 
       // Realtime board refresh
       window.addEventListener('elite-crm-updated', () => {
+        updateStats();
         renderLeads();
         // Keep open modal in sync if same card
         const openId = document.getElementById('lead-id') && document.getElementById('lead-id').value;
         const modal = document.getElementById('lead-modal');
         if (openId && modal && modal.classList.contains('active')) openLead(openId);
       });
-      window.addEventListener('elite-crm-sync', () => updateCrmSyncBadge());
+      window.addEventListener('elite-crm-sync', () => {
+        updateCrmSyncBadge();
+        updateStats();
+      });
       window.addEventListener('elite-crm-team', () => {
         populateCrmFilters();
         renderTeamList();

@@ -1,16 +1,19 @@
-/* Lightweight public-site CRM ingest → localStorage + Firestore crm_leads */
+/* Lightweight public-site CRM ingest → localStorage + Firestore (multi-device) */
 (function (global) {
   'use strict';
 
   var COLLECTION = 'crm_leads';
+  var LEGACY_INQ = 'inquiries';
+  var FEED_COL = 'client_feed';
   var LS = 'elite_inquiries';
+  var FEED_KEY = 'elite_client_feed';
 
-  function readLeads() {
-    try { return JSON.parse(localStorage.getItem(LS) || '[]'); } catch (e) { return []; }
+  function readJson(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch (e) { return fallback; }
   }
 
-  function writeLeads(list) {
-    try { localStorage.setItem(LS, JSON.stringify(list)); } catch (e) {}
+  function writeJson(key, val) {
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
   }
 
   function ensureDb() {
@@ -23,7 +26,8 @@
   }
 
   function cloudSafe(lead) {
-    var copy = JSON.parse(JSON.stringify(lead || {}));
+    var copy;
+    try { copy = JSON.parse(JSON.stringify(lead || {})); } catch (e) { copy = Object.assign({}, lead || {}); }
     if (Array.isArray(copy.attachments)) {
       copy.attachments = copy.attachments.map(function (a) {
         return {
@@ -33,10 +37,13 @@
           size: a.size || 0,
           url: a.url || '',
           at: a.at || ''
-          // no dataUrl on public push
         };
       });
     }
+    // Strip undefined (Firestore rejects them)
+    Object.keys(copy).forEach(function (k) {
+      if (copy[k] === undefined) delete copy[k];
+    });
     copy.updatedAtIso = copy.updatedAtIso || new Date().toISOString();
     copy.createdAtIso = copy.createdAtIso || copy.updatedAtIso;
     copy.kanbanColumn = copy.kanbanColumn || 'new';
@@ -44,6 +51,7 @@
     copy.priority = copy.priority || 'normal';
     copy.assigneeEmail = copy.assigneeEmail || '';
     copy.assigneeName = copy.assigneeName || '';
+    copy.timestamp = copy.timestamp || new Date().toLocaleString();
     copy.activity = copy.activity || [{
       id: 'ACT-web',
       type: 'create',
@@ -56,8 +64,25 @@
     return copy;
   }
 
+  function pushClientFeed(entry) {
+    var list = readJson(FEED_KEY, []);
+    list.unshift(entry);
+    writeJson(FEED_KEY, list.slice(0, 200));
+    var db = ensureDb();
+    if (db) {
+      try {
+        var id = entry.id || ('feed_' + Date.now());
+        db.collection(FEED_COL).doc(String(id)).set(Object.assign({}, entry, {
+          id: id,
+          atIso: entry.atIso || new Date().toISOString()
+        }), { merge: true }).catch(function () {});
+      } catch (e) {}
+    }
+  }
+
   /**
    * Persist enquiry for Super Admin CRM (all devices via Firebase when available).
+   * Also mirrors client_feed for consultations/messages so Ops Console fills.
    */
   function ingest(lead) {
     if (!lead || !lead.id) return { ok: false };
@@ -66,11 +91,12 @@
     if (global.EliteCRM && typeof EliteCRM.ingestLead === 'function') {
       try {
         EliteCRM.ingestLead(lead, { skipCloud: false });
+        maybeFeedFromLead(lead);
         return { ok: true, via: 'EliteCRM' };
       } catch (e) {}
     }
 
-    var list = readLeads();
+    var list = readJson(LS, []);
     var idx = list.findIndex(function (r) { return r.id === lead.id; });
     var payload = Object.assign({}, lead, {
       kanbanColumn: lead.kanbanColumn || 'new',
@@ -80,16 +106,22 @@
       updatedAtIso: new Date().toISOString(),
       createdAtIso: lead.createdAtIso || new Date().toISOString(),
       updatedAt: new Date().toLocaleString(),
+      timestamp: lead.timestamp || new Date().toLocaleString(),
       order: lead.order || Date.now()
     });
     if (idx >= 0) list[idx] = Object.assign({}, list[idx], payload);
     else list.unshift(payload);
-    writeLeads(list);
+    writeJson(LS, list);
+
+    maybeFeedFromLead(payload);
 
     var db = ensureDb();
     if (db) {
       try {
-        db.collection(COLLECTION).doc(String(lead.id)).set(cloudSafe(payload), { merge: true }).catch(function () {});
+        var safe = cloudSafe(payload);
+        db.collection(COLLECTION).doc(String(lead.id)).set(safe, { merge: true }).catch(function () {});
+        // Legacy ops path
+        db.collection(LEGACY_INQ).doc(String(lead.id)).set(safe, { merge: true }).catch(function () {});
         return { ok: true, via: 'firestore' };
       } catch (e2) {
         return { ok: true, via: 'local-only' };
@@ -98,5 +130,33 @@
     return { ok: true, via: 'local-only' };
   }
 
-  global.EliteCRMPush = { ingest: ingest };
+  function maybeFeedFromLead(lead) {
+    var src = String(lead.source || lead.page || '').toLowerCase();
+    var isClient =
+      src.indexOf('consult') !== -1 ||
+      src.indexOf('client') !== -1 ||
+      src.indexOf('message') !== -1 ||
+      /consultation/i.test(lead.service || '');
+    if (!isClient && src !== 'consultation-modal' && src !== 'client-portal') return;
+
+    var type = /message/i.test(src) || /message/i.test(lead.service || '')
+      ? 'message'
+      : 'consultation';
+    pushClientFeed({
+      id: 'feed_' + String(lead.id),
+      at: lead.timestamp || new Date().toLocaleString(),
+      atIso: lead.updatedAtIso || new Date().toISOString(),
+      client: lead.email || lead.name || 'client',
+      type: type,
+      detail: (lead.service ? lead.service + ' — ' : '') + (lead.message || lead.consultation || ''),
+      leadId: lead.id,
+      name: lead.name || '',
+      phone: lead.phone || ''
+    });
+  }
+
+  global.EliteCRMPush = {
+    ingest: ingest,
+    pushClientFeed: pushClientFeed
+  };
 })(typeof window !== 'undefined' ? window : this);

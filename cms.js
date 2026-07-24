@@ -1701,4 +1701,8 @@
 
   window.EliteCMS = new EliteCMSEngine();
   window.EliteCMS.KANBAN_COLUMNS = EliteCMSEngine.KANBAN_COLUMNS;
+  // Re-bridge CRM methods if elite-crm.js already loaded
+  try {
+    if (typeof window.__eliteBridgeCms === 'function') window.__eliteBridgeCms();
+  } catch (e) {}
 })(window);

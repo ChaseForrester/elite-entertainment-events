@@ -110,13 +110,23 @@
       </div>
 
       <div class="ops-card">
-        <h2>Inbound multi-enquiries</h2>
-        <p class="ops-note">From multi-enquiry cart + service forms (localStorage + optional Firestore <code>inquiries</code>).</p>
-        <div style="overflow:auto;"><table><thead><tr><th>When</th><th>Name</th><th>Service</th><th>Message</th></tr></thead><tbody id="ops-inq-body"></tbody></table></div>
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:center;">
+          <div>
+            <h2 style="margin:0;">Inbound enquiries</h2>
+            <p class="ops-note" style="margin:0.35rem 0 0;">Live from CRM Kanban + multi-enquiry + website forms (Firebase <code>crm_leads</code>).</p>
+          </div>
+          <div class="btn-row">
+            <span class="ops-status" id="ops-crm-sync" style="margin:0;">Syncing…</span>
+            <button type="button" class="btn btn-outline" id="ops-refresh-crm">Refresh CRM</button>
+          </div>
+        </div>
+        <p class="ops-note" id="ops-inq-count" style="margin:0.75rem 0 0.5rem;"></p>
+        <div style="overflow:auto;"><table><thead><tr><th>When</th><th>Name</th><th>Service / stage</th><th>Message</th></tr></thead><tbody id="ops-inq-body"></tbody></table></div>
       </div>
 
       <div class="ops-card">
         <h2>Client messages &amp; consultations</h2>
+        <p class="ops-note">From client portal + consultation requests (local feed + Firebase + CRM consultation leads).</p>
         <div style="overflow:auto;"><table><thead><tr><th>When</th><th>Client</th><th>Type</th><th>Detail</th></tr></thead><tbody id="ops-client-body"></tbody></table></div>
       </div>
     </div>
@@ -127,6 +137,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
   <script src="elite-admin-auth.js"></script>
+  <script src="elite-crm.js"></script>
   <script src="cms.js"></script>
   <script>
   (function () {
@@ -135,14 +146,41 @@
     var dash = document.getElementById('ops-dash');
     var FIELDS = ['heroVideo1','heroVideo2','heroVideo3','heroPoster','heroTitle','heroSubtitle','companyLegalName','abn','acn','asicDate','contactPhone','contactEmail','contactAddress','publicLiability','workersComp'];
 
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function setSyncLabel(text, ok) {
+      var el = document.getElementById('ops-crm-sync');
+      if (!el) return;
+      el.textContent = text || '';
+      el.style.color = ok === false ? '#ff8a8a' : (ok ? '#8fd18f' : '#c9a84c');
+    }
+
+    function startCrm() {
+      if (!window.EliteCRM) return Promise.resolve();
+      try { EliteCRM.startRealtime(); } catch (e) {}
+      return (EliteCRM.pullOnce ? EliteCRM.pullOnce() : Promise.resolve({ ok: false }))
+        .then(function (r) {
+          if (r && r.ok) setSyncLabel('Live · ' + (r.count || 0) + ' cloud leads', true);
+          else if (r && r.offline) setSyncLabel('Local only (Firebase offline)', false);
+          else setSyncLabel((r && r.error) || 'Sync partial — showing local + cloud when available', false);
+          return r;
+        });
+    }
+
     function showDash() {
       auth.classList.remove('is-on');
       dash.classList.add('is-on');
       var se = document.getElementById('ops-session-email');
       if (se && window.EliteAdminAuth) se.textContent = EliteAdminAuth.currentEmail() || '';
       loadContent();
-      loadInquiries();
-      loadClientFeed();
+      setSyncLabel('Syncing CRM…');
+      startCrm().then(function () {
+        loadInquiries();
+        loadClientFeed();
+      });
     }
 
     function loadContent() {
@@ -154,31 +192,83 @@
       });
     }
 
+    function allLeads() {
+      if (window.EliteCRM && EliteCRM.getAllLeads) return EliteCRM.getAllLeads();
+      if (window.EliteCMS && EliteCMS.getAllLeads) return EliteCMS.getAllLeads();
+      try { return JSON.parse(localStorage.getItem('elite_inquiries') || '[]'); } catch (e) { return []; }
+    }
+
     function loadInquiries() {
       var body = document.getElementById('ops-inq-body');
-      var rows = [];
-      try { rows = JSON.parse(localStorage.getItem('elite_inquiries') || '[]'); } catch (e) {}
-      body.innerHTML = rows.slice(0, 40).map(function (r) {
-        return '<tr><td>' + (r.timestamp || '') + '</td><td>' + (r.name || '') + '<br><span style="color:#888">' + (r.email || '') + '</span></td><td>' + (r.service || '') + '</td><td style="white-space:pre-wrap;max-width:320px;">' + (r.message || '').slice(0, 280) + '</td></tr>';
-      }).join('') || '<tr><td colspan="4">No enquiries yet.</td></tr>';
+      var countEl = document.getElementById('ops-inq-count');
+      if (!body) return;
+      var rows = allLeads();
+      var open = rows.filter(function (r) {
+        var col = r.kanbanColumn || 'new';
+        return col !== 'lost';
+      });
+      if (countEl) {
+        countEl.textContent = rows.length + ' total · ' + open.length + ' open pipeline · multi + website + service forms';
+      }
+      body.innerHTML = rows.slice(0, 60).map(function (r) {
+        var stage = r.status || r.kanbanColumn || 'new';
+        var when = r.timestamp || r.updatedAt || r.at || '';
+        var msg = String(r.message || '').slice(0, 280);
+        return '<tr>' +
+          '<td>' + esc(when) + '</td>' +
+          '<td><strong>' + esc(r.name || '—') + '</strong><br><span style="color:#888">' + esc(r.email || '') +
+            (r.phone ? ' · ' + esc(r.phone) : '') + '</span></td>' +
+          '<td>' + esc(r.service || r.source || '—') +
+            '<br><span style="color:#c9a84c;font-size:0.72rem;">' + esc(stage) +
+            (r.page === 'multi' || /multi/i.test(r.source || '') ? ' · multi' : '') +
+            '</span></td>' +
+          '<td style="white-space:pre-wrap;max-width:360px;">' + esc(msg) + '</td>' +
+          '</tr>';
+      }).join('') || '<tr><td colspan="4">No enquiries yet. Submit a website form or multi-enquiry, then hit Refresh CRM.</td></tr>';
     }
 
     function loadClientFeed() {
       var body = document.getElementById('ops-client-body');
-      var rows = [];
-      try { rows = JSON.parse(localStorage.getItem('elite_client_feed') || '[]'); } catch (e) {}
+      if (!body) return;
+
       function paint(list) {
-        body.innerHTML = list.slice(0, 50).map(function (r) {
-          return '<tr><td>' + (r.at || '') + '</td><td>' + (r.client || '') + '</td><td>' + (r.type || '') + '</td><td style="white-space:pre-wrap;max-width:320px;">' + (r.detail || '') + '</td></tr>';
+        body.innerHTML = (list || []).slice(0, 50).map(function (r) {
+          return '<tr><td>' + esc(r.at || r.timestamp || '') + '</td><td>' +
+            esc(r.client || r.email || r.name || '') + '</td><td>' +
+            esc(r.type || 'activity') + '</td><td style="white-space:pre-wrap;max-width:360px;">' +
+            esc(r.detail || r.message || '') + '</td></tr>';
         }).join('') || '<tr><td colspan="4">No client activity yet.</td></tr>';
       }
-      paint(rows);
+
+      var list = [];
+      if (window.EliteCRM && EliteCRM.getClientFeed) {
+        list = EliteCRM.getClientFeed();
+      } else {
+        try { list = JSON.parse(localStorage.getItem('elite_client_feed') || '[]'); } catch (e) {}
+      }
+      paint(list);
+
+      // Merge remote client_feed
       try {
         if (window.EliteFirebase && EliteFirebase.db) {
-          EliteFirebase.db.collection('client_feed').orderBy('at', 'desc').limit(40).get().then(function (snap) {
+          EliteFirebase.db.collection('client_feed').limit(50).get().then(function (snap) {
             var remote = [];
-            snap.forEach(function (d) { remote.push(d.data()); });
-            if (remote.length) paint(remote);
+            snap.forEach(function (d) {
+              var row = d.data() || {};
+              if (!row.id) row.id = d.id;
+              remote.push(row);
+            });
+            if (!remote.length) return;
+            var map = {};
+            list.concat(remote).forEach(function (r) {
+              var key = r.id || (r.client + '|' + r.at + '|' + (r.detail || '').slice(0, 40));
+              map[key] = r;
+            });
+            var merged = Object.keys(map).map(function (k) { return map[k]; });
+            merged.sort(function (a, b) {
+              return String(b.atIso || b.at || '').localeCompare(String(a.atIso || a.at || ''));
+            });
+            paint(merged);
           }).catch(function () {});
         }
       } catch (e) {}
@@ -194,8 +284,6 @@
         onSuccess: function (result) {
           showDash();
           if (result && result.mustChangePassword) {
-            var st = document.getElementById('ops-auth-status');
-            // status is on login card; surface toast on dash
             alert('You signed in with the bootstrap password. Open CRM → Account / Password and change it now.');
           }
         }
@@ -209,6 +297,7 @@
         localStorage.removeItem('elite_admin_session_v2');
         try { if (EliteFirebase && EliteFirebase.auth) EliteFirebase.auth.signOut(); } catch (e) {}
       }
+      try { if (window.EliteCRM && EliteCRM.stopRealtime) EliteCRM.stopRealtime(); } catch (e2) {}
       dash.classList.remove('is-on');
       auth.classList.add('is-on');
     };
@@ -224,6 +313,31 @@
       EliteCMS.applyHeroVideos();
       document.getElementById('ops-content-status').textContent = 'Saved locally and pushed to Firebase (if connected).';
     };
+
+    var refreshBtn = document.getElementById('ops-refresh-crm');
+    if (refreshBtn) {
+      refreshBtn.onclick = function () {
+        setSyncLabel('Refreshing…');
+        startCrm().then(function () {
+          loadInquiries();
+          loadClientFeed();
+        });
+      };
+    }
+
+    window.addEventListener('elite-crm-updated', function () {
+      if (dash.classList.contains('is-on')) {
+        loadInquiries();
+        loadClientFeed();
+      }
+    });
+    window.addEventListener('elite-crm-sync', function () {
+      if (!window.EliteCRM) return;
+      var st = EliteCRM.getSyncStatus();
+      if (st.listenersReady || st.lastSyncAt) setSyncLabel('Live CRM', true);
+      else if (st.syncing) setSyncLabel('Syncing…');
+      else if (st.lastError) setSyncLabel(st.lastError, false);
+    });
 
     if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) showDash();
   })();
