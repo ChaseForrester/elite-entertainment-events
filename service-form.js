@@ -698,29 +698,33 @@
         } catch (cartErr) {}
       }
 
-      if (btn) { btn.disabled = true; btn.textContent = files.length ? 'Reading files…' : 'Sending…'; }
+      var leadId = 'SVC-' + Date.now().toString().slice(-6);
+      if (btn) { btn.disabled = true; btn.textContent = files.length ? 'Uploading files…' : 'Sending…'; }
       if (status) {
         status.hidden = false;
         status.className = 'cat-form-status cat-form-status--info';
         status.textContent = files.length
-          ? ('Preparing ' + files.length + ' attachment' + (files.length > 1 ? 's' : '') + ' for CRM…')
+          ? ('Uploading ' + files.length + ' file' + (files.length > 1 ? 's' : '') + ' to Super Admin CRM…')
           : ('Saving to Super Admin CRM and emailing ' + recipientsText() + '…');
       }
 
-      var attachPromise = (mail() && mail().filesToAttachments)
-        ? mail().filesToAttachments(files)
-        : Promise.resolve(files.map(function (f, i) {
-            return {
-              id: 'A-' + Date.now().toString(36) + '-' + i,
-              name: f.name,
-              type: f.type || 'file',
-              size: f.size || 0,
-              at: new Date().toLocaleString(),
-              emailed: true,
-              dataUrl: '',
-              note: 'File emailed to the team'
-            };
-          }));
+      var attachPromise = (window.EliteAttachments && EliteAttachments.filesToAttachments)
+        ? EliteAttachments.filesToAttachments(files, { leadId: leadId })
+        : ((mail() && mail().filesToAttachments)
+          ? mail().filesToAttachments(files, { leadId: leadId })
+          : Promise.resolve(files.map(function (f, i) {
+              return {
+                id: 'A-' + Date.now().toString(36) + '-' + i,
+                name: f.name,
+                type: f.type || 'file',
+                size: f.size || 0,
+                at: new Date().toLocaleString(),
+                emailed: true,
+                dataUrl: '',
+                url: '',
+                note: 'File emailed to the team'
+              };
+            })));
 
       attachPromise.then(function (attachmentRecords) {
         // Human-readable message for cards/emails (not the cart dump)
@@ -741,12 +745,13 @@
         if (collected['sf-production']) briefLines.push('Production:\n' + collected['sf-production']);
         if (attachmentRecords.length) {
           briefLines.push('Attachments: ' + attachmentRecords.map(function (a) {
-            return a.name + (a.size ? ' (' + Math.round(a.size / 1024) + 'KB)' : '');
+            return a.name + (a.size ? ' (' + Math.round(a.size / 1024) + 'KB)' : '') +
+              (a.url ? ' [CRM]' : '');
           }).join(', '));
         }
         var fullDetails = briefLines.join('\n');
         var lead = {
-          id: 'SVC-' + Date.now().toString().slice(-6),
+          id: leadId,
           name: name,
           email: email,
           phone: phone,

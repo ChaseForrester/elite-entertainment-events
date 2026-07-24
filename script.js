@@ -339,16 +339,19 @@ try {
       const originalText = btn ? btn.textContent : 'Send Enquiry';
 
       if (btn) {
-        btn.textContent = files.length ? 'Reading files…' : 'Sending…';
+        btn.textContent = files.length ? 'Uploading files…' : 'Sending…';
         btn.disabled = true;
       }
 
       // Email full team via EliteMail (FormSubmit + CC list + attachments)
       (async () => {
         try {
+          const leadId = 'INQ-' + Date.now().toString().slice(-5);
           var attachmentRecords = [];
-          if (window.EliteMail && window.EliteMail.filesToAttachments) {
-            attachmentRecords = await window.EliteMail.filesToAttachments(files);
+          if (window.EliteAttachments && EliteAttachments.filesToAttachments) {
+            attachmentRecords = await EliteAttachments.filesToAttachments(files, { leadId: leadId });
+          } else if (window.EliteMail && window.EliteMail.filesToAttachments) {
+            attachmentRecords = await window.EliteMail.filesToAttachments(files, { leadId: leadId });
           } else {
             attachmentRecords = files.map(function (f, i) {
               return {
@@ -358,13 +361,14 @@ try {
                 size: f.size || 0,
                 at: new Date().toLocaleString(),
                 emailed: true,
-                dataUrl: ''
+                dataUrl: '',
+                url: ''
               };
             });
           }
 
           const newInquiry = {
-            id: 'INQ-' + Date.now().toString().slice(-5),
+            id: leadId,
             name,
             email,
             phone,

@@ -32,5 +32,13 @@ service cloud.firestore {
     match /crm_trash/{docId} {
       allow read, write: if true;
     }
+
+    // Full enquiry file bodies (base64 / chunked) for Super Admin open/download
+    match /crm_files/{fileId} {
+      allow read, write: if true;
+      match /chunks/{chunkId} {
+        allow read, write: if true;
+      }
+    }
   }
 }

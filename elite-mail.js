@@ -75,12 +75,16 @@
   }
 
   /**
-   * Convert File objects into CRM attachment records with real dataUrls
-   * (when under size limits). Always returns name/type/size so the Kanban
-   * card can list every client file even if the body is email-only.
+   * Convert File objects into CRM attachment records.
+   * Prefer EliteAttachments (Firebase Storage download URLs for Super Admin).
+   * Pass opts.leadId so files land under crm_attachments/{leadId}/...
    */
   function filesToAttachments(files, opts) {
     opts = opts || {};
+    if (global.EliteAttachments && typeof EliteAttachments.filesToAttachments === 'function') {
+      return EliteAttachments.filesToAttachments(files, opts);
+    }
+    // Fallback without Storage module: metadata + small dataUrl only
     var maxPreview = opts.maxPreviewBytes || MAX_CRM_PREVIEW_BYTES;
     var maxCloud = opts.maxCloudBytes || MAX_CRM_CLOUD_BYTES;
     var list = files || [];
@@ -97,28 +101,16 @@
         dataUrl: '',
         url: '',
         cloudSafe: false,
-        note: ''
+        note: 'Storage module missing — install elite-attachments.js'
       };
-      if (!file || !file.size) {
-        base.note = 'Empty file';
-        return Promise.resolve(base);
-      }
-      if (file.size > maxPreview) {
-        base.note = 'Full file emailed to the team (over ' +
-          Math.round(maxPreview / 1024) + 'KB CRM preview limit)';
-        return Promise.resolve(base);
-      }
+      if (!file || !file.size) return Promise.resolve(base);
+      if (file.size > maxPreview) return Promise.resolve(base);
       return readFileAsDataUrl(file).then(function (dataUrl) {
         base.dataUrl = dataUrl || '';
         base.cloudSafe = !!(file.size <= maxCloud && dataUrl);
-        if (!base.cloudSafe && base.dataUrl) {
-          base.note = 'Preview on this browser; full file also emailed to the team';
-        }
+        base.note = base.dataUrl ? 'Local preview only' : base.note;
         return base;
-      }).catch(function () {
-        base.note = 'Could not preview in CRM — full file still emailed to the team';
-        return base;
-      });
+      }).catch(function () { return base; });
     }));
   }
 

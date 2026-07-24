@@ -1,0 +1,23 @@
+rules_version = '2';
+// CRM enquiry attachments — full files for Super Admin open/download.
+// Public write is size/type limited (matches open crm_leads write for website forms).
+// Tighten to auth-only later once all admins use Firebase Auth.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /crm_attachments/{leadId}/{fileName} {
+      allow read: if true;
+      allow write: if request.resource.size < 12 * 1024 * 1024
+        && (
+          request.resource.contentType.matches('image/.*')
+          || request.resource.contentType.matches('application/pdf')
+          || request.resource.contentType.matches('application/msword')
+          || request.resource.contentType.matches('application/vnd\\..*')
+          || request.resource.contentType.matches('text/.*')
+          || request.resource.contentType == 'application/zip'
+          || request.resource.contentType == 'application/x-zip-compressed'
+          || request.resource.contentType == 'application/octet-stream'
+        );
+      allow delete: if true;
+    }
+  }
+}

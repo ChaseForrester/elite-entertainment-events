@@ -18,10 +18,17 @@
       if (!firebase.apps || !firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
       }
+      var storage = null;
+      try {
+        if (firebase.storage) storage = firebase.storage();
+      } catch (eS) {
+        storage = null;
+      }
       window.EliteFirebase = {
         app: firebase.app(),
         auth: firebase.auth ? firebase.auth() : null,
         db: firebase.firestore ? firebase.firestore() : null,
+        storage: storage,
         ready: true
       };
       return window.EliteFirebase;

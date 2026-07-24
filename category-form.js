@@ -121,16 +121,19 @@
       }
 
       const originalBtn = btn ? btn.textContent : '';
+      const id = 'CAT-' + Date.now().toString().slice(-6);
       if (btn) {
         btn.disabled = true;
-        btn.textContent = files.length ? 'Reading files…' : 'Sending…';
+        btn.textContent = files.length ? 'Uploading files…' : 'Sending…';
       }
-      setStatus(statusEl, files.length ? 'Preparing attachments for CRM…' : 'Saving to admin pipeline and emailing our team…', 'info');
+      setStatus(statusEl, files.length ? 'Uploading files to Super Admin CRM…' : 'Saving to admin pipeline and emailing our team…', 'info');
 
       var attachmentRecords = [];
       try {
-        if (mail() && mail().filesToAttachments) {
-          attachmentRecords = await mail().filesToAttachments(files);
+        if (window.EliteAttachments && EliteAttachments.filesToAttachments) {
+          attachmentRecords = await EliteAttachments.filesToAttachments(files, { leadId: id });
+        } else if (mail() && mail().filesToAttachments) {
+          attachmentRecords = await mail().filesToAttachments(files, { leadId: id });
         } else {
           attachmentRecords = files.map(function (f, i) {
             return {
@@ -141,6 +144,7 @@
               at: new Date().toLocaleString(),
               emailed: true,
               dataUrl: '',
+              url: '',
               note: 'File emailed to the team'
             };
           });
@@ -155,12 +159,11 @@
             at: new Date().toLocaleString(),
             emailed: true,
             dataUrl: '',
+            url: '',
             note: 'File emailed to the team'
           };
         });
       }
-
-      const id = 'CAT-' + Date.now().toString().slice(-6);
       const lead = {
         id,
         name,

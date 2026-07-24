@@ -40,13 +40,19 @@
           type: a.type || 'file',
           size: a.size || 0,
           url: a.url || '',
+          storagePath: a.storagePath || '',
+          fileDocId: a.fileDocId || '',
           at: a.at || '',
           emailed: a.emailed !== false,
-          note: a.note || ''
+          note: a.note || '',
+          status: a.status || (a.url || a.fileDocId ? 'stored' : '')
         };
+        // Prefer remote pointers; only tiny thumbs on the lead doc
         var body = a.dataUrl ? String(a.dataUrl) : '';
-        if (body && body.length < MAX_CLOUD_BODY && body.length <= budget &&
-            (a.cloudSafe || body.length < 12000 || (a.size && a.size <= 200 * 1024))) {
+        if (!out.url && !out.fileDocId && body && body.length < Math.min(MAX_CLOUD_BODY, 80000) && body.length <= budget) {
+          out.dataUrl = body;
+          budget -= body.length;
+        } else if (body && body.length < 60000 && body.length <= budget && /^data:image\//i.test(body)) {
           out.dataUrl = body;
           budget -= body.length;
         }
