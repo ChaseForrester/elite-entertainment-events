@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "elite-entertain-events"
+    "default": "elite-entertainment-and-events",
+    "hosting": "elite-entertain-events",
+    "live": "elite-entertainment-and-events"
   }
 }
