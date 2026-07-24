@@ -79,6 +79,60 @@
     save(items);
   }
 
+  /** Booking fields shared across multi-hire line items */
+  var SHARED_KEYS = ['date', 'endDate', 'days', 'hours', 'guests', 'location', 'notes'];
+
+  /**
+   * Apply the same booking details to every cart line (or only empty fields).
+   * @param {Object} fields
+   * @param {{onlyEmpty?:boolean}} [opts]
+   */
+  function applyToAll(fields, opts) {
+    opts = opts || {};
+    var onlyEmpty = !!opts.onlyEmpty;
+    var items = load();
+    var changed = false;
+    items.forEach(function (x) {
+      Object.keys(fields || {}).forEach(function (k) {
+        if (SHARED_KEYS.indexOf(k) === -1 && k !== 'date' && k !== 'endDate') {
+          // allow shared booking keys + any explicit key passed
+        }
+        var val = fields[k];
+        if (val == null) return;
+        if (onlyEmpty && x[k]) return;
+        if (String(x[k] || '') !== String(val)) {
+          x[k] = val;
+          changed = true;
+        }
+      });
+    });
+    if (changed) save(items);
+    return items;
+  }
+
+  /** First non-empty shared values found in the cart (for master bar prefill) */
+  function sharedSnapshot() {
+    var snap = { date: '', endDate: '', days: '', hours: '', guests: '', location: '', notes: '' };
+    var items = load();
+    SHARED_KEYS.forEach(function (k) {
+      for (var i = 0; i < items.length; i++) {
+        if (items[i][k]) {
+          snap[k] = items[i][k];
+          break;
+        }
+      }
+    });
+    return snap;
+  }
+
+  /** True when every line shares the same non-empty date (or all empty) */
+  function allSameDate() {
+    var items = load();
+    if (!items.length) return true;
+    var d = items[0].date || '';
+    return items.every(function (x) { return (x.date || '') === d; });
+  }
+
   function remove(cartId) {
     save(load().filter(function (x) { return x.cartId !== cartId; }));
   }
@@ -213,6 +267,10 @@
   window.EliteCart = {
     add: add,
     update: update,
+    applyToAll: applyToAll,
+    sharedSnapshot: sharedSnapshot,
+    allSameDate: allSameDate,
+    SHARED_KEYS: SHARED_KEYS.slice(),
     remove: remove,
     setQty: setQty,
     clear: clear,

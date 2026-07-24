@@ -550,6 +550,18 @@
         if (el) collected[f.id] = el.value.trim();
       });
       if (step === cfg.steps.length - 1) captureAttachments();
+      // Multi-enquiry: push event details into every cart line when same-day hire
+      if (key === 'multi' && window.EliteCart && EliteCart.applyToAll) {
+        var push = {};
+        if (collected['sf-date']) push.date = collected['sf-date'];
+        if (collected['sf-end-date']) push.endDate = collected['sf-end-date'];
+        if (collected['sf-venue']) push.location = collected['sf-venue'];
+        if (collected['sf-guests']) push.guests = collected['sf-guests'];
+        if (collected['sf-duration']) push.hours = collected['sf-duration'];
+        if (Object.keys(push).length) {
+          try { EliteCart.applyToAll(push, { onlyEmpty: false }); } catch (e) {}
+        }
+      }
     }
 
     function validateStep() {
@@ -632,6 +644,20 @@
         }
       }
 
+      // Always refresh multi-cart summary from live cart at submit time
+      if (key === 'multi' && window.EliteCart) {
+        try {
+          collected['sf-cart'] = window.EliteCart.summaryText();
+          collected['sf-quantity'] = window.EliteCart.load().length + ' lines · ' + window.EliteCart.count() + ' units';
+          var shared = window.EliteCart.sharedSnapshot ? window.EliteCart.sharedSnapshot() : {};
+          if (shared.date && !collected['sf-date']) collected['sf-date'] = shared.date;
+          if (shared.endDate && !collected['sf-end-date']) collected['sf-end-date'] = shared.endDate;
+          if (shared.location && !collected['sf-venue']) collected['sf-venue'] = shared.location;
+          if (shared.guests && !collected['sf-guests']) collected['sf-guests'] = shared.guests;
+          if (shared.hours && !collected['sf-duration']) collected['sf-duration'] = shared.hours;
+        } catch (cartErr) {}
+      }
+
       var msgParts = [];
       Object.keys(collected).forEach(function (k) {
         if (collected[k]) msgParts.push(k.replace('sf-', '') + ': ' + collected[k]);
@@ -639,6 +665,13 @@
       if (files.length) {
         msgParts.push('attachments: ' + files.map(function (f) { return f.name; }).join(', '));
       }
+      if (key === 'multi' && window.EliteCart) {
+        try {
+          msgParts.push('--- FULL MULTI-CART ---');
+          msgParts.push(window.EliteCart.summaryText());
+        } catch (e2) {}
+      }
+      var fullDetails = msgParts.join('\n');
       var lead = {
         id: 'SVC-' + Date.now().toString().slice(-6),
         name: name,
@@ -651,12 +684,14 @@
         budget: collected['sf-budget'] || '',
         company: collected['sf-company'] || '',
         service: cfg.title + ' · ' + service,
-        message: msgParts.join('\n'),
+        message: fullDetails,
         status: 'New Enquiry',
         kanbanColumn: 'new',
+        priority: 'normal',
         timestamp: new Date().toLocaleString(),
         source: 'service-page',
         page: key,
+        formFields: collected,
         attachmentNames: files.map(function (f) { return f.name; }),
         attachments: files.map(function (f) {
           return { name: f.name, type: f.type || 'file', size: f.size || 0, at: new Date().toLocaleString() };
@@ -679,25 +714,41 @@
       if (status) {
         status.hidden = false;
         status.className = 'cat-form-status cat-form-status--info';
-        status.textContent = 'Saving to admin and emailing the Elite team…';
+        status.textContent = 'Saving to Super Admin CRM and emailing ' + recipientsText() + '…';
       }
+
+      var emailPayload = {
+        name: name,
+        email: email,
+        phone: phone || '—',
+        _subject: '[Elite] ' + cfg.title + ' · ' + name,
+        form_type: cfg.title,
+        page: key,
+        service: service,
+        eventDate: collected['sf-date'] || '—',
+        eventEndDate: collected['sf-end-date'] || '—',
+        venue: collected['sf-venue'] || '—',
+        guests: collected['sf-guests'] || '—',
+        company: collected['sf-company'] || '—',
+        duration: collected['sf-duration'] || '—',
+        budget: collected['sf-budget'] || '—',
+        multi_cart: collected['sf-cart'] || '—',
+        quantity_summary: collected['sf-quantity'] || '—',
+        vehicles: collected['sf-vehicles'] || '',
+        yachts: collected['sf-yachts'] || '',
+        talent: collected['sf-talent'] || '',
+        security: collected['sf-security'] || '',
+        production: collected['sf-production'] || '',
+        message: fullDetails,
+        full_form_json: JSON.stringify(collected, null, 2),
+        leadId: lead.id,
+        source: (typeof location !== 'undefined' ? location.pathname : key)
+      };
 
       var sendPromise;
       if (mail()) {
-        // Prefer live input; fall back to retained File objects from multi-step navigation
         var fileSource = (liveFiles.length && attachInput) ? [attachInput] : files;
-        sendPromise = mail().sendEnquiry({
-          name: name,
-          email: email,
-          phone: phone || '—',
-          _subject: '[Elite] ' + cfg.title + ' · ' + name,
-          service: service,
-          eventDate: collected['sf-date'] || '—',
-          venue: collected['sf-venue'] || '—',
-          message: lead.message,
-          leadId: lead.id,
-          source: key
-        }, fileSource);
+        sendPromise = mail().sendEnquiry(emailPayload, fileSource);
       } else {
         sendPromise = Promise.resolve({ ok: false, error: new Error('EliteMail missing') });
       }
@@ -706,8 +757,13 @@
         if (result && result.ok) {
           if (status) {
             status.className = 'cat-form-status cat-form-status--success';
-            status.textContent = 'Enquiry sent! Check Super Admin leads and ' + recipientsText() +
-              (files.length ? ' (with ' + files.length + ' attachment' + (files.length > 1 ? 's' : '') + ')' : '') + '.';
+            var extra = '';
+            if (result.allOk === false && result.failed && result.failed.length) {
+              extra = ' (partial: confirm FormSubmit for ' + result.failed.join(', ') + ')';
+            }
+            status.textContent = 'Enquiry sent to Super Admin CRM and ' + recipientsText() +
+              (files.length ? ' with ' + files.length + ' attachment' + (files.length > 1 ? 's' : '') : '') +
+              extra + '.';
           }
           if (btn) { btn.textContent = 'Sent'; }
           if (key === 'multi' && window.EliteCart) { try { window.EliteCart.clear(); } catch (e) {} }
@@ -718,8 +774,8 @@
         } else {
           if (status) {
             status.className = 'cat-form-status cat-form-status--warn';
-            status.textContent = 'Saved to Super Admin. Email may need FormSubmit confirmation — check ' +
-              recipientsText() + ' (and spam) and click “Confirm email”.';
+            status.textContent = 'Saved to Super Admin CRM. Email needs a one-time FormSubmit confirmation — open ' +
+              recipientsText() + ' (and spam) and click “Confirm email”, then submit again.';
           }
           if (btn) { btn.disabled = false; btn.textContent = 'Submit Enquiry'; }
         }

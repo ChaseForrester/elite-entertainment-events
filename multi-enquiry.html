@@ -49,7 +49,7 @@
 
       <div class="cat-form-block" style="margin-top:2rem;" id="service-multi-form">
         <h2 class="cat-form-heading">Submit multi-enquiry</h2>
-        <p class="cat-form-lead">Your cart fills the form with every line item, image source, dates, people and notes. Super Admin receives the full package list + email to the Elite team (attachments supported).</p>
+        <p class="cat-form-lead">Your cart fills the form with every line item, image, dates, people and notes. Use <strong>Apply to all items</strong> when every hire is on the same day. Super Admin CRM + <strong>info@eeevents.com.au</strong> and <strong>bookings@eeevents.com.au</strong> receive the full package (attachments supported).</p>
         <div class="sf-wrap" data-service-form="multi"></div>
       </div>
     </div>
@@ -160,6 +160,99 @@
       );
     }
 
+    var SYNC_KEY = 'elite_cart_sync_all_v1';
+
+    function syncAllEnabled() {
+      try {
+        var v = localStorage.getItem(SYNC_KEY);
+        if (v === null || v === undefined || v === '') return true; // default ON
+        return v === '1' || v === 'true';
+      } catch (e) { return true; }
+    }
+
+    function setSyncAll(on) {
+      try { localStorage.setItem(SYNC_KEY, on ? '1' : '0'); } catch (e) {}
+    }
+
+    function sharedBarHtml(snap) {
+      snap = snap || {};
+      var checked = syncAllEnabled() ? ' checked' : '';
+      return (
+        '<div class="cart-shared-bar" id="cart-shared-bar" style="margin:0 0 1.25rem;padding:1.15rem 1.2rem;border:1px solid rgba(200,168,76,0.28);border-radius:14px;background:rgba(200,168,76,0.06);">' +
+          '<div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;justify-content:space-between;margin-bottom:0.85rem;">' +
+            '<div>' +
+              '<strong style="color:#e8c86b;font-size:0.95rem;">Shared booking details</strong>' +
+              '<p style="margin:0.25rem 0 0;font-size:0.78rem;color:#aaa;line-height:1.45;">When enabled, dates, venue, hours and guests fill <em>every</em> hire item automatically — ideal when all tiers are on the same day.</p>' +
+            '</div>' +
+            '<label style="display:inline-flex;align-items:center;gap:0.45rem;font-size:0.8rem;color:#ddd;cursor:pointer;white-space:nowrap;">' +
+              '<input type="checkbox" id="cart-sync-all"' + checked + ' /> Apply to all items' +
+            '</label>' +
+          '</div>' +
+          '<div class="cart-item-fields" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.65rem;">' +
+            '<div><label for="shared-date">Event / start date</label>' +
+              '<input type="date" id="shared-date" data-shared="date" value="' + esc(snap.date || '') + '" min="' + todayISO() + '" /></div>' +
+            '<div><label for="shared-endDate">End date</label>' +
+              '<input type="date" id="shared-endDate" data-shared="endDate" value="' + esc(snap.endDate || '') + '" min="' + todayISO() + '" /></div>' +
+            '<div><label for="shared-days">Days</label>' +
+              '<input type="number" id="shared-days" data-shared="days" min="1" value="' + esc(snap.days || '') + '" placeholder="e.g. 1" /></div>' +
+            '<div><label for="shared-hours">Hours / duration</label>' +
+              '<input type="text" id="shared-hours" data-shared="hours" value="' + esc(snap.hours || '') + '" placeholder="e.g. 6pm–12am" /></div>' +
+            '<div><label for="shared-guests">People / guests</label>' +
+              '<input type="text" id="shared-guests" data-shared="guests" value="' + esc(snap.guests || '') + '" placeholder="e.g. 150" /></div>' +
+            '<div><label for="shared-location">Venue / location</label>' +
+              '<input type="text" id="shared-location" data-shared="location" value="' + esc(snap.location || '') + '" placeholder="Suburb or venue" /></div>' +
+            '<div style="grid-column:1/-1;"><label for="shared-notes">Notes for all items</label>' +
+              '<textarea id="shared-notes" data-shared="notes" rows="2" placeholder="Access, theme, must-haves…">' + esc(snap.notes || '') + '</textarea></div>' +
+          '</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.85rem;align-items:center;">' +
+            '<button type="button" class="btn btn-gold btn-sm" id="cart-apply-all">Apply to all hire items now</button>' +
+            '<span id="cart-sync-status" style="font-size:0.75rem;color:#8fd18f;"></span>' +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    function readSharedFields() {
+      var out = {};
+      document.querySelectorAll('[data-shared]').forEach(function (el) {
+        out[el.getAttribute('data-shared')] = el.value;
+      });
+      return out;
+    }
+
+    function applySharedToAll(showStatus) {
+      if (!window.EliteCart || !EliteCart.applyToAll) return;
+      var fields = readSharedFields();
+      EliteCart.applyToAll(fields);
+      // Update visible per-item inputs without full re-render (keeps focus)
+      Object.keys(fields).forEach(function (key) {
+        document.querySelectorAll('[data-field="' + key + '"][data-cart-id]').forEach(function (el) {
+          if (document.activeElement === el) return;
+          el.value = fields[key] || '';
+        });
+      });
+      // Also push into multi service form event fields when present
+      var map = {
+        date: 'sf-date',
+        endDate: 'sf-end-date',
+        location: 'sf-venue',
+        guests: 'sf-guests',
+        hours: 'sf-duration'
+      };
+      Object.keys(map).forEach(function (k) {
+        var el = document.getElementById(map[k]);
+        if (el && fields[k] && !el.value) el.value = fields[k];
+      });
+      syncForm(EliteCart.load());
+      if (showStatus) {
+        var st = document.getElementById('cart-sync-status');
+        if (st) {
+          st.textContent = 'Applied to all ' + EliteCart.load().length + ' line items.';
+          setTimeout(function () { if (st) st.textContent = ''; }, 2200);
+        }
+      }
+    }
+
     function render() {
       var mount = document.getElementById('cart-list-mount');
       if (!mount || !window.EliteCart) return;
@@ -181,11 +274,24 @@
         syncForm(items);
         return;
       }
+
+      // If sync-all is on and some shared values exist, fill empty lines before paint
+      if (syncAllEnabled() && EliteCart.applyToAll && EliteCart.sharedSnapshot) {
+        var snap = EliteCart.sharedSnapshot();
+        var hasAny = Object.keys(snap).some(function (k) { return !!snap[k]; });
+        if (hasAny) EliteCart.applyToAll(snap, { onlyEmpty: true });
+        items = EliteCart.load();
+        snap = EliteCart.sharedSnapshot();
+      } else {
+        snap = EliteCart.sharedSnapshot ? EliteCart.sharedSnapshot() : {};
+      }
+
       mount.innerHTML =
         '<p class="cart-page-count" style="margin:0 0 1rem;color:#999;font-size:0.85rem;">' +
           '<strong style="color:#e8c86b;">' + items.length + '</strong> line item' + (items.length === 1 ? '' : 's') +
-          ' · <strong style="color:#e8c86b;">' + EliteCart.count() + '</strong> total units — fill booking fields below for each item' +
+          ' · <strong style="color:#e8c86b;">' + EliteCart.count() + '</strong> total units' +
         '</p>' +
+        sharedBarHtml(snap) +
         '<ul class="cart-list">' + items.map(itemCard).join('') + '</ul>' +
         '<div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;">' +
           '<button type="button" class="btn btn-outline" id="cart-clear">Clear cart</button>' +
@@ -199,6 +305,21 @@
       if (ta && window.EliteCart) ta.value = EliteCart.summaryText();
       var q = document.getElementById('sf-quantity');
       if (q && items) q.value = items.length + ' line items · ' + EliteCart.count() + ' total units';
+      // Prefill multi service-form event step from shared cart details
+      if (window.EliteCart && EliteCart.sharedSnapshot) {
+        var s = EliteCart.sharedSnapshot();
+        var pairs = [
+          ['sf-date', s.date],
+          ['sf-end-date', s.endDate],
+          ['sf-venue', s.location],
+          ['sf-guests', s.guests],
+          ['sf-duration', s.hours]
+        ];
+        pairs.forEach(function (p) {
+          var el = document.getElementById(p[0]);
+          if (el && p[1] && !el.value) el.value = p[1];
+        });
+      }
     }
 
     document.addEventListener('click', function (e) {
@@ -215,21 +336,45 @@
           EliteCart.clear();
           render();
         }
+        return;
+      }
+      if (t.id === 'cart-apply-all') {
+        applySharedToAll(true);
       }
     });
 
     document.addEventListener('change', function (e) {
       var t = e.target;
       if (!t) return;
+      if (t.id === 'cart-sync-all') {
+        setSyncAll(!!t.checked);
+        if (t.checked) applySharedToAll(true);
+        return;
+      }
+      if (t.getAttribute && t.getAttribute('data-shared')) {
+        if (syncAllEnabled()) applySharedToAll(false);
+        return;
+      }
       if (t.getAttribute && t.getAttribute('data-qty')) {
         EliteCart.setQty(t.getAttribute('data-qty'), t.value);
         syncForm(EliteCart.load());
         return;
       }
       if (t.getAttribute && t.getAttribute('data-field') && t.getAttribute('data-cart-id')) {
+        var key = t.getAttribute('data-field');
         var fields = {};
-        fields[t.getAttribute('data-field')] = t.value;
-        EliteCart.update(t.getAttribute('data-cart-id'), fields);
+        fields[key] = t.value;
+        if (syncAllEnabled() && EliteCart.SHARED_KEYS && EliteCart.SHARED_KEYS.indexOf(key) !== -1) {
+          // Keep shared master bar + all lines aligned
+          var sharedEl = document.querySelector('[data-shared="' + key + '"]');
+          if (sharedEl) sharedEl.value = t.value;
+          EliteCart.applyToAll(fields);
+          document.querySelectorAll('[data-field="' + key + '"][data-cart-id]').forEach(function (el) {
+            if (el !== t) el.value = t.value;
+          });
+        } else {
+          EliteCart.update(t.getAttribute('data-cart-id'), fields);
+        }
         syncForm(EliteCart.load());
       }
     });
@@ -238,11 +383,27 @@
     document.addEventListener('input', function (e) {
       var t = e.target;
       if (!t || !t.getAttribute) return;
+      if (t.getAttribute('data-shared')) {
+        clearTimeout(window._cartSharedT);
+        window._cartSharedT = setTimeout(function () {
+          if (syncAllEnabled()) applySharedToAll(false);
+        }, 180);
+        return;
+      }
       if (t.getAttribute('data-field') && t.getAttribute('data-cart-id')) {
+        var key = t.getAttribute('data-field');
         var fields = {};
-        fields[t.getAttribute('data-field')] = t.value;
-        EliteCart.update(t.getAttribute('data-cart-id'), fields);
-        // Debounce form sync lightly
+        fields[key] = t.value;
+        if (syncAllEnabled() && EliteCart.SHARED_KEYS && EliteCart.SHARED_KEYS.indexOf(key) !== -1) {
+          var sharedEl = document.querySelector('[data-shared="' + key + '"]');
+          if (sharedEl && sharedEl !== t) sharedEl.value = t.value;
+          EliteCart.applyToAll(fields);
+          document.querySelectorAll('[data-field="' + key + '"][data-cart-id]').forEach(function (el) {
+            if (el !== t) el.value = t.value;
+          });
+        } else {
+          EliteCart.update(t.getAttribute('data-cart-id'), fields);
+        }
         clearTimeout(window._cartSyncT);
         window._cartSyncT = setTimeout(function () { syncForm(EliteCart.load()); }, 200);
       }
@@ -250,11 +411,11 @@
 
     window.addEventListener('elite-cart-changed', function () {
       // Avoid full re-render while typing in fields (would steal focus)
-      if (document.activeElement && document.activeElement.getAttribute && document.activeElement.getAttribute('data-field')) {
-        syncForm(EliteCart.load());
-        return;
-      }
-      if (document.activeElement && document.activeElement.getAttribute && document.activeElement.getAttribute('data-qty')) {
+      if (document.activeElement && document.activeElement.getAttribute && (
+        document.activeElement.getAttribute('data-field') ||
+        document.activeElement.getAttribute('data-shared') ||
+        document.activeElement.getAttribute('data-qty')
+      )) {
         syncForm(EliteCart.load());
         return;
       }

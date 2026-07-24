@@ -165,17 +165,23 @@
         else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(lead);
       } catch (crmErr) {}
       const mailResult = await emailLead({
-        id,
-        name,
-        email,
-        phone,
-        date,
-        guests,
-        venue,
-        budget,
+        id: id,
+        name: name,
+        email: email,
+        phone: phone,
+        date: date,
+        guests: guests,
+        venue: venue,
+        budget: budget,
         message: lead.message,
-        category,
-        act,
+        category: category,
+        act: act,
+        form_type: 'Category enquiry',
+        full_form_json: JSON.stringify({
+          id: id, name: name, email: email, phone: phone, date: date,
+          guests: guests, venue: venue, budget: budget, category: category,
+          act: act, message: message, attachments: files.map(function (f) { return f.name; })
+        }, null, 2),
         subject: '[Elite Enquiry] ' + category + (act ? ' — ' + act : '') + ' · ' + name,
         source: window.location.pathname.split('/').pop() || 'category'
       }, fileInput ? [fileInput] : []);

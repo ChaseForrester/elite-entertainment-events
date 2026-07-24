@@ -1,34 +1,25 @@
 /* ═══════════════════════════════════════════════════
    Elite Entertainment — shared form email delivery
-   FormSubmit AJAX + multi-recipient CC + file attachments
+   Dual-inbox FormSubmit + full payload + attachments
 ═══════════════════════════════════════════════════ */
 (function (global) {
   'use strict';
 
-  /** Official Elite inboxes — FormSubmit primary + CC */
+  /** Official Elite inboxes — each receives a full FormSubmit delivery */
   var EMAIL_PRIMARY = 'info@eeevents.com.au';
-
-  /** Additional official inbox receives every submission via FormSubmit _cc */
-  var EMAIL_CC = [
-    'bookings@eeevents.com.au'
-  ];
+  var EMAIL_CC = ['bookings@eeevents.com.au'];
+  var ALL_INBOXES = [EMAIL_PRIMARY].concat(EMAIL_CC);
 
   var MAX_TOTAL_BYTES = 10 * 1024 * 1024; // FormSubmit 10MB limit
-  var CC_STRING = EMAIL_CC.join(',');
 
   function allRecipients() {
-    return [EMAIL_PRIMARY].concat(EMAIL_CC);
+    return ALL_INBOXES.slice();
   }
 
   function recipientsLabel() {
-    return allRecipients().join(', ');
+    return ALL_INBOXES.join(', ');
   }
 
-  /**
-   * Collect File objects from file inputs / FileList / arrays.
-   * @param {HTMLInputElement|FileList|File[]|null} source
-   * @returns {File[]}
-   */
   function collectFiles(source) {
     var out = [];
     if (!source) return out;
@@ -64,13 +55,120 @@
     return { ok: true, files: files };
   }
 
+  function flattenPayload(fields) {
+    var lines = [];
+    var keys = Object.keys(fields || {}).sort();
+    keys.forEach(function (key) {
+      if (key.charAt(0) === '_' || key === 'subject') return;
+      var val = fields[key];
+      if (val == null || val === '') return;
+      lines.push(String(key).toUpperCase() + ':\n' + String(val));
+    });
+    return lines.join('\n\n');
+  }
+
   /**
-   * Send enquiry via FormSubmit.
-   * Always uses multipart FormData so file attachments work.
-   *
-   * @param {Object} fields Plain string fields (name, email, message, _subject, …)
-   * @param {File[]|HTMLInputElement[]} [filesOrInputs]
-   * @returns {Promise<{ok:boolean, data?:any, error?:any, recipients:string[]}>}
+   * Build FormData for one recipient inbox.
+   * Sends full details both as table fields and a complete text dump.
+   */
+  function buildFormData(fields, files, toEmail) {
+    fields = fields || {};
+    files = files || [];
+    var fd = new FormData();
+
+    var name = fields.name || fields.fullName || 'Website enquiry';
+    var email = fields.email || fields.replyEmail || '';
+    var phone = fields.phone || '';
+
+    fd.append('name', String(name));
+    if (email) fd.append('email', String(email));
+    if (phone) fd.append('phone', String(phone));
+
+    fd.append('_subject', String(fields._subject || fields.subject || '[Elite Enquiry] Website form'));
+    fd.append('_template', String(fields._template || 'table'));
+    fd.append('_captcha', 'false');
+    // Help FormSubmit route replies to the customer
+    if (email) fd.append('_replyto', String(email));
+    // Honey pot empty
+    fd.append('_honey', '');
+
+    // CC the other official inboxes (in addition to dual-primary send)
+    var others = ALL_INBOXES.filter(function (e) {
+      return e.toLowerCase() !== String(toEmail || '').toLowerCase();
+    });
+    if (others.length) fd.append('_cc', others.join(','));
+
+    // Delivered-to stamp
+    fd.append('delivered_to', String(toEmail));
+    fd.append('elite_inboxes', recipientsLabel());
+    fd.append('site_url', (typeof location !== 'undefined' ? location.href : ''));
+    fd.append('submitted_at', new Date().toISOString());
+
+    var skip = {
+      name: 1, fullName: 1, email: 1, replyEmail: 1, phone: 1,
+      _subject: 1, subject: 1, _template: 1, _captcha: 1, _cc: 1, _replyto: 1, _honey: 1
+    };
+
+    Object.keys(fields).forEach(function (key) {
+      if (skip[key]) return;
+      var val = fields[key];
+      if (val == null || val === '') return;
+      // Flatten objects/arrays for email readability
+      if (typeof val === 'object') {
+        try { val = JSON.stringify(val, null, 2); } catch (e) { val = String(val); }
+      }
+      fd.append(key, String(val));
+    });
+
+    // Full dump so nothing is lost if table template truncates
+    var full = flattenPayload(fields);
+    if (full) {
+      fd.append('full_enquiry_details', full);
+      // Also map to FormSubmit's common "message" if empty
+      if (!fields.message && !fields.Message) {
+        fd.append('message', full);
+      }
+    }
+
+    files.forEach(function (file, idx) {
+      var fieldName = files.length === 1 ? 'attachment' : ('attachment_' + (idx + 1));
+      fd.append(fieldName, file, file.name);
+    });
+
+    if (files.length) {
+      fd.append('attachment_count', String(files.length));
+      fd.append(
+        'attachment_names',
+        files.map(function (f) { return f.name + ' (' + Math.round(f.size / 1024) + 'KB)'; }).join('; ')
+      );
+    }
+
+    return fd;
+  }
+
+  function postToInbox(toEmail, formData) {
+    var url = 'https://formsubmit.co/ajax/' + encodeURIComponent(toEmail);
+    return fetch(url, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: formData
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        return {
+          ok: res.ok || !!(data && (data.success || data.message)),
+          status: res.status,
+          data: data,
+          to: toEmail
+        };
+      });
+    }).catch(function (err) {
+      return { ok: false, error: err, to: toEmail };
+    });
+  }
+
+  /**
+   * Send enquiry to EVERY official inbox as a primary recipient
+   * (more reliable than CC-only) and include the full form payload.
    */
   function sendEnquiry(fields, filesOrInputs) {
     fields = fields || {};
@@ -92,78 +190,36 @@
       return Promise.resolve({
         ok: false,
         error: new Error(check.error),
-        recipients: allRecipients()
+        recipients: allRecipients(),
+        results: []
       });
     }
     files = check.files;
 
-    var fd = new FormData();
-
-    // Core identity fields
-    if (fields.name) fd.append('name', String(fields.name));
-    if (fields.email) fd.append('email', String(fields.email));
-    if (fields.phone) fd.append('phone', String(fields.phone));
-
-    // FormSubmit controls
-    fd.append('_subject', String(fields._subject || fields.subject || '[Elite Enquiry] Website form'));
-    fd.append('_template', String(fields._template || 'table'));
-    fd.append('_captcha', 'false');
-    fd.append('_cc', CC_STRING);
-    // Reply-To the submitter when we have their email
-    if (fields.email) fd.append('_replyto', String(fields.email));
-
-    // Remaining payload fields (skip reserved / already set)
-    var skip = {
-      name: 1, email: 1, phone: 1,
-      _subject: 1, subject: 1, _template: 1, _captcha: 1, _cc: 1, _replyto: 1
-    };
-    Object.keys(fields).forEach(function (key) {
-      if (skip[key]) return;
-      var val = fields[key];
-      if (val == null || val === '') return;
-      fd.append(key, typeof val === 'string' ? val : String(val));
+    // Fire one full delivery per official inbox
+    var jobs = ALL_INBOXES.map(function (inbox) {
+      var fd = buildFormData(fields, files, inbox);
+      return postToInbox(inbox, fd);
     });
 
-    // Attachments — FormSubmit accepts multiple file fields
-    files.forEach(function (file, idx) {
-      var fieldName = files.length === 1 ? 'attachment' : ('attachment_' + (idx + 1));
-      fd.append(fieldName, file, file.name);
-    });
-
-    if (files.length) {
-      fd.append('attachment_count', String(files.length));
-      fd.append(
-        'attachment_names',
-        files.map(function (f) { return f.name + ' (' + Math.round(f.size / 1024) + 'KB)'; }).join('; ')
-      );
-    }
-
-    var url = 'https://formsubmit.co/ajax/' + encodeURIComponent(EMAIL_PRIMARY);
-
-    return fetch(url, {
-      method: 'POST',
-      // Do NOT set Content-Type — browser sets multipart boundary for files
-      headers: { Accept: 'application/json' },
-      body: fd
-    }).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json().catch(function () { return {}; });
-    }).then(function (data) {
-      return { ok: true, data: data, recipients: allRecipients() };
-    }).catch(function (err) {
-      return { ok: false, error: err, recipients: allRecipients() };
+    return Promise.all(jobs).then(function (results) {
+      var anyOk = results.some(function (r) { return r && r.ok; });
+      var allOk = results.every(function (r) { return r && r.ok; });
+      var failed = results.filter(function (r) { return !r || !r.ok; }).map(function (r) { return r && r.to; });
+      return {
+        ok: anyOk,
+        allOk: allOk,
+        results: results,
+        recipients: allRecipients(),
+        failed: failed,
+        error: anyOk ? null : new Error(
+          'Email delivery failed for: ' + (failed.join(', ') || 'all inboxes') +
+          '. Confirm FormSubmit for each address (check spam for “Confirm your email”).'
+        )
+      };
     });
   }
 
-  /**
-   * Build a small reusable file-upload UI block (HTML string).
-   * @param {Object} opts
-   * @param {string} opts.id input id
-   * @param {string} [opts.label]
-   * @param {string} [opts.accept]
-   * @param {boolean} [opts.multiple]
-   * @param {string} [opts.hint]
-   */
   function fileFieldHtml(opts) {
     opts = opts || {};
     var id = opts.id || 'elite-attachment';
@@ -183,7 +239,6 @@
     );
   }
 
-  /** Wire status text for a file input */
   function bindFileStatus(inputId) {
     var input = document.getElementById(inputId);
     var status = document.getElementById(inputId + '-status');
@@ -203,9 +258,10 @@
     });
   }
 
-  var api = {
+  global.EliteMail = {
     EMAIL_PRIMARY: EMAIL_PRIMARY,
     EMAIL_CC: EMAIL_CC.slice(),
+    ALL_INBOXES: ALL_INBOXES.slice(),
     allRecipients: allRecipients,
     recipientsLabel: recipientsLabel,
     collectFiles: collectFiles,
@@ -214,6 +270,4 @@
     fileFieldHtml: fileFieldHtml,
     bindFileStatus: bindFileStatus
   };
-
-  global.EliteMail = api;
 })(typeof window !== 'undefined' ? window : this);
