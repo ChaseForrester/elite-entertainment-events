@@ -233,7 +233,7 @@
         <div class="btn-row">
           <button type="button" class="btn btn-gold" id="ops-login">Sign in</button>
           <button type="button" class="btn btn-outline" id="ops-forgot">Forgot password?</button>
-          <a class="btn btn-outline" href="admin.html">CRM dashboard</a>
+          <a class="btn btn-outline" href="admin.html#leads">CRM Kanban</a>
         </div>
         <p class="ops-status" id="ops-auth-status"></p>
       </div>
@@ -245,7 +245,8 @@
         <div class="btn-row">
           <span id="ops-session-email" class="ops-note" style="margin:0;align-self:center;"></span>
           <a class="btn btn-outline" href="index.html">View site</a>
-          <a class="btn btn-outline" href="admin.html">CRM / Artists</a>
+          <a class="btn btn-outline" href="admin.html#artists">Artists CMS</a>
+          <a class="btn btn-outline" href="admin.html#leads">CRM Kanban</a>
           <a class="btn btn-outline" href="admin.html#account">Change password</a>
           <button type="button" class="btn btn-outline" id="ops-logout">Log out</button>
         </div>
@@ -729,7 +730,7 @@
             '<div class="inq-actions">' +
               (r.email ? '<a class="btn btn-gold" href="mailto:' + esc(r.email) + '?subject=' + encodeURIComponent('Re: your Elite enquiry') + '">Email client</a>' : '') +
               (r.phone ? '<a class="btn btn-outline" href="tel:' + esc(r.phone) + '">Call</a>' : '') +
-              '<a class="btn btn-outline" href="admin.html">Open in CRM Kanban</a>' +
+              '<a class="btn btn-outline" href="admin.html#leads' + (r.id ? ('/' + encodeURIComponent(r.id)) : '') + '">Open in CRM Kanban</a>' +
               '<button type="button" class="btn btn-outline" data-trash-lead="' + esc(r.id || '') + '" style="border-color:rgba(255,80,80,.35);color:#ff8a8a;">Move to trash</button>' +
             '</div>' +
           '</div>' +

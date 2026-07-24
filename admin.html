@@ -680,11 +680,11 @@
 
       <!-- Tab Toggles -->
       <div class="db-tabs" style="display:flex; gap:1rem; margin-bottom:2rem; justify-content:flex-start; width:100%; flex-wrap:wrap;">
-        <button class="btn btn-gold tab-btn" id="tab-btn-cms-artists" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem;">Artists &amp; Performers</button>
-        <button class="btn btn-outline tab-btn" id="tab-btn-leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">CRM Kanban</button>
-        <button class="btn btn-outline tab-btn" id="tab-btn-cms-events" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Events &amp; Packages</button>
-        <button class="btn btn-outline tab-btn" id="tab-btn-cms-content" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Hero &amp; Global Content</button>
-        <button class="btn btn-outline tab-btn" id="tab-btn-partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Partner Applications</button>
+        <button type="button" class="btn btn-gold tab-btn" id="tab-btn-cms-artists" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem;">Artists &amp; Performers</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">CRM Kanban</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-events" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Events &amp; Packages</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-content" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Hero &amp; Global Content</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Partner Applications</button>
       </div>
 
       <!-- ARTISTS CMS TABLE -->
@@ -1147,20 +1147,22 @@
               if (typeof updateStats === 'function') updateStats();
               if (typeof renderLeads === 'function') renderLeads();
               if (typeof updateCrmSyncBadge === 'function') updateCrmSyncBadge();
+              // Re-apply deep link after cloud leads arrive (open specific card)
+              if (typeof applyAdminHash === 'function') {
+                var h = String(location.hash || '');
+                if (/leads?|kanban|crm|lead=/i.test(h)) applyAdminHash({ openLead: true });
+              }
             });
           }
         } catch (e) {}
         if (typeof populateCrmFilters === 'function') populateCrmFilters();
         if (typeof updateCrmSyncBadge === 'function') updateCrmSyncBadge();
         if (typeof renderDashboard === 'function') renderDashboard();
+        // Hash routing applied after tabs are wired (see bottom of this script)
       }
 
       if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) {
         enterDashboard();
-        if (location.hash === '#account' && accountPanel) {
-          accountPanel.style.display = 'block';
-          accountPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
       } else {
         authOverlay.classList.remove('hidden');
       }
@@ -1226,7 +1228,81 @@
         'partners': document.getElementById('tab-btn-partners')
       };
 
-      function switchTab(activeKey) {
+      const TAB_HASH = {
+        'cms-artists': 'artists',
+        'cms-events': 'events',
+        'cms-content': 'content',
+        'leads': 'leads',
+        'partners': 'partners'
+      };
+      const HASH_TAB = {
+        artists: 'cms-artists',
+        artist: 'cms-artists',
+        cms: 'cms-artists',
+        events: 'cms-events',
+        packages: 'cms-events',
+        content: 'cms-content',
+        hero: 'cms-content',
+        leads: 'leads',
+        lead: 'leads',
+        kanban: 'leads',
+        crm: 'leads',
+        partners: 'partners',
+        partner: 'partners'
+      };
+
+      var currentAdminTab = 'cms-artists';
+      var pendingLeadOpenId = '';
+
+      function parseAdminHash() {
+        // Supports: #leads | #leads/SVC-123 | #kanban | #account | #artists
+        // Also: #leads?lead=SVC-123 and legacy #leads&lead=SVC-123
+        var raw = String(location.hash || '').replace(/^#/, '').trim();
+        if (!raw) return { tab: '', leadId: '', account: false };
+        var account = false;
+        var leadId = '';
+        var tabToken = raw;
+
+        if (/^account\b/i.test(raw)) {
+          account = true;
+          tabToken = '';
+        }
+
+        // lead deep-link forms
+        var mLeadPath = raw.match(/^(?:leads?|kanban|crm)(?:\/([^/?&#]+))/i);
+        if (mLeadPath) {
+          tabToken = 'leads';
+          try { leadId = decodeURIComponent(mLeadPath[1] || ''); } catch (e1) { leadId = mLeadPath[1] || ''; }
+        }
+        var mLeadQuery = raw.match(/(?:[?&]lead=|\/lead\/)([^&/?#]+)/i);
+        if (!leadId && mLeadQuery) {
+          tabToken = tabToken || 'leads';
+          try { leadId = decodeURIComponent(mLeadQuery[1] || ''); } catch (e2) { leadId = mLeadQuery[1] || ''; }
+        }
+        // bare #lead-ID or #lead/ID
+        var mBare = raw.match(/^lead[=\/:-](.+)$/i);
+        if (!leadId && mBare) {
+          tabToken = 'leads';
+          try { leadId = decodeURIComponent(mBare[1] || ''); } catch (e3) { leadId = mBare[1] || ''; }
+        }
+
+        if (!tabToken && !account) tabToken = raw.split(/[\/?&#]/)[0] || '';
+        if (tabToken && tabToken.indexOf('&') !== -1) tabToken = tabToken.split('&')[0];
+        if (tabToken && tabToken.indexOf('?') !== -1) tabToken = tabToken.split('?')[0];
+        tabToken = String(tabToken || '').toLowerCase();
+
+        return {
+          tab: HASH_TAB[tabToken] || '',
+          leadId: leadId,
+          account: account || tabToken === 'account'
+        };
+      }
+
+      function switchTab(activeKey, opts) {
+        opts = opts || {};
+        if (!tabs[activeKey]) activeKey = 'cms-artists';
+        currentAdminTab = activeKey;
+
         Object.keys(tabs).forEach(key => {
           if (tabs[key]) tabs[key].style.display = key === activeKey ? 'block' : 'none';
           if (tabBtns[key]) {
@@ -1237,20 +1313,109 @@
             tabBtns[key].style.fontWeight = '700';
             tabBtns[key].style.padding = '0.6rem 1.6rem';
             tabBtns[key].style.fontSize = '0.8rem';
+            tabBtns[key].setAttribute('aria-pressed', key === activeKey ? 'true' : 'false');
             if (key !== activeKey) {
               tabBtns[key].style.borderColor = 'rgba(255,255,255,0.2)';
+            } else {
+              tabBtns[key].style.borderColor = '';
             }
           }
         });
-        if (activeKey === 'leads') renderLeads();
-        if (activeKey === 'partners') renderPartners();
+
+        try {
+          if (activeKey === 'leads' && typeof renderLeads === 'function') renderLeads();
+          if (activeKey === 'partners' && typeof renderPartners === 'function') renderPartners();
+          if (activeKey === 'cms-artists' && typeof renderArtists === 'function') renderArtists();
+          if (activeKey === 'cms-events' && typeof renderEvents === 'function') renderEvents();
+          if (activeKey === 'cms-content' && typeof loadContentForm === 'function') loadContentForm();
+        } catch (tabErr) {
+          console.error('Admin tab switch error', activeKey, tabErr);
+        }
+
+        // Keep URL in sync so Ops deep-links and refresh stay on the right board
+        if (!opts.skipHash) {
+          var hashName = TAB_HASH[activeKey] || activeKey;
+          var nextHash = '#' + hashName;
+          if (activeKey === 'leads' && pendingLeadOpenId) {
+            nextHash = '#leads/' + encodeURIComponent(pendingLeadOpenId);
+          }
+          if (location.hash !== nextHash) {
+            try {
+              history.replaceState(null, '', nextHash);
+            } catch (hErr) {
+              location.hash = nextHash;
+            }
+          }
+        }
+
+        // Scroll the active panel into view on small screens
+        if (opts.scroll !== false && tabs[activeKey]) {
+          try {
+            tabs[activeKey].scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } catch (sErr) {}
+        }
+      }
+
+      function applyAdminHash(opts) {
+        opts = opts || {};
+        var info = parseAdminHash();
+        if (info.account && accountPanel) {
+          accountPanel.style.display = 'block';
+          try { accountPanel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+        }
+        if (info.leadId) pendingLeadOpenId = info.leadId;
+        if (info.tab) {
+          switchTab(info.tab, { skipHash: true, scroll: !!info.tab });
+        } else if (info.leadId) {
+          switchTab('leads', { skipHash: true, scroll: true });
+        }
+        if (opts.openLead && pendingLeadOpenId && typeof openLead === 'function') {
+          // Retry briefly — cloud pull may still be landing
+          var tries = 0;
+          var want = pendingLeadOpenId;
+          var tick = function () {
+            tries += 1;
+            try {
+              var api = (window.EliteCRM || window.EliteCMS);
+              var found = api && api.getAllLeads
+                ? (api.getAllLeads() || []).some(function (l) { return l && l.id === want; })
+                : false;
+              if (found) {
+                openLead(want);
+                pendingLeadOpenId = '';
+                return;
+              }
+            } catch (e) {}
+            if (tries < 8) setTimeout(tick, 250);
+          };
+          setTimeout(tick, 50);
+        }
       }
 
       Object.keys(tabBtns).forEach(key => {
         if (tabBtns[key]) {
-          tabBtns[key].addEventListener('click', () => switchTab(key));
+          tabBtns[key].addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            pendingLeadOpenId = '';
+            switchTab(key);
+          });
         }
       });
+
+      // Deep-link / back-forward support
+      window.addEventListener('hashchange', function () {
+        if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) {
+          applyAdminHash({ openLead: true });
+        }
+      });
+
+      // Expose for Ops / console debugging
+      window.EliteAdminTabs = {
+        switchTab: switchTab,
+        applyHash: applyAdminHash,
+        current: function () { return currentAdminTab; }
+      };
 
       function esc(str) {
         return String(str == null ? '' : str)
@@ -1542,7 +1707,7 @@
           priority: f.priority,
           assigneeEmail: f.unassignedOnly ? '' : f.assigneeEmail
         });
-        const columns = api.KANBAN_COLUMNS || window.EliteCMS.KANBAN_COLUMNS || [];
+        const columns = api.KANBAN_COLUMNS || (window.EliteCMS && window.EliteCMS.KANBAN_COLUMNS) || [];
         let total = 0;
         const team = getTeam();
 
@@ -2298,6 +2463,8 @@
       // Only load dashboard data when Super Admin session is valid
       if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) {
         renderDashboard();
+        // Open the tab requested by the URL (Ops "Open in CRM Kanban" → #leads)
+        applyAdminHash({ openLead: true });
       }
 
       // Refresh leads when storage updates from another tab
