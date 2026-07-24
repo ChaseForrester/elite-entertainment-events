@@ -318,17 +318,38 @@
     return d.getFullYear() + '-' + m + '-' + day;
   }
 
+  /** Reliable value for text, date, textarea, and select (avoids disabled-placeholder bugs) */
+  function fieldValue(el) {
+    if (!el) return '';
+    if (el.tagName === 'SELECT') {
+      var idx = el.selectedIndex;
+      if (idx < 0 || idx >= el.options.length) return '';
+      var opt = el.options[idx];
+      if (!opt || opt.disabled) return '';
+      var v = opt.value != null ? String(opt.value) : '';
+      // Some browsers leave value="" on the selected option; fall back to label text
+      if (!v.trim() && opt.text && opt.text.trim() && opt.text.trim() !== 'Select…') {
+        v = opt.text;
+      }
+      return v.trim();
+    }
+    return String(el.value != null ? el.value : '').trim();
+  }
+
   function fieldHtml(f) {
     var req = f.required ? ' required' : '';
     var label = '<label for="' + f.id + '">' + f.label + '</label>';
     var ph = f.placeholder ? ' placeholder="' + f.placeholder.replace(/"/g, '&quot;') + '"' : '';
     if (f.type === 'select') {
       var opts = (f.options || []).map(function (o) {
-        return '<option value="' + o.replace(/"/g, '&quot;') + '">' + o + '</option>';
+        // Explicit value attribute — never rely on implicit option values
+        var safe = String(o).replace(/"/g, '&quot;');
+        return '<option value="' + safe + '">' + safe + '</option>';
       }).join('');
       return '<div class="form-group form-group--select">' + label +
         '<select id="' + f.id + '" name="' + f.id + '"' + req + '>' +
-        '<option value="" disabled selected>Select…</option>' + opts +
+        // Placeholder must NOT be disabled+selected (breaks value reads on mobile browsers)
+        '<option value="" selected>Select…</option>' + opts +
         '</select></div>';
     }
     if (f.type === 'textarea') {
@@ -418,7 +439,7 @@
           '</div>' +
           '<div class="sf-steps" aria-label="Form progress">' + dots + '</div>' +
           fleetPreview +
-          '<form class="sf-form quote-form" id="service-multi-form" novalidate enctype="multipart/form-data">' +
+          '<form class="sf-form quote-form" id="service-enquiry-form" data-service-key="' + key + '" novalidate enctype="multipart/form-data">' +
             '<h3 class="sf-step-title">Step ' + (step + 1) + ': ' + s.label + '</h3>' +
             '<div class="sf-fields">' + fields +
               (isLast && mail()
@@ -439,10 +460,21 @@
           '</form>' +
         '</div>';
 
-      // restore values
+      // restore values (including selects — match by value)
       s.fields.forEach(function (f) {
         var el = document.getElementById(f.id);
-        if (el && collected[f.id] != null) el.value = collected[f.id];
+        if (!el || collected[f.id] == null || collected[f.id] === '') return;
+        el.value = collected[f.id];
+        // Select restore fallback: match option text if value set failed
+        if (el.tagName === 'SELECT' && fieldValue(el) !== String(collected[f.id]).trim()) {
+          for (var i = 0; i < el.options.length; i++) {
+            if (String(el.options[i].value).trim() === String(collected[f.id]).trim() ||
+                String(el.options[i].text).trim() === String(collected[f.id]).trim()) {
+              el.selectedIndex = i;
+              break;
+            }
+          }
+        }
       });
 
       // Prefill fleet selection into vehicles field
@@ -507,7 +539,7 @@
         } catch (err6) {}
       }
 
-      var form = document.getElementById('service-multi-form');
+      var form = root.querySelector('form.sf-form') || document.getElementById('service-enquiry-form');
       var back = document.getElementById('sf-back');
       if (back) back.addEventListener('click', function () {
         saveStep();
@@ -529,9 +561,23 @@
         } catch (bindErr) {}
       }
 
+      // Keep select values in collected as soon as user picks (fixes flaky submit validation)
       if (form) {
+        form.querySelectorAll('select').forEach(function (sel) {
+          sel.addEventListener('change', function () {
+            if (sel.id) collected[sel.id] = fieldValue(sel);
+            sel.style.borderColor = '';
+            sel.classList.remove('sf-invalid');
+          });
+        });
         form.addEventListener('submit', function (e) {
           e.preventDefault();
+          e.stopPropagation();
+          // Snapshot all current step fields before validate
+          cfg.steps[step].fields.forEach(function (f) {
+            var el = document.getElementById(f.id);
+            if (el) collected[f.id] = fieldValue(el);
+          });
           if (!validateStep()) return;
           saveStep();
           if (step < cfg.steps.length - 1) {
@@ -547,7 +593,7 @@
     function saveStep() {
       cfg.steps[step].fields.forEach(function (f) {
         var el = document.getElementById(f.id);
-        if (el) collected[f.id] = el.value.trim();
+        if (el) collected[f.id] = fieldValue(el);
       });
       if (step === cfg.steps.length - 1) captureAttachments();
       // Multi-enquiry: push event details into every cart line when same-day hire
@@ -566,14 +612,24 @@
 
     function validateStep() {
       var ok = true;
+      var missing = [];
       cfg.steps[step].fields.forEach(function (f) {
         if (!f.required) return;
         var el = document.getElementById(f.id);
-        if (!el || !el.value.trim()) {
+        // Prefer live DOM; fall back to already-collected values
+        var val = el ? fieldValue(el) : (collected[f.id] || '');
+        if (!val) {
           ok = false;
-          if (el) el.style.borderColor = '#ff5555';
+          missing.push(f.label.replace(/\s*\*$/, ''));
+          if (el) {
+            el.style.borderColor = '#ff5555';
+            el.classList.add('sf-invalid');
+          }
         } else if (el) {
           el.style.borderColor = '';
+          el.classList.remove('sf-invalid');
+          // Persist immediately so re-renders keep the selection
+          collected[f.id] = val;
         }
       });
       if (!ok) {
@@ -581,7 +637,9 @@
         if (st) {
           st.hidden = false;
           st.className = 'cat-form-status cat-form-status--error';
-          st.textContent = 'Please complete the required fields.';
+          st.textContent = missing.length
+            ? ('Please complete: ' + missing.join(', ') + '.')
+            : 'Please complete the required fields.';
         }
       }
       return ok;

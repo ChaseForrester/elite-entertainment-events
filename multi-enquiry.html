@@ -47,7 +47,7 @@
     <div class="container cart-page-wrap">
       <div id="cart-list-mount"></div>
 
-      <div class="cat-form-block" style="margin-top:2rem;" id="service-multi-form">
+      <div class="cat-form-block" style="margin-top:2rem;" id="multi-enquiry-form-block">
         <h2 class="cat-form-heading">Submit multi-enquiry</h2>
         <p class="cat-form-lead">Your cart fills the form with every line item, image, dates, people and notes. Use <strong>Apply to all items</strong> when every hire is on the same day. Super Admin CRM + <strong>info@eeevents.com.au</strong> and <strong>bookings@eeevents.com.au</strong> receive the full package (attachments supported).</p>
         <div class="sf-wrap" data-service-form="multi"></div>
@@ -294,7 +294,7 @@
         '<ul class="cart-list">' + items.map(itemCard).join('') + '</ul>' +
         '<div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;">' +
           '<button type="button" class="btn btn-outline" id="cart-clear">Clear cart</button>' +
-          '<a class="btn btn-gold" href="#service-multi-form">Continue to form</a>' +
+          '<a class="btn btn-gold" href="#multi-enquiry-form-block">Continue to form</a>' +
         '</div>';
       syncForm(items);
     }
