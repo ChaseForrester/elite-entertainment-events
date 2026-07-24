@@ -341,6 +341,12 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="categories-data.js"></script>
+  <script src="security-data.js"></script>
+  <script src="production-data.js"></script>
+  <script src="fleet-data.js"></script>
+  <script src="yacht-data.js"></script>
+  <script src="talent-data.js"></script>
   <script src="elite-admin-auth.js"></script>
   <script src="elite-crm.js"></script>
   <script src="cms.js"></script>
@@ -407,28 +413,96 @@
       try { return JSON.parse(localStorage.getItem('elite_inquiries') || '[]'); } catch (e) { return []; }
     }
 
-    var ACT_IMAGE_INDEX = null; // name -> image path
+    var ACT_IMAGE_INDEX = null; // normalized name -> image path
+
+    function normName(s) {
+      return String(s || '')
+        .toLowerCase()
+        .replace(/\s*×\s*\d+\s*$/i, '')
+        .replace(/\s*x\s*\d+\s*$/i, '')
+        .replace(/[–—−]/g, '-') // normalize dashes
+        .replace(/['']/g, "'")
+        .replace(/[^\w\s\-'.&]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function isPlaceholderImage(img) {
+      if (!img) return true;
+      // Only treat brand logos as empty — stock / Unsplash URLs are real product photos
+      if (/images\/brand\/logo/i.test(img)) return true;
+      if (img.indexOf('logo-icon') !== -1) return true;
+      return false;
+    }
+
+    function indexImage(name, image) {
+      if (!name || !image || isPlaceholderImage(image)) return;
+      var k = normName(name);
+      if (!k || ACT_IMAGE_INDEX[k]) return;
+      ACT_IMAGE_INDEX[k] = image;
+    }
+
+    function indexCatalogRow(x) {
+      if (!x) return;
+      var img = x.image || x.img || x.photo || x.cover || '';
+      if (!img) return;
+      indexImage(x.name, img);
+      indexImage(x.title, img);
+      indexImage(x.model, img);
+      if (x.brand && x.model) indexImage(x.brand + ' ' + x.model, img);
+      if (x.id) {
+        indexImage(String(x.id).replace(/[-_]+/g, ' '), img);
+      }
+    }
 
     function loadActImageIndex() {
       if (ACT_IMAGE_INDEX) return Promise.resolve(ACT_IMAGE_INDEX);
       ACT_IMAGE_INDEX = {};
+
+      // 1) Full live roster (~200 acts with real photos)
+      try {
+        (window.ELITE_FOLDERS || []).forEach(function (f) {
+          (f.acts || []).forEach(function (a) {
+            indexImage(a.name, a.image);
+          });
+        });
+      } catch (e1) {}
+
+      // 2) CMS artists (admin-edited)
+      try {
+        if (window.EliteCMS && EliteCMS.getArtists) {
+          EliteCMS.getArtists().forEach(function (a) {
+            indexImage(a.name, a.image);
+          });
+        }
+      } catch (e2) {}
+
+      // 3) Security / production / fleet / yacht / talent catalogs
+      try {
+        (window.ELITE_SECURITY || window.SECURITY_TYPES || []).forEach(indexCatalogRow);
+      } catch (e3) {}
+      try {
+        (window.ELITE_PRODUCTION || []).forEach(indexCatalogRow);
+      } catch (e3b) {}
+      try {
+        (window.ELITE_FLEET || []).forEach(indexCatalogRow);
+      } catch (e3c) {}
+      try {
+        (window.ELITE_YACHTS || []).forEach(indexCatalogRow);
+      } catch (e3d) {}
+      try {
+        (window.ELITE_TALENT || []).forEach(indexCatalogRow);
+      } catch (e3e) {}
+
+      // 4) mapping.json fallback (partial ~82 acts)
       return fetch('images/acts/mapping.json')
         .then(function (r) { return r.ok ? r.json() : {}; })
         .then(function (map) {
           Object.keys(map || {}).forEach(function (k) {
             var row = map[k] || {};
-            if (row.name && row.image) {
-              ACT_IMAGE_INDEX[String(row.name).toLowerCase()] = row.image;
-            }
+            indexImage(row.name, row.image);
+            if (k) indexImage(String(k).replace(/[-_]+/g, ' '), row.image);
           });
-          // Also index CMS artists if available
-          try {
-            if (window.EliteCMS && EliteCMS.getArtists) {
-              EliteCMS.getArtists().forEach(function (a) {
-                if (a.name && a.image) ACT_IMAGE_INDEX[String(a.name).toLowerCase()] = a.image;
-              });
-            }
-          } catch (e) {}
           return ACT_IMAGE_INDEX;
         })
         .catch(function () { return ACT_IMAGE_INDEX; });
@@ -436,16 +510,25 @@
 
     function resolveItemImage(it) {
       if (!it) return 'images/brand/logo-icon.png';
-      var img = String(it.image || '').trim();
+      var img = String(it.image || it.coverImage || '').trim();
       if (img && !/^data:/.test(img) && img.indexOf('http') !== 0 && img.charAt(0) === '/') {
         img = img.slice(1);
       }
-      // Prefer the exact image the client cart stored
-      if (img && img !== 'images/brand/logo-icon.png') return img;
-      // Exact act-name match only (no fuzzy / partial matching — that invents wrong photos)
-      var key = String(it.name || '').toLowerCase().replace(/\s*×\d+\s*$/, '').trim();
-      if (ACT_IMAGE_INDEX && ACT_IMAGE_INDEX[key]) return ACT_IMAGE_INDEX[key];
-      return 'images/brand/logo-icon.png';
+      // Prefer the exact image the client cart stored (skip empty/logo placeholders)
+      if (img && !isPlaceholderImage(img)) return img;
+
+      var key = normName(it.name);
+      if (key && ACT_IMAGE_INDEX && ACT_IMAGE_INDEX[key]) return ACT_IMAGE_INDEX[key];
+      // Try without leading "The "
+      if (key && key.indexOf('the ') === 0 && ACT_IMAGE_INDEX[key.slice(4)]) {
+        return ACT_IMAGE_INDEX[key.slice(4)];
+      }
+      // Try kind-stripped common prefixes in meta/id
+      if (it.id) {
+        var idKey = normName(String(it.id).replace(/[-_]+/g, ' '));
+        if (ACT_IMAGE_INDEX[idKey]) return ACT_IMAGE_INDEX[idKey];
+      }
+      return (img && !isPlaceholderImage(img) ? img : '') || 'images/brand/logo-icon.png';
     }
 
     function stageClass(stage) {
@@ -536,7 +619,14 @@
 
     function leadCover(r) {
       var items = leadItems(r);
-      if (r.coverImage) return resolveItemImage({ image: r.coverImage, name: r.name });
+      // Resolve against the package act name (not the client contact name)
+      if (r.coverImage) {
+        return resolveItemImage({
+          image: r.coverImage,
+          name: (items[0] && items[0].name) || r.service || '',
+          id: items[0] && items[0].id
+        });
+      }
       if (items[0]) return resolveItemImage(items[0]);
       if (Array.isArray(r.attachments)) {
         for (var i = 0; i < r.attachments.length; i++) {
