@@ -192,27 +192,29 @@
   function hydrateAttachments(lead) {
     if (!lead) return lead;
     var cached = attachCache()[lead.id] || [];
-    if (!cached.length && !(lead.attachments && lead.attachments.length)) return lead;
-    var byId = {};
-    var byName = {};
-    cached.forEach(function (a) {
-      if (a.id) byId[a.id] = a;
-      if (a.name) byName[a.name] = a;
-    });
-    var list = (lead.attachments && lead.attachments.length)
-      ? lead.attachments
-      : cached;
-    lead.attachments = list.map(function (a) {
-      var hit = (a.id && byId[a.id]) || (a.name && byName[a.name]) || null;
-      if (!hit) return a;
-      return Object.assign({}, a, {
-        dataUrl: a.dataUrl || hit.dataUrl || '',
-        url: a.url || hit.url || '',
-        size: a.size || hit.size || 0,
-        type: a.type || hit.type || 'file',
-        note: a.note || hit.note || ''
+    var fromLead = Array.isArray(lead.attachments) ? lead.attachments.slice() : [];
+    if (!cached.length && !fromLead.length) return lead;
+
+    // Union lead + local cache by id/name so previews reappear on this device
+    var map = {};
+    function put(a) {
+      if (!a) return;
+      var key = a.id || a.name;
+      if (!key) return;
+      var prev = map[key] || {};
+      map[key] = Object.assign({}, prev, a, {
+        dataUrl: a.dataUrl || prev.dataUrl || '',
+        url: a.url || prev.url || '',
+        size: a.size || prev.size || 0,
+        type: a.type || prev.type || 'file',
+        note: a.note || prev.note || '',
+        name: a.name || prev.name || 'file',
+        id: a.id || prev.id || key
       });
-    });
+    }
+    fromLead.forEach(put);
+    cached.forEach(put);
+    lead.attachments = Object.keys(map).map(function (k) { return map[k]; });
     return lead;
   }
 
@@ -893,14 +895,28 @@
     return ids.length;
   }
 
+  /**
+   * Clear LOCAL enquiry cache only.
+   * IMPORTANT: do NOT soft-delete into trash — that blocks cloud rehydration
+   * (applyRemoteLeads refuses trashed IDs) and empties the Kanban forever
+   * on this device even though Firestore still has the leads.
+   */
   function clearInquiries(opts) {
     opts = opts || {};
-    // Soft-clear active enquiries into trash
-    var active = getAllLeads();
-    active.forEach(function (l) {
-      deleteLead(l.id, { skipCloud: opts.skipCloud, actor: opts.actor || 'Super Admin' });
-    });
-    emit('elite-crm-updated', { cleared: true });
+    writeJson(LS_LEADS, []);
+    writeJson(LS_CLIENTS, []);
+    // Keep trash as-is (user may want to restore real deletes).
+    // Optional: wipe attach cache for active leads only — leave for now.
+    emit('elite-crm-updated', { cleared: true, localOnly: true });
+    if (opts.repull !== false && !opts.skipRepull) {
+      return pullOnce().then(function (r) {
+        emit('elite-crm-updated', { cleared: true, repulled: true, count: r && r.count });
+        return r;
+      }).catch(function () {
+        return { ok: false, cleared: true };
+      });
+    }
+    return Promise.resolve({ ok: true, cleared: true });
   }
 
   function estimatePipeline() {

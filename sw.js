@@ -2,7 +2,7 @@
    ELITE ENTERTAINMENT — PWA Service Worker
 ═══════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'elite-events-v79-crm-attachments';
+const CACHE_NAME = 'elite-events-v80-crm-clear-local';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

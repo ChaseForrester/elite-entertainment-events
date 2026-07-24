@@ -335,44 +335,66 @@ try {
         }
       }
 
-      const newInquiry = {
-        id: 'INQ-' + Date.now().toString().slice(-5),
-        name,
-        email,
-        phone,
-        date,
-        service: artistType ? (service + ' · ' + artistType) : service,
-        message: message + (files.length ? '\nAttachments: ' + files.map(function (f) { return f.name; }).join(', ') : ''),
-        status: 'New Enquiry',
-        kanbanColumn: 'new',
-        timestamp: new Date().toLocaleString(),
-        attachmentNames: files.map(function (f) { return f.name; }),
-        attachments: files.map(function (f) {
-          return { name: f.name, type: f.type || 'file', size: f.size || 0, at: new Date().toLocaleString() };
-        }),
-        notes: [],
-        order: Date.now()
-      };
-
-      const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
-      inquiries.unshift(newInquiry);
-      localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
-      try {
-        if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(newInquiry);
-        else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(newInquiry);
-      } catch (crmErr) {}
-
       const btn = form.querySelector('button[type="submit"]');
       const originalText = btn ? btn.textContent : 'Send Enquiry';
 
       if (btn) {
-        btn.textContent = 'Sending…';
+        btn.textContent = files.length ? 'Reading files…' : 'Sending…';
         btn.disabled = true;
       }
 
       // Email full team via EliteMail (FormSubmit + CC list + attachments)
       (async () => {
         try {
+          var attachmentRecords = [];
+          if (window.EliteMail && window.EliteMail.filesToAttachments) {
+            attachmentRecords = await window.EliteMail.filesToAttachments(files);
+          } else {
+            attachmentRecords = files.map(function (f, i) {
+              return {
+                id: 'A-' + Date.now().toString(36) + '-' + i,
+                name: f.name,
+                type: f.type || 'file',
+                size: f.size || 0,
+                at: new Date().toLocaleString(),
+                emailed: true,
+                dataUrl: ''
+              };
+            });
+          }
+
+          const newInquiry = {
+            id: 'INQ-' + Date.now().toString().slice(-5),
+            name,
+            email,
+            phone,
+            date,
+            service: artistType ? (service + ' · ' + artistType) : service,
+            message: message + (attachmentRecords.length
+              ? '\nAttachments: ' + attachmentRecords.map(function (a) { return a.name; }).join(', ')
+              : ''),
+            status: 'New Enquiry',
+            kanbanColumn: 'new',
+            timestamp: new Date().toLocaleString(),
+            attachmentNames: attachmentRecords.map(function (a) { return a.name; }),
+            attachmentCount: attachmentRecords.length,
+            attachments: attachmentRecords,
+            notes: [],
+            order: Date.now()
+          };
+
+          try {
+            if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(newInquiry);
+            else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(newInquiry);
+            else {
+              const inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
+              inquiries.unshift(newInquiry);
+              localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
+            }
+          } catch (crmErr) {}
+
+          if (btn) btn.textContent = 'Sending…';
+
           if (window.EliteMail) {
             await window.EliteMail.sendEnquiry({
               name,
@@ -382,9 +404,10 @@ try {
               service: artistType ? (service + ' · ' + artistType) : service,
               eventDate: date || '—',
               message: newInquiry.message || '—',
+              attachment_names: attachmentRecords.map(function (a) { return a.name; }).join('; '),
               leadId: newInquiry.id,
               source: 'Homepage quote form'
-            }, attachEl ? [attachEl] : []);
+            }, files.length ? files : (attachEl ? [attachEl] : []));
           }
         } catch (err) {
           console.warn('Email delivery deferred — lead saved in admin CRM', err);

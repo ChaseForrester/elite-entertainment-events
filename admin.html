@@ -2227,10 +2227,23 @@
       });
 
       document.getElementById('btn-clear-leads').addEventListener('click', () => {
-        if (confirm('Clear LOCAL enquiry cache on this device only? Cloud CRM data is kept for other devices.')) {
-          if (window.EliteCRM) EliteCRM.clearInquiries({ skipCloud: true });
-          else window.EliteCMS.clearInquiries();
-          try { localStorage.setItem('elite_clients', '[]'); } catch (e) {}
+        if (!confirm('Clear LOCAL enquiry cache on this device only?\n\nCloud CRM stays intact. This device will re-download leads from Firebase immediately so the Kanban does not stay empty.')) {
+          return;
+        }
+        try { localStorage.setItem('elite_clients', '[]'); } catch (e) {}
+        if (window.EliteCRM && EliteCRM.clearInquiries) {
+          // clearInquiries wipes local only, then pullOnce() rehydrates from cloud
+          Promise.resolve(EliteCRM.clearInquiries({ skipCloud: true, repull: true }))
+            .then(function () {
+              renderLeads();
+              updateStats();
+              updateCrmSyncBadge();
+            });
+        } else if (window.EliteCMS && EliteCMS.clearInquiries) {
+          EliteCMS.clearInquiries();
+          renderLeads();
+        } else {
+          try { localStorage.setItem('elite_inquiries', '[]'); } catch (e2) {}
           renderLeads();
         }
       });
