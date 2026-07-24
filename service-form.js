@@ -651,40 +651,20 @@
       var name = collected['sf-name'] || '';
       var email = collected['sf-email'] || '';
       var phone = collected['sf-phone'] || '';
-      var service = (collected['sf-service'] || key) + (collected['sf-company'] ? ' · ' + collected['sf-company'] : '');
-      if (collected['sf-vehicles']) {
-        service = service + ' · Vehicles: ' + collected['sf-vehicles'].replace(/\n/g, ', ');
+      // Short human title only — never embed the full multi-cart dump into service
+      var serviceBits = [cfg.title];
+      if (collected['sf-service']) serviceBits.push(collected['sf-service']);
+      if (collected['sf-company']) serviceBits.push(collected['sf-company']);
+      if (collected['sf-look']) serviceBits.push(collected['sf-look']);
+      if (collected['sf-drive']) serviceBits.push(collected['sf-drive']);
+      if (collected['sf-catering']) serviceBits.push('Catering: ' + collected['sf-catering']);
+      if (collected['sf-quantity'] && key !== 'multi') serviceBits.push(collected['sf-quantity']);
+      if (key === 'multi' && window.EliteCart) {
+        try {
+          serviceBits.push(EliteCart.load().length + ' package lines · ' + EliteCart.count() + ' units');
+        } catch (e0) {}
       }
-      if (collected['sf-yachts']) {
-        service = service + ' · Vessels: ' + collected['sf-yachts'].replace(/\n/g, ', ');
-      }
-      if (collected['sf-talent']) {
-        service = service + ' · Talent: ' + collected['sf-talent'].replace(/\n/g, ', ');
-      }
-      if (collected['sf-security']) {
-        service = service + ' · Security: ' + collected['sf-security'].replace(/\n/g, ', ');
-      }
-      if (collected['sf-production']) {
-        service = service + ' · Production: ' + collected['sf-production'].replace(/\n/g, ', ');
-      }
-      if (collected['sf-cart']) {
-        service = service + ' · Multi-cart: ' + collected['sf-cart'].replace(/\n/g, ' | ');
-      }
-      if (collected['sf-look']) {
-        service = service + ' · Look: ' + collected['sf-look'];
-      }
-      if (collected['sf-quantity']) {
-        service = service + ' · Qty: ' + collected['sf-quantity'];
-      }
-      if (collected['sf-drive']) {
-        service = service + ' · ' + collected['sf-drive'];
-      }
-      if (collected['sf-duration']) {
-        service = service + ' · Duration: ' + collected['sf-duration'];
-      }
-      if (collected['sf-catering']) {
-        service = service + ' · Catering: ' + collected['sf-catering'];
-      }
+      var service = serviceBits.filter(Boolean).join(' · ');
 
       captureAttachments();
       var attachInput = document.getElementById('sf-attachments');
@@ -718,20 +698,26 @@
         } catch (cartErr) {}
       }
 
-      var msgParts = [];
-      Object.keys(collected).forEach(function (k) {
-        if (collected[k]) msgParts.push(k.replace('sf-', '') + ': ' + collected[k]);
-      });
+      // Human-readable message for cards/emails (not the cart dump)
+      var briefLines = [];
+      if (collected['sf-message']) briefLines.push(collected['sf-message']);
+      if (collected['sf-name']) briefLines.push('Contact: ' + collected['sf-name']);
+      if (collected['sf-email']) briefLines.push('Email: ' + collected['sf-email']);
+      if (collected['sf-phone']) briefLines.push('Phone: ' + collected['sf-phone']);
+      if (collected['sf-date']) briefLines.push('Date: ' + collected['sf-date'] + (collected['sf-end-date'] ? ' → ' + collected['sf-end-date'] : ''));
+      if (collected['sf-venue']) briefLines.push('Venue: ' + collected['sf-venue']);
+      if (collected['sf-guests']) briefLines.push('Guests: ' + collected['sf-guests']);
+      if (collected['sf-duration']) briefLines.push('Schedule: ' + collected['sf-duration']);
+      if (collected['sf-budget']) briefLines.push('Budget: ' + collected['sf-budget']);
+      if (collected['sf-vehicles']) briefLines.push('Vehicles:\n' + collected['sf-vehicles']);
+      if (collected['sf-yachts']) briefLines.push('Vessels:\n' + collected['sf-yachts']);
+      if (collected['sf-talent']) briefLines.push('Talent:\n' + collected['sf-talent']);
+      if (collected['sf-security']) briefLines.push('Security:\n' + collected['sf-security']);
+      if (collected['sf-production']) briefLines.push('Production:\n' + collected['sf-production']);
       if (files.length) {
-        msgParts.push('attachments: ' + files.map(function (f) { return f.name; }).join(', '));
+        briefLines.push('Attachments: ' + files.map(function (f) { return f.name; }).join(', '));
       }
-      if (key === 'multi' && window.EliteCart) {
-        try {
-          msgParts.push('--- FULL MULTI-CART ---');
-          msgParts.push(window.EliteCart.summaryText());
-        } catch (e2) {}
-      }
-      var fullDetails = msgParts.join('\n');
+      var fullDetails = briefLines.join('\n');
       var lead = {
         id: 'SVC-' + Date.now().toString().slice(-6),
         name: name,
@@ -743,7 +729,7 @@
         guests: collected['sf-guests'] || '',
         budget: collected['sf-budget'] || '',
         company: collected['sf-company'] || '',
-        service: cfg.title + ' · ' + service,
+        service: service,
         message: fullDetails,
         status: 'New Enquiry',
         kanbanColumn: 'new',

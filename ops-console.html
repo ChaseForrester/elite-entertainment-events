@@ -130,58 +130,73 @@
       font-weight: 600;
       word-break: break-word;
     }
-    .inq-items {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .55rem;
-      margin: .35rem 0 .65rem;
-    }
-    .inq-item {
-      display: flex;
-      gap: .5rem;
-      align-items: center;
-      min-width: min(100%, 220px);
-      max-width: 280px;
-      flex: 1 1 200px;
-      padding: .45rem;
-      border-radius: 10px;
-      background: rgba(0,0,0,.35);
+    .inq-table-wrap {
+      margin: .45rem 0 .75rem;
+      overflow: auto;
+      border-radius: 12px;
       border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.28);
     }
-    .inq-item img {
-      width: 52px;
-      height: 52px;
-      border-radius: 8px;
-      object-fit: cover;
-      flex-shrink: 0;
-      border: 1px solid rgba(200,168,76,.2);
-      background: #1a1a1a;
+    .inq-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .74rem;
+      min-width: 640px;
     }
-    .inq-item-body { min-width: 0; }
-    .inq-item-kind {
-      font-size: .58rem;
-      font-weight: 800;
+    .inq-table th {
+      position: sticky;
+      top: 0;
+      background: #141414;
+      color: #c9a84c;
+      font-size: .6rem;
       letter-spacing: .08em;
       text-transform: uppercase;
-      color: #c9a84c;
-      margin: 0 0 .1rem;
+      padding: .55rem .55rem;
+      border-bottom: 1px solid rgba(200,168,76,.2);
+      white-space: nowrap;
     }
-    .inq-item-name {
-      font-size: .78rem;
+    .inq-table td {
+      padding: .55rem;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      vertical-align: middle;
+      color: #ddd;
+    }
+    .inq-table tr:last-child td { border-bottom: none; }
+    .inq-table tr:hover td { background: rgba(200,168,76,.04); }
+    .inq-table .thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      display: block;
+      border: 1px solid rgba(200,168,76,.25);
+      background: #1a1a1a;
+    }
+    .inq-table .item-name {
       font-weight: 700;
       color: #fff;
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      margin: 0 0 .15rem;
+      font-size: .8rem;
     }
-    .inq-item-sub {
+    .inq-table .item-meta {
+      margin: 0;
       font-size: .68rem;
       color: #999;
-      margin: .1rem 0 0;
+      max-width: 220px;
+      line-height: 1.35;
+    }
+    .inq-table .kind-pill {
+      display: inline-block;
+      font-size: .58rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #c9a84c;
+      border: 1px solid rgba(200,168,76,.3);
+      background: rgba(200,168,76,.08);
+      border-radius: 999px;
+      padding: .2rem .45rem;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .inq-message {
       margin: 0;
@@ -377,6 +392,52 @@
       try { return JSON.parse(localStorage.getItem('elite_inquiries') || '[]'); } catch (e) { return []; }
     }
 
+    var ACT_IMAGE_INDEX = null; // name -> image path
+
+    function loadActImageIndex() {
+      if (ACT_IMAGE_INDEX) return Promise.resolve(ACT_IMAGE_INDEX);
+      ACT_IMAGE_INDEX = {};
+      return fetch('images/acts/mapping.json')
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .then(function (map) {
+          Object.keys(map || {}).forEach(function (k) {
+            var row = map[k] || {};
+            if (row.name && row.image) {
+              ACT_IMAGE_INDEX[String(row.name).toLowerCase()] = row.image;
+            }
+          });
+          // Also index CMS artists if available
+          try {
+            if (window.EliteCMS && EliteCMS.getArtists) {
+              EliteCMS.getArtists().forEach(function (a) {
+                if (a.name && a.image) ACT_IMAGE_INDEX[String(a.name).toLowerCase()] = a.image;
+              });
+            }
+          } catch (e) {}
+          return ACT_IMAGE_INDEX;
+        })
+        .catch(function () { return ACT_IMAGE_INDEX; });
+    }
+
+    function resolveItemImage(it) {
+      if (!it) return 'images/brand/logo-icon.png';
+      var img = it.image || '';
+      if (img && !/^data:/.test(img) && img.indexOf('http') !== 0 && img.charAt(0) === '/') {
+        img = img.slice(1);
+      }
+      if (img) return img;
+      var key = String(it.name || '').toLowerCase().replace(/\s*×\d+\s*$/, '').trim();
+      if (ACT_IMAGE_INDEX && ACT_IMAGE_INDEX[key]) return ACT_IMAGE_INDEX[key];
+      // partial match
+      if (ACT_IMAGE_INDEX) {
+        var hit = Object.keys(ACT_IMAGE_INDEX).find(function (n) {
+          return key && (n.indexOf(key) !== -1 || key.indexOf(n) !== -1);
+        });
+        if (hit) return ACT_IMAGE_INDEX[hit];
+      }
+      return 'images/brand/logo-icon.png';
+    }
+
     function stageClass(stage) {
       var s = String(stage || 'new').toLowerCase();
       if (s.indexOf('book') !== -1 || s === 'won') return 'stage-booked';
@@ -386,71 +447,156 @@
     }
 
     function leadItems(r) {
-      if (Array.isArray(r.cartItems) && r.cartItems.length) return r.cartItems;
-      return [];
+      var items = Array.isArray(r.cartItems) ? r.cartItems.slice() : [];
+      if (!items.length && window.EliteCRM && typeof EliteCRM === 'object') {
+        // normalizeLead already parses; try raw message/service blob
+        try {
+          var blob = [r.message, r.service, r.formFields && r.formFields['sf-cart']].filter(Boolean).join('\n');
+          if (blob && /\[\s*Artist\s*\]|Multi-cart/i.test(blob) && EliteCRM.getAllLeads) {
+            // re-normalize via a shallow clone path: parse locally using same pipe logic
+            items = parseItemsLocal(blob);
+          }
+        } catch (e) {}
+      }
+      if (!items.length) items = parseItemsLocal([r.message, r.service, r.formFields && r.formFields['sf-cart']].filter(Boolean).join('\n'));
+      // Fill missing images from act index
+      items.forEach(function (it) {
+        if (!it.image) it.image = resolveItemImage(it);
+        else it.image = resolveItemImage(it);
+      });
+      return items;
+    }
+
+    function parseItemsLocal(text) {
+      text = String(text || '');
+      if (!text) return [];
+      text = text.replace(/\s*\|\s*/g, '\n').replace(/Multi-cart:\s*/i, '\n');
+      var chunks = text.split(/(?=\d+\.\s*\[)/);
+      var items = [];
+      chunks.forEach(function (block) {
+        var m = block.match(/(\d+)\.\s*\[([^\]]+)\]\s*([^\n]+?)(?:\s*×(\d+))?/);
+        if (!m) return;
+        var item = {
+          kindLabel: m[2].trim(),
+          name: m[3].replace(/\s*×\d+\s*$/, '').trim(),
+          image: '',
+          meta: '',
+          date: '',
+          endDate: '',
+          hours: '',
+          guests: '',
+          location: '',
+          notes: '',
+          qty: parseInt(m[4] || '1', 10) || 1
+        };
+        var pick = function (re) {
+          var x = block.match(re);
+          return x ? x[1].trim() : '';
+        };
+        item.image = pick(/Image:\s*([^\n]+)/i);
+        item.meta = pick(/Detail:\s*([^\n]+)/i) || pick(/Info:\s*([^\n]+)/i);
+        item.date = pick(/Start date:\s*([^\n]+)/i);
+        item.endDate = pick(/End date:\s*([^\n]+)/i);
+        item.hours = pick(/Hours\s*\/\s*duration:\s*([^\n]+)/i);
+        item.guests = pick(/People\s*\/\s*capacity:\s*([^\n]+)/i);
+        item.location = pick(/Location:\s*([^\n]+)/i);
+        item.notes = pick(/Notes:\s*([^\n]+)/i);
+        items.push(item);
+      });
+      return items;
+    }
+
+    function cleanServiceTitle(r) {
+      var s = String(r.service || '');
+      s = s.replace(/\s*·\s*Multi-cart:[\s\S]*/i, '').trim();
+      s = s.replace(/\s*·\s*Qty:\s*[\s\S]*/i, '').trim();
+      if (!s || s.length > 120 || /Start date:|Detail:|Source:/i.test(s)) {
+        var items = leadItems(r);
+        var n = items.length;
+        var eventType = (r.formFields && r.formFields['sf-service']) || '';
+        var company = r.company || (r.formFields && r.formFields['sf-company']) || '';
+        var bits = ['Multi-Enquiry Package'];
+        if (eventType) bits.push(eventType);
+        if (company) bits.push(company);
+        if (n) bits.push(n + ' lines');
+        return bits.join(' · ');
+      }
+      return s;
     }
 
     function leadCover(r) {
-      if (r.coverImage) return r.coverImage;
       var items = leadItems(r);
-      if (items[0] && items[0].image) return items[0].image;
-      // attachment preview if image type
+      if (r.coverImage) return resolveItemImage({ image: r.coverImage, name: r.name });
+      if (items[0]) return resolveItemImage(items[0]);
       if (Array.isArray(r.attachments)) {
         for (var i = 0; i < r.attachments.length; i++) {
           var a = r.attachments[i];
           if (a.dataUrl && String(a.type || '').indexOf('image') === 0) return a.dataUrl;
           if (a.url && /\.(png|jpe?g|webp|gif|avif)(\?|$)/i.test(a.url)) return a.url;
-          if (a.name && /\.(png|jpe?g|webp|gif|avif)$/i.test(a.name) && a.dataUrl) return a.dataUrl;
         }
       }
       return '';
     }
 
     function briefMessage(r) {
-      var msg = String(r.message || '');
-      // Prefer human brief over huge cart dumps
       if (r.formFields && r.formFields['sf-message']) return String(r.formFields['sf-message']);
-      // Strip noisy machine blocks for card preview
-      msg = msg.replace(/--- FULL MULTI-CART ---[\s\S]*/i, '').trim();
-      msg = msg.replace(/full_form_json:[\s\S]*/i, '').trim();
-      if (msg.length > 420) msg = msg.slice(0, 420) + '…';
-      return msg || 'No written brief — see package items above.';
+      var msg = String(r.message || '');
+      msg = msg.replace(/--- FULL MULTI-CART ---[\s\S]*/i, '');
+      msg = msg.replace(/Multi-cart:[\s\S]*/i, '');
+      msg = msg.replace(/\d+\.\s*\[[^\]]+\][\s\S]*/i, '');
+      msg = msg.replace(/full_form_json:[\s\S]*/i, '');
+      msg = msg.trim();
+      if (msg.length > 360) msg = msg.slice(0, 360) + '…';
+      return msg || 'See package table for full hire lines. Client brief not provided.';
+    }
+
+    function itemsTable(items) {
+      if (!items.length) return '';
+      var rows = items.map(function (it, idx) {
+        var img = resolveItemImage(it);
+        return '<tr>' +
+          '<td style="width:58px;"><img class="thumb" src="' + esc(img) + '" alt="" loading="lazy" onerror="this.src=\'images/brand/logo-icon.png\'" /></td>' +
+          '<td><span class="kind-pill">' + esc(it.kindLabel || it.kind || 'Item') + '</span></td>' +
+          '<td><p class="item-name">' + esc(it.name || 'Item') + (it.qty > 1 ? ' ×' + it.qty : '') + '</p>' +
+            (it.meta ? '<p class="item-meta">' + esc(String(it.meta).slice(0, 120)) + (String(it.meta).length > 120 ? '…' : '') + '</p>' : '') +
+          '</td>' +
+          '<td>' + esc(it.date || '—') + (it.endDate ? '<br><span style="color:#888">' + esc(it.endDate) + '</span>' : '') + '</td>' +
+          '<td>' + esc(it.hours || '—') + '</td>' +
+          '<td>' + esc(it.guests || '—') + '</td>' +
+          '<td>' + esc(it.location || '—') + '</td>' +
+          '<td>' + esc(it.notes || '—') + '</td>' +
+        '</tr>';
+      }).join('');
+      return (
+        '<div class="inq-table-wrap">' +
+          '<table class="inq-table">' +
+            '<thead><tr>' +
+              '<th>Photo</th><th>Type</th><th>Act / item</th><th>Dates</th><th>Hours</th><th>People</th><th>Venue</th><th>Notes</th>' +
+            '</tr></thead>' +
+            '<tbody>' + rows + '</tbody>' +
+          '</table>' +
+        '</div>'
+      );
     }
 
     function enquiryCard(r) {
       var stage = r.status || r.kanbanColumn || 'New';
       var when = r.timestamp || r.updatedAt || r.at || '';
-      var cover = leadCover(r);
       var items = leadItems(r);
+      var cover = leadCover(r);
       var isMulti = r.page === 'multi' || /multi/i.test(r.source || '') || items.length > 1;
+      var title = cleanServiceTitle(r);
       var coverHtml = cover
         ? '<img class="inq-cover" src="' + esc(cover) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" />' +
           '<div class="inq-cover-fallback" style="display:none">Elite</div>'
         : '<div class="inq-cover-fallback">' + esc((r.name || 'E').charAt(0)) + '</div>';
 
-      var itemsHtml = '';
-      if (items.length) {
-        itemsHtml = '<div class="inq-items">' + items.slice(0, 8).map(function (it) {
-          var img = it.image
-            ? '<img src="' + esc(it.image) + '" alt="" loading="lazy" onerror="this.src=\'images/brand/logo-icon.png\'" />'
-            : '<img src="images/brand/logo-icon.png" alt="" />';
-          var sub = [it.date, it.location, it.qty > 1 ? ('×' + it.qty) : ''].filter(Boolean).join(' · ');
-          return '<div class="inq-item">' + img +
-            '<div class="inq-item-body">' +
-              '<p class="inq-item-kind">' + esc(it.kindLabel || it.kind || 'Item') + '</p>' +
-              '<p class="inq-item-name">' + esc(it.name || 'Item') + '</p>' +
-              (sub ? '<p class="inq-item-sub">' + esc(sub) + '</p>' : '') +
-              (it.notes ? '<p class="inq-item-sub" title="' + esc(it.notes) + '">' + esc(it.notes.slice(0, 48)) + (it.notes.length > 48 ? '…' : '') + '</p>' : '') +
-            '</div></div>';
-        }).join('') +
-        (items.length > 8 ? '<div class="inq-item-sub" style="align-self:center;padding:.5rem;">+' + (items.length - 8) + ' more</div>' : '') +
-        '</div>';
-      }
-
       var facts = [
         ['Event date', r.date || (items[0] && items[0].date) || '—'],
+        ['End date', r.endDate || (items[0] && items[0].endDate) || '—'],
         ['Venue', r.venue || (items[0] && items[0].location) || '—'],
         ['Guests', r.guests || (items[0] && items[0].guests) || '—'],
+        ['Lines', String(items.length || 0)],
         ['Source', r.source || r.page || 'website']
       ];
 
@@ -473,11 +619,12 @@
                 (r.priority && r.priority !== 'normal' ? '<span class="inq-badge muted">' + esc(r.priority) + '</span>' : '') +
               '</div>' +
             '</div>' +
-            '<p class="inq-meta" style="margin:0 0 .35rem;color:#ddd;font-weight:600;">' + esc(r.service || 'General enquiry') + '</p>' +
+            '<p class="inq-meta" style="margin:0 0 .35rem;color:#e8c86b;font-weight:700;font-size:.9rem;">' + esc(title) + '</p>' +
             '<div class="inq-facts">' + facts.map(function (f) {
               return '<div class="inq-fact"><label>' + esc(f[0]) + '</label><div>' + esc(f[1]) + '</div></div>';
             }).join('') + '</div>' +
-            itemsHtml +
+            (items.length ? '<label style="margin:.15rem 0 .35rem;">Package lines</label>' + itemsTable(items) : '') +
+            '<label style="margin:.15rem 0 .35rem;">Client brief</label>' +
             '<p class="inq-message">' + esc(briefMessage(r)) + '</p>' +
             '<div class="inq-actions">' +
               (r.email ? '<a class="btn btn-gold" href="mailto:' + esc(r.email) + '?subject=' + encodeURIComponent('Re: your Elite enquiry') + '">Email client</a>' : '') +
@@ -493,16 +640,19 @@
       var list = document.getElementById('ops-inq-list');
       var countEl = document.getElementById('ops-inq-count');
       if (!list) return;
-      var rows = allLeads();
-      var open = rows.filter(function (r) {
-        var col = r.kanbanColumn || 'new';
-        return col !== 'lost';
-      });
-      if (countEl) {
-        countEl.textContent = rows.length + ' total · ' + open.length + ' open pipeline · multi + website + service forms';
+      function paint() {
+        var rows = allLeads();
+        var open = rows.filter(function (r) {
+          var col = r.kanbanColumn || 'new';
+          return col !== 'lost';
+        });
+        if (countEl) {
+          countEl.textContent = rows.length + ' total · ' + open.length + ' open pipeline · multi + website + service forms';
+        }
+        list.innerHTML = rows.slice(0, 60).map(enquiryCard).join('') ||
+          '<div class="ops-note" style="padding:1.25rem;border:1px dashed rgba(255,255,255,.12);border-radius:12px;text-align:center;">No enquiries yet. Submit a website form or multi-enquiry, then hit Refresh CRM.</div>';
       }
-      list.innerHTML = rows.slice(0, 60).map(enquiryCard).join('') ||
-        '<div class="ops-note" style="padding:1.25rem;border:1px dashed rgba(255,255,255,.12);border-radius:12px;text-align:center;">No enquiries yet. Submit a website form or multi-enquiry, then hit Refresh CRM.</div>';
+      loadActImageIndex().then(paint).catch(paint);
     }
 
     function loadClientFeed() {

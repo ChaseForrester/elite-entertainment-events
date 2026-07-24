@@ -256,12 +256,17 @@
     if (!lead.coverImage && lead.cartItems.length && lead.cartItems[0].image) {
       lead.coverImage = lead.cartItems[0].image;
     }
-    // Recover images from multi-cart text lines: " Image: path"
-    if ((!lead.cartItems || !lead.cartItems.length) && lead.message) {
-      lead.cartItems = parseCartItemsFromMessage(lead.message);
+    // Recover structured items from dumped multi-cart text (message or service)
+    if (!lead.cartItems || !lead.cartItems.length) {
+      var blob = [lead.message, lead.service, raw.multi_cart, raw.multi_cart_text].filter(Boolean).join('\n');
+      lead.cartItems = parseCartItemsFromMessage(blob);
       if (!lead.coverImage && lead.cartItems[0] && lead.cartItems[0].image) {
         lead.coverImage = lead.cartItems[0].image;
       }
+    }
+    // Never keep multi-cart dumps in the short service title
+    if (lead.service && /Multi-cart:/i.test(lead.service)) {
+      lead.service = cleanServiceTitle(lead.service, lead);
     }
     if (lead.assigneeEmail && !lead.assigneeName) {
       lead.assigneeName = teamName(lead.assigneeEmail);
@@ -269,36 +274,61 @@
     return hydrateAttachments(lead);
   }
 
+  function cleanServiceTitle(service, lead) {
+    var s = String(service || '');
+    s = s.replace(/\s*·\s*Multi-cart:[\s\S]*/i, '');
+    s = s.replace(/\s*·\s*Qty:\s*\d+[\s\S]*/i, '');
+    s = s.replace(/\s*\|\s*\d+\.\s*\[/g, ' · ['); // collapse pipe noise if any left
+    s = s.trim();
+    if (!s || s.length > 140) {
+      var n = (lead && lead.cartItems && lead.cartItems.length) || 0;
+      if (n) return 'Multi-Enquiry Package · ' + n + ' lines';
+      return 'Multi-Enquiry Package';
+    }
+    return s;
+  }
+
   function parseCartItemsFromMessage(message) {
     var text = String(message || '');
     if (!text) return [];
-    var blocks = text.split(/\n\n+/);
+    // Support both newline blocks and the old pipe-joined dump
+    text = text.replace(/\s*\|\s*/g, '\n');
+    text = text.replace(/Multi-cart:\s*/i, '\n');
+    var chunks = text.split(/(?=\d+\.\s*\[)/);
     var items = [];
-    blocks.forEach(function (block) {
-      var nameMatch = block.match(/^\s*\d+\.\s*\[([^\]]+)\]\s*(.+?)(?:\s*×\d+)?\s*$/m);
+    chunks.forEach(function (block) {
+      var nameMatch = block.match(/(\d+)\.\s*\[([^\]]+)\]\s*([^\n|]+?)(?:\s*×(\d+))?/);
       if (!nameMatch) return;
       var item = {
-        kindLabel: nameMatch[1].trim(),
-        name: nameMatch[2].trim(),
+        kindLabel: nameMatch[2].trim(),
+        name: nameMatch[3].replace(/\s*×\d+\s*$/, '').trim(),
         image: '',
         meta: '',
         date: '',
+        endDate: '',
+        hours: '',
+        guests: '',
         location: '',
         notes: '',
-        qty: 1
+        href: '',
+        qty: parseInt(nameMatch[4] || '1', 10) || 1
       };
-      var img = block.match(/Image:\s*(.+)/i);
-      if (img) item.image = img[1].trim();
-      var detail = block.match(/Detail:\s*(.+)/i);
-      if (detail) item.meta = detail[1].trim();
-      var start = block.match(/Start date:\s*(.+)/i);
-      if (start) item.date = start[1].trim();
-      var loc = block.match(/Location:\s*(.+)/i);
-      if (loc) item.location = loc[1].trim();
-      var notes = block.match(/Notes:\s*(.+)/i);
-      if (notes) item.notes = notes[1].trim();
-      var qty = block.match(/×(\d+)/);
-      if (qty) item.qty = parseInt(qty[1], 10) || 1;
+      var pick = function (re) {
+        var m = block.match(re);
+        return m ? m[1].trim() : '';
+      };
+      item.image = pick(/Image:\s*([^\n|]+)/i);
+      item.meta = pick(/Detail:\s*([^\n|]+)/i) || pick(/Info:\s*([^\n|]+)/i);
+      item.date = pick(/Start date:\s*([^\n|]+)/i);
+      item.endDate = pick(/End date:\s*([^\n|]+)/i);
+      item.hours = pick(/Hours\s*\/\s*duration:\s*([^\n|]+)/i);
+      item.guests = pick(/People\s*\/\s*capacity:\s*([^\n|]+)/i) || pick(/Guests:\s*([^\n|]+)/i);
+      item.location = pick(/Location:\s*([^\n|]+)/i);
+      item.notes = pick(/Notes:\s*([^\n|]+)/i);
+      item.href = pick(/Source:\s*([^\n|]+)/i);
+      // qty from name line "Name ×2" or security style
+      var q2 = block.match(/×(\d+)/);
+      if (q2) item.qty = parseInt(q2[1], 10) || item.qty;
       items.push(item);
     });
     return items;
