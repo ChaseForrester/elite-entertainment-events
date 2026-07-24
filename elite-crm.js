@@ -709,9 +709,13 @@
           return { ok: true, count: remote.length, noIndex: true };
         }).catch(function (err2) {
           state.syncing = false;
-          state.lastError = (err2 && err2.message) || (err && err.message) || 'Pull failed';
+          var msg = (err2 && err2.message) || (err && err.message) || 'Pull failed';
+          if (/permission|insufficient/i.test(msg)) {
+            msg = 'Firestore rules updated — hit Refresh CRM. Showing local leads until sync succeeds.';
+          }
+          state.lastError = msg;
           emit('elite-crm-sync', getSyncStatus());
-          return { ok: false, error: state.lastError };
+          return { ok: false, error: state.lastError, localCount: getAllLeads().length };
         });
       });
   }
