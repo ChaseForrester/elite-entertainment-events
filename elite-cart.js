@@ -79,8 +79,8 @@
     save(items);
   }
 
-  /** Booking fields shared across multi-hire line items */
-  var SHARED_KEYS = ['date', 'endDate', 'days', 'hours', 'guests', 'location', 'notes'];
+  /** Booking fields shared across multi-hire line items (NOT notes — those stay per item) */
+  var SHARED_KEYS = ['date', 'endDate', 'days', 'hours', 'guests', 'location'];
 
   /**
    * Apply the same booking details to every cart line (or only empty fields).
@@ -112,7 +112,7 @@
 
   /** First non-empty shared values found in the cart (for master bar prefill) */
   function sharedSnapshot() {
-    var snap = { date: '', endDate: '', days: '', hours: '', guests: '', location: '', notes: '' };
+    var snap = { date: '', endDate: '', days: '', hours: '', guests: '', location: '' };
     var items = load();
     SHARED_KEYS.forEach(function (k) {
       for (var i = 0; i < items.length; i++) {

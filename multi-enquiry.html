@@ -182,7 +182,7 @@
           '<div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;justify-content:space-between;margin-bottom:0.85rem;">' +
             '<div>' +
               '<strong style="color:#e8c86b;font-size:0.95rem;">Shared booking details</strong>' +
-              '<p style="margin:0.25rem 0 0;font-size:0.78rem;color:#aaa;line-height:1.45;">When enabled, dates, venue, hours and guests fill <em>every</em> hire item automatically — ideal when all tiers are on the same day.</p>' +
+              '<p style="margin:0.25rem 0 0;font-size:0.78rem;color:#aaa;line-height:1.45;">When enabled, dates, venue, hours and guests fill every hire item automatically. <strong style="color:#ccc;">Notes stay per item</strong> so each enquiry line can be different.</p>' +
             '</div>' +
             '<label style="display:inline-flex;align-items:center;gap:0.45rem;font-size:0.8rem;color:#ddd;cursor:pointer;white-space:nowrap;">' +
               '<input type="checkbox" id="cart-sync-all"' + checked + ' /> Apply to all items' +
@@ -201,11 +201,10 @@
               '<input type="text" id="shared-guests" data-shared="guests" value="' + esc(snap.guests || '') + '" placeholder="e.g. 150" /></div>' +
             '<div><label for="shared-location">Venue / location</label>' +
               '<input type="text" id="shared-location" data-shared="location" value="' + esc(snap.location || '') + '" placeholder="Suburb or venue" /></div>' +
-            '<div style="grid-column:1/-1;"><label for="shared-notes">Notes for all items</label>' +
-              '<textarea id="shared-notes" data-shared="notes" rows="2" placeholder="Access, theme, must-haves…">' + esc(snap.notes || '') + '</textarea></div>' +
           '</div>' +
+          '<p style="margin:0.75rem 0 0;font-size:0.75rem;color:#999;line-height:1.4;">Item notes stay separate — use “Notes for this item” on each line for unique requirements.</p>' +
           '<div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.85rem;align-items:center;">' +
-            '<button type="button" class="btn btn-gold btn-sm" id="cart-apply-all">Apply to all hire items now</button>' +
+            '<button type="button" class="btn btn-gold btn-sm" id="cart-apply-all">Apply dates &amp; venue to all items</button>' +
             '<span id="cart-sync-status" style="font-size:0.75rem;color:#8fd18f;"></span>' +
           '</div>' +
         '</div>'
