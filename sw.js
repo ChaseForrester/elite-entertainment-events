@@ -2,7 +2,7 @@
    ELITE ENTERTAINMENT — PWA Service Worker
 ═══════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'elite-events-v78-roving-order';
+const CACHE_NAME = 'elite-events-v79-crm-attachments';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -37,9 +37,13 @@ const ASSETS_TO_CACHE = [
   './style.css',
   './script.js',
   './cms.js',
+  './elite-crm.js',
+  './elite-crm-push.js',
+  './elite-mail.js',
   './service-form.js',
   './service-form.css',
   './site-nav.js',
+  './ops-console.html',
   './manifest.webmanifest',
   './favicon.ico',
   './icons/icon-192.png',

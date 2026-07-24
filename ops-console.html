@@ -651,6 +651,38 @@
       return msg || 'See package table for full hire lines. Client brief not provided.';
     }
 
+    function leadAttachments(r) {
+      var atts = Array.isArray(r.attachments) ? r.attachments.slice() : [];
+      if (!atts.length && Array.isArray(r.attachmentNames)) {
+        atts = r.attachmentNames.map(function (n, i) {
+          return { id: 'n' + i, name: n, size: 0, emailed: true };
+        });
+      }
+      return atts.filter(function (a) { return a && a.name; });
+    }
+
+    function attachmentsBlock(r) {
+      var atts = leadAttachments(r);
+      if (!atts.length) return '';
+      var rows = atts.map(function (a) {
+        var link = a.dataUrl || a.url || '';
+        var name = a.name || 'file';
+        var size = a.size ? (' · ' + Math.round(a.size / 1024) + 'KB') : '';
+        var open = link
+          ? ('<a href="' + esc(link) + '" target="_blank" rel="noopener" style="color:#e8c86b;font-weight:700;">' + esc(name) + '</a>')
+          : ('<span style="color:#fff;font-weight:700;">' + esc(name) + '</span>');
+        return '<div style="display:flex;justify-content:space-between;gap:.5rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.78rem;">' +
+          '<div>' + open + '<span style="color:#888;">' + size + (a.emailed !== false ? ' · emailed' : '') + '</span></div>' +
+          (link ? '<a href="' + esc(link) + '" target="_blank" rel="noopener" style="color:#c9a84c;font-size:.72rem;">Open</a>' : '<span style="color:#777;font-size:.7rem;">See team email</span>') +
+        '</div>';
+      }).join('');
+      return '<label style="margin:.15rem 0 .35rem;">Client attachments (' + atts.length + ')</label>' +
+        '<div style="margin:0 0 .75rem;padding:.55rem .75rem;border-radius:10px;border:1px solid rgba(200,168,76,.2);background:rgba(0,0,0,.28);">' +
+          rows +
+          '<p style="margin:.45rem 0 0;font-size:.68rem;color:#888;">Full files also go to info@eeevents.com.au and bookings@eeevents.com.au.</p>' +
+        '</div>';
+    }
+
     function itemsTable(items) {
       if (!items.length) return '';
       var rows = items.map(function (it, idx) {
@@ -725,6 +757,7 @@
               return '<div class="inq-fact"><label>' + esc(f[0]) + '</label><div>' + esc(f[1]) + '</div></div>';
             }).join('') + '</div>' +
             (items.length ? '<label style="margin:.15rem 0 .35rem;">Package lines</label>' + itemsTable(items) : '') +
+            attachmentsBlock(r) +
             '<label style="margin:.15rem 0 .35rem;">Client brief</label>' +
             '<p class="inq-message">' + esc(briefMessage(r)) + '</p>' +
             '<div class="inq-actions">' +

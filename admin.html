@@ -185,6 +185,46 @@
       overflow: hidden;
       margin-bottom: 2rem;
     }
+    /* Kanban needs its own horizontal scroll — don't clip the board */
+    #leads-container.table-container {
+      overflow: visible;
+    }
+    #leads-container .table-header {
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+    .analytic-card.is-clickable {
+      cursor: pointer;
+      transition: border-color .15s, transform .15s;
+    }
+    .analytic-card.is-clickable:hover {
+      border-color: rgba(200,168,76,0.45);
+      transform: translateY(-1px);
+    }
+    .db-tabs .tab-btn {
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      pointer-events: auto;
+    }
+    .attach-item {
+      padding: 0.65rem 0.75rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      background: rgba(0,0,0,0.25);
+      margin-bottom: 0.45rem;
+    }
+    .attach-item time {
+      display: block;
+      font-size: 0.68rem;
+      color: #888;
+      margin-top: 0.2rem;
+    }
+    .attach-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
     .table-header {
       padding: 1.5rem 2rem;
       border-bottom: 1px solid var(--card-border);
@@ -668,11 +708,11 @@
           <div class="analytic-label">Total Events</div>
           <div class="analytic-value" id="stat-events" style="color:var(--gold);">0</div>
         </div>
-        <div class="analytic-card">
+        <div class="analytic-card is-clickable" id="stat-card-leads" title="Open CRM Kanban" role="button" tabindex="0">
           <div class="analytic-label">Open Enquiries</div>
           <div class="analytic-value" id="stat-leads">0</div>
         </div>
-        <div class="analytic-card">
+        <div class="analytic-card is-clickable" id="stat-card-pipeline" title="Open CRM Kanban" role="button" tabindex="0">
           <div class="analytic-label">Active Pipeline Cards</div>
           <div class="analytic-value" id="stat-rev" style="color: var(--gold);">0</div>
         </div>
@@ -680,11 +720,11 @@
 
       <!-- Tab Toggles -->
       <div class="db-tabs" style="display:flex; gap:1rem; margin-bottom:2rem; justify-content:flex-start; width:100%; flex-wrap:wrap;">
-        <button type="button" class="btn btn-gold tab-btn" id="tab-btn-cms-artists" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem;">Artists &amp; Performers</button>
-        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">CRM Kanban</button>
-        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-events" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Events &amp; Packages</button>
-        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-content" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Hero &amp; Global Content</button>
-        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Partner Applications</button>
+        <button type="button" class="btn btn-gold tab-btn" id="tab-btn-cms-artists" data-admin-tab="cms-artists" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem;">Artists &amp; Performers</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-leads" data-admin-tab="leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">CRM Kanban</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-events" data-admin-tab="cms-events" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Events &amp; Packages</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-content" data-admin-tab="cms-content" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Hero &amp; Global Content</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-partners" data-admin-tab="partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Partner Applications</button>
       </div>
 
       <!-- ARTISTS CMS TABLE -->
@@ -1028,11 +1068,14 @@
 
       <div class="lead-section">
         <h4>Documents &amp; attachments</h4>
-        <p style="font-size:0.75rem; color:#888; margin:0 0 0.65rem;">Form uploads show as file names (synced across devices). Local previews under 1.5MB stay on this browser; metadata syncs to the team board.</p>
+        <p style="font-size:0.75rem; color:#888; margin:0 0 0.65rem;">
+          Client form uploads appear here. Images under ~200KB preview across devices; larger files keep their name/size on the board and are also emailed to
+          <strong style="color:#ccc;">info@eeevents.com.au</strong> and <strong style="color:#ccc;">bookings@eeevents.com.au</strong>.
+        </p>
         <div id="lead-attachments-list"></div>
         <label class="btn btn-outline btn-sm" style="cursor:pointer; display:inline-flex; margin-top:0.35rem;">
           + Attach file
-          <input type="file" id="lead-attach-file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" style="display:none;" />
+          <input type="file" id="lead-attach-file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" multiple style="display:none;" />
         </label>
       </div>
 
@@ -1304,7 +1347,10 @@
         currentAdminTab = activeKey;
 
         Object.keys(tabs).forEach(key => {
-          if (tabs[key]) tabs[key].style.display = key === activeKey ? 'block' : 'none';
+          if (tabs[key]) {
+            // !important beats any leftover inline/CSS that left panels stuck
+            tabs[key].style.setProperty('display', key === activeKey ? 'block' : 'none', 'important');
+          }
           if (tabBtns[key]) {
             tabBtns[key].className = key === activeKey
               ? 'btn btn-gold tab-btn'
@@ -1313,6 +1359,8 @@
             tabBtns[key].style.fontWeight = '700';
             tabBtns[key].style.padding = '0.6rem 1.6rem';
             tabBtns[key].style.fontSize = '0.8rem';
+            tabBtns[key].style.pointerEvents = 'auto';
+            tabBtns[key].style.cursor = 'pointer';
             tabBtns[key].setAttribute('aria-pressed', key === activeKey ? 'true' : 'false');
             if (key !== activeKey) {
               tabBtns[key].style.borderColor = 'rgba(255,255,255,0.2)';
@@ -1330,6 +1378,14 @@
           if (activeKey === 'cms-content' && typeof loadContentForm === 'function') loadContentForm();
         } catch (tabErr) {
           console.error('Admin tab switch error', activeKey, tabErr);
+          if (activeKey === 'leads') {
+            var boardEl = document.getElementById('kanban-board');
+            if (boardEl) {
+              boardEl.innerHTML = '<p style="padding:1.5rem;color:#ff8a8a;">Kanban failed to render: ' +
+                esc((tabErr && tabErr.message) || 'unknown error') +
+                '. Click Sync now, or hard-refresh (Cmd+Shift+R).</p>';
+            }
+          }
         }
 
         // Keep URL in sync so Ops deep-links and refresh stay on the right board
@@ -1392,15 +1448,46 @@
         }
       }
 
-      Object.keys(tabBtns).forEach(key => {
-        if (tabBtns[key]) {
-          tabBtns[key].addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+      function wireTabButton(btn, key) {
+        if (!btn) return;
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          pendingLeadOpenId = '';
+          switchTab(key, { scroll: true });
+        });
+      }
+      Object.keys(tabBtns).forEach(function (key) {
+        wireTabButton(tabBtns[key], key);
+      });
+
+      // Delegation backup — survives partial re-renders / stale handlers
+      var tabsBar = document.querySelector('.db-tabs');
+      if (tabsBar) {
+        tabsBar.addEventListener('click', function (e) {
+          var btn = e.target && e.target.closest ? e.target.closest('[data-admin-tab]') : null;
+          if (!btn || !tabsBar.contains(btn)) return;
+          e.preventDefault();
+          var key = btn.getAttribute('data-admin-tab');
+          if (key && tabs[key]) {
             pendingLeadOpenId = '';
-            switchTab(key);
-          });
-        }
+            switchTab(key, { scroll: true });
+          }
+        });
+      }
+
+      // Stats cards jump straight to the board
+      ['stat-card-leads', 'stat-card-pipeline'].forEach(function (id) {
+        var card = document.getElementById(id);
+        if (!card) return;
+        var go = function () {
+          pendingLeadOpenId = '';
+          switchTab('leads', { scroll: true });
+        };
+        card.addEventListener('click', go);
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+        });
       });
 
       // Deep-link / back-forward support
@@ -1696,18 +1783,47 @@
         const board = document.getElementById('kanban-board');
         const empty = document.getElementById('kanban-empty');
         const api = crmApi();
-        if (!board || !api || !api.getLeadsByColumn) {
+        if (!board) {
           updateStats();
           return;
         }
+        if (!api) {
+          board.innerHTML = '<p style="padding:1.25rem;color:#ff8a8a;">CRM engine not loaded. Hard-refresh Super Admin (Cmd+Shift+R).</p>';
+          updateStats();
+          return;
+        }
+        // Fallback if only getAllLeads exists (older CMS bridge)
+        let byCol = {};
+        const columns = api.KANBAN_COLUMNS || (window.EliteCMS && window.EliteCMS.KANBAN_COLUMNS) || [
+          { id: 'new', label: 'New Enquiry', color: '#c9a84c' },
+          { id: 'contacted', label: 'Contacted', color: '#6db3f2' },
+          { id: 'quoted', label: 'Quoted', color: '#b48cf2' },
+          { id: 'negotiating', label: 'Negotiating', color: '#f0c060' },
+          { id: 'booked', label: 'Booked / Won', color: '#55c555' },
+          { id: 'lost', label: 'Lost / Closed', color: '#ff6b6b' }
+        ];
         const f = getCrmFilter();
-        // EliteCRM getLeadsByColumn supports filters; for unassigned use client filter
-        const byCol = api.getLeadsByColumn({
-          q: f.q,
-          priority: f.priority,
-          assigneeEmail: f.unassignedOnly ? '' : f.assigneeEmail
-        });
-        const columns = api.KANBAN_COLUMNS || (window.EliteCMS && window.EliteCMS.KANBAN_COLUMNS) || [];
+        try {
+          if (api.getLeadsByColumn) {
+            byCol = api.getLeadsByColumn({
+              q: f.q,
+              priority: f.priority,
+              assigneeEmail: f.unassignedOnly ? '' : f.assigneeEmail
+            }) || {};
+          } else if (api.getAllLeads) {
+            columns.forEach(function (c) { byCol[c.id] = []; });
+            (api.getAllLeads() || []).forEach(function (lead) {
+              var col = lead.kanbanColumn || 'new';
+              if (!byCol[col]) byCol[col] = [];
+              byCol[col].push(lead);
+            });
+          }
+        } catch (renderErr) {
+          board.innerHTML = '<p style="padding:1.25rem;color:#ff8a8a;">Could not load leads: ' +
+            esc((renderErr && renderErr.message) || 'error') + '</p>';
+          updateStats();
+          return;
+        }
         let total = 0;
         const team = getTeam();
 
@@ -1727,7 +1843,10 @@
           const cards = colEl.querySelector('.kanban-cards');
 
           leads.forEach(lead => {
-            const attCount = (lead.attachments || []).length;
+            const attCount = (lead.attachments && lead.attachments.length)
+              || (lead.attachmentNames && lead.attachmentNames.length)
+              || lead.attachmentCount
+              || 0;
             const noteCount = (lead.notes || []).length;
             const p = priorityMeta(lead.priority || 'normal');
             const aName = lead.assigneeName || (lead.assigneeEmail && window.EliteCRM ? EliteCRM.teamName(lead.assigneeEmail) : '') || '';
@@ -1749,7 +1868,7 @@
               '<p class="kanban-meta">' + esc(lead.email || '') + (lead.phone ? (' · ' + esc(lead.phone)) : '') + '</p>' +
               '<div class="kanban-tags">' +
                 '<span class="kanban-tag gold">' + esc(lead.source || 'web') + '</span>' +
-                (attCount ? '<span class="kanban-tag">' + attCount + ' file' + (attCount > 1 ? 's' : '') + '</span>' : '') +
+                (attCount ? '<span class="kanban-tag" title="Client attachments">📎 ' + attCount + ' file' + (attCount > 1 ? 's' : '') + '</span>' : '') +
                 (noteCount ? '<span class="kanban-tag">' + noteCount + ' note' + (noteCount > 1 ? 's' : '') + '</span>' : '') +
               '</div>' +
               '<div class="kanban-card-actions">' +
@@ -1880,24 +1999,57 @@
         ).join('');
       }
 
+      function formatBytes(n) {
+        n = Number(n) || 0;
+        if (n < 1024) return n + ' B';
+        if (n < 1024 * 1024) return Math.round(n / 1024) + ' KB';
+        return (n / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+
       function renderLeadAttachments(lead) {
         const list = document.getElementById('lead-attachments-list');
         if (!list) return;
-        const atts = lead.attachments || [];
+        let atts = Array.isArray(lead.attachments) ? lead.attachments.slice() : [];
+        // Recover names-only from older leads
+        if (!atts.length && Array.isArray(lead.attachmentNames) && lead.attachmentNames.length) {
+          atts = lead.attachmentNames.map(function (n, i) {
+            return { id: 'name-' + i, name: n, size: 0, emailed: true, note: 'From form (check team email for file)' };
+          });
+        }
         if (!atts.length) {
-          list.innerHTML = '<p style="font-size:0.78rem;color:#777;margin:0;">No attachments yet.</p>';
+          list.innerHTML = '<p style="font-size:0.78rem;color:#777;margin:0;">No attachments on this enquiry yet. Client files from the website form will appear here after they submit with uploads.</p>';
           return;
         }
-        list.innerHTML = atts.map(a => {
+        list.innerHTML = atts.map(function (a) {
           const link = a.dataUrl || a.url || '';
           const name = a.name || 'file';
-          const open = link
-            ? ('<a href="' + esc(link) + '" target="_blank" rel="noopener" style="color:var(--gold);">' + esc(name) + '</a>')
-            : esc(name);
-          return '<div class="attach-item" style="display:flex;justify-content:space-between;gap:0.75rem;align-items:center;">' +
-            '<div>' + open + '<time>' + esc(a.at || '') + (a.size ? (' · ' + Math.round(a.size / 1024) + 'KB') : '') + '</time></div>' +
-            (a.id ? '<button type="button" class="btn-action" style="color:#ff8a8a;" data-rm-att="' + esc(a.id) + '">Remove</button>' : '') +
-            '</div>';
+          const isImg = link && (/^data:image\//i.test(link) || /\.(png|jpe?g|gif|webp|avif)(\?|$)/i.test(link) || /image\//i.test(a.type || ''));
+          const thumb = (isImg && link)
+            ? ('<img src="' + esc(link) + '" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid rgba(200,168,76,.3);" />')
+            : '<div style="width:48px;height:48px;border-radius:8px;background:rgba(200,168,76,.12);border:1px solid rgba(200,168,76,.25);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#e8c86b;font-weight:800;">FILE</div>';
+          const openBtn = link
+            ? ('<a class="btn btn-gold btn-sm" href="' + esc(link) + '" target="_blank" rel="noopener" download="' + esc(name) + '">Open / download</a>')
+            : '';
+          const note = a.note
+            ? esc(a.note)
+            : (link
+              ? 'Available on this CRM card'
+              : 'Name synced · full file also in info@ / bookings@ email');
+          return '<div class="attach-item" style="display:flex;justify-content:space-between;gap:0.75rem;align-items:flex-start;flex-wrap:wrap;">' +
+            '<div style="display:flex;gap:0.75rem;align-items:flex-start;flex:1;min-width:180px;">' +
+              thumb +
+              '<div>' +
+                '<div style="font-weight:700;color:#fff;">' + esc(name) + '</div>' +
+                '<time>' + esc(a.at || '') + (a.size ? (' · ' + formatBytes(a.size)) : '') +
+                  (a.emailed !== false ? ' · emailed to team' : '') + '</time>' +
+                '<p style="margin:0.25rem 0 0;font-size:0.72rem;color:#999;">' + note + '</p>' +
+              '</div>' +
+            '</div>' +
+            '<div class="attach-actions">' +
+              openBtn +
+              (a.id ? '<button type="button" class="btn btn-outline btn-sm" style="color:#ff8a8a;border-color:rgba(255,80,80,.35);" data-rm-att="' + esc(a.id) + '">Remove</button>' : '') +
+            '</div>' +
+          '</div>';
         }).join('');
         list.querySelectorAll('[data-rm-att]').forEach(btn => {
           btn.addEventListener('click', () => {
@@ -2243,28 +2395,42 @@
       });
       document.getElementById('lead-attach-file').addEventListener('change', (e) => {
         const id = document.getElementById('lead-id').value;
-        const file = e.target.files && e.target.files[0];
-        if (!id || !file) return;
-        if (file.size > 1.5 * 1024 * 1024) {
-          alert('Keep admin card attachments under 1.5MB each (browser storage limit). Larger files should be emailed — the card still keeps the file name if you note it.');
-          e.target.value = '';
-          return;
+        const fileList = e.target.files ? Array.from(e.target.files) : [];
+        if (!id || !fileList.length) return;
+        const tooBig = fileList.filter(function (f) { return f.size > 1.5 * 1024 * 1024; });
+        if (tooBig.length) {
+          alert('Keep admin card attachments under 1.5MB each. Skipped: ' + tooBig.map(function (f) { return f.name; }).join(', '));
         }
-        const reader = new FileReader();
-        reader.onload = function (evt) {
-          const att = {
-            name: file.name,
-            type: file.type || 'file',
-            size: file.size,
-            dataUrl: evt.target.result
-          };
-          if (window.EliteCRM) EliteCRM.addLeadAttachment(id, att, { actor: currentAdminActor() });
-          else crmApi().addLeadAttachment(id, att);
+        const okFiles = fileList.filter(function (f) { return f.size <= 1.5 * 1024 * 1024; });
+        if (!okFiles.length) { e.target.value = ''; return; }
+
+        const addOne = function (file) {
+          return new Promise(function (resolve) {
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+              const att = {
+                id: 'A-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6),
+                name: file.name,
+                type: file.type || 'file',
+                size: file.size,
+                dataUrl: evt.target.result,
+                cloudSafe: file.size <= 200 * 1024,
+                emailed: false,
+                at: new Date().toLocaleString()
+              };
+              if (window.EliteCRM) EliteCRM.addLeadAttachment(id, att, { actor: currentAdminActor() });
+              else if (crmApi().addLeadAttachment) crmApi().addLeadAttachment(id, att);
+              resolve();
+            };
+            reader.onerror = function () { resolve(); };
+            reader.readAsDataURL(file);
+          });
+        };
+        Promise.all(okFiles.map(addOne)).then(function () {
           e.target.value = '';
           openLead(id);
           renderLeads();
-        };
-        reader.readAsDataURL(file);
+        });
       });
 
       // Rich Text & Image Uploader Helper Functions

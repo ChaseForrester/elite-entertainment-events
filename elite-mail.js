@@ -55,6 +55,73 @@
     return { ok: true, files: files };
   }
 
+  /** Per-file ceiling for CRM in-browser preview (localStorage / Indexed path). */
+  var MAX_CRM_PREVIEW_BYTES = 1.5 * 1024 * 1024;
+  /** Smaller files also sync as dataUrl across devices via Firestore. */
+  var MAX_CRM_CLOUD_BYTES = 200 * 1024;
+
+  function readFileAsDataUrl(file) {
+    return new Promise(function (resolve, reject) {
+      if (!file) return resolve('');
+      var reader = new FileReader();
+      reader.onload = function () { resolve(String(reader.result || '')); };
+      reader.onerror = function () { reject(reader.error || new Error('read failed')); };
+      try {
+        reader.readAsDataURL(file);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  /**
+   * Convert File objects into CRM attachment records with real dataUrls
+   * (when under size limits). Always returns name/type/size so the Kanban
+   * card can list every client file even if the body is email-only.
+   */
+  function filesToAttachments(files, opts) {
+    opts = opts || {};
+    var maxPreview = opts.maxPreviewBytes || MAX_CRM_PREVIEW_BYTES;
+    var maxCloud = opts.maxCloudBytes || MAX_CRM_CLOUD_BYTES;
+    var list = files || [];
+    var stamp = Date.now().toString(36);
+
+    return Promise.all(list.map(function (file, i) {
+      var base = {
+        id: 'A-' + stamp + '-' + i,
+        name: (file && file.name) || ('file-' + (i + 1)),
+        type: (file && file.type) || 'application/octet-stream',
+        size: (file && file.size) || 0,
+        at: new Date().toLocaleString(),
+        emailed: true,
+        dataUrl: '',
+        url: '',
+        cloudSafe: false,
+        note: ''
+      };
+      if (!file || !file.size) {
+        base.note = 'Empty file';
+        return Promise.resolve(base);
+      }
+      if (file.size > maxPreview) {
+        base.note = 'Full file emailed to the team (over ' +
+          Math.round(maxPreview / 1024) + 'KB CRM preview limit)';
+        return Promise.resolve(base);
+      }
+      return readFileAsDataUrl(file).then(function (dataUrl) {
+        base.dataUrl = dataUrl || '';
+        base.cloudSafe = !!(file.size <= maxCloud && dataUrl);
+        if (!base.cloudSafe && base.dataUrl) {
+          base.note = 'Preview on this browser; full file also emailed to the team';
+        }
+        return base;
+      }).catch(function () {
+        base.note = 'Could not preview in CRM — full file still emailed to the team';
+        return base;
+      });
+    }));
+  }
+
   function flattenPayload(fields) {
     var lines = [];
     var keys = Object.keys(fields || {}).sort();
@@ -266,8 +333,14 @@
     recipientsLabel: recipientsLabel,
     collectFiles: collectFiles,
     validateFiles: validateFiles,
+    totalSize: totalSize,
+    readFileAsDataUrl: readFileAsDataUrl,
+    filesToAttachments: filesToAttachments,
     sendEnquiry: sendEnquiry,
     fileFieldHtml: fileFieldHtml,
-    bindFileStatus: bindFileStatus
+    bindFileStatus: bindFileStatus,
+    MAX_TOTAL_BYTES: MAX_TOTAL_BYTES,
+    MAX_CRM_PREVIEW_BYTES: MAX_CRM_PREVIEW_BYTES,
+    MAX_CRM_CLOUD_BYTES: MAX_CRM_CLOUD_BYTES
   };
 })(typeof window !== 'undefined' ? window : this);

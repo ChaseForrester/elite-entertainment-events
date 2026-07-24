@@ -25,20 +25,37 @@
     return null;
   }
 
+  var MAX_CLOUD_BODY = 280000;
+  var MAX_CLOUD_BUDGET = 750000;
+
   function cloudSafe(lead) {
     var copy;
     try { copy = JSON.parse(JSON.stringify(lead || {})); } catch (e) { copy = Object.assign({}, lead || {}); }
     if (Array.isArray(copy.attachments)) {
+      var budget = MAX_CLOUD_BUDGET;
       copy.attachments = copy.attachments.map(function (a) {
-        return {
+        var out = {
           id: a.id || '',
           name: a.name || 'file',
           type: a.type || 'file',
           size: a.size || 0,
           url: a.url || '',
-          at: a.at || ''
+          at: a.at || '',
+          emailed: a.emailed !== false,
+          note: a.note || ''
         };
+        var body = a.dataUrl ? String(a.dataUrl) : '';
+        if (body && body.length < MAX_CLOUD_BODY && body.length <= budget &&
+            (a.cloudSafe || body.length < 12000 || (a.size && a.size <= 200 * 1024))) {
+          out.dataUrl = body;
+          budget -= body.length;
+        }
+        return out;
       });
+      copy.attachmentNames = copy.attachments.map(function (a) { return a.name; });
+      copy.attachmentCount = copy.attachments.length;
+    } else if (Array.isArray(copy.attachmentNames)) {
+      copy.attachmentCount = copy.attachmentNames.length;
     }
     // Strip undefined (Firestore rejects them)
     Object.keys(copy).forEach(function (k) {
@@ -84,6 +101,28 @@
    * Persist enquiry for Super Admin CRM (all devices via Firebase when available).
    * Also mirrors client_feed for consultations/messages so Ops Console fills.
    */
+  function cacheAttachLocal(lead) {
+    if (!lead || !lead.id || !Array.isArray(lead.attachments) || !lead.attachments.length) return;
+    try {
+      var key = 'elite_crm_attach_cache_v1';
+      var map = readJson(key, {});
+      map[lead.id] = lead.attachments.map(function (a) {
+        return {
+          id: a.id || '',
+          name: a.name || 'file',
+          type: a.type || 'file',
+          size: a.size || 0,
+          dataUrl: a.dataUrl || '',
+          url: a.url || '',
+          at: a.at || '',
+          emailed: a.emailed !== false,
+          note: a.note || ''
+        };
+      });
+      writeJson(key, map);
+    } catch (e) {}
+  }
+
   function ingest(lead) {
     if (!lead || !lead.id) return { ok: false };
 
@@ -107,11 +146,15 @@
       createdAtIso: lead.createdAtIso || new Date().toISOString(),
       updatedAt: new Date().toLocaleString(),
       timestamp: lead.timestamp || new Date().toLocaleString(),
-      order: lead.order || Date.now()
+      order: lead.order || Date.now(),
+      attachmentNames: (lead.attachments || []).map(function (a) { return a.name; }).filter(Boolean)
+        .concat(lead.attachmentNames || []).filter(function (v, i, arr) { return arr.indexOf(v) === i; }),
+      attachmentCount: (lead.attachments && lead.attachments.length) || (lead.attachmentNames && lead.attachmentNames.length) || 0
     });
     if (idx >= 0) list[idx] = Object.assign({}, list[idx], payload);
     else list.unshift(payload);
     writeJson(LS, list);
+    cacheAttachLocal(payload);
 
     maybeFeedFromLead(payload);
 

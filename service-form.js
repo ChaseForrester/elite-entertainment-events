@@ -698,137 +698,176 @@
         } catch (cartErr) {}
       }
 
-      // Human-readable message for cards/emails (not the cart dump)
-      var briefLines = [];
-      if (collected['sf-message']) briefLines.push(collected['sf-message']);
-      if (collected['sf-name']) briefLines.push('Contact: ' + collected['sf-name']);
-      if (collected['sf-email']) briefLines.push('Email: ' + collected['sf-email']);
-      if (collected['sf-phone']) briefLines.push('Phone: ' + collected['sf-phone']);
-      if (collected['sf-date']) briefLines.push('Date: ' + collected['sf-date'] + (collected['sf-end-date'] ? ' → ' + collected['sf-end-date'] : ''));
-      if (collected['sf-venue']) briefLines.push('Venue: ' + collected['sf-venue']);
-      if (collected['sf-guests']) briefLines.push('Guests: ' + collected['sf-guests']);
-      if (collected['sf-duration']) briefLines.push('Schedule: ' + collected['sf-duration']);
-      if (collected['sf-budget']) briefLines.push('Budget: ' + collected['sf-budget']);
-      if (collected['sf-vehicles']) briefLines.push('Vehicles:\n' + collected['sf-vehicles']);
-      if (collected['sf-yachts']) briefLines.push('Vessels:\n' + collected['sf-yachts']);
-      if (collected['sf-talent']) briefLines.push('Talent:\n' + collected['sf-talent']);
-      if (collected['sf-security']) briefLines.push('Security:\n' + collected['sf-security']);
-      if (collected['sf-production']) briefLines.push('Production:\n' + collected['sf-production']);
-      if (files.length) {
-        briefLines.push('Attachments: ' + files.map(function (f) { return f.name; }).join(', '));
-      }
-      var fullDetails = briefLines.join('\n');
-      var lead = {
-        id: 'SVC-' + Date.now().toString().slice(-6),
-        name: name,
-        email: email,
-        phone: phone,
-        date: collected['sf-date'] || '',
-        endDate: collected['sf-end-date'] || '',
-        venue: collected['sf-venue'] || '',
-        guests: collected['sf-guests'] || '',
-        budget: collected['sf-budget'] || '',
-        company: collected['sf-company'] || '',
-        service: service,
-        message: fullDetails,
-        status: 'New Enquiry',
-        kanbanColumn: 'new',
-        priority: 'normal',
-        timestamp: new Date().toLocaleString(),
-        source: 'service-page',
-        page: key,
-        formFields: collected,
-        cartItems: cartItems,
-        coverImage: (cartItems[0] && cartItems[0].image) || '',
-        attachmentNames: files.map(function (f) { return f.name; }),
-        attachments: files.map(function (f) {
-          return { name: f.name, type: f.type || 'file', size: f.size || 0, at: new Date().toLocaleString() };
-        }),
-        notes: [],
-        order: Date.now()
-      };
-
-      try {
-        var inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
-        inquiries.unshift(lead);
-        localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
-      } catch (e) {}
-      try {
-        if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(lead);
-        else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(lead);
-      } catch (crmErr) {}
-
-      if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+      if (btn) { btn.disabled = true; btn.textContent = files.length ? 'Reading files…' : 'Sending…'; }
       if (status) {
         status.hidden = false;
         status.className = 'cat-form-status cat-form-status--info';
-        status.textContent = 'Saving to Super Admin CRM and emailing ' + recipientsText() + '…';
+        status.textContent = files.length
+          ? ('Preparing ' + files.length + ' attachment' + (files.length > 1 ? 's' : '') + ' for CRM…')
+          : ('Saving to Super Admin CRM and emailing ' + recipientsText() + '…');
       }
 
-      var emailPayload = {
-        name: name,
-        email: email,
-        phone: phone || '—',
-        _subject: '[Elite] ' + cfg.title + ' · ' + name,
-        form_type: cfg.title,
-        page: key,
-        service: service,
-        eventDate: collected['sf-date'] || '—',
-        eventEndDate: collected['sf-end-date'] || '—',
-        venue: collected['sf-venue'] || '—',
-        guests: collected['sf-guests'] || '—',
-        company: collected['sf-company'] || '—',
-        duration: collected['sf-duration'] || '—',
-        budget: collected['sf-budget'] || '—',
-        multi_cart: collected['sf-cart'] || '—',
-        quantity_summary: collected['sf-quantity'] || '—',
-        vehicles: collected['sf-vehicles'] || '',
-        yachts: collected['sf-yachts'] || '',
-        talent: collected['sf-talent'] || '',
-        security: collected['sf-security'] || '',
-        production: collected['sf-production'] || '',
-        message: fullDetails,
-        full_form_json: JSON.stringify(collected, null, 2),
-        cart_items_json: cartItems.length ? JSON.stringify(cartItems, null, 2) : '',
-        cover_image: lead.coverImage || '',
-        leadId: lead.id,
-        source: (typeof location !== 'undefined' ? location.pathname : key)
-      };
+      var attachPromise = (mail() && mail().filesToAttachments)
+        ? mail().filesToAttachments(files)
+        : Promise.resolve(files.map(function (f, i) {
+            return {
+              id: 'A-' + Date.now().toString(36) + '-' + i,
+              name: f.name,
+              type: f.type || 'file',
+              size: f.size || 0,
+              at: new Date().toLocaleString(),
+              emailed: true,
+              dataUrl: '',
+              note: 'File emailed to the team'
+            };
+          }));
 
-      var sendPromise;
-      if (mail()) {
-        var fileSource = (liveFiles.length && attachInput) ? [attachInput] : files;
-        sendPromise = mail().sendEnquiry(emailPayload, fileSource);
-      } else {
-        sendPromise = Promise.resolve({ ok: false, error: new Error('EliteMail missing') });
-      }
-
-      sendPromise.then(function (result) {
-        if (result && result.ok) {
-          if (status) {
-            status.className = 'cat-form-status cat-form-status--success';
-            var extra = '';
-            if (result.allOk === false && result.failed && result.failed.length) {
-              extra = ' (partial: confirm FormSubmit for ' + result.failed.join(', ') + ')';
-            }
-            status.textContent = 'Enquiry sent to Super Admin CRM and ' + recipientsText() +
-              (files.length ? ' with ' + files.length + ' attachment' + (files.length > 1 ? 's' : '') : '') +
-              extra + '.';
-          }
-          if (btn) { btn.textContent = 'Sent'; }
-          if (key === 'multi' && window.EliteCart) { try { window.EliteCart.clear(); } catch (e) {} }
-          collected = {};
-          pendingFiles = [];
-          step = 0;
-          setTimeout(render, 2200);
-        } else {
-          if (status) {
-            status.className = 'cat-form-status cat-form-status--warn';
-            status.textContent = 'Saved to Super Admin CRM. Email needs a one-time FormSubmit confirmation — open ' +
-              recipientsText() + ' (and spam) and click “Confirm email”, then submit again.';
-          }
-          if (btn) { btn.disabled = false; btn.textContent = 'Submit Enquiry'; }
+      attachPromise.then(function (attachmentRecords) {
+        // Human-readable message for cards/emails (not the cart dump)
+        var briefLines = [];
+        if (collected['sf-message']) briefLines.push(collected['sf-message']);
+        if (collected['sf-name']) briefLines.push('Contact: ' + collected['sf-name']);
+        if (collected['sf-email']) briefLines.push('Email: ' + collected['sf-email']);
+        if (collected['sf-phone']) briefLines.push('Phone: ' + collected['sf-phone']);
+        if (collected['sf-date']) briefLines.push('Date: ' + collected['sf-date'] + (collected['sf-end-date'] ? ' → ' + collected['sf-end-date'] : ''));
+        if (collected['sf-venue']) briefLines.push('Venue: ' + collected['sf-venue']);
+        if (collected['sf-guests']) briefLines.push('Guests: ' + collected['sf-guests']);
+        if (collected['sf-duration']) briefLines.push('Schedule: ' + collected['sf-duration']);
+        if (collected['sf-budget']) briefLines.push('Budget: ' + collected['sf-budget']);
+        if (collected['sf-vehicles']) briefLines.push('Vehicles:\n' + collected['sf-vehicles']);
+        if (collected['sf-yachts']) briefLines.push('Vessels:\n' + collected['sf-yachts']);
+        if (collected['sf-talent']) briefLines.push('Talent:\n' + collected['sf-talent']);
+        if (collected['sf-security']) briefLines.push('Security:\n' + collected['sf-security']);
+        if (collected['sf-production']) briefLines.push('Production:\n' + collected['sf-production']);
+        if (attachmentRecords.length) {
+          briefLines.push('Attachments: ' + attachmentRecords.map(function (a) {
+            return a.name + (a.size ? ' (' + Math.round(a.size / 1024) + 'KB)' : '');
+          }).join(', '));
         }
+        var fullDetails = briefLines.join('\n');
+        var lead = {
+          id: 'SVC-' + Date.now().toString().slice(-6),
+          name: name,
+          email: email,
+          phone: phone,
+          date: collected['sf-date'] || '',
+          endDate: collected['sf-end-date'] || '',
+          venue: collected['sf-venue'] || '',
+          guests: collected['sf-guests'] || '',
+          budget: collected['sf-budget'] || '',
+          company: collected['sf-company'] || '',
+          service: service,
+          message: fullDetails,
+          status: 'New Enquiry',
+          kanbanColumn: 'new',
+          priority: 'normal',
+          timestamp: new Date().toLocaleString(),
+          source: 'service-page',
+          page: key,
+          formFields: collected,
+          cartItems: cartItems,
+          coverImage: (cartItems[0] && cartItems[0].image) || '',
+          attachmentNames: attachmentRecords.map(function (a) { return a.name; }),
+          attachmentCount: attachmentRecords.length,
+          attachments: attachmentRecords,
+          notes: [],
+          order: Date.now()
+        };
+
+        try {
+          var inquiries = JSON.parse(localStorage.getItem('elite_inquiries') || '[]');
+          inquiries.unshift(lead);
+          localStorage.setItem('elite_inquiries', JSON.stringify(inquiries));
+        } catch (e) {}
+        try {
+          if (window.EliteCRMPush && EliteCRMPush.ingest) EliteCRMPush.ingest(lead);
+          else if (window.EliteCRM && EliteCRM.ingestLead) EliteCRM.ingestLead(lead);
+        } catch (crmErr) {}
+
+        if (btn) { btn.textContent = 'Sending…'; }
+        if (status) {
+          status.textContent = 'Saving to Super Admin CRM and emailing ' + recipientsText() +
+            (attachmentRecords.length ? ' (with attachments)' : '') + '…';
+        }
+
+        var emailPayload = {
+          name: name,
+          email: email,
+          phone: phone || '—',
+          _subject: '[Elite] ' + cfg.title + ' · ' + name,
+          form_type: cfg.title,
+          page: key,
+          service: service,
+          eventDate: collected['sf-date'] || '—',
+          eventEndDate: collected['sf-end-date'] || '—',
+          venue: collected['sf-venue'] || '—',
+          guests: collected['sf-guests'] || '—',
+          company: collected['sf-company'] || '—',
+          duration: collected['sf-duration'] || '—',
+          budget: collected['sf-budget'] || '—',
+          multi_cart: collected['sf-cart'] || '—',
+          quantity_summary: collected['sf-quantity'] || '—',
+          vehicles: collected['sf-vehicles'] || '',
+          yachts: collected['sf-yachts'] || '',
+          talent: collected['sf-talent'] || '',
+          security: collected['sf-security'] || '',
+          production: collected['sf-production'] || '',
+          message: fullDetails,
+          full_form_json: JSON.stringify(collected, null, 2),
+          cart_items_json: cartItems.length ? JSON.stringify(cartItems, null, 2) : '',
+          cover_image: lead.coverImage || '',
+          attachment_names: attachmentRecords.map(function (a) {
+            return a.name + (a.size ? ' (' + Math.round(a.size / 1024) + 'KB)' : '');
+          }).join('; '),
+          leadId: lead.id,
+          source: (typeof location !== 'undefined' ? location.pathname : key)
+        };
+
+        var sendPromise;
+        if (mail()) {
+          // Prefer original File objects so FormSubmit gets real binaries
+          var fileSource = files.length ? files : ((liveFiles.length && attachInput) ? [attachInput] : []);
+          sendPromise = mail().sendEnquiry(emailPayload, fileSource);
+        } else {
+          sendPromise = Promise.resolve({ ok: false, error: new Error('EliteMail missing') });
+        }
+
+        return sendPromise.then(function (result) {
+          if (result && result.ok) {
+            if (status) {
+              status.className = 'cat-form-status cat-form-status--success';
+              var extra = '';
+              if (result.allOk === false && result.failed && result.failed.length) {
+                extra = ' (partial: confirm FormSubmit for ' + result.failed.join(', ') + ')';
+              }
+              status.textContent = 'Enquiry sent to Super Admin CRM and ' + recipientsText() +
+                (attachmentRecords.length ? ' with ' + attachmentRecords.length + ' attachment' + (attachmentRecords.length > 1 ? 's' : '') : '') +
+                extra + '.';
+            }
+            if (btn) { btn.textContent = 'Sent'; }
+            if (key === 'multi' && window.EliteCart) { try { window.EliteCart.clear(); } catch (e) {} }
+            collected = {};
+            pendingFiles = [];
+            step = 0;
+            setTimeout(render, 2200);
+          } else {
+            if (status) {
+              status.className = 'cat-form-status cat-form-status--warn';
+              status.textContent = 'Saved to Super Admin CRM' +
+                (attachmentRecords.length ? ' (attachments on CRM card)' : '') +
+                '. Email needs a one-time FormSubmit confirmation — open ' +
+                recipientsText() + ' (and spam) and click “Confirm email”, then submit again.';
+            }
+            if (btn) { btn.disabled = false; btn.textContent = 'Submit Enquiry'; }
+          }
+        });
+      }).catch(function (err) {
+        if (status) {
+          status.hidden = false;
+          status.className = 'cat-form-status cat-form-status--error';
+          status.textContent = 'Could not prepare attachments: ' + ((err && err.message) || 'unknown error');
+        }
+        if (btn) { btn.disabled = false; btn.textContent = 'Submit Enquiry'; }
       });
     }
 

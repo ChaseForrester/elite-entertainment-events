@@ -120,6 +120,46 @@
         }
       }
 
+      const originalBtn = btn ? btn.textContent : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = files.length ? 'Reading files…' : 'Sending…';
+      }
+      setStatus(statusEl, files.length ? 'Preparing attachments for CRM…' : 'Saving to admin pipeline and emailing our team…', 'info');
+
+      var attachmentRecords = [];
+      try {
+        if (mail() && mail().filesToAttachments) {
+          attachmentRecords = await mail().filesToAttachments(files);
+        } else {
+          attachmentRecords = files.map(function (f, i) {
+            return {
+              id: 'A-' + Date.now().toString(36) + '-' + i,
+              name: f.name,
+              type: f.type || 'file',
+              size: f.size || 0,
+              at: new Date().toLocaleString(),
+              emailed: true,
+              dataUrl: '',
+              note: 'File emailed to the team'
+            };
+          });
+        }
+      } catch (attErr) {
+        attachmentRecords = files.map(function (f, i) {
+          return {
+            id: 'A-' + Date.now().toString(36) + '-' + i,
+            name: f.name,
+            type: f.type || 'file',
+            size: f.size || 0,
+            at: new Date().toLocaleString(),
+            emailed: true,
+            dataUrl: '',
+            note: 'File emailed to the team'
+          };
+        });
+      }
+
       const id = 'CAT-' + Date.now().toString().slice(-6);
       const lead = {
         id,
@@ -136,7 +176,9 @@
           guests ? 'Guests: ' + guests : '',
           venue ? 'Venue: ' + venue : '',
           budget ? 'Budget: ' + budget : '',
-          files.length ? 'Attachments: ' + files.map(function (f) { return f.name; }).join(', ') : ''
+          attachmentRecords.length ? 'Attachments: ' + attachmentRecords.map(function (a) {
+            return a.name + (a.size ? ' (' + Math.round(a.size / 1024) + 'KB)' : '');
+          }).join(', ') : ''
         ].filter(Boolean).join('\n'),
         status: 'New Enquiry',
         kanbanColumn: 'new',
@@ -144,19 +186,14 @@
         source: 'category',
         category,
         act,
-        attachmentNames: files.map(function (f) { return f.name; }),
-        attachments: files.map(function (f) {
-          return { name: f.name, type: f.type || 'file', size: f.size || 0, at: new Date().toLocaleString() };
-        }),
+        attachmentNames: attachmentRecords.map(function (a) { return a.name; }),
+        attachmentCount: attachmentRecords.length,
+        attachments: attachmentRecords,
         notes: [],
         order: Date.now()
       };
 
-      const originalBtn = btn ? btn.textContent : '';
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = 'Sending…';
-      }
+      if (btn) btn.textContent = 'Sending…';
       setStatus(statusEl, 'Saving to admin pipeline and emailing our team…', 'info');
 
       const adminOk = saveToAdmin(lead);
@@ -177,14 +214,17 @@
         category: category,
         act: act,
         form_type: 'Category enquiry',
+        attachment_names: attachmentRecords.map(function (a) {
+          return a.name + (a.size ? ' (' + Math.round(a.size / 1024) + 'KB)' : '');
+        }).join('; '),
         full_form_json: JSON.stringify({
           id: id, name: name, email: email, phone: phone, date: date,
           guests: guests, venue: venue, budget: budget, category: category,
-          act: act, message: message, attachments: files.map(function (f) { return f.name; })
+          act: act, message: message, attachments: attachmentRecords.map(function (a) { return a.name; })
         }, null, 2),
         subject: '[Elite Enquiry] ' + category + (act ? ' — ' + act : '') + ' · ' + name,
         source: window.location.pathname.split('/').pop() || 'category'
-      }, fileInput ? [fileInput] : []);
+      }, files.length ? files : (fileInput ? [fileInput] : []));
 
       if (adminOk && mailResult.ok) {
         setStatus(

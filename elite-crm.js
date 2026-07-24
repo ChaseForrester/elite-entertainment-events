@@ -13,7 +13,10 @@
   var LS_TRASH = 'elite_crm_trash_v1';
   var LS_TEAM = 'elite_crm_team_v1';
   var LS_ATTACH = 'elite_crm_attach_cache_v1';
-  var MAX_CLOUD_ATTACH_CHARS = 12000; // strip large dataUrls from cloud docs
+  // Allow modest image previews in Firestore (~200KB file ≈ ~270k base64 chars).
+  // Larger files stay metadata-only on cloud + full body in local attach cache / email.
+  var MAX_CLOUD_ATTACH_CHARS = 280000;
+  var MAX_CLOUD_ATTACH_BUDGET = 750000; // total dataUrl chars per lead document
   var LISTEN_LIMIT = 400;
 
   var KANBAN_COLUMNS = [
@@ -146,42 +149,83 @@
   function cacheAttachments(leadId, attachments) {
     if (!leadId || !attachments || !attachments.length) return;
     var map = attachCache();
-    map[leadId] = (attachments || []).map(function (a) {
-      return {
-        id: a.id,
-        name: a.name,
-        type: a.type,
-        size: a.size,
-        dataUrl: a.dataUrl || '',
-        url: a.url || '',
-        at: a.at
+    var prev = map[leadId] || [];
+    var byKey = {};
+    prev.forEach(function (a) {
+      var k = a.id || a.name;
+      if (k) byKey[k] = a;
+    });
+    (attachments || []).forEach(function (a) {
+      if (!a) return;
+      var k = a.id || a.name;
+      if (!k) return;
+      var old = byKey[k] || {};
+      byKey[k] = {
+        id: a.id || old.id || '',
+        name: a.name || old.name || 'file',
+        type: a.type || old.type || 'file',
+        size: a.size || old.size || 0,
+        // Prefer the richest available body
+        dataUrl: a.dataUrl || old.dataUrl || '',
+        url: a.url || old.url || '',
+        at: a.at || old.at || nowLocal(),
+        emailed: a.emailed !== false,
+        note: a.note || old.note || ''
       };
     });
-    setAttachCache(map);
+    map[leadId] = Object.keys(byKey).map(function (k) { return byKey[k]; });
+    try {
+      setAttachCache(map);
+    } catch (e) {
+      // If localStorage is full, keep metadata only
+      try {
+        map[leadId] = map[leadId].map(function (a) {
+          return Object.assign({}, a, {
+            dataUrl: (a.dataUrl && a.dataUrl.length < 80000) ? a.dataUrl : ''
+          });
+        });
+        setAttachCache(map);
+      } catch (e2) {}
+    }
   }
 
   function hydrateAttachments(lead) {
     if (!lead) return lead;
     var cached = attachCache()[lead.id] || [];
-    if (!cached.length) return lead;
+    if (!cached.length && !(lead.attachments && lead.attachments.length)) return lead;
     var byId = {};
-    cached.forEach(function (a) { if (a.id) byId[a.id] = a; });
     var byName = {};
-    cached.forEach(function (a) { if (a.name) byName[a.name] = a; });
-    lead.attachments = (lead.attachments || []).map(function (a) {
-      var hit = (a.id && byId[a.id]) || (a.name && byName[a.name]);
-      if (hit && !a.dataUrl && hit.dataUrl) {
-        return Object.assign({}, a, { dataUrl: hit.dataUrl });
-      }
-      return a;
+    cached.forEach(function (a) {
+      if (a.id) byId[a.id] = a;
+      if (a.name) byName[a.name] = a;
+    });
+    var list = (lead.attachments && lead.attachments.length)
+      ? lead.attachments
+      : cached;
+    lead.attachments = list.map(function (a) {
+      var hit = (a.id && byId[a.id]) || (a.name && byName[a.name]) || null;
+      if (!hit) return a;
+      return Object.assign({}, a, {
+        dataUrl: a.dataUrl || hit.dataUrl || '',
+        url: a.url || hit.url || '',
+        size: a.size || hit.size || 0,
+        type: a.type || hit.type || 'file',
+        note: a.note || hit.note || ''
+      });
     });
     return lead;
   }
 
   function cloudSafeLead(lead) {
-    var copy = JSON.parse(JSON.stringify(lead || {}));
-    // Firestore rejects undefined; strip heavy attachment bodies
+    var copy;
+    try {
+      copy = JSON.parse(JSON.stringify(lead || {}));
+    } catch (e) {
+      copy = Object.assign({}, lead || {});
+    }
+    // Firestore rejects undefined; keep attachment metadata always, dataUrls within budget
     if (Array.isArray(copy.attachments)) {
+      var budget = MAX_CLOUD_ATTACH_BUDGET;
       copy.attachments = copy.attachments.map(function (a) {
         var out = {
           id: a.id || '',
@@ -189,14 +233,26 @@
           type: a.type || 'file',
           size: a.size || 0,
           url: a.url || '',
-          at: a.at || ''
+          at: a.at || '',
+          emailed: a.emailed !== false,
+          note: a.note || '',
+          cloudSafe: !!a.cloudSafe
         };
-        // Only keep tiny dataUrls (icons/snippets)
-        if (a.dataUrl && String(a.dataUrl).length < MAX_CLOUD_ATTACH_CHARS) {
-          out.dataUrl = a.dataUrl;
+        var body = a.dataUrl ? String(a.dataUrl) : '';
+        var allowBody = body &&
+          body.length < MAX_CLOUD_ATTACH_CHARS &&
+          body.length <= budget &&
+          (a.cloudSafe || body.length < 12000 || (a.size && a.size <= 200 * 1024));
+        if (allowBody) {
+          out.dataUrl = body;
+          budget -= body.length;
         }
         return out;
       });
+      copy.attachmentNames = copy.attachments.map(function (a) { return a.name; });
+      copy.attachmentCount = copy.attachments.length;
+    } else if (Array.isArray(copy.attachmentNames) && copy.attachmentNames.length) {
+      copy.attachmentCount = copy.attachmentNames.length;
     }
     // Prefer ISO timestamps for merge
     copy.updatedAtIso = copy.updatedAtIso || nowIso();
@@ -211,15 +267,42 @@
   function normalizeLead(raw, sourceHint) {
     if (!raw || typeof raw !== 'object') return null;
     var column = raw.kanbanColumn || normalizeColumn(raw.status);
-    var attachments = Array.isArray(raw.attachments)
-      ? raw.attachments
-      : (Array.isArray(raw.attachmentNames)
-          ? raw.attachmentNames.map(function (n) {
-              return typeof n === 'string'
-                ? { id: 'A-' + Math.random().toString(36).slice(2, 8), name: n, type: 'ref', size: 0, at: nowLocal() }
-                : n;
-            })
-          : []);
+    var attachments = Array.isArray(raw.attachments) ? raw.attachments.slice() : [];
+    // Recover names-only lists (older forms / email dumps)
+    if ((!attachments || !attachments.length) && Array.isArray(raw.attachmentNames)) {
+      attachments = raw.attachmentNames.map(function (n, i) {
+        if (typeof n === 'string') {
+          return {
+            id: 'A-name-' + i + '-' + String(n).slice(0, 12),
+            name: n,
+            type: 'file',
+            size: 0,
+            at: nowLocal(),
+            emailed: true,
+            note: 'Listed from form (open team email for full file if no preview)'
+          };
+        }
+        return n;
+      }).filter(Boolean);
+    }
+    // Ensure every attachment has a stable id + name
+    attachments = attachments.map(function (a, i) {
+      if (!a || typeof a !== 'object') {
+        return { id: 'A-' + i, name: String(a || 'file'), type: 'file', size: 0, at: nowLocal() };
+      }
+      return {
+        id: a.id || ('A-' + i + '-' + String(a.name || 'file').slice(0, 16)),
+        name: a.name || ('file-' + (i + 1)),
+        type: a.type || 'file',
+        size: a.size || 0,
+        dataUrl: a.dataUrl || '',
+        url: a.url || '',
+        at: a.at || nowLocal(),
+        emailed: a.emailed !== false,
+        note: a.note || '',
+        cloudSafe: !!a.cloudSafe
+      };
+    });
     var activity = Array.isArray(raw.activity) ? raw.activity : [];
     var lead = {
       id: raw.id || ('LEAD-' + Date.now().toString(36)),
