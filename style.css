@@ -323,10 +323,32 @@ input, select, textarea { font: inherit; }
   font-weight: 600;
   margin-top: 4px;
 }
+/* Mobile: keep the nav logo visible (pages use brand-logo--nav only;
+   the old rule hid it and expected a missing brand-logo--nav-icon) */
+@media (max-width: 900px) {
+  .logo {
+    max-width: 56px;
+    flex-shrink: 0;
+    z-index: 3;
+    position: relative;
+  }
+  .brand-logo--nav {
+    display: block !important;
+    height: 44px;
+    width: 44px;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .brand-logo--nav-icon {
+    display: none;
+  }
+}
 @media (max-width: 520px) {
-  .brand-logo--nav { display: none; }
-  .brand-logo--nav-icon { display: block; }
   .logo { max-width: 48px; }
+  .brand-logo--nav {
+    height: 42px;
+    width: 42px;
+  }
 }
 
 /* Nav */
