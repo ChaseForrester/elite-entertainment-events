@@ -194,37 +194,108 @@
     return nav;
   }
 
-  function bindNav() {
-    var navToggle = document.getElementById('nav-toggle');
-    var mainNav = document.getElementById('main-nav');
-    if (!mainNav) return;
-
-    function closeMobile() {
-      if (!mainNav || !navToggle) return;
-      mainNav.classList.remove('open');
-      navToggle.setAttribute('aria-expanded', 'false');
-      var spans = navToggle.querySelectorAll('span');
+  function setHamburgerIcon(navToggle, isOpen) {
+    if (!navToggle) return;
+    var spans = navToggle.querySelectorAll('span');
+    if (isOpen) {
+      if (spans[0]) spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+      if (spans[1]) spans[1].style.opacity = '0';
+      if (spans[2]) spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+    } else {
       if (spans[0]) spans[0].style.transform = '';
       if (spans[1]) spans[1].style.opacity = '';
       if (spans[2]) spans[2].style.transform = '';
+    }
+  }
+
+  function closeMobileNav() {
+    var mainNav = document.getElementById('main-nav');
+    var navToggle = document.getElementById('nav-toggle');
+    if (mainNav) {
+      mainNav.classList.remove('open');
       mainNav.querySelectorAll('.has-dropdown.open').forEach(function (li) {
         li.classList.remove('open');
       });
     }
+    if (navToggle) {
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.classList.remove('is-open');
+      setHamburgerIcon(navToggle, false);
+    }
+    document.body.classList.remove('nav-open');
+    document.documentElement.classList.remove('nav-open');
+  }
 
-    if (navToggle && !navToggle.dataset.bound) {
+  function openMobileNav() {
+    var mainNav = document.getElementById('main-nav');
+    var navToggle = document.getElementById('nav-toggle');
+    if (!mainNav) return;
+    mainNav.classList.add('open');
+    if (navToggle) {
+      navToggle.setAttribute('aria-expanded', 'true');
+      navToggle.classList.add('is-open');
+      setHamburgerIcon(navToggle, true);
+    }
+    document.body.classList.add('nav-open');
+    document.documentElement.classList.add('nav-open');
+  }
+
+  var _navJustOpenedAt = 0;
+
+  function toggleMobileNav(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+    }
+    var mainNav = document.getElementById('main-nav');
+    if (!mainNav) return;
+    if (mainNav.classList.contains('open')) {
+      closeMobileNav();
+    } else {
+      openMobileNav();
+      _navJustOpenedAt = Date.now();
+    }
+  }
+
+  function bindNav() {
+    var mainNav = document.getElementById('main-nav');
+    var navToggle = document.getElementById('nav-toggle');
+    if (!mainNav) return;
+
+    // Wipe any prior click handlers from inline page scripts / script.js
+    // so the drawer only toggles once (double-bind was closing it immediately).
+    if (navToggle && navToggle.parentNode) {
+      var fresh = navToggle.cloneNode(true);
+      navToggle.parentNode.replaceChild(fresh, navToggle);
+      navToggle = fresh;
+      navToggle.id = 'nav-toggle';
+      navToggle.type = 'button';
+      navToggle.setAttribute('aria-controls', 'main-nav');
+      navToggle.setAttribute('aria-label', navToggle.getAttribute('aria-label') || 'Toggle navigation');
       navToggle.dataset.bound = '1';
-      navToggle.addEventListener('click', function () {
-        var isOpen = mainNav.classList.toggle('open');
-        navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        var spans = navToggle.querySelectorAll('span');
-        if (isOpen) {
-          if (spans[0]) spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-          if (spans[1]) spans[1].style.opacity = '0';
-          if (spans[2]) spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-        } else {
-          closeMobile();
-        }
+      navToggle.dataset.eliteNav = '1';
+      navToggle.addEventListener('click', toggleMobileNav);
+    }
+
+    // Backdrop / outside click closes drawer on mobile
+    if (!document.documentElement.dataset.eliteNavDocBound) {
+      document.documentElement.dataset.eliteNavDocBound = '1';
+      document.addEventListener('click', function (e) {
+        var nav = document.getElementById('main-nav');
+        var toggle = document.getElementById('nav-toggle');
+        if (!nav || !nav.classList.contains('open')) return;
+        if (window.innerWidth > 900) return;
+        // Ignore the same gesture that opened the menu
+        if (Date.now() - _navJustOpenedAt < 400) return;
+        if (nav.contains(e.target) || (toggle && toggle.contains(e.target))) return;
+        closeMobileNav();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeMobileNav();
+      });
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 900) closeMobileNav();
       });
     }
 
@@ -234,6 +305,7 @@
       link.addEventListener('click', function (e) {
         if (window.innerWidth <= 900) {
           e.preventDefault();
+          e.stopPropagation();
           var parent = link.parentElement;
           var wasOpen = parent.classList.contains('open');
           mainNav.querySelectorAll('.has-dropdown.open').forEach(function (li) {
@@ -248,10 +320,26 @@
       if (a.dataset.navBound) return;
       a.dataset.navBound = '1';
       a.addEventListener('click', function () {
-        if (window.innerWidth <= 900) closeMobile();
+        if (window.innerWidth <= 900) closeMobileNav();
+      });
+    });
+
+    // Mobile contact links should also close drawer
+    mainNav.querySelectorAll('.mobile-contact-info a').forEach(function (a) {
+      if (a.dataset.navBound) return;
+      a.dataset.navBound = '1';
+      a.addEventListener('click', function () {
+        if (window.innerWidth <= 900) closeMobileNav();
       });
     });
   }
+
+  // Public API for other scripts
+  window.EliteNav = {
+    open: openMobileNav,
+    close: closeMobileNav,
+    toggle: toggleMobileNav
+  };
 
   function ensureCartAssets() {
     try {

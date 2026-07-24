@@ -123,57 +123,8 @@ try {
     }, { passive: true });
   }
 
-  /* ─── MOBILE NAV TOGGLE ─── */
-  const navToggle = document.getElementById('nav-toggle');
-  const mainNav = document.getElementById('main-nav');
-
-  const closeMobileNav = () => {
-    if (!mainNav || !navToggle) return;
-    mainNav.classList.remove('open');
-    navToggle.setAttribute('aria-expanded', 'false');
-    const spans = navToggle.querySelectorAll('span');
-    if (spans[0]) spans[0].style.transform = '';
-    if (spans[1]) spans[1].style.opacity = '';
-    if (spans[2]) spans[2].style.transform = '';
-  };
-
-  if (navToggle && mainNav) {
-    navToggle.addEventListener('click', () => {
-      const isOpen = mainNav.classList.toggle('open');
-      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      const spans = navToggle.querySelectorAll('span');
-      if (isOpen) {
-        if (spans[0]) spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-        if (spans[1]) spans[1].style.opacity = '0';
-        if (spans[2]) spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-      } else {
-        closeMobileNav();
-      }
-    });
-
-    mainNav.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        // Don't close when expanding a dropdown parent on mobile
-        if (window.innerWidth <= 900 && !a.parentElement.classList.contains('has-dropdown')) {
-          closeMobileNav();
-        }
-      });
-    });
-  }
-
-  /* ─── MOBILE DROPDOWN TOGGLE (skip if site-nav already bound) ─── */
-  const hasDropdowns = document.querySelectorAll('.has-dropdown > a:not([data-ddBound])');
-  hasDropdowns.forEach(link => {
-    if (link.dataset.ddBound) return;
-    link.dataset.ddBound = '1';
-    link.addEventListener('click', (e) => {
-      if (window.innerWidth <= 900) {
-        e.preventDefault();
-        const parent = link.parentElement;
-        parent.classList.toggle('open');
-      }
-    });
-  });
+  /* ─── MOBILE NAV — handled solely by site-nav.js (EliteNav) ─── */
+  // Do not bind a second hamburger listener here; double-toggle was closing the drawer instantly.
 
   /* ─── BACK TO TOP ─── */
   const backToTop = document.getElementById('back-to-top');
