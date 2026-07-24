@@ -31,11 +31,9 @@
   ];
 
   var DEFAULT_TEAM = [
-    { id: 'tm-stormy', name: 'Stormy Forrester', email: 'stormychaseforrester@gmail.com', color: '#c9a84c', role: 'Super Admin' },
-    { id: 'tm-info', name: 'Elite Info', email: 'info@eeevents.com.au', color: '#6db3f2', role: 'Admin' },
-    { id: 'tm-techaid', name: 'TechAid Australia', email: 'info@techaidaustralia.com.au', color: '#55c555', role: 'Admin' },
-    { id: 'tm-brescia', name: 'Brescia Entertainment', email: 'bresciaentertainment@hotmail.com', color: '#b48cf2', role: 'Admin' },
-    { id: 'tm-fran', name: 'Fran Brescia', email: 'fran@bresciaentertainment.com.au', color: '#f0c060', role: 'Admin' }
+    { id: 'tm-info', name: 'Elite Info', email: 'info@eeevents.com.au', color: '#c9a84c', role: 'Super Admin' },
+    { id: 'tm-bookings', name: 'Elite Bookings', email: 'bookings@eeevents.com.au', color: '#6db3f2', role: 'Bookings' },
+    { id: 'tm-stormy', name: 'Stormy Forrester', email: 'stormychaseforrester@gmail.com', color: '#55c555', role: 'Super Admin' }
   ];
 
   var state = {

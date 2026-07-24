@@ -125,7 +125,7 @@ try {
 
   /* ─── MOBILE NAV TOGGLE ─── */
   const navToggle = document.getElementById('nav-toggle');
-  const mainNav   = document.getElementById('main-nav');
+  const mainNav = document.getElementById('main-nav');
 
   const closeMobileNav = () => {
     if (!mainNav || !navToggle) return;
@@ -1760,7 +1760,7 @@ try {
             <span style="font-family:'Cormorant Garamond',serif; font-size:0.6rem; letter-spacing:0.18em; color:var(--gold); display:block; text-transform:uppercase;">Artist Hire Enquiry</span>
           </div>
           <h3 style="margin-bottom:0.5rem; color:var(--white); text-align:center;" id="hire-modal-artist-title">Book Artist</h3>
-          <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem; text-align:center;">Fill out the form below to receive a direct quote. Your enquiry will be logged in the CRM &amp; emailed to info@eeevents.com.au.</p>
+          <p style="font-size:0.8rem; color:var(--silver-mid); margin-bottom:1.5rem; text-align:center;">Fill out the form below to receive a direct quote. Your enquiry will be logged in the CRM &amp; emailed to info@eeevents.com.au and bookings@eeevents.com.au.</p>
           
           <form id="artist-hire-form" style="display:flex; flex-direction:column; gap:1rem; text-align:left;">
             <input type="hidden" id="hire-artist-name" />

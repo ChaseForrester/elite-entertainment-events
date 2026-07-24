@@ -134,6 +134,7 @@
       '<div class="mobile-contact-info">' +
         '<a href="tel:+61417221111">+61 417 221 111</a>' +
         '<a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>' +
+        '<a href="mailto:bookings@eeevents.com.au">bookings@eeevents.com.au</a>' +
         '<a href="index.html#contact" class="btn btn-gold" style="margin-top:0.75rem;border-radius:30px;width:100%;">Get a Quote</a>' +
       '</div>'
     );

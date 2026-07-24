@@ -654,7 +654,7 @@ window.ELITE_TALENT = [
   },
   {
     id: "siboney-promotional-model",
-    name: "Siboney  - Promotional Model",
+    name: "Siboney - Promotional Model",
     style: "Models & Hostesses",
     styles: ["Models & Hostesses"],
     group: "Flexible",

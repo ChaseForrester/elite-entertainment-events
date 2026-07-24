@@ -5,14 +5,12 @@
 (function (global) {
   'use strict';
 
-  /** Primary inbox (FormSubmit endpoint) */
-  var EMAIL_PRIMARY = 'stormychaseforrester@gmail.com';
+  /** Official Elite inboxes — FormSubmit primary + CC */
+  var EMAIL_PRIMARY = 'info@eeevents.com.au';
 
-  /** Additional inboxes receive every submission via FormSubmit _cc */
+  /** Additional official inbox receives every submission via FormSubmit _cc */
   var EMAIL_CC = [
-    'info@techaidaustralia.com.au',
-    'bresciaentertainment@hotmail.com',
-    'fran@bresciaentertainment.com.au'
+    'bookings@eeevents.com.au'
   ];
 
   var MAX_TOTAL_BYTES = 10 * 1024 * 1024; // FormSubmit 10MB limit
@@ -70,7 +68,7 @@
    * Send enquiry via FormSubmit.
    * Always uses multipart FormData so file attachments work.
    *
-   * @param {Object} fields  Plain string fields (name, email, message, _subject, …)
+   * @param {Object} fields Plain string fields (name, email, message, _subject, …)
    * @param {File[]|HTMLInputElement[]} [filesOrInputs]
    * @returns {Promise<{ok:boolean, data?:any, error?:any, recipients:string[]}>}
    */
@@ -160,7 +158,7 @@
   /**
    * Build a small reusable file-upload UI block (HTML string).
    * @param {Object} opts
-   * @param {string} opts.id       input id
+   * @param {string} opts.id input id
    * @param {string} [opts.label]
    * @param {string} [opts.accept]
    * @param {boolean} [opts.multiple]

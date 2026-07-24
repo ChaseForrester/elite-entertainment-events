@@ -1235,11 +1235,12 @@
   "companyLegalName": "ELITE ENTERTAINMENT & EVENTS PTY LTD",
   "abn": "17 698 991 481",
   "acn": "698 991 481",
-  "asicDate": "12/06/2026",
+  "asicDate": "40+ years",
   "publicLiability": "Public Liability Insurance held — certificates available on request for tender and venue compliance.",
   "workersComp": "Workers compensation cover as required for contracted personnel.",
   "contactPhone": "+61 417 221 111",
   "contactEmail": "info@eeevents.com.au",
+  "contactEmailBookings": "bookings@eeevents.com.au",
   "contactAddress": "Sydney | Melbourne | Brisbane | Gold Coast"
 };
 

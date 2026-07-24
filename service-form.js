@@ -6,7 +6,7 @@
 
   function recipientsText() {
     var m = mail();
-    return m ? m.recipientsLabel() : 'stormychaseforrester@gmail.com';
+    return m ? m.recipientsLabel() : 'info@eeevents.com.au, bookings@eeevents.com.au';
   }
 
   var CONFIGS = {

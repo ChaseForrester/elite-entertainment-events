@@ -114,16 +114,16 @@
       var lines = [
         (i + 1) + '. [' + kindLabel(x.kind) + '] ' + x.name + (x.qty > 1 ? ' ×' + x.qty : '')
       ];
-      if (x.meta) lines.push('   Detail: ' + x.meta);
-      if (x.summary && x.summary !== x.meta) lines.push('   Info: ' + x.summary);
-      if (x.date) lines.push('   Start date: ' + x.date);
-      if (x.endDate) lines.push('   End date: ' + x.endDate);
-      if (x.days) lines.push('   Days: ' + x.days);
-      if (x.hours) lines.push('   Hours / duration: ' + x.hours);
-      if (x.guests) lines.push('   People / capacity: ' + x.guests);
-      if (x.location) lines.push('   Location: ' + x.location);
-      if (x.notes) lines.push('   Notes: ' + x.notes);
-      if (x.href) lines.push('   Source: ' + x.href);
+      if (x.meta) lines.push(' Detail: ' + x.meta);
+      if (x.summary && x.summary !== x.meta) lines.push(' Info: ' + x.summary);
+      if (x.date) lines.push(' Start date: ' + x.date);
+      if (x.endDate) lines.push(' End date: ' + x.endDate);
+      if (x.days) lines.push(' Days: ' + x.days);
+      if (x.hours) lines.push(' Hours / duration: ' + x.hours);
+      if (x.guests) lines.push(' People / capacity: ' + x.guests);
+      if (x.location) lines.push(' Location: ' + x.location);
+      if (x.notes) lines.push(' Notes: ' + x.notes);
+      if (x.href) lines.push(' Source: ' + x.href);
       return lines.join('\n');
     }).join('\n\n');
   }

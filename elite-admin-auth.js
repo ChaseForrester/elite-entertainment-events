@@ -8,19 +8,17 @@
 (function (global) {
   'use strict';
 
-  /** Who may access Super Admin */
+  /** Who may access Super Admin (official + operational accounts) */
   var ADMIN_EMAILS = [
     'info@eeevents.com.au',
-    'stormychaseforrester@gmail.com',
-    'info@techaidaustralia.com.au',
-    'bresciaentertainment@hotmail.com',
-    'fran@bresciaentertainment.com.au'
+    'bookings@eeevents.com.au',
+    'stormychaseforrester@gmail.com'
   ];
 
   /**
    * Bootstrap password SHA-256 (hex).
    * Default password (change immediately after first login):
-   *   Elite#SuperAdmin2026
+   * Elite#SuperAdmin2026
    * After change, hash is stored under LOCAL_HASH_KEY and this bootstrap is no longer used.
    */
   var BOOTSTRAP_HASH =
@@ -364,10 +362,10 @@
   /**
    * Wire a standard login form block.
    * opts: {
-   *   emailId, passId, submitId, statusId,
-   *   forgotId (optional button),
-   *   onSuccess(result),
-   *   redirect (optional url)
+   * emailId, passId, submitId, statusId,
+   * forgotId (optional button),
+   * onSuccess(result),
+   * redirect (optional url)
    * }
    */
   function bindLoginForm(opts) {

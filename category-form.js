@@ -9,7 +9,7 @@
 
   function recipientsText() {
     var m = mail();
-    return m ? m.recipientsLabel() : 'stormychaseforrester@gmail.com';
+    return m ? m.recipientsLabel() : 'info@eeevents.com.au, bookings@eeevents.com.au';
   }
 
   function val(id) {
@@ -209,7 +209,7 @@
       } else {
         setStatus(
           statusEl,
-          'Something went wrong. Please call +61 417 221 111 or email stormychaseforrester@gmail.com directly.',
+          'Something went wrong. Please call +61 417 221 111 or email info@eeevents.com.au / bookings@eeevents.com.au directly.',
           'error'
         );
       }
@@ -240,7 +240,7 @@
       var m = mail();
       return m
         ? { primary: m.EMAIL_PRIMARY, cc: m.EMAIL_CC.slice(), all: m.allRecipients() }
-        : { primary: 'stormychaseforrester@gmail.com', cc: [], all: ['stormychaseforrester@gmail.com'] };
+        : { primary: 'info@eeevents.com.au', cc: ['bookings@eeevents.com.au'], all: ['info@eeevents.com.au', 'bookings@eeevents.com.au'] };
     }
   };
 

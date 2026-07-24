@@ -801,8 +801,8 @@
             <input type="text" id="content-acn" />
           </div>
           <div class="auth-input-group">
-            <label>ASIC Registration Date</label>
-            <input type="text" id="content-asic-date" />
+            <label>Years in business</label>
+            <input type="text" id="content-asic-date" placeholder="e.g. 40+ years" />
           </div>
         </div>
       </div>
@@ -1852,7 +1852,7 @@
         document.getElementById('content-legal-name').value = content.companyLegalName || 'ELITE ENTERTAINMENT & EVENTS PTY LTD';
         document.getElementById('content-abn').value = content.abn || '17 698 991 481';
         document.getElementById('content-acn').value = content.acn || '698 991 481';
-        document.getElementById('content-asic-date').value = content.asicDate || '12/06/2026';
+        document.getElementById('content-asic-date').value = content.asicDate || '40+ years';
       }
 
       document.getElementById('btn-save-content').addEventListener('click', () => {
