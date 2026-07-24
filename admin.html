@@ -1012,7 +1012,7 @@
       <div class="auth-input-group"><label>Message / brief</label><textarea id="lead-message" rows="4" style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:#fff; resize:vertical;"></textarea></div>
       <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem;">
         <button type="button" class="btn btn-gold" id="btn-save-lead">Save enquiry</button>
-        <button type="button" class="btn btn-outline" id="btn-delete-lead" style="border-color:rgba(255,80,80,0.35); color:#ff8a8a;">Delete</button>
+        <button type="button" class="btn btn-outline" id="btn-delete-lead" style="border-color:rgba(255,80,80,0.35); color:#ff8a8a;">Move to trash</button>
         <a class="btn btn-outline" id="lead-mailto" href="#">Email client</a>
         <a class="btn btn-outline" id="lead-mailto-assignee" href="#" style="display:none;">Email assignee</a>
       </div>
@@ -1592,6 +1592,7 @@
                   ? ('<span class="assignee-chip" title="' + esc(lead.assigneeEmail) + '"><span class="assignee-avatar" style="background:' + aColor + ';">' + esc(aInit) + '</span>' + esc(aName || lead.assigneeEmail) + '</span>')
                   : '<span class="kanban-meta" style="margin:0;">Unassigned</span>') +
                 '<button type="button" class="btn-action" data-open-lead="' + esc(lead.id) + '">Open</button>' +
+                '<button type="button" class="btn-action" data-trash-lead="' + esc(lead.id) + '" style="color:#ff8a8a;">Trash</button>' +
               '</div>' +
               '<select class="quick-assign" data-quick-assign="' + esc(lead.id) + '" title="Assign team member">' +
                 '<option value="">Assign…</option>' +
@@ -1621,6 +1622,17 @@
               openBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 openLead(lead.id);
+              });
+            }
+            const trashBtn = card.querySelector('[data-trash-lead]');
+            if (trashBtn) {
+              trashBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!confirm('Move this enquiry to trash?')) return;
+                if (window.EliteCRM) EliteCRM.deleteLead(lead.id, { actor: currentAdminActor() });
+                else if (crmApi().deleteLead) crmApi().deleteLead(lead.id);
+                renderLeads();
+                updateStats();
               });
             }
             const qa = card.querySelector('[data-quick-assign]');
@@ -2046,11 +2058,12 @@
       });
       document.getElementById('btn-delete-lead').addEventListener('click', () => {
         const id = document.getElementById('lead-id').value;
-        if (!id || !confirm('Delete this enquiry on all devices?')) return;
-        if (window.EliteCRM) EliteCRM.deleteLead(id);
+        if (!id || !confirm('Move this enquiry to trash? You can restore it from Ops Console → Trash.')) return;
+        if (window.EliteCRM) EliteCRM.deleteLead(id, { actor: currentAdminActor() });
         else crmApi().deleteLead(id);
         closeLeadModal();
         renderLeads();
+        updateStats();
       });
       document.getElementById('btn-add-note').addEventListener('click', () => {
         const id = document.getElementById('lead-id').value;

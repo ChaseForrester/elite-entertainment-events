@@ -6,9 +6,11 @@
   'use strict';
 
   var COLLECTION = 'crm_leads';
+  var TRASH_COLLECTION = 'crm_trash';
   var TEAM_DOC = 'crm_settings/team';
   var LS_LEADS = 'elite_inquiries';
   var LS_CLIENTS = 'elite_clients';
+  var LS_TRASH = 'elite_crm_trash_v1';
   var LS_TEAM = 'elite_crm_team_v1';
   var LS_ATTACH = 'elite_crm_attach_cache_v1';
   var MAX_CLOUD_ATTACH_CHARS = 12000; // strip large dataUrls from cloud docs
@@ -256,16 +258,47 @@
     if (!lead.coverImage && lead.cartItems.length && lead.cartItems[0].image) {
       lead.coverImage = lead.cartItems[0].image;
     }
-    // Recover structured items from dumped multi-cart text (message or service)
+    // Only recover cart lines from explicit multi-cart text when structured cartItems missing.
+    // Never invent acts from free-form bios/messages.
     if (!lead.cartItems || !lead.cartItems.length) {
-      var blob = [lead.message, lead.service, raw.multi_cart, raw.multi_cart_text].filter(Boolean).join('\n');
-      lead.cartItems = parseCartItemsFromMessage(blob);
+      var blob = '';
+      if (raw.formFields && raw.formFields['sf-cart']) blob = String(raw.formFields['sf-cart']);
+      else if (raw.multi_cart) blob = String(raw.multi_cart);
+      else if (lead.message && /Multi-cart:|\d+\.\s*\[/.test(lead.message)) blob = String(lead.message);
+      else if (lead.service && /Multi-cart:|\d+\.\s*\[/.test(lead.service)) blob = String(lead.service);
+      if (blob) {
+        lead.cartItems = parseCartItemsFromMessage(blob);
+      }
       if (!lead.coverImage && lead.cartItems[0] && lead.cartItems[0].image) {
         lead.coverImage = lead.cartItems[0].image;
       }
     }
+    // Sanitize each cart line — keep only real fields, no dump text as name
+    lead.cartItems = (lead.cartItems || []).filter(function (it) {
+      return it && it.name && !/^Detail:|^Info:|^Start date:|^Source:/i.test(it.name);
+    }).map(function (it) {
+      return {
+        cartId: it.cartId || '',
+        kind: it.kind || '',
+        kindLabel: it.kindLabel || it.kind || 'Item',
+        id: it.id || '',
+        name: String(it.name || '').replace(/\s*×\d+\s*$/, '').trim(),
+        meta: it.meta || '',
+        summary: it.summary || '',
+        qty: it.qty || 1,
+        image: it.image || '',
+        href: it.href || '',
+        date: it.date || '',
+        endDate: it.endDate || '',
+        days: it.days || '',
+        hours: it.hours || '',
+        guests: it.guests || '',
+        location: it.location || '',
+        notes: it.notes || ''
+      };
+    });
     // Never keep multi-cart dumps in the short service title
-    if (lead.service && /Multi-cart:/i.test(lead.service)) {
+    if (lead.service && (/Multi-cart:/i.test(lead.service) || lead.service.length > 140)) {
       lead.service = cleanServiceTitle(lead.service, lead);
     }
     if (lead.assigneeEmail && !lead.assigneeName) {
@@ -395,7 +428,20 @@
     return readJson(LS_LEADS, []);
   }
 
+  function getTrashRaw() {
+    return readJson(LS_TRASH, []);
+  }
+
+  function trashIds() {
+    var set = {};
+    getTrashRaw().forEach(function (t) {
+      if (t && t.id) set[t.id] = true;
+    });
+    return set;
+  }
+
   function getAllLeads() {
+    var trashed = trashIds();
     var inquiries = getLocalLeadsRaw().map(function (r) {
       return normalizeLead(r, r.source || 'enquiry');
     });
@@ -406,11 +452,20 @@
       }), 'consultation');
     });
     var map = {};
-    clients.forEach(function (l) { if (l) map[l.id] = l; });
-    inquiries.forEach(function (l) { if (l) map[l.id] = l; });
+    clients.forEach(function (l) { if (l && !l.deleted && !trashed[l.id]) map[l.id] = l; });
+    inquiries.forEach(function (l) { if (l && !l.deleted && !trashed[l.id]) map[l.id] = l; });
     return Object.keys(map).map(function (k) { return map[k]; }).sort(function (a, b) {
       return (b.order || 0) - (a.order || 0);
     });
+  }
+
+  function getTrash() {
+    return getTrashRaw()
+      .map(function (r) { return normalizeLead(r, r.source || 'trash'); })
+      .filter(Boolean)
+      .sort(function (a, b) {
+        return isoTime(b.deletedAtIso || b.updatedAtIso) - isoTime(a.deletedAtIso || a.updatedAtIso);
+      });
   }
 
   function getLeadsByColumn(filter) {
@@ -640,31 +695,128 @@
     return saveLead(Object.assign({}, lead, { attachments: attachments }), opts);
   }
 
+  /**
+   * Soft-delete → Trash (restorable). Use permanentDeleteFromTrash to destroy.
+   */
   function deleteLead(id, opts) {
     opts = opts || {};
+    var lead = getAllLeads().find(function (l) { return l.id === id; });
+    if (!lead) {
+      // try raw local
+      lead = getLocalLeadsRaw().find(function (r) { return r.id === id; }) ||
+        readJson(LS_CLIENTS, []).find(function (r) { return r.id === id; });
+      if (lead) lead = normalizeLead(lead);
+    }
+    if (!lead) return null;
+
+    var trashed = Object.assign({}, lead, {
+      deleted: true,
+      deletedAt: nowLocal(),
+      deletedAtIso: nowIso(),
+      deletedBy: opts.actor || 'Super Admin',
+      previousColumn: lead.kanbanColumn || 'new'
+    });
+
+    // Remove from active lists
     writeJson(LS_LEADS, getLocalLeadsRaw().filter(function (r) { return r.id !== id; }));
     writeJson(LS_CLIENTS, readJson(LS_CLIENTS, []).filter(function (r) { return r.id !== id; }));
+
+    // Add to trash (dedupe)
+    var trash = getTrashRaw().filter(function (r) { return r.id !== id; });
+    trash.unshift(trashed);
+    writeJson(LS_TRASH, trash.slice(0, 300));
+
+    if (!opts.skipCloud) {
+      var db = getDb();
+      if (db) {
+        var safe = cloudSafeLead(trashed);
+        db.collection(TRASH_COLLECTION).doc(String(id)).set(safe, { merge: true }).catch(function () {});
+        db.collection(COLLECTION).doc(String(id)).delete().catch(function () {});
+        db.collection('inquiries').doc(String(id)).delete().catch(function () {});
+      }
+    }
+    emit('elite-crm-updated', { id: id, trashed: true });
+    emit('elite-crm-trash', { id: id });
+    return trashed;
+  }
+
+  function restoreFromTrash(id, opts) {
+    opts = opts || {};
+    var trash = getTrashRaw();
+    var idx = trash.findIndex(function (r) { return r.id === id; });
+    if (idx < 0) return null;
+    var lead = trash[idx];
+    trash.splice(idx, 1);
+    writeJson(LS_TRASH, trash);
+
+    delete lead.deleted;
+    delete lead.deletedAt;
+    delete lead.deletedAtIso;
+    delete lead.deletedBy;
+    lead.kanbanColumn = lead.previousColumn || lead.kanbanColumn || 'new';
+    lead.status = statusLabel(lead.kanbanColumn);
+    lead.updatedAtIso = nowIso();
+    lead.updatedAt = nowLocal();
+    pushActivity(lead, 'restore', 'Restored from trash', opts.actor || 'Super Admin');
+
+    writeLocalLead(lead);
+    if (!opts.skipCloud) {
+      var db = getDb();
+      if (db) {
+        var safe = cloudSafeLead(lead);
+        db.collection(COLLECTION).doc(String(id)).set(safe, { merge: true }).catch(function () {});
+        db.collection('inquiries').doc(String(id)).set(safe, { merge: true }).catch(function () {});
+        db.collection(TRASH_COLLECTION).doc(String(id)).delete().catch(function () {});
+      }
+    }
+    emit('elite-crm-updated', { id: id, restored: true });
+    emit('elite-crm-trash', { id: id, restored: true });
+    return lead;
+  }
+
+  function permanentDeleteFromTrash(id, opts) {
+    opts = opts || {};
+    writeJson(LS_TRASH, getTrashRaw().filter(function (r) { return r.id !== id; }));
     var map = attachCache();
     delete map[id];
     setAttachCache(map);
     if (!opts.skipCloud) {
       var db = getDb();
       if (db) {
+        db.collection(TRASH_COLLECTION).doc(String(id)).delete().catch(function () {});
         db.collection(COLLECTION).doc(String(id)).delete().catch(function () {});
+        db.collection('inquiries').doc(String(id)).delete().catch(function () {});
       }
     }
-    emit('elite-crm-updated', { id: id, deleted: true });
+    emit('elite-crm-updated', { id: id, permanentDelete: true });
+    emit('elite-crm-trash', { id: id, permanentDelete: true });
+    return true;
+  }
+
+  function emptyTrash(opts) {
+    opts = opts || {};
+    var ids = getTrashRaw().map(function (r) { return r.id; });
+    writeJson(LS_TRASH, []);
+    if (!opts.skipCloud) {
+      var db = getDb();
+      if (db) {
+        ids.forEach(function (id) {
+          db.collection(TRASH_COLLECTION).doc(String(id)).delete().catch(function () {});
+        });
+      }
+    }
+    emit('elite-crm-updated', { emptiedTrash: true });
+    emit('elite-crm-trash', { emptied: true });
+    return ids.length;
   }
 
   function clearInquiries(opts) {
     opts = opts || {};
-    writeJson(LS_LEADS, []);
-    writeJson(LS_CLIENTS, []);
-    writeJson(LS_ATTACH, {});
-    if (!opts.skipCloud) {
-      // Cloud clear is intentional only when admin confirms — batch delete not free on client
-      // Leave cloud data; next merge will re-import unless deleted individually
-    }
+    // Soft-clear active enquiries into trash
+    var active = getAllLeads();
+    active.forEach(function (l) {
+      deleteLead(l.id, { skipCloud: opts.skipCloud, actor: opts.actor || 'Super Admin' });
+    });
     emit('elite-crm-updated', { cleared: true });
   }
 
@@ -695,12 +847,14 @@
 
   function applyRemoteLeads(remoteList) {
     if (state.suppressRemoteApply) return;
+    var trashed = trashIds();
     var localMap = {};
     getAllLeads().forEach(function (l) { localMap[l.id] = l; });
     var changed = false;
     var nextInquiries = getLocalLeadsRaw().slice();
 
     function upsertLocal(lead) {
+      if (trashed[lead.id] || lead.deleted) return; // never resurrect from trash via sync
       var idx = nextInquiries.findIndex(function (r) { return r.id === lead.id; });
       if (idx >= 0) nextInquiries[idx] = Object.assign({}, nextInquiries[idx], lead);
       else nextInquiries.unshift(lead);
@@ -709,6 +863,7 @@
     remoteList.forEach(function (raw) {
       var remote = normalizeLead(raw, raw.source || 'cloud');
       if (!remote) return;
+      if (trashed[remote.id] || remote.deleted) return;
       var local = localMap[remote.id];
       if (!local) {
         upsertLocal(remote);
@@ -954,6 +1109,11 @@
     addLeadAttachment: addLeadAttachment,
     removeLeadAttachment: removeLeadAttachment,
     deleteLead: deleteLead,
+    softDeleteLead: deleteLead,
+    getTrash: getTrash,
+    restoreFromTrash: restoreFromTrash,
+    permanentDeleteFromTrash: permanentDeleteFromTrash,
+    emptyTrash: emptyTrash,
     clearInquiries: clearInquiries,
     estimatePipeline: estimatePipeline,
     startRealtime: startRealtime,
@@ -961,7 +1121,9 @@
     pullOnce: pullOnce,
     pushAllLocal: pushAllLocal,
     getSyncStatus: getSyncStatus,
-    statusLabel: statusLabel
+    statusLabel: statusLabel,
+    cleanServiceTitle: cleanServiceTitle,
+    parseCartItemsFromMessage: parseCartItemsFromMessage
   };
 
   api.getClientFeed = getClientFeed;
@@ -991,6 +1153,10 @@
       return removeLeadAttachment(id, attId, { origin: 'admin' });
     };
     cms.deleteLead = function (id) { return deleteLead(id); };
+    cms.getTrash = function () { return getTrash(); };
+    cms.restoreFromTrash = function (id) { return restoreFromTrash(id); };
+    cms.permanentDeleteFromTrash = function (id) { return permanentDeleteFromTrash(id); };
+    cms.emptyTrash = function () { return emptyTrash(); };
     cms.clearInquiries = function () { return clearInquiries(); };
     cms.estimatePipeline = function () { return estimatePipeline(); };
     cms.getClientFeed = function () { return getClientFeed(); };

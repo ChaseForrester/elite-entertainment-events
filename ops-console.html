@@ -315,6 +315,20 @@
         <div id="ops-inq-list" aria-live="polite"></div>
       </div>
 
+      <div class="ops-card" id="ops-trash-card">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:center;">
+          <div>
+            <h2 style="margin:0;">Trash</h2>
+            <p class="ops-note" style="margin:0.35rem 0 0;">Deleted enquiries stay here until restored or permanently removed.</p>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-outline" id="ops-empty-trash" style="border-color:rgba(255,80,80,.35);color:#ff8a8a;">Empty trash</button>
+          </div>
+        </div>
+        <p class="ops-note" id="ops-trash-count" style="margin:0.75rem 0 0.5rem;"></p>
+        <div id="ops-trash-list" aria-live="polite"></div>
+      </div>
+
       <div class="ops-card">
         <h2>Client messages &amp; consultations</h2>
         <p class="ops-note">From client portal + consultation requests (local feed + Firebase + CRM consultation leads).</p>
@@ -373,6 +387,7 @@
       setSyncLabel('Syncing CRM…');
       startCrm().then(function () {
         loadInquiries();
+        loadTrash();
         loadClientFeed();
       });
     }
@@ -421,20 +436,15 @@
 
     function resolveItemImage(it) {
       if (!it) return 'images/brand/logo-icon.png';
-      var img = it.image || '';
+      var img = String(it.image || '').trim();
       if (img && !/^data:/.test(img) && img.indexOf('http') !== 0 && img.charAt(0) === '/') {
         img = img.slice(1);
       }
-      if (img) return img;
+      // Prefer the exact image the client cart stored
+      if (img && img !== 'images/brand/logo-icon.png') return img;
+      // Exact act-name match only (no fuzzy / partial matching — that invents wrong photos)
       var key = String(it.name || '').toLowerCase().replace(/\s*×\d+\s*$/, '').trim();
       if (ACT_IMAGE_INDEX && ACT_IMAGE_INDEX[key]) return ACT_IMAGE_INDEX[key];
-      // partial match
-      if (ACT_IMAGE_INDEX) {
-        var hit = Object.keys(ACT_IMAGE_INDEX).find(function (n) {
-          return key && (n.indexOf(key) !== -1 || key.indexOf(n) !== -1);
-        });
-        if (hit) return ACT_IMAGE_INDEX[hit];
-      }
       return 'images/brand/logo-icon.png';
     }
 
@@ -447,22 +457,22 @@
     }
 
     function leadItems(r) {
+      // ONLY the client's package lines — never invent a roster of artists
       var items = Array.isArray(r.cartItems) ? r.cartItems.slice() : [];
-      if (!items.length && window.EliteCRM && typeof EliteCRM === 'object') {
-        // normalizeLead already parses; try raw message/service blob
-        try {
-          var blob = [r.message, r.service, r.formFields && r.formFields['sf-cart']].filter(Boolean).join('\n');
-          if (blob && /\[\s*Artist\s*\]|Multi-cart/i.test(blob) && EliteCRM.getAllLeads) {
-            // re-normalize via a shallow clone path: parse locally using same pipe logic
-            items = parseItemsLocal(blob);
-          }
-        } catch (e) {}
+      if (!items.length) {
+        // Recover only from explicit multi-cart field dumps, not free-form bios
+        var blob = '';
+        if (r.formFields && r.formFields['sf-cart']) blob = String(r.formFields['sf-cart']);
+        else if (r.multi_cart) blob = String(r.multi_cart);
+        else if (r.message && /\d+\.\s*\[/.test(r.message)) blob = String(r.message);
+        if (blob) items = parseItemsLocal(blob);
       }
-      if (!items.length) items = parseItemsLocal([r.message, r.service, r.formFields && r.formFields['sf-cart']].filter(Boolean).join('\n'));
-      // Fill missing images from act index
+      // Drop junk rows that came from pipe-dump parsing
+      items = items.filter(function (it) {
+        return it && it.name && !/^(Detail|Info|Start date|End date|Hours|People|Location|Notes|Source|Image):/i.test(it.name);
+      });
       items.forEach(function (it) {
-        if (!it.image) it.image = resolveItemImage(it);
-        else it.image = resolveItemImage(it);
+        it.image = resolveItemImage(it);
       });
       return items;
     }
@@ -630,6 +640,32 @@
               (r.email ? '<a class="btn btn-gold" href="mailto:' + esc(r.email) + '?subject=' + encodeURIComponent('Re: your Elite enquiry') + '">Email client</a>' : '') +
               (r.phone ? '<a class="btn btn-outline" href="tel:' + esc(r.phone) + '">Call</a>' : '') +
               '<a class="btn btn-outline" href="admin.html">Open in CRM Kanban</a>' +
+              '<button type="button" class="btn btn-outline" data-trash-lead="' + esc(r.id || '') + '" style="border-color:rgba(255,80,80,.35);color:#ff8a8a;">Move to trash</button>' +
+            '</div>' +
+          '</div>' +
+        '</article>'
+      );
+    }
+
+    function trashCard(r) {
+      var when = r.deletedAt || r.timestamp || r.updatedAt || '';
+      var items = leadItems(r);
+      var title = cleanServiceTitle(r);
+      return (
+        '<article class="inq-card" style="opacity:.92;border-style:dashed;">' +
+          '<div class="inq-cover-fallback">Trash</div>' +
+          '<div>' +
+            '<div class="inq-head">' +
+              '<div>' +
+                '<h3 class="inq-name">' + esc(r.name || 'Unknown') + '</h3>' +
+                '<p class="inq-meta">' + esc(r.email || '') + (when ? ' · deleted ' + esc(when) : '') + '</p>' +
+              '</div>' +
+              '<span class="inq-badge muted">' + esc(items.length ? (items.length + ' lines') : 'enquiry') + '</span>' +
+            '</div>' +
+            '<p class="inq-meta" style="color:#e8c86b;font-weight:700;">' + esc(title) + '</p>' +
+            '<div class="inq-actions">' +
+              '<button type="button" class="btn btn-gold" data-restore-lead="' + esc(r.id || '') + '">Restore</button>' +
+              '<button type="button" class="btn btn-outline" data-perm-delete-lead="' + esc(r.id || '') + '" style="border-color:rgba(255,80,80,.45);color:#ff8a8a;">Delete permanently</button>' +
             '</div>' +
           '</div>' +
         '</article>'
@@ -647,12 +683,24 @@
           return col !== 'lost';
         });
         if (countEl) {
-          countEl.textContent = rows.length + ' total · ' + open.length + ' open pipeline · multi + website + service forms';
+          countEl.textContent = rows.length + ' active · ' + open.length + ' open pipeline · only client-selected package lines shown';
         }
         list.innerHTML = rows.slice(0, 60).map(enquiryCard).join('') ||
           '<div class="ops-note" style="padding:1.25rem;border:1px dashed rgba(255,255,255,.12);border-radius:12px;text-align:center;">No enquiries yet. Submit a website form or multi-enquiry, then hit Refresh CRM.</div>';
       }
       loadActImageIndex().then(paint).catch(paint);
+    }
+
+    function loadTrash() {
+      var list = document.getElementById('ops-trash-list');
+      var countEl = document.getElementById('ops-trash-count');
+      if (!list) return;
+      var rows = [];
+      if (window.EliteCRM && EliteCRM.getTrash) rows = EliteCRM.getTrash() || [];
+      if (countEl) countEl.textContent = rows.length ? (rows.length + ' in trash') : 'Trash is empty';
+      list.innerHTML = rows.length
+        ? rows.map(trashCard).join('')
+        : '<div class="ops-note" style="padding:1rem;color:#777;">No deleted enquiries.</div>';
     }
 
     function loadClientFeed() {
@@ -748,15 +796,57 @@
         setSyncLabel('Refreshing…');
         startCrm().then(function () {
           loadInquiries();
+          loadTrash();
           loadClientFeed();
         });
       };
     }
 
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t || !t.getAttribute) return;
+      var trashId = t.getAttribute('data-trash-lead');
+      if (trashId && window.EliteCRM) {
+        if (!confirm('Move this enquiry to trash? You can restore it later.')) return;
+        EliteCRM.deleteLead(trashId, { actor: (window.EliteAdminAuth && EliteAdminAuth.currentEmail()) || 'Ops' });
+        loadInquiries();
+        loadTrash();
+        return;
+      }
+      var restoreId = t.getAttribute('data-restore-lead');
+      if (restoreId && window.EliteCRM) {
+        EliteCRM.restoreFromTrash(restoreId, { actor: (window.EliteAdminAuth && EliteAdminAuth.currentEmail()) || 'Ops' });
+        loadInquiries();
+        loadTrash();
+        return;
+      }
+      var permId = t.getAttribute('data-perm-delete-lead');
+      if (permId && window.EliteCRM) {
+        if (!confirm('Permanently delete this enquiry? This cannot be undone.')) return;
+        EliteCRM.permanentDeleteFromTrash(permId);
+        loadTrash();
+        return;
+      }
+      if (t.id === 'ops-empty-trash' && window.EliteCRM) {
+        var n = (EliteCRM.getTrash() || []).length;
+        if (!n) return;
+        if (!confirm('Permanently delete all ' + n + ' items in trash? This cannot be undone.')) return;
+        EliteCRM.emptyTrash();
+        loadTrash();
+      }
+    });
+
     window.addEventListener('elite-crm-updated', function () {
       if (dash.classList.contains('is-on')) {
         loadInquiries();
+        loadTrash();
         loadClientFeed();
+      }
+    });
+    window.addEventListener('elite-crm-trash', function () {
+      if (dash.classList.contains('is-on')) {
+        loadInquiries();
+        loadTrash();
       }
     });
     window.addEventListener('elite-crm-sync', function () {

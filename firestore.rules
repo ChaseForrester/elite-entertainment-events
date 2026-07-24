@@ -28,5 +28,9 @@ service cloud.firestore {
     match /client_feed/{docId} {
       allow read, write: if true;
     }
+
+    match /crm_trash/{docId} {
+      allow read, write: if true;
+    }
   }
 }
