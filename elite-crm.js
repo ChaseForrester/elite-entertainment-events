@@ -248,12 +248,60 @@
       updatedAt: raw.updatedAt || raw.timestamp || nowLocal(),
       updatedAtIso: raw.updatedAtIso || nowIso(),
       order: typeof raw.order === 'number' ? raw.order : Date.now(),
-      syncOrigin: raw.syncOrigin || 'local'
+      syncOrigin: raw.syncOrigin || 'local',
+      cartItems: Array.isArray(raw.cartItems) ? raw.cartItems : [],
+      coverImage: raw.coverImage || '',
+      formFields: raw.formFields && typeof raw.formFields === 'object' ? raw.formFields : null
     };
+    if (!lead.coverImage && lead.cartItems.length && lead.cartItems[0].image) {
+      lead.coverImage = lead.cartItems[0].image;
+    }
+    // Recover images from multi-cart text lines: " Image: path"
+    if ((!lead.cartItems || !lead.cartItems.length) && lead.message) {
+      lead.cartItems = parseCartItemsFromMessage(lead.message);
+      if (!lead.coverImage && lead.cartItems[0] && lead.cartItems[0].image) {
+        lead.coverImage = lead.cartItems[0].image;
+      }
+    }
     if (lead.assigneeEmail && !lead.assigneeName) {
       lead.assigneeName = teamName(lead.assigneeEmail);
     }
     return hydrateAttachments(lead);
+  }
+
+  function parseCartItemsFromMessage(message) {
+    var text = String(message || '');
+    if (!text) return [];
+    var blocks = text.split(/\n\n+/);
+    var items = [];
+    blocks.forEach(function (block) {
+      var nameMatch = block.match(/^\s*\d+\.\s*\[([^\]]+)\]\s*(.+?)(?:\s*×\d+)?\s*$/m);
+      if (!nameMatch) return;
+      var item = {
+        kindLabel: nameMatch[1].trim(),
+        name: nameMatch[2].trim(),
+        image: '',
+        meta: '',
+        date: '',
+        location: '',
+        notes: '',
+        qty: 1
+      };
+      var img = block.match(/Image:\s*(.+)/i);
+      if (img) item.image = img[1].trim();
+      var detail = block.match(/Detail:\s*(.+)/i);
+      if (detail) item.meta = detail[1].trim();
+      var start = block.match(/Start date:\s*(.+)/i);
+      if (start) item.date = start[1].trim();
+      var loc = block.match(/Location:\s*(.+)/i);
+      if (loc) item.location = loc[1].trim();
+      var notes = block.match(/Notes:\s*(.+)/i);
+      if (notes) item.notes = notes[1].trim();
+      var qty = block.match(/×(\d+)/);
+      if (qty) item.qty = parseInt(qty[1], 10) || 1;
+      items.push(item);
+    });
+    return items;
   }
 
   function pushActivity(lead, type, text, actor) {

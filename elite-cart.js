@@ -177,9 +177,35 @@
       if (x.guests) lines.push(' People / capacity: ' + x.guests);
       if (x.location) lines.push(' Location: ' + x.location);
       if (x.notes) lines.push(' Notes: ' + x.notes);
+      if (x.image) lines.push(' Image: ' + x.image);
       if (x.href) lines.push(' Source: ' + x.href);
       return lines.join('\n');
     }).join('\n\n');
+  }
+
+  /** Compact snapshot for CRM / Ops UI (includes images) */
+  function itemsSnapshot() {
+    return load().map(function (x) {
+      return {
+        cartId: x.cartId || '',
+        kind: x.kind || 'service',
+        kindLabel: kindLabel(x.kind),
+        id: x.id || '',
+        name: x.name || '',
+        meta: x.meta || '',
+        summary: x.summary || '',
+        qty: x.qty || 1,
+        image: x.image || '',
+        href: x.href || '',
+        date: x.date || '',
+        endDate: x.endDate || '',
+        days: x.days || '',
+        hours: x.hours || '',
+        guests: x.guests || '',
+        location: x.location || '',
+        notes: x.notes || ''
+      };
+    });
   }
 
   function flash(msg) {
@@ -277,6 +303,7 @@
     load: load,
     count: count,
     summaryText: summaryText,
+    itemsSnapshot: itemsSnapshot,
     kindLabel: kindLabel,
     buttonHtml: buttonHtml,
     cartIcon: CART_ICON,

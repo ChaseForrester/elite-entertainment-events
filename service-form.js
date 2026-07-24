@@ -703,10 +703,12 @@
       }
 
       // Always refresh multi-cart summary from live cart at submit time
+      var cartItems = [];
       if (key === 'multi' && window.EliteCart) {
         try {
           collected['sf-cart'] = window.EliteCart.summaryText();
           collected['sf-quantity'] = window.EliteCart.load().length + ' lines · ' + window.EliteCart.count() + ' units';
+          cartItems = window.EliteCart.itemsSnapshot ? window.EliteCart.itemsSnapshot() : window.EliteCart.load();
           var shared = window.EliteCart.sharedSnapshot ? window.EliteCart.sharedSnapshot() : {};
           if (shared.date && !collected['sf-date']) collected['sf-date'] = shared.date;
           if (shared.endDate && !collected['sf-end-date']) collected['sf-end-date'] = shared.endDate;
@@ -750,6 +752,8 @@
         source: 'service-page',
         page: key,
         formFields: collected,
+        cartItems: cartItems,
+        coverImage: (cartItems[0] && cartItems[0].image) || '',
         attachmentNames: files.map(function (f) { return f.name; }),
         attachments: files.map(function (f) {
           return { name: f.name, type: f.type || 'file', size: f.size || 0, at: new Date().toLocaleString() };
@@ -799,6 +803,8 @@
         production: collected['sf-production'] || '',
         message: fullDetails,
         full_form_json: JSON.stringify(collected, null, 2),
+        cart_items_json: cartItems.length ? JSON.stringify(cartItems, null, 2) : '',
+        cover_image: lead.coverImage || '',
         leadId: lead.id,
         source: (typeof location !== 'undefined' ? location.pathname : key)
       };

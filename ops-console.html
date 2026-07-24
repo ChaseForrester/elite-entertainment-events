@@ -27,6 +27,182 @@
     th, td { text-align:left; padding:.55rem .4rem; border-bottom:1px solid rgba(255,255,255,.06); vertical-align:top; }
     th { color:#c9a84c; font-size:.65rem; letter-spacing:.08em; text-transform:uppercase; }
     .btn-row { display:flex; flex-wrap:wrap; gap:.5rem; }
+    /* Inbound enquiry cards */
+    #ops-inq-list { display:flex; flex-direction:column; gap:1rem; margin-top:.75rem; }
+    .inq-card {
+      display:grid;
+      grid-template-columns: 120px 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 14px;
+      border: 1px solid rgba(200,168,76,.2);
+      background: linear-gradient(145deg, rgba(255,255,255,.03), rgba(0,0,0,.25));
+      box-shadow: 0 8px 28px rgba(0,0,0,.35);
+    }
+    @media (max-width:640px) {
+      .inq-card { grid-template-columns: 1fr; }
+    }
+    .inq-cover {
+      width: 100%;
+      aspect-ratio: 1;
+      max-height: 140px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid rgba(200,168,76,.25);
+      background: #111;
+    }
+    .inq-cover-fallback {
+      width: 100%;
+      aspect-ratio: 1;
+      max-height: 140px;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(circle at 30% 20%, rgba(200,168,76,.2), #121212 70%);
+      border: 1px solid rgba(200,168,76,.2);
+      color: #c9a84c;
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: .5rem;
+    }
+    .inq-head {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap: .5rem .75rem;
+      align-items:flex-start;
+      margin-bottom: .55rem;
+    }
+    .inq-name {
+      margin: 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.15;
+    }
+    .inq-meta { font-size: .78rem; color: #aaa; line-height: 1.45; margin: .2rem 0 0; }
+    .inq-meta a { color: #e8c86b; text-decoration: none; }
+    .inq-meta a:hover { text-decoration: underline; }
+    .inq-badges { display:flex; flex-wrap:wrap; gap: .35rem; justify-content:flex-end; }
+    .inq-badge {
+      font-size: .62rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .28rem .55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(200,168,76,.35);
+      color: #e8c86b;
+      background: rgba(200,168,76,.1);
+      white-space: nowrap;
+    }
+    .inq-badge.muted {
+      color: #bbb;
+      border-color: rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+    .inq-badge.stage-new { color:#c9a84c; }
+    .inq-badge.stage-booked { color:#8fd18f; border-color:rgba(85,197,85,.35); background:rgba(85,197,85,.1); }
+    .inq-badge.stage-lost { color:#ff8a8a; border-color:rgba(255,100,100,.3); background:rgba(255,80,80,.08); }
+    .inq-facts {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: .45rem .75rem;
+      margin: .65rem 0 .75rem;
+      padding: .65rem .75rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .inq-fact label {
+      margin: 0 0 .15rem;
+      font-size: .58rem;
+      letter-spacing: .1em;
+    }
+    .inq-fact div {
+      font-size: .8rem;
+      color: #e8e8e8;
+      font-weight: 600;
+      word-break: break-word;
+    }
+    .inq-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .55rem;
+      margin: .35rem 0 .65rem;
+    }
+    .inq-item {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      min-width: min(100%, 220px);
+      max-width: 280px;
+      flex: 1 1 200px;
+      padding: .45rem;
+      border-radius: 10px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .inq-item img {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(200,168,76,.2);
+      background: #1a1a1a;
+    }
+    .inq-item-body { min-width: 0; }
+    .inq-item-kind {
+      font-size: .58rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #c9a84c;
+      margin: 0 0 .1rem;
+    }
+    .inq-item-name {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .inq-item-sub {
+      font-size: .68rem;
+      color: #999;
+      margin: .1rem 0 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .inq-message {
+      margin: 0;
+      font-size: .8rem;
+      color: #ccc;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      max-height: 7.5em;
+      overflow: auto;
+      padding: .55rem .7rem;
+      border-radius: 8px;
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.05);
+    }
+    .inq-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .75rem;
+    }
+    .inq-actions .btn { font-size: .72rem; padding: .45rem .85rem; border-radius: 999px; }
   </style>
 </head>
 <body>
@@ -121,7 +297,7 @@
           </div>
         </div>
         <p class="ops-note" id="ops-inq-count" style="margin:0.75rem 0 0.5rem;"></p>
-        <div style="overflow:auto;"><table><thead><tr><th>When</th><th>Name</th><th>Service / stage</th><th>Message</th></tr></thead><tbody id="ops-inq-body"></tbody></table></div>
+        <div id="ops-inq-list" aria-live="polite"></div>
       </div>
 
       <div class="ops-card">
@@ -201,10 +377,122 @@
       try { return JSON.parse(localStorage.getItem('elite_inquiries') || '[]'); } catch (e) { return []; }
     }
 
+    function stageClass(stage) {
+      var s = String(stage || 'new').toLowerCase();
+      if (s.indexOf('book') !== -1 || s === 'won') return 'stage-booked';
+      if (s.indexOf('lost') !== -1 || s.indexOf('closed') !== -1) return 'stage-lost';
+      if (s === 'new' || s.indexOf('new') !== -1 || s.indexOf('pend') !== -1) return 'stage-new';
+      return '';
+    }
+
+    function leadItems(r) {
+      if (Array.isArray(r.cartItems) && r.cartItems.length) return r.cartItems;
+      return [];
+    }
+
+    function leadCover(r) {
+      if (r.coverImage) return r.coverImage;
+      var items = leadItems(r);
+      if (items[0] && items[0].image) return items[0].image;
+      // attachment preview if image type
+      if (Array.isArray(r.attachments)) {
+        for (var i = 0; i < r.attachments.length; i++) {
+          var a = r.attachments[i];
+          if (a.dataUrl && String(a.type || '').indexOf('image') === 0) return a.dataUrl;
+          if (a.url && /\.(png|jpe?g|webp|gif|avif)(\?|$)/i.test(a.url)) return a.url;
+          if (a.name && /\.(png|jpe?g|webp|gif|avif)$/i.test(a.name) && a.dataUrl) return a.dataUrl;
+        }
+      }
+      return '';
+    }
+
+    function briefMessage(r) {
+      var msg = String(r.message || '');
+      // Prefer human brief over huge cart dumps
+      if (r.formFields && r.formFields['sf-message']) return String(r.formFields['sf-message']);
+      // Strip noisy machine blocks for card preview
+      msg = msg.replace(/--- FULL MULTI-CART ---[\s\S]*/i, '').trim();
+      msg = msg.replace(/full_form_json:[\s\S]*/i, '').trim();
+      if (msg.length > 420) msg = msg.slice(0, 420) + '…';
+      return msg || 'No written brief — see package items above.';
+    }
+
+    function enquiryCard(r) {
+      var stage = r.status || r.kanbanColumn || 'New';
+      var when = r.timestamp || r.updatedAt || r.at || '';
+      var cover = leadCover(r);
+      var items = leadItems(r);
+      var isMulti = r.page === 'multi' || /multi/i.test(r.source || '') || items.length > 1;
+      var coverHtml = cover
+        ? '<img class="inq-cover" src="' + esc(cover) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" />' +
+          '<div class="inq-cover-fallback" style="display:none">Elite</div>'
+        : '<div class="inq-cover-fallback">' + esc((r.name || 'E').charAt(0)) + '</div>';
+
+      var itemsHtml = '';
+      if (items.length) {
+        itemsHtml = '<div class="inq-items">' + items.slice(0, 8).map(function (it) {
+          var img = it.image
+            ? '<img src="' + esc(it.image) + '" alt="" loading="lazy" onerror="this.src=\'images/brand/logo-icon.png\'" />'
+            : '<img src="images/brand/logo-icon.png" alt="" />';
+          var sub = [it.date, it.location, it.qty > 1 ? ('×' + it.qty) : ''].filter(Boolean).join(' · ');
+          return '<div class="inq-item">' + img +
+            '<div class="inq-item-body">' +
+              '<p class="inq-item-kind">' + esc(it.kindLabel || it.kind || 'Item') + '</p>' +
+              '<p class="inq-item-name">' + esc(it.name || 'Item') + '</p>' +
+              (sub ? '<p class="inq-item-sub">' + esc(sub) + '</p>' : '') +
+              (it.notes ? '<p class="inq-item-sub" title="' + esc(it.notes) + '">' + esc(it.notes.slice(0, 48)) + (it.notes.length > 48 ? '…' : '') + '</p>' : '') +
+            '</div></div>';
+        }).join('') +
+        (items.length > 8 ? '<div class="inq-item-sub" style="align-self:center;padding:.5rem;">+' + (items.length - 8) + ' more</div>' : '') +
+        '</div>';
+      }
+
+      var facts = [
+        ['Event date', r.date || (items[0] && items[0].date) || '—'],
+        ['Venue', r.venue || (items[0] && items[0].location) || '—'],
+        ['Guests', r.guests || (items[0] && items[0].guests) || '—'],
+        ['Source', r.source || r.page || 'website']
+      ];
+
+      return (
+        '<article class="inq-card" data-lead-id="' + esc(r.id || '') + '">' +
+          '<div>' + coverHtml + '</div>' +
+          '<div>' +
+            '<div class="inq-head">' +
+              '<div>' +
+                '<h3 class="inq-name">' + esc(r.name || 'Unknown client') + '</h3>' +
+                '<p class="inq-meta">' +
+                  (r.email ? '<a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>' : 'No email') +
+                  (r.phone ? ' · <a href="tel:' + esc(r.phone) + '">' + esc(r.phone) + '</a>' : '') +
+                  (when ? '<br><span style="color:#777">' + esc(when) + '</span>' : '') +
+                '</p>' +
+              '</div>' +
+              '<div class="inq-badges">' +
+                '<span class="inq-badge ' + stageClass(stage) + '">' + esc(stage) + '</span>' +
+                (isMulti ? '<span class="inq-badge muted">Multi package</span>' : '') +
+                (r.priority && r.priority !== 'normal' ? '<span class="inq-badge muted">' + esc(r.priority) + '</span>' : '') +
+              '</div>' +
+            '</div>' +
+            '<p class="inq-meta" style="margin:0 0 .35rem;color:#ddd;font-weight:600;">' + esc(r.service || 'General enquiry') + '</p>' +
+            '<div class="inq-facts">' + facts.map(function (f) {
+              return '<div class="inq-fact"><label>' + esc(f[0]) + '</label><div>' + esc(f[1]) + '</div></div>';
+            }).join('') + '</div>' +
+            itemsHtml +
+            '<p class="inq-message">' + esc(briefMessage(r)) + '</p>' +
+            '<div class="inq-actions">' +
+              (r.email ? '<a class="btn btn-gold" href="mailto:' + esc(r.email) + '?subject=' + encodeURIComponent('Re: your Elite enquiry') + '">Email client</a>' : '') +
+              (r.phone ? '<a class="btn btn-outline" href="tel:' + esc(r.phone) + '">Call</a>' : '') +
+              '<a class="btn btn-outline" href="admin.html">Open in CRM Kanban</a>' +
+            '</div>' +
+          '</div>' +
+        '</article>'
+      );
+    }
+
     function loadInquiries() {
-      var body = document.getElementById('ops-inq-body');
+      var list = document.getElementById('ops-inq-list');
       var countEl = document.getElementById('ops-inq-count');
-      if (!body) return;
+      if (!list) return;
       var rows = allLeads();
       var open = rows.filter(function (r) {
         var col = r.kanbanColumn || 'new';
@@ -213,21 +501,8 @@
       if (countEl) {
         countEl.textContent = rows.length + ' total · ' + open.length + ' open pipeline · multi + website + service forms';
       }
-      body.innerHTML = rows.slice(0, 60).map(function (r) {
-        var stage = r.status || r.kanbanColumn || 'new';
-        var when = r.timestamp || r.updatedAt || r.at || '';
-        var msg = String(r.message || '').slice(0, 280);
-        return '<tr>' +
-          '<td>' + esc(when) + '</td>' +
-          '<td><strong>' + esc(r.name || '—') + '</strong><br><span style="color:#888">' + esc(r.email || '') +
-            (r.phone ? ' · ' + esc(r.phone) : '') + '</span></td>' +
-          '<td>' + esc(r.service || r.source || '—') +
-            '<br><span style="color:#c9a84c;font-size:0.72rem;">' + esc(stage) +
-            (r.page === 'multi' || /multi/i.test(r.source || '') ? ' · multi' : '') +
-            '</span></td>' +
-          '<td style="white-space:pre-wrap;max-width:360px;">' + esc(msg) + '</td>' +
-          '</tr>';
-      }).join('') || '<tr><td colspan="4">No enquiries yet. Submit a website form or multi-enquiry, then hit Refresh CRM.</td></tr>';
+      list.innerHTML = rows.slice(0, 60).map(enquiryCard).join('') ||
+        '<div class="ops-note" style="padding:1.25rem;border:1px dashed rgba(255,255,255,.12);border-radius:12px;text-align:center;">No enquiries yet. Submit a website form or multi-enquiry, then hit Refresh CRM.</div>';
     }
 
     function loadClientFeed() {
