@@ -1,6 +1,7 @@
-/* Elite Entertainment — Live performance videos + gallery images
-   Enriches artist acts (ELITE_FOLDERS) and talent (ELITE_TALENT) at runtime.
-   Prefer named artist live clips; fall back to modern style-matched live previews. */
+/* Elite Entertainment — Verified media only
+   Videos: ONLY when we have a real YouTube clip of THAT named act (embeddable video ID).
+   No genre/style fallbacks. No “close enough” dance/party clips. If unknown → leave blank.
+   Images/galleries: ONLY real roster photos of that act (no Unsplash/stock fillers). */
 (function (window) {
     'use strict';
 
@@ -34,46 +35,48 @@
         return id ? ('https://www.youtube.com/watch?v=' + id) : '';
     }
 
-    /* ── Modern live performance clips (embeddable video IDs) ── */
-    var LIVE = {
-        // Named Australian / roster artists (live or live TV where possible)
-        guySebastian: 'GgmIiyQJU-g',          // The Keys — Nova Red Room live 2025
-        jessicaMauboy: 'MnzXUwlXDW4',         // While I Got Time — live at Sunrise
-        justiceCrew: 'Pw_kKlzrMCk',           // Que Sera live
-        markVincent: '_h6MnSAlEZw',           // This Is Not the End (Live)
-        adamBrand: 'NJoFs2JCXNU',             // Get On Down The Road (Live)
-        wiggles: 'LPH5KR0ntPA',               // Live in concert Sydney 2023
-        // Genre / style modern live previews for local & specialty acts
-        celebrityVocal: 'ED0v9YuVpiE',        // Live vocal stage energy (The Voice)
-        partyBand: 'mUOJHBc3w9U',             // Wedding / party band LIVE showcase
-        soloAcoustic: 'dFvUm6G4Gik',          // Live vocal / session energy
-        duoTrio: 'mUOJHBc3w9U',               // Multi-piece live party band energy
-        dj: 'plJIMtJX4DM',                     // Live from the DJ booth (club set)
-        karaoke: 'mUOJHBc3w9U',               // Live party / vocal crowd energy
-        danceHipHop: 'HjBXLCjvE0Q',           // Pro hip-hop crew live stage
-        showgirls: 'SBTYRrsUWgA',             // High-production dance live stage
-        latinDance: 'A4-lV6r0lyg',            // High-energy dance stage compilation
-        bollywood: 'HjBXLCjvE0Q',
-        belly: 'A4-lV6r0lyg',
-        capoeira: 'SBTYRrsUWgA',
-        comedy: 'FACPypHzbIs',                // Australian stand-up live stage
-        country: 'NJoFs2JCXNU',
-        classical: '_h6MnSAlEZw',
-        kids: 'LPH5KR0ntPA',
-        magician: 'mUOJHBc3w9U',              // Live event entertainment energy
-        multicultural: 'A4-lV6r0lyg',
-        tribute: 'mUOJHBc3w9U',
-        roving: 'SBTYRrsUWgA',
-        instrumental: 'dFvUm6G4Gik',
-        christmas: 'mUOJHBc3w9U',
-        models: 'SBTYRrsUWgA',
-        defaultLive: 'GgmIiyQJU-g'
+    /**
+     * VERIFIED same-artist live (or live TV) clips only.
+     * Keys = norm(act name). Values = YouTube video IDs researched for that performer.
+     * Do not add an entry unless you are confident the video is of that act.
+     */
+    var VERIFIED_YT = {
+        // Celebrity / headline
+        'guy sebastian': 'GgmIiyQJU-g',                 // The Keys — Nova Red Room live 2025
+        'jessica mauboy': 'MnzXUwlXDW4',                // While I Got Time — live at Sunrise
+        'anthony callea': 'aYwH5nInX7U',                // Circle of Life — Sydney Opera House live
+        'casey donovan': 'SEjDxv5f-U4',                 // Live Sydney Opera House NYE (ABC)
+        'mark vincent': '_h6MnSAlEZw',                  // This Is Not the End (Live)
+        'justice crew': 'Pw_kKlzrMCk',                  // Que Sera live
+        'justice crew official booking': 'Pw_kKlzrMCk',
+        'juse crew dancers official booking': 'Pw_kKlzrMCk',
+        'dami im': '2EG_Jtw4OyU',                       // Sound of Silence — Eurovision 2016 LIVE
+        'delta goodrem': 'Yps5OMNiC4o',                 // The Show Must Go On — Global Citizen Live SOH
+        // Country
+        'adam brand': 'NJoFs2JCXNU',                    // Get On Down The Road (Live)
+        'kasey chambers': 'S70xek3x4ro',                // Lose Yourself live — Civic Theatre Newcastle
+        'beccy cole': '3s4E1Hf5TvE',                    // Wine Time live — ABC studios
+        'amber lawrence': '1uxszxRIkCA',                // Hell to Hallelujah — live performance (official)
+        'melinda schneider': 'pkQkdIhVIfw',             // Shanghai live — The Basement Sydney
+        'gina jeffreys': 'kv-w1arUyOk',                 // Dancin' With Elvis (concert clip)
+        // Comedy
+        'joe avati': 'Pjjqvz9lOwU',                     // Shopping with Nonna — live standup
+        'anh do': 'wgJS-L9sa0s',                        // The Happiest Refugee LIVE
+        'vince sorrenti': 'GhB1XzZKw2c',                // Stand-up — Hey Hey It's Saturday
+        // Kids / dance crews with public performance clips
+        'the wiggles': 'LPH5KR0ntPA',                   // Live in concert Sydney
+        'wiggles': 'LPH5KR0ntPA',
+        'phly crew': 'xV9BZMFVG8A',                     // Australia's Got Talent audition (this act)
+        'instant bun': 'ccSFVeLvA98',                   // Australia's Got Talent 2011 audition
+        // Tribute / stage shows with identifiable clips of that show
+        'fabba': 'iHP9EiPi5iE',                         // Fabba — Australian ABBA Show (Sydney)
+        // Solo / independent with own live upload
+        'amanda easton': 'wlma9Qh6Q5g'                  // Running Up That Hill LIVE Solo (her channel)
     };
 
     /**
      * REAL extra photos only — verified local roster files for the same act.
-     * Never use Unsplash / stock fillers. If we only have one real photo, gallery stays single-image
-     * (UI hides gallery strip when fewer than 2 real shots).
+     * Never use Unsplash / stock fillers.
      */
     var REAL_GALLERY = {
         'jessica mauboy': [
@@ -174,140 +177,11 @@
         ]
     };
 
-    /* Exact name → live video id only (no stock gallery pools) */
-    var BY_NAME = {
-        'guy sebastian': { yt: LIVE.guySebastian },
-        'jessica mauboy': { yt: LIVE.jessicaMauboy },
-        'anthony callea': { yt: LIVE.celebrityVocal },
-        'casey donovan': { yt: LIVE.celebrityVocal },
-        'mark vincent': { yt: LIVE.markVincent },
-        'justice crew': { yt: LIVE.justiceCrew },
-        'justice crew official booking': { yt: LIVE.justiceCrew },
-        'juse crew dancers official booking': { yt: LIVE.justiceCrew },
-        'ricki lee coulter': { yt: LIVE.celebrityVocal },
-        'ricki lee': { yt: LIVE.celebrityVocal },
-        'delta goodrem': { yt: LIVE.celebrityVocal },
-        'dami im': { yt: LIVE.celebrityVocal },
-        'john farnham tribute experience': { yt: LIVE.tribute },
-        'the veronicas showcase': { yt: LIVE.duoTrio },
-        'keith urban acoustic set': { yt: LIVE.country },
-        'adam brand': { yt: LIVE.adamBrand },
-        'kasey chambers': { yt: LIVE.country },
-        'beccy cole': { yt: LIVE.country },
-        'gina jeffreys': { yt: LIVE.country },
-        'melinda schneider': { yt: LIVE.country },
-        'jason owen': { yt: LIVE.country },
-        'amber lawrence': { yt: LIVE.country },
-        'the wiggles': { yt: LIVE.wiggles },
-        'wiggles': { yt: LIVE.wiggles },
-        'fabba': { yt: LIVE.tribute },
-        'queen the show': { yt: LIVE.tribute },
-        'kick the inxs show': { yt: LIVE.tribute },
-        'the beatnix show': { yt: LIVE.tribute },
-        'the pink show': { yt: LIVE.tribute },
-        'twist and shout by the williams brothers': { yt: LIVE.tribute },
-        'the australian beach boys show': { yt: LIVE.tribute },
-        'emmanuel rodriguez the rookies': { yt: LIVE.danceHipHop },
-        'rookies dance crew': { yt: LIVE.danceHipHop },
-        'phly crew': { yt: LIVE.danceHipHop },
-        'alive dancers': { yt: LIVE.danceHipHop },
-        'sydney showgirls': { yt: LIVE.showgirls },
-        'cabaret de paris': { yt: LIVE.showgirls },
-        'moulin rouge show': { yt: LIVE.showgirls },
-        'bollywood spice': { yt: LIVE.latinDance },
-        'bollywood dancers': { yt: LIVE.latinDance },
-        'latinoz brazil': { yt: LIVE.latinDance },
-        'capoeira martial artists': { yt: LIVE.capoeira },
-        'world salsa champions': { yt: LIVE.latinDance },
-        'latin motion shows': { yt: LIVE.latinDance },
-        'doudoumba': { yt: LIVE.multicultural },
-        'vince sorrenti': { yt: LIVE.comedy },
-        'joe avati': { yt: LIVE.comedy },
-        'anh do': { yt: LIVE.comedy },
-        'george kapiniaris': { yt: LIVE.comedy },
-        'tahir': { yt: LIVE.comedy },
-        'dave hughes style night': { yt: LIVE.comedy },
-        'shane edwards': { yt: LIVE.soloAcoustic },
-        'amanda easton': { yt: LIVE.soloAcoustic },
-        'csaba szirmai celebrity dancer': { yt: LIVE.danceHipHop },
-        'siboney promotional model': { yt: LIVE.models },
-        'accredited makeup artist nat pallandre': { yt: LIVE.models }
-    };
-
-    var FOLDER_MEDIA = {
-        'celebrity-bands-and-artists': { yt: LIVE.celebrityVocal },
-        'solo-acts': { yt: LIVE.soloAcoustic },
-        'duos': { yt: LIVE.duoTrio },
-        'trios': { yt: LIVE.duoTrio },
-        'party-bands': { yt: LIVE.partyBand },
-        'tribute-acts': { yt: LIVE.tribute },
-        'production-shows': { yt: LIVE.tribute },
-        'stage-shows': { yt: LIVE.tribute },
-        'dance-troupes-mcs': { yt: LIVE.danceHipHop },
-        'mcs': { yt: LIVE.comedy },
-        'djs-karaoke': { yt: LIVE.dj },
-        'instrumentals': { yt: LIVE.instrumental },
-        'multicultural-entertainment': { yt: LIVE.multicultural },
-        'country': { yt: LIVE.country },
-        'comedians': { yt: LIVE.comedy },
-        'childrens-entertainment': { yt: LIVE.kids },
-        'classical-entertainment': { yt: LIVE.classical },
-        'seasonal-specialty-entertainment': { yt: LIVE.christmas },
-        'roving-entertainment': { yt: LIVE.roving }
-    };
-
-    var CMS_CAT_MEDIA = {
-        celebrity: { yt: LIVE.celebrityVocal },
-        bands: { yt: LIVE.partyBand },
-        djs: { yt: LIVE.dj },
-        solos: { yt: LIVE.soloAcoustic },
-        duos: { yt: LIVE.duoTrio },
-        trios: { yt: LIVE.duoTrio },
-        jazz: { yt: LIVE.instrumental },
-        tributes: { yt: LIVE.tribute },
-        multicultural: { yt: LIVE.multicultural },
-        country: { yt: LIVE.country },
-        comedians: { yt: LIVE.comedy },
-        children: { yt: LIVE.kids },
-        classical: { yt: LIVE.classical },
-        specialty: { yt: LIVE.christmas },
-        roving: { yt: LIVE.roving },
-        'models-dancers': { yt: LIVE.danceHipHop },
-        corporate: { yt: LIVE.partyBand },
-        weddings: { yt: LIVE.soloAcoustic }
-    };
-
-    function styleMatch(text) {
-        var s = String(text || '').toLowerCase();
-        if (/dj|club|turntabl/.test(s)) return { yt: LIVE.dj };
-        if (/karaoke/.test(s)) return { yt: LIVE.karaoke };
-        if (/comed|mc|host|compere/.test(s)) return { yt: LIVE.comedy };
-        if (/country|outback/.test(s)) return { yt: LIVE.country };
-        if (/classic|opera|string|quartet|violin|piano|tenor|orchestr/.test(s)) return { yt: LIVE.classical };
-        if (/kids|children|wiggle|smurf|princess|superhero|magic to the max|crazy science/.test(s)) return { yt: LIVE.kids };
-        if (/tribute|abba|inxs|queen|beatle|beach boys|rocky horror|gatsby|pink show|fabba/.test(s)) return { yt: LIVE.tribute };
-        if (/showgirl|cabaret|moulin|burlesque/.test(s)) return { yt: LIVE.showgirls };
-        if (/belly|arabian|snake danc/.test(s)) return { yt: LIVE.belly };
-        if (/bollywood/.test(s)) return { yt: LIVE.bollywood };
-        if (/latin|salsa|samba|brazil|batucada|cuban/.test(s)) return { yt: LIVE.latinDance };
-        if (/capoeira|acro|stunt|break|hip hop|hip-hop|street|crew|dancer|dance/.test(s)) return { yt: LIVE.danceHipHop };
-        if (/model|makeup|promotional/.test(s)) return { yt: LIVE.models };
-        if (/magician|juggler|stilt|roving|statue|bubble|change face/.test(s)) return { yt: LIVE.roving };
-        if (/chinese|lion|greek|lebanese|filipino|thai|italian|multicultural|hula|naidoc|oktober/.test(s)) return { yt: LIVE.multicultural };
-        if (/christmas|santa|easter|nye|halloween|cup fashion/.test(s)) return { yt: LIVE.christmas };
-        if (/band|funk|soul|disco|party|groove|cover/.test(s)) return { yt: LIVE.partyBand };
-        if (/duo|trio|vocal/.test(s)) return { yt: LIVE.duoTrio };
-        if (/solo|singer|songwriter|acoustic|guitar/.test(s)) return { yt: LIVE.soloAcoustic };
-        if (/instrument|accordion|violin/.test(s)) return { yt: LIVE.instrumental };
-        return { yt: LIVE.defaultLive };
-    }
-
-    /** Stock / generic placeholders must never appear in galleries. */
+    /** Stock / generic placeholders must never appear as act photos or galleries. */
     function isStockImage(url) {
         if (!url) return true;
         var u = String(url);
         if (/unsplash\.com|picsum\.photos|placehold|loremflickr|via\.placeholder|dummyimage/i.test(u)) return true;
-        // Site-wide generic fillers (not a specific act photo)
         if (/^images\/(solo|duo|trio|party-band)\.jpe?g$/i.test(u)) return true;
         if (/^images\/categories\//i.test(u)) return true;
         return false;
@@ -318,11 +192,8 @@
     }
 
     /**
-     * Gallery = only real photos of THIS act:
-     *  - their roster primary (if real)
-     *  - verified multi-file extras in REAL_GALLERY
-     *  - admin-curated gallery entries that are not stock
-     * Never pads with Unsplash or other acts' photos.
+     * Gallery = only real photos of THIS act.
+     * Never pads with stock or other acts' photos.
      */
     function buildGallery(name, primary, existing) {
         var out = [];
@@ -341,46 +212,49 @@
         return out;
     }
 
-    function resolveMedia(name, style, folderId, category) {
-        var key = norm(name);
-        var named = BY_NAME[key];
-        if (named) return named;
-        if (folderId && FOLDER_MEDIA[folderId]) return FOLDER_MEDIA[folderId];
-        if (category && CMS_CAT_MEDIA[category]) return CMS_CAT_MEDIA[category];
-        return styleMatch((style || '') + ' ' + (name || '') + ' ' + (folderId || '') + ' ' + (category || ''));
+    /**
+     * Strict video pick:
+     * 1) Admin/data URL only if it is a real embeddable video ID (not a channel page)
+     * 2) Else verified map for this exact name
+     * 3) Else empty — never invent a genre stand-in
+     */
+    function pickYoutube(name, existing) {
+        var id = youtubeId(existing);
+        if (id && !isChannelUrl(existing)) {
+            return existing.indexOf('http') === 0 ? existing : watchUrl(id);
+        }
+        // Channel-only links cannot embed and are not a performance clip
+        var verified = VERIFIED_YT[norm(name)];
+        if (verified) return watchUrl(verified);
+        return '';
     }
 
-    function pickYoutube(existing, resolved) {
-        if (existing && youtubeId(existing)) return existing.indexOf('http') === 0 ? existing : watchUrl(youtubeId(existing));
-        if (existing && !isChannelUrl(existing) && youtubeId(existing)) return existing;
-        // Channel-only URLs cannot embed — replace with a concrete live clip
-        if (resolved && resolved.yt) return watchUrl(resolved.yt);
-        return existing || watchUrl(LIVE.defaultLive);
+    function cleanPrimaryImage(image) {
+        return isRealImage(image) ? image : '';
     }
 
     function enrichAct(act, folder) {
         if (!act || typeof act !== 'object') return act;
-        var folderId = folder && (folder.id || folder);
-        var resolved = resolveMedia(act.name, act.style, folderId, act.category);
-        act.youtubeUrl = pickYoutube(act.youtubeUrl, resolved);
-        // Always rebuild gallery from real photos only (strips any prior stock fillers)
+        act.youtubeUrl = pickYoutube(act.name, act.youtubeUrl);
+        act.image = cleanPrimaryImage(act.image) || act.image;
+        // If primary is stock, clear it so UI does not present a fake person as the act
+        if (isStockImage(act.image)) act.image = '';
         act.gallery = buildGallery(act.name, act.image, act.gallery);
         return act;
     }
 
     function enrichTalent(t) {
         if (!t || typeof t !== 'object') return t;
-        var hay = [t.name, t.style, t.category, (t.styles || []).join(' '), (t.tags || []).join(' ')].join(' ');
-        var resolved = BY_NAME[norm(t.name)] || styleMatch(hay);
-        t.youtubeUrl = pickYoutube(t.youtubeUrl, resolved);
+        t.youtubeUrl = pickYoutube(t.name, t.youtubeUrl);
+        if (isStockImage(t.image)) t.image = '';
         t.gallery = buildGallery(t.name, t.image, t.gallery);
         return t;
     }
 
     function enrichCmsArtist(a) {
         if (!a || typeof a !== 'object') return a;
-        var resolved = BY_NAME[norm(a.name)] || CMS_CAT_MEDIA[a.category] || styleMatch((a.genre || '') + ' ' + (a.name || '') + ' ' + (a.category || ''));
-        a.youtubeUrl = pickYoutube(a.youtubeUrl, resolved);
+        a.youtubeUrl = pickYoutube(a.name, a.youtubeUrl);
+        if (isStockImage(a.image)) a.image = '';
         a.gallery = buildGallery(a.name, a.image, a.gallery);
         return a;
     }
@@ -424,7 +298,9 @@
         buildGallery: buildGallery,
         isStockImage: isStockImage,
         isRealImage: isRealImage,
-        watchUrl: watchUrl
+        pickYoutube: pickYoutube,
+        watchUrl: watchUrl,
+        VERIFIED_YT: VERIFIED_YT
     };
 
     function boot() {
@@ -435,7 +311,6 @@
     } else {
         boot();
     }
-    // Re-enrich if data scripts load after this file
     setTimeout(enrichAll, 0);
     setTimeout(enrichAll, 250);
 })(window);

@@ -173,7 +173,7 @@
 
   function cardHtml(t) {
     var on = !!selected[t.id];
-    var fallback = 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80';
+    var fallback = 'images/brand/logo-icon.png';
     var img = t.image || fallback;
     var idAttr = esc(t.id);
     var hasVideo = !!(t.youtubeUrl && ((window.EliteMedia && window.EliteMedia.youtubeId(t.youtubeUrl)) || /watch\?v=|youtu\.be\/|shorts\//.test(String(t.youtubeUrl || ''))));
@@ -260,7 +260,7 @@
       });
     }
 
-    var fallback = 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=900&q=80';
+    var fallback = 'images/brand/logo-icon.png';
     var photo = document.getElementById('talent-profile-photo');
     photo.src = t.image || fallback;
     photo.alt = t.name;

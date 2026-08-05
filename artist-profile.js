@@ -28,21 +28,9 @@
     return { folder: folder, act: act };
   }
 
+  // Never substitute a stock/Unsplash stranger for a missing act photo
   function themedFallback(style, name) {
-    var s = ((style || '') + ' ' + (name || '')).toLowerCase();
-    if (/dj|karaoke|crowd/.test(s)) return 'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?auto=format&fit=crop&w=900&q=80';
-    if (/comedy|comedian/.test(s)) return 'https://images.unsplash.com/photo-1527224857830-43a7acc85260?auto=format&fit=crop&w=900&q=80';
-    if (/country/.test(s)) return 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=900&q=80';
-    if (/classical|string|opera|piano|violin/.test(s)) return 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=900&q=80';
-    if (/dance|troupe|mc|host/.test(s)) return 'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=900&q=80';
-    if (/tribute|stage|production|show/.test(s)) return 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=80';
-    if (/kids|children|smurf|wiggle|magic/.test(s)) return 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=80';
-    if (/yacht|car|luxury|security/.test(s)) return 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80';
-    if (/duo|solo|trio|acoustic/.test(s)) return 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=900&q=80';
-    if (/band|party|funk|soul/.test(s)) return 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=80';
-    if (/multicultural|latin|greek|chinese|thai|belly|lion/.test(s)) return 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=900&q=80';
-    if (/roving|stilt|juggler|magician/.test(s)) return 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80';
-    return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80';
+    return 'images/brand/logo-icon.png';
   }
 
   document.addEventListener('DOMContentLoaded', function () {
