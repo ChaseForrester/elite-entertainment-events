@@ -1144,11 +1144,11 @@
           </div>
         </div>
         <div class="auth-input-group">
-          <label>Gallery images (extra profile photos)</label>
-          <textarea id="artist-gallery" rows="3" placeholder="One image URL or path per line"
+          <label>Gallery images (real extras only)</label>
+          <textarea id="artist-gallery" rows="3" placeholder="One real photo path or URL per line — no stock/Unsplash"
             style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:#fff; resize:vertical; font-size:0.85rem;"></textarea>
-          <p style="margin:0.35rem 0 0; font-size:0.72rem; color:var(--silver-mid);">Shown on the public profile under
-            the live video. Primary photo is included automatically when blank.</p>
+          <p style="margin:0.35rem 0 0; font-size:0.72rem; color:var(--silver-mid);">Only real photos of this act.
+            Stock/Unsplash images are blocked on the public profile. Gallery shows when 2+ real photos exist.</p>
         </div>
         <div class="auth-input-group">
           <label>Description</label>
@@ -2855,7 +2855,10 @@
         const bioHtml = document.getElementById('artist-bio-editor').innerHTML.trim();
         const galleryRaw = (document.getElementById('artist-gallery').value || '').trim();
         const gallery = galleryRaw
-          ? galleryRaw.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+          ? galleryRaw.split(/\r?\n/).map(s => s.trim()).filter(Boolean).filter(s => {
+            if (window.EliteMedia && window.EliteMedia.isRealImage) return window.EliteMedia.isRealImage(s);
+            return s && !/unsplash\.com|picsum|placehold/i.test(s);
+          })
           : [];
         window.EliteCMS.saveArtist({
           id: document.getElementById('artist-id').value || undefined,

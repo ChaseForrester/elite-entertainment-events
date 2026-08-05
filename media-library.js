@@ -70,204 +70,274 @@
         defaultLive: 'GgmIiyQJU-g'
     };
 
-    /* Extra gallery stills (modern event / performance photography) */
-    var GALLERY = {
-        concert: [
-            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80'
+    /**
+     * REAL extra photos only — verified local roster files for the same act.
+     * Never use Unsplash / stock fillers. If we only have one real photo, gallery stays single-image
+     * (UI hides gallery strip when fewer than 2 real shots).
+     */
+    var REAL_GALLERY = {
+        'jessica mauboy': [
+            'images/acts/celebrity-bands-and-artists/jessica-mauboy.webp',
+            'images/artists/jessica-mauboy.jpg'
         ],
-        party: [
-            'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80'
+        'mark vincent': [
+            'images/acts/celebrity-bands-and-artists/mark-vincent.jpg',
+            'images/acts/celebrity-bands-and-artists/mark-vincent.png'
         ],
-        dance: [
-            'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1535525153412-5a42439a210d?auto=format&fit=crop&w=900&q=80'
+        'ricki lee coulter': [
+            'images/acts/celebrity-bands-and-artists/ricki-lee-coulter.webp',
+            'images/artists/ricki-lee.jpg'
         ],
-        dj: [
-            'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=900&q=80'
+        'ricki lee': [
+            'images/acts/celebrity-bands-and-artists/ricki-lee-coulter.webp',
+            'images/artists/ricki-lee.jpg'
         ],
-        classical: [
-            'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1507838153414-b4b713384a76?auto=format&fit=crop&w=900&q=80'
+        'justice crew': [
+            'images/acts/celebrity-bands-and-artists/justice-crew.jpg'
         ],
-        country: [
-            'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80'
+        'justice crew official booking': [
+            'images/acts/celebrity-bands-and-artists/justice-crew.jpg'
         ],
-        comedy: [
-            'https://images.unsplash.com/photo-1527224857830-43a7acc85260?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1585699324551-f6c309eedeca?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1516280440614-6697288d5d38?auto=format&fit=crop&w=900&q=80'
+        'juse crew dancers official booking': [
+            'images/acts/celebrity-bands-and-artists/justice-crew.jpg'
         ],
-        kids: [
-            'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=900&q=80'
+        'anh do': [
+            'images/acts/comedians/anh-do.jpg',
+            'images/artists/anh-do.jpg'
         ],
-        models: [
-            'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80'
+        'george kapiniaris': [
+            'images/acts/comedians/george-kapiniaris.jpg',
+            'images/artists/george-kapiniaris.jpg'
         ],
-        multicultural: [
-            'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1535525153412-5a42439a210d?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80'
+        'jason owen': [
+            'images/acts/country/jason-owen.jpg',
+            'images/artists/jason-owen.jpg'
         ],
-        roving: [
-            'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80',
-            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=80'
+        'kasey chambers': [
+            'images/acts/country/kasey-chambers.jpg',
+            'images/acts/country/kasey-chambers.jpeg'
+        ],
+        'brown sugar': [
+            'images/acts/bands/brown-sugar.jpg',
+            'images/acts/bands/brown-sugar.webp'
+        ],
+        'james liotta': [
+            'images/acts/mcs/james-liotta.jpg',
+            'images/acts/mcs/james-liotta.webp'
+        ],
+        'shane edwards': [
+            'images/acts/soloists-duos-trios/shane-edwards.jpg',
+            'images/acts/mcs/shane-edwards.jpg'
+        ],
+        'vince sorrenti': [
+            'images/acts/comedians/vince-sorrenti.jpg',
+            'images/acts/mcs/vince-sorrenti.jpg'
+        ],
+        'julie accordion': [
+            'images/acts/instrumentals/julie-accordion.jpg',
+            'images/acts/roving-entertainment/julie-accordion.jpg'
+        ],
+        'ian cooper': [
+            'images/acts/instrumentals/ian-cooper-violinist.jpg',
+            'images/acts/roving-entertainment/ian-cooper-irish-jig-music.jpg',
+            'images/acts/seasonal-specialty-entertainment/ian-cooper-st-patricks-day.jpg'
+        ],
+        'ian cooper irish jig music': [
+            'images/acts/roving-entertainment/ian-cooper-irish-jig-music.jpg',
+            'images/acts/instrumentals/ian-cooper-violinist.jpg',
+            'images/acts/seasonal-specialty-entertainment/ian-cooper-st-patricks-day.jpg'
+        ],
+        'ian cooper st patrick s day': [
+            'images/acts/seasonal-specialty-entertainment/ian-cooper-st-patricks-day.jpg',
+            'images/acts/instrumentals/ian-cooper-violinist.jpg',
+            'images/acts/roving-entertainment/ian-cooper-irish-jig-music.jpg'
+        ],
+        'the wiggles': [
+            'images/acts/childrens-entertainment/the-wiggles.jpg',
+            'images/artists/wiggles.jpg'
+        ],
+        'wiggles': [
+            'images/acts/childrens-entertainment/the-wiggles.jpg',
+            'images/artists/wiggles.jpg'
+        ],
+        'viva italia': [
+            'images/acts/multicultural-entertainment/viva-italia.png',
+            'images/acts/multicultural-entertainment/viva-italia-show.png'
+        ],
+        'mesa music trio': [
+            'images/acts/soloists-duos-trios/mesa-music-trio.jpg',
+            'images/acts/soloists-duos-trios/mesa-music-trio.png'
+        ],
+        'mesa groove trio': [
+            'images/acts/soloists-duos-trios/mesa-music-trio.jpg',
+            'images/acts/soloists-duos-trios/mesa-music-trio.png'
         ]
     };
 
-    /* Exact name → live video id (and optional extra gallery images) */
+    /* Exact name → live video id only (no stock gallery pools) */
     var BY_NAME = {
-        'guy sebastian': { yt: LIVE.guySebastian, pool: 'concert' },
-        'jessica mauboy': { yt: LIVE.jessicaMauboy, pool: 'concert' },
-        'anthony callea': { yt: LIVE.celebrityVocal, pool: 'concert' },
-        'casey donovan': { yt: LIVE.celebrityVocal, pool: 'concert' },
-        'mark vincent': { yt: LIVE.markVincent, pool: 'classical' },
-        'justice crew': { yt: LIVE.justiceCrew, pool: 'dance' },
-        'justice crew official booking': { yt: LIVE.justiceCrew, pool: 'dance' },
-        'juse crew dancers official booking': { yt: LIVE.justiceCrew, pool: 'dance' },
-        'ricki lee coulter': { yt: LIVE.celebrityVocal, pool: 'concert' },
-        'ricki lee': { yt: LIVE.celebrityVocal, pool: 'concert' },
-        'delta goodrem': { yt: LIVE.celebrityVocal, pool: 'concert' },
-        'dami im': { yt: LIVE.celebrityVocal, pool: 'concert' },
-        'john farnham tribute experience': { yt: LIVE.tribute, pool: 'concert' },
-        'the veronicas showcase': { yt: LIVE.duoTrio, pool: 'concert' },
-        'keith urban acoustic set': { yt: LIVE.country, pool: 'country' },
-        'adam brand': { yt: LIVE.adamBrand, pool: 'country' },
-        'kasey chambers': { yt: LIVE.country, pool: 'country' },
-        'beccy cole': { yt: LIVE.country, pool: 'country' },
-        'gina jeffreys': { yt: LIVE.country, pool: 'country' },
-        'melinda schneider': { yt: LIVE.country, pool: 'country' },
-        'jason owen': { yt: LIVE.country, pool: 'country' },
-        'amber lawrence': { yt: LIVE.country, pool: 'country' },
-        'the wiggles': { yt: LIVE.wiggles, pool: 'kids' },
-        'wiggles': { yt: LIVE.wiggles, pool: 'kids' },
-        'fabba': { yt: LIVE.tribute, pool: 'party' },
-        'queen the show': { yt: LIVE.tribute, pool: 'concert' },
-        'kick the inxs show': { yt: LIVE.tribute, pool: 'concert' },
-        'the beatnix show': { yt: LIVE.tribute, pool: 'concert' },
-        'the pink show': { yt: LIVE.tribute, pool: 'party' },
-        'twist and shout by the williams brothers': { yt: LIVE.tribute, pool: 'party' },
-        'the australian beach boys show': { yt: LIVE.tribute, pool: 'party' },
-        'emmanuel rodriguez the rookies': { yt: LIVE.danceHipHop, pool: 'dance' },
-        'rookies dance crew': { yt: LIVE.danceHipHop, pool: 'dance' },
-        'phly crew': { yt: LIVE.danceHipHop, pool: 'dance' },
-        'alive dancers': { yt: LIVE.danceHipHop, pool: 'dance' },
-        'sydney showgirls': { yt: LIVE.showgirls, pool: 'dance' },
-        'cabaret de paris': { yt: LIVE.showgirls, pool: 'dance' },
-        'moulin rouge show': { yt: LIVE.showgirls, pool: 'dance' },
-        'bollywood spice': { yt: LIVE.latinDance, pool: 'multicultural' },
-        'bollywood dancers': { yt: LIVE.latinDance, pool: 'multicultural' },
-        'latinoz brazil': { yt: LIVE.latinDance, pool: 'multicultural' },
-        'capoeira martial artists': { yt: LIVE.capoeira, pool: 'dance' },
-        'world salsa champions': { yt: LIVE.latinDance, pool: 'dance' },
-        'latin motion shows': { yt: LIVE.latinDance, pool: 'dance' },
-        'doudoumba': { yt: LIVE.multicultural, pool: 'multicultural' },
-        'vince sorrenti': { yt: LIVE.comedy, pool: 'comedy' },
-        'joe avati': { yt: LIVE.comedy, pool: 'comedy' },
-        'anh do': { yt: LIVE.comedy, pool: 'comedy' },
-        'george kapiniaris': { yt: LIVE.comedy, pool: 'comedy' },
-        'tahir': { yt: LIVE.comedy, pool: 'comedy' },
-        'dave hughes style night': { yt: LIVE.comedy, pool: 'comedy' },
-        'shane edwards': { yt: LIVE.soloAcoustic, pool: 'concert' },
-        'amanda easton': { yt: LIVE.soloAcoustic, pool: 'concert' },
-        'csaba szirmai celebrity dancer': { yt: LIVE.danceHipHop, pool: 'dance' },
-        'siboney promotional model': { yt: LIVE.models, pool: 'models' },
-        'accredited makeup artist nat pallandre': { yt: LIVE.models, pool: 'models' }
+        'guy sebastian': { yt: LIVE.guySebastian },
+        'jessica mauboy': { yt: LIVE.jessicaMauboy },
+        'anthony callea': { yt: LIVE.celebrityVocal },
+        'casey donovan': { yt: LIVE.celebrityVocal },
+        'mark vincent': { yt: LIVE.markVincent },
+        'justice crew': { yt: LIVE.justiceCrew },
+        'justice crew official booking': { yt: LIVE.justiceCrew },
+        'juse crew dancers official booking': { yt: LIVE.justiceCrew },
+        'ricki lee coulter': { yt: LIVE.celebrityVocal },
+        'ricki lee': { yt: LIVE.celebrityVocal },
+        'delta goodrem': { yt: LIVE.celebrityVocal },
+        'dami im': { yt: LIVE.celebrityVocal },
+        'john farnham tribute experience': { yt: LIVE.tribute },
+        'the veronicas showcase': { yt: LIVE.duoTrio },
+        'keith urban acoustic set': { yt: LIVE.country },
+        'adam brand': { yt: LIVE.adamBrand },
+        'kasey chambers': { yt: LIVE.country },
+        'beccy cole': { yt: LIVE.country },
+        'gina jeffreys': { yt: LIVE.country },
+        'melinda schneider': { yt: LIVE.country },
+        'jason owen': { yt: LIVE.country },
+        'amber lawrence': { yt: LIVE.country },
+        'the wiggles': { yt: LIVE.wiggles },
+        'wiggles': { yt: LIVE.wiggles },
+        'fabba': { yt: LIVE.tribute },
+        'queen the show': { yt: LIVE.tribute },
+        'kick the inxs show': { yt: LIVE.tribute },
+        'the beatnix show': { yt: LIVE.tribute },
+        'the pink show': { yt: LIVE.tribute },
+        'twist and shout by the williams brothers': { yt: LIVE.tribute },
+        'the australian beach boys show': { yt: LIVE.tribute },
+        'emmanuel rodriguez the rookies': { yt: LIVE.danceHipHop },
+        'rookies dance crew': { yt: LIVE.danceHipHop },
+        'phly crew': { yt: LIVE.danceHipHop },
+        'alive dancers': { yt: LIVE.danceHipHop },
+        'sydney showgirls': { yt: LIVE.showgirls },
+        'cabaret de paris': { yt: LIVE.showgirls },
+        'moulin rouge show': { yt: LIVE.showgirls },
+        'bollywood spice': { yt: LIVE.latinDance },
+        'bollywood dancers': { yt: LIVE.latinDance },
+        'latinoz brazil': { yt: LIVE.latinDance },
+        'capoeira martial artists': { yt: LIVE.capoeira },
+        'world salsa champions': { yt: LIVE.latinDance },
+        'latin motion shows': { yt: LIVE.latinDance },
+        'doudoumba': { yt: LIVE.multicultural },
+        'vince sorrenti': { yt: LIVE.comedy },
+        'joe avati': { yt: LIVE.comedy },
+        'anh do': { yt: LIVE.comedy },
+        'george kapiniaris': { yt: LIVE.comedy },
+        'tahir': { yt: LIVE.comedy },
+        'dave hughes style night': { yt: LIVE.comedy },
+        'shane edwards': { yt: LIVE.soloAcoustic },
+        'amanda easton': { yt: LIVE.soloAcoustic },
+        'csaba szirmai celebrity dancer': { yt: LIVE.danceHipHop },
+        'siboney promotional model': { yt: LIVE.models },
+        'accredited makeup artist nat pallandre': { yt: LIVE.models }
     };
 
     var FOLDER_MEDIA = {
-        'celebrity-bands-and-artists': { yt: LIVE.celebrityVocal, pool: 'concert' },
-        'solo-acts': { yt: LIVE.soloAcoustic, pool: 'concert' },
-        'duos': { yt: LIVE.duoTrio, pool: 'concert' },
-        'trios': { yt: LIVE.duoTrio, pool: 'party' },
-        'party-bands': { yt: LIVE.partyBand, pool: 'party' },
-        'tribute-acts': { yt: LIVE.tribute, pool: 'concert' },
-        'production-shows': { yt: LIVE.tribute, pool: 'concert' },
-        'stage-shows': { yt: LIVE.tribute, pool: 'concert' },
-        'dance-troupes-mcs': { yt: LIVE.danceHipHop, pool: 'dance' },
-        'mcs': { yt: LIVE.comedy, pool: 'comedy' },
-        'djs-karaoke': { yt: LIVE.dj, pool: 'dj' },
-        'instrumentals': { yt: LIVE.instrumental, pool: 'classical' },
-        'multicultural-entertainment': { yt: LIVE.multicultural, pool: 'multicultural' },
-        'country': { yt: LIVE.country, pool: 'country' },
-        'comedians': { yt: LIVE.comedy, pool: 'comedy' },
-        'childrens-entertainment': { yt: LIVE.kids, pool: 'kids' },
-        'classical-entertainment': { yt: LIVE.classical, pool: 'classical' },
-        'seasonal-specialty-entertainment': { yt: LIVE.christmas, pool: 'party' },
-        'roving-entertainment': { yt: LIVE.roving, pool: 'roving' }
+        'celebrity-bands-and-artists': { yt: LIVE.celebrityVocal },
+        'solo-acts': { yt: LIVE.soloAcoustic },
+        'duos': { yt: LIVE.duoTrio },
+        'trios': { yt: LIVE.duoTrio },
+        'party-bands': { yt: LIVE.partyBand },
+        'tribute-acts': { yt: LIVE.tribute },
+        'production-shows': { yt: LIVE.tribute },
+        'stage-shows': { yt: LIVE.tribute },
+        'dance-troupes-mcs': { yt: LIVE.danceHipHop },
+        'mcs': { yt: LIVE.comedy },
+        'djs-karaoke': { yt: LIVE.dj },
+        'instrumentals': { yt: LIVE.instrumental },
+        'multicultural-entertainment': { yt: LIVE.multicultural },
+        'country': { yt: LIVE.country },
+        'comedians': { yt: LIVE.comedy },
+        'childrens-entertainment': { yt: LIVE.kids },
+        'classical-entertainment': { yt: LIVE.classical },
+        'seasonal-specialty-entertainment': { yt: LIVE.christmas },
+        'roving-entertainment': { yt: LIVE.roving }
     };
 
     var CMS_CAT_MEDIA = {
-        celebrity: { yt: LIVE.celebrityVocal, pool: 'concert' },
-        bands: { yt: LIVE.partyBand, pool: 'party' },
-        djs: { yt: LIVE.dj, pool: 'dj' },
-        solos: { yt: LIVE.soloAcoustic, pool: 'concert' },
-        duos: { yt: LIVE.duoTrio, pool: 'concert' },
-        trios: { yt: LIVE.duoTrio, pool: 'party' },
-        jazz: { yt: LIVE.instrumental, pool: 'classical' },
-        tributes: { yt: LIVE.tribute, pool: 'concert' },
-        multicultural: { yt: LIVE.multicultural, pool: 'multicultural' },
-        country: { yt: LIVE.country, pool: 'country' },
-        comedians: { yt: LIVE.comedy, pool: 'comedy' },
-        children: { yt: LIVE.kids, pool: 'kids' },
-        classical: { yt: LIVE.classical, pool: 'classical' },
-        specialty: { yt: LIVE.christmas, pool: 'party' },
-        roving: { yt: LIVE.roving, pool: 'roving' },
-        'models-dancers': { yt: LIVE.danceHipHop, pool: 'dance' },
-        corporate: { yt: LIVE.partyBand, pool: 'party' },
-        weddings: { yt: LIVE.soloAcoustic, pool: 'concert' }
+        celebrity: { yt: LIVE.celebrityVocal },
+        bands: { yt: LIVE.partyBand },
+        djs: { yt: LIVE.dj },
+        solos: { yt: LIVE.soloAcoustic },
+        duos: { yt: LIVE.duoTrio },
+        trios: { yt: LIVE.duoTrio },
+        jazz: { yt: LIVE.instrumental },
+        tributes: { yt: LIVE.tribute },
+        multicultural: { yt: LIVE.multicultural },
+        country: { yt: LIVE.country },
+        comedians: { yt: LIVE.comedy },
+        children: { yt: LIVE.kids },
+        classical: { yt: LIVE.classical },
+        specialty: { yt: LIVE.christmas },
+        roving: { yt: LIVE.roving },
+        'models-dancers': { yt: LIVE.danceHipHop },
+        corporate: { yt: LIVE.partyBand },
+        weddings: { yt: LIVE.soloAcoustic }
     };
 
     function styleMatch(text) {
         var s = String(text || '').toLowerCase();
-        if (/dj|club|turntabl/.test(s)) return { yt: LIVE.dj, pool: 'dj' };
-        if (/karaoke/.test(s)) return { yt: LIVE.karaoke, pool: 'party' };
-        if (/comed|mc|host|compere/.test(s)) return { yt: LIVE.comedy, pool: 'comedy' };
-        if (/country|outback/.test(s)) return { yt: LIVE.country, pool: 'country' };
-        if (/classic|opera|string|quartet|violin|piano|tenor|orchestr/.test(s)) return { yt: LIVE.classical, pool: 'classical' };
-        if (/kids|children|wiggle|smurf|princess|superhero|magic to the max|crazy science/.test(s)) return { yt: LIVE.kids, pool: 'kids' };
-        if (/tribute|abba|inxs|queen|beatle|beach boys|rocky horror|gatsby|pink show|fabba/.test(s)) return { yt: LIVE.tribute, pool: 'concert' };
-        if (/showgirl|cabaret|moulin|burlesque/.test(s)) return { yt: LIVE.showgirls, pool: 'dance' };
-        if (/belly|arabian|snake danc/.test(s)) return { yt: LIVE.belly, pool: 'multicultural' };
-        if (/bollywood/.test(s)) return { yt: LIVE.bollywood, pool: 'multicultural' };
-        if (/latin|salsa|samba|brazil|batucada|cuban/.test(s)) return { yt: LIVE.latinDance, pool: 'multicultural' };
-        if (/capoeira|acro|stunt|break|hip hop|hip-hop|street|crew|dancer|dance/.test(s)) return { yt: LIVE.danceHipHop, pool: 'dance' };
-        if (/model|makeup|promotional/.test(s)) return { yt: LIVE.models, pool: 'models' };
-        if (/magician|juggler|stilt|roving|statue|bubble|change face/.test(s)) return { yt: LIVE.roving, pool: 'roving' };
-        if (/chinese|lion|greek|lebanese|filipino|thai|italian|multicultural|hula|naidoc|oktober/.test(s)) return { yt: LIVE.multicultural, pool: 'multicultural' };
-        if (/christmas|santa|easter|nye|halloween|cup fashion/.test(s)) return { yt: LIVE.christmas, pool: 'party' };
-        if (/band|funk|soul|disco|party|groove|cover/.test(s)) return { yt: LIVE.partyBand, pool: 'party' };
-        if (/duo|trio|vocal/.test(s)) return { yt: LIVE.duoTrio, pool: 'concert' };
-        if (/solo|singer|songwriter|acoustic|guitar/.test(s)) return { yt: LIVE.soloAcoustic, pool: 'concert' };
-        if (/instrument|accordion|violin/.test(s)) return { yt: LIVE.instrumental, pool: 'classical' };
-        return { yt: LIVE.defaultLive, pool: 'concert' };
+        if (/dj|club|turntabl/.test(s)) return { yt: LIVE.dj };
+        if (/karaoke/.test(s)) return { yt: LIVE.karaoke };
+        if (/comed|mc|host|compere/.test(s)) return { yt: LIVE.comedy };
+        if (/country|outback/.test(s)) return { yt: LIVE.country };
+        if (/classic|opera|string|quartet|violin|piano|tenor|orchestr/.test(s)) return { yt: LIVE.classical };
+        if (/kids|children|wiggle|smurf|princess|superhero|magic to the max|crazy science/.test(s)) return { yt: LIVE.kids };
+        if (/tribute|abba|inxs|queen|beatle|beach boys|rocky horror|gatsby|pink show|fabba/.test(s)) return { yt: LIVE.tribute };
+        if (/showgirl|cabaret|moulin|burlesque/.test(s)) return { yt: LIVE.showgirls };
+        if (/belly|arabian|snake danc/.test(s)) return { yt: LIVE.belly };
+        if (/bollywood/.test(s)) return { yt: LIVE.bollywood };
+        if (/latin|salsa|samba|brazil|batucada|cuban/.test(s)) return { yt: LIVE.latinDance };
+        if (/capoeira|acro|stunt|break|hip hop|hip-hop|street|crew|dancer|dance/.test(s)) return { yt: LIVE.danceHipHop };
+        if (/model|makeup|promotional/.test(s)) return { yt: LIVE.models };
+        if (/magician|juggler|stilt|roving|statue|bubble|change face/.test(s)) return { yt: LIVE.roving };
+        if (/chinese|lion|greek|lebanese|filipino|thai|italian|multicultural|hula|naidoc|oktober/.test(s)) return { yt: LIVE.multicultural };
+        if (/christmas|santa|easter|nye|halloween|cup fashion/.test(s)) return { yt: LIVE.christmas };
+        if (/band|funk|soul|disco|party|groove|cover/.test(s)) return { yt: LIVE.partyBand };
+        if (/duo|trio|vocal/.test(s)) return { yt: LIVE.duoTrio };
+        if (/solo|singer|songwriter|acoustic|guitar/.test(s)) return { yt: LIVE.soloAcoustic };
+        if (/instrument|accordion|violin/.test(s)) return { yt: LIVE.instrumental };
+        return { yt: LIVE.defaultLive };
     }
 
-    function buildGallery(primary, poolName) {
-        var pool = GALLERY[poolName] || GALLERY.concert;
+    /** Stock / generic placeholders must never appear in galleries. */
+    function isStockImage(url) {
+        if (!url) return true;
+        var u = String(url);
+        if (/unsplash\.com|picsum\.photos|placehold|loremflickr|via\.placeholder|dummyimage/i.test(u)) return true;
+        // Site-wide generic fillers (not a specific act photo)
+        if (/^images\/(solo|duo|trio|party-band)\.jpe?g$/i.test(u)) return true;
+        if (/^images\/categories\//i.test(u)) return true;
+        return false;
+    }
+
+    function isRealImage(url) {
+        return !!(url && !isStockImage(url));
+    }
+
+    /**
+     * Gallery = only real photos of THIS act:
+     *  - their roster primary (if real)
+     *  - verified multi-file extras in REAL_GALLERY
+     *  - admin-curated gallery entries that are not stock
+     * Never pads with Unsplash or other acts' photos.
+     */
+    function buildGallery(name, primary, existing) {
         var out = [];
         var seen = {};
         function push(u) {
-            if (!u || seen[u]) return;
+            if (!isRealImage(u) || seen[u]) return;
             seen[u] = true;
             out.push(u);
         }
         push(primary);
-        for (var i = 0; i < pool.length && out.length < 4; i++) push(pool[i]);
+        var extras = REAL_GALLERY[norm(name)] || [];
+        for (var i = 0; i < extras.length; i++) push(extras[i]);
+        if (Array.isArray(existing)) {
+            for (var j = 0; j < existing.length; j++) push(existing[j]);
+        }
         return out;
     }
 
@@ -293,11 +363,8 @@
         var folderId = folder && (folder.id || folder);
         var resolved = resolveMedia(act.name, act.style, folderId, act.category);
         act.youtubeUrl = pickYoutube(act.youtubeUrl, resolved);
-        if (!act.gallery || !act.gallery.length) {
-            act.gallery = buildGallery(act.image, resolved.pool || 'concert');
-        } else if (act.image && act.gallery.indexOf(act.image) === -1) {
-            act.gallery = [act.image].concat(act.gallery).slice(0, 4);
-        }
+        // Always rebuild gallery from real photos only (strips any prior stock fillers)
+        act.gallery = buildGallery(act.name, act.image, act.gallery);
         return act;
     }
 
@@ -306,9 +373,7 @@
         var hay = [t.name, t.style, t.category, (t.styles || []).join(' '), (t.tags || []).join(' ')].join(' ');
         var resolved = BY_NAME[norm(t.name)] || styleMatch(hay);
         t.youtubeUrl = pickYoutube(t.youtubeUrl, resolved);
-        if (!t.gallery || !t.gallery.length) {
-            t.gallery = buildGallery(t.image, resolved.pool || 'dance');
-        }
+        t.gallery = buildGallery(t.name, t.image, t.gallery);
         return t;
     }
 
@@ -316,9 +381,7 @@
         if (!a || typeof a !== 'object') return a;
         var resolved = BY_NAME[norm(a.name)] || CMS_CAT_MEDIA[a.category] || styleMatch((a.genre || '') + ' ' + (a.name || '') + ' ' + (a.category || ''));
         a.youtubeUrl = pickYoutube(a.youtubeUrl, resolved);
-        if (!a.gallery || !a.gallery.length) {
-            a.gallery = buildGallery(a.image, resolved.pool || 'concert');
-        }
+        a.gallery = buildGallery(a.name, a.image, a.gallery);
         return a;
     }
 
@@ -359,6 +422,8 @@
         enrichCmsArtist: enrichCmsArtist,
         enrichAll: enrichAll,
         buildGallery: buildGallery,
+        isStockImage: isStockImage,
+        isRealImage: isRealImage,
         watchUrl: watchUrl
     };
 

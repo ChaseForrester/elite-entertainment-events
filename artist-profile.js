@@ -110,8 +110,12 @@
         }
       }
 
-      var gallery = act.gallery || act.images || [];
-      if (gallery.length && !document.getElementById('artist-gallery')) {
+      // Only show gallery when we have 2+ REAL photos of this act (no stock fillers)
+      var gallery = (act.gallery || act.images || []).filter(function (src) {
+        if (window.EliteMedia && window.EliteMedia.isRealImage) return window.EliteMedia.isRealImage(src);
+        return src && !/unsplash\.com|picsum|placehold/i.test(String(src));
+      });
+      if (gallery.length >= 2 && !document.getElementById('artist-gallery')) {
         var gal = document.createElement('div');
         gal.id = 'artist-gallery';
         gal.className = 'artist-gallery';

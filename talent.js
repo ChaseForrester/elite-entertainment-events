@@ -177,7 +177,11 @@
     var img = t.image || fallback;
     var idAttr = esc(t.id);
     var hasVideo = !!(t.youtubeUrl && ((window.EliteMedia && window.EliteMedia.youtubeId(t.youtubeUrl)) || /watch\?v=|youtu\.be\/|shorts\//.test(String(t.youtubeUrl || ''))));
-    var galCount = (t.gallery && t.gallery.length) || 0;
+    var galCount = ((t.gallery || []).filter(function (src) {
+      if (window.EliteMedia && window.EliteMedia.isRealImage) return window.EliteMedia.isRealImage(src);
+      return src && !/unsplash\.com/i.test(String(src));
+    }).length) || 0;
+    if (galCount < 2) galCount = 0;
     return (
       '<article class="talent-card' + (on ? ' is-selected' : '') + '" data-id="' + idAttr + '">' +
       '<div class="talent-card-media">' +
@@ -283,8 +287,12 @@
     }
 
     var galHost = document.getElementById('talent-profile-gallery');
-    var gallery = t.gallery || [];
-    if (gallery.length) {
+    var gallery = (t.gallery || []).filter(function (src) {
+      if (window.EliteMedia && window.EliteMedia.isRealImage) return window.EliteMedia.isRealImage(src);
+      return src && !/unsplash\.com|picsum|placehold/i.test(String(src));
+    });
+    // Only multi-shot real galleries (hero already shows the primary photo)
+    if (gallery.length >= 2) {
       galHost.innerHTML =
         '<p class="artist-yt-label">Gallery</p>' +
         '<div class="artist-gallery-grid">' +
