@@ -2818,7 +2818,14 @@
           document.getElementById('artist-genre').value = artist.genre || '';
           document.getElementById('artist-image').value = artist.image || '';
           document.getElementById('artist-youtube').value = artist.youtubeUrl || '';
-          document.getElementById('artist-gallery').value = Array.isArray(artist.gallery) ? artist.gallery.join('\n') : (artist.gallery || '');
+          {
+            const gal = Array.isArray(artist.gallery) ? artist.gallery : (artist.gallery ? [artist.gallery] : []);
+            const realGal = gal.filter(s => {
+              if (window.EliteMedia && window.EliteMedia.isRealImage) return window.EliteMedia.isRealImage(s);
+              return s && !/unsplash\.com|picsum|placehold/i.test(String(s));
+            });
+            document.getElementById('artist-gallery').value = realGal.join('\n');
+          }
           document.getElementById('artist-bio-editor').innerHTML = artist.bio || '';
           document.getElementById('artist-bio').value = artist.bio || '';
           document.getElementById('artist-meta-description').value = artist.metaDescription || '';
