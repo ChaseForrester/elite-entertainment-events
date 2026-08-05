@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-AU">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -13,10 +14,13 @@
   <link rel="icon" href="favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="service-form.css" />
 </head>
+
 <body>
 
   <div class="topbar">
@@ -36,7 +40,8 @@
     <div class="container header-inner">
       <div class="logo">
         <a href="index.html" class="brand-link" aria-label="Elite Entertainment and Events — Home">
-          <img class="brand-logo brand-logo--nav" src="images/brand/logo-nav-icon.png" alt="Elite Entertainment and Events" width="50" height="50" />
+          <img class="brand-logo brand-logo--nav" src="images/brand/logo-nav-icon.png"
+            alt="Elite Entertainment and Events" width="50" height="50" />
         </a>
       </div>
       <nav class="main-nav" id="main-nav" aria-label="Primary">
@@ -48,7 +53,8 @@
         </ul>
       </nav>
       <div class="header-actions">
-        <a href="#category-enquiry" class="btn btn-gold header-cta" style="border-radius:30px;text-transform:none;">Get a Quote</a>
+        <a href="#category-enquiry" class="btn btn-gold header-cta" style="border-radius:30px;text-transform:none;">Get
+          a Quote</a>
         <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -70,7 +76,8 @@
         <p class="folder-count-badge" id="folder-count"></p>
         <div class="cat-page-hero-actions">
           <a href="#folder-acts" class="btn btn-gold" style="border-radius:30px;text-transform:none;">Browse Acts</a>
-          <a href="#category-enquiry" class="btn btn-outline" style="border-radius:30px;text-transform:none;">Request a Quote</a>
+          <a href="#category-enquiry" class="btn btn-outline" style="border-radius:30px;text-transform:none;">Request a
+            Quote</a>
         </div>
       </div>
     </section>
@@ -81,7 +88,8 @@
 
         <div class="cat-roster-intro" id="folder-acts">
           <p class="section-eyebrow" style="text-align:center;">Full Roster</p>
-          <h2 class="section-title" style="text-align:center;font-size:clamp(1.4rem,3vw,1.9rem);" id="folder-roster-title">Acts</h2>
+          <h2 class="section-title" style="text-align:center;font-size:clamp(1.4rem,3vw,1.9rem);"
+            id="folder-roster-title">Acts</h2>
           <div class="gold-divider"></div>
         </div>
         <div id="folder-act-grid" class="act-grid" aria-live="polite"></div>
@@ -92,7 +100,8 @@
               <p class="section-eyebrow" style="text-align:left;">Book This Category</p>
               <h2 class="section-title" style="text-align:left;">Request a Quote</h2>
               <div class="gold-divider" style="margin-left:0;"></div>
-              <p>Your enquiry is saved to Super Admin and emailed to the full Elite team (with optional docs/images). We respond within 24 hours.</p>
+              <p>Your enquiry is saved to Super Admin and emailed to the full Elite team (with optional docs/images). We
+                respond within 24 hours.</p>
               <p class="cat-enquiry-phones">
                 <a href="tel:+61417221111">+61 417 221 111</a><br />
                 <a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>
@@ -112,11 +121,13 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="cat-name">Full Name *</label>
-                  <input type="text" id="cat-name" name="name" required autocomplete="name" placeholder="Your full name" />
+                  <input type="text" id="cat-name" name="name" required autocomplete="name"
+                    placeholder="Your full name" />
                 </div>
                 <div class="form-group">
                   <label for="cat-email">Email *</label>
-                  <input type="email" id="cat-email" name="email" required autocomplete="email" placeholder="you@email.com" />
+                  <input type="email" id="cat-email" name="email" required autocomplete="email"
+                    placeholder="you@email.com" />
                 </div>
               </div>
               <div class="form-row">
@@ -175,6 +186,7 @@
   </footer>
 
   <script src="categories-data.js"></script>
+  <script src="media-library.js"></script>
   <script src="category-page.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -184,7 +196,8 @@
   <script src="elite-attachments.js"></script>
   <script src="elite-crm-push.js"></script>
   <script src="category-form.js"></script>
-  
+
   <script src="site-nav.js"></script>
 </body>
+
 </html>

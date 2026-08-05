@@ -59,6 +59,9 @@
 
     var folder = found.folder;
     var act = found.act;
+    if (window.EliteMedia && typeof window.EliteMedia.enrichAct === 'function') {
+      window.EliteMedia.enrichAct(act, folder);
+    }
     var photo = act.image || themedFallback(act.style, act.name);
     var bio = act.bio || (act.name + ' is available through Elite Entertainment & Events for weddings, corporate galas, festivals and private events across Australia. Contact us for packages, technical riders and availability.');
     var fullBio = bio + ' Book ' + act.name + ' via Elite Entertainment for professional delivery, fully insured performers, and nationwide coordination from Sydney, Melbourne, Brisbane and the Gold Coast.';
@@ -83,22 +86,58 @@
         else content.appendChild(site);
       }
       if (act.youtubeUrl && !document.getElementById('artist-yt-wrap')) {
-        var match = String(act.youtubeUrl).match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-        var id = match ? match[1] : '';
-        if (!id) return;
-        var wrap = document.createElement('div');
-        wrap.id = 'artist-yt-wrap';
-        wrap.className = 'artist-yt-wrap';
-        wrap.innerHTML =
-          '<p class="artist-yt-label">Watch the show</p>' +
-          '<div class="artist-yt-frame">' +
+        var id = '';
+        if (window.EliteMedia && window.EliteMedia.youtubeId) {
+          id = window.EliteMedia.youtubeId(act.youtubeUrl);
+        } else {
+          var match = String(act.youtubeUrl).match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|live\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+          id = match ? match[1] : '';
+        }
+        if (id) {
+          var wrap = document.createElement('div');
+          wrap.id = 'artist-yt-wrap';
+          wrap.className = 'artist-yt-wrap';
+          wrap.innerHTML =
+            '<p class="artist-yt-label">Live performance</p>' +
+            '<div class="artist-yt-frame">' +
             '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1" ' +
-              'title="' + esc(act.name) + ' video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
-              'allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>' +
+            'title="' + esc(act.name) + ' live performance" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
+            'allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>' +
+            '</div>';
+          var media = document.querySelector('.artist-profile-media');
+          if (media) media.appendChild(wrap);
+          else content.appendChild(wrap);
+        }
+      }
+
+      var gallery = act.gallery || act.images || [];
+      if (gallery.length && !document.getElementById('artist-gallery')) {
+        var gal = document.createElement('div');
+        gal.id = 'artist-gallery';
+        gal.className = 'artist-gallery';
+        gal.innerHTML =
+          '<p class="artist-yt-label">Gallery</p>' +
+          '<div class="artist-gallery-grid">' +
+          gallery.map(function (src, i) {
+            return '<button type="button" class="artist-gallery-item" data-gallery-src="' + esc(src) + '" aria-label="View image ' + (i + 1) + '">' +
+              '<img src="' + esc(src) + '" alt="' + esc(act.name) + ' photo ' + (i + 1) + '" loading="lazy" decoding="async" />' +
+              '</button>';
+          }).join('') +
           '</div>';
-        var media = document.querySelector('.artist-profile-media');
-        if (media) media.appendChild(wrap);
-        else content.appendChild(wrap);
+        var mediaHost = document.querySelector('.artist-profile-media');
+        if (mediaHost) mediaHost.appendChild(gal);
+        else content.appendChild(gal);
+
+        gal.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-gallery-src]');
+          if (!btn) return;
+          var src = btn.getAttribute('data-gallery-src');
+          var photoEl = document.getElementById('artist-photo');
+          if (photoEl && src) {
+            photoEl.src = src;
+            photoEl.alt = act.name;
+          }
+        });
       }
     })();
 
@@ -112,15 +151,15 @@
       wrap.className = 'artist-lineup-block';
       wrap.innerHTML =
         '<details class="act-lineup-accordion artist-lineup-accordion" open>' +
-          '<summary class="act-lineup-summary">Featured artists <span>(' + list.length + ')</span></summary>' +
-          '<ul class="act-lineup-list">' +
-            list.map(function (a) {
-              var name = typeof a === 'string' ? a : (a.name || '');
-              var role = typeof a === 'string' ? '' : (a.role || a.style || '');
-              return '<li class="act-lineup-item"><span class="act-lineup-name">' + esc(name) + '</span>' +
-                (role ? '<span class="act-lineup-role">' + esc(role) + '</span>' : '') + '</li>';
-            }).join('') +
-          '</ul>' +
+        '<summary class="act-lineup-summary">Featured artists <span>(' + list.length + ')</span></summary>' +
+        '<ul class="act-lineup-list">' +
+        list.map(function (a) {
+          var name = typeof a === 'string' ? a : (a.name || '');
+          var role = typeof a === 'string' ? '' : (a.role || a.style || '');
+          return '<li class="act-lineup-item"><span class="act-lineup-name">' + esc(name) + '</span>' +
+            (role ? '<span class="act-lineup-role">' + esc(role) + '</span>' : '') + '</li>';
+        }).join('') +
+        '</ul>' +
         '</details>';
       var bioEl = document.getElementById('artist-bio');
       if (bioEl && bioEl.parentNode) bioEl.parentNode.insertBefore(wrap, bioEl.nextSibling);
@@ -138,7 +177,7 @@
       b.setAttribute('aria-label', 'Add to multi-enquiry');
       b.innerHTML =
         '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
-          '<path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>' +
+        '<path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>' +
         '</svg><span>Add to multi-enquiry</span>';
       b.addEventListener('click', function () {
         window.EliteCart.add({

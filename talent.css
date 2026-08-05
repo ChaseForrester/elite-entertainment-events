@@ -559,3 +559,135 @@ body.has-talent-selection .site-footer {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ── Talent profile modal (live video + gallery) ── */
+.talent-card-live {
+  position: absolute;
+  left: 0.65rem;
+  bottom: 0.65rem;
+  z-index: 2;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(200, 40, 40, 0.92);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.talent-card-media { position: relative; }
+.talent-profile-btn {
+  width: 100%;
+  margin-bottom: 0.35rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.talent-profile-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.82);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.talent-profile-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.talent-profile-dialog {
+  position: relative;
+  width: min(1080px, 100%);
+  max-height: min(92vh, 900px);
+  overflow: auto;
+  background: #0d0d0d;
+  border: 1px solid rgba(200, 168, 76, 0.28);
+  border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+.talent-profile-close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.talent-profile-close:hover {
+  border-color: rgba(200, 168, 76, 0.5);
+  color: var(--gold, #c9a84c);
+}
+.talent-profile-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(260px, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.talent-profile-hero {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(200, 168, 76, 0.25);
+  aspect-ratio: 3 / 4;
+  background: #111;
+}
+.talent-profile-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.talent-profile-yt {
+  margin-top: 1rem;
+}
+.talent-profile-gallery {
+  margin-top: 1rem;
+}
+.talent-profile-copy h2 {
+  font-family: var(--font-heading, "Cormorant Garamond", serif);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  color: #fff;
+  margin: 0.25rem 0 0.5rem;
+}
+.talent-profile-meta {
+  color: var(--gold, #c9a84c);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 0 0 1rem;
+}
+.talent-profile-summary {
+  color: var(--silver-light, #ccc);
+  line-height: 1.7;
+  margin: 0 0 1.25rem;
+}
+.talent-profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+body.talent-profile-open {
+  overflow: hidden;
+}
+@media (max-width: 800px) {
+  .talent-profile-layout {
+    grid-template-columns: 1fr;
+  }
+  .talent-profile-hero {
+    max-width: 360px;
+    margin-inline: auto;
+  }
+}

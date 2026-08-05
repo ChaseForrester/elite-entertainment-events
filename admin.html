@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Elite Super Admin Dashboard | Elite Entertainment &amp; Events</title>
   <meta name="robots" content="noindex, nofollow" />
-  
+
   <!-- PWA Metadata -->
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#c9a84c" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <style>
     :root {
@@ -22,6 +25,7 @@
       --card-border: rgba(255, 255, 255, 0.06);
       --gold-glow: 0 0 25px rgba(200, 168, 76, 0.35);
     }
+
     body {
       background: var(--bg-dark);
       color: var(--white);
@@ -30,16 +34,18 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
+
     .dashboard-wrap {
       position: relative;
       min-height: 100vh;
-      background-image: 
-        linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
       background-size: 40px 40px;
       padding: 3rem 2rem;
       box-sizing: border-box;
     }
+
     .glow-point {
       position: absolute;
       width: 400px;
@@ -49,6 +55,7 @@
       top: 10%;
       left: 70%;
     }
+
     #auth-overlay {
       position: fixed;
       inset: 0;
@@ -60,11 +67,13 @@
       backdrop-filter: blur(25px);
       transition: var(--transition);
     }
+
     #auth-overlay.hidden {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
+
     .auth-card {
       background: var(--black-3);
       border: 1px solid var(--gold-dark);
@@ -75,6 +84,7 @@
       box-shadow: var(--gold-glow);
       text-align: center;
     }
+
     .auth-card h2 {
       font-family: var(--font-heading);
       font-size: 2.2rem;
@@ -83,15 +93,18 @@
       margin-bottom: 0.5rem;
       color: var(--white);
     }
+
     .auth-card p {
       font-size: 0.8rem;
       color: var(--silver-mid);
       margin-bottom: 2rem;
     }
+
     .auth-input-group {
       margin-bottom: 1.5rem;
       text-align: left;
     }
+
     .auth-input-group label {
       font-size: 0.6rem;
       font-weight: 800;
@@ -101,7 +114,10 @@
       display: block;
       margin-bottom: 0.5rem;
     }
-    .auth-input-group input, .auth-input-group select, .auth-input-group textarea {
+
+    .auth-input-group input,
+    .auth-input-group select,
+    .auth-input-group textarea {
       width: 100%;
       padding: 0.85rem 1rem;
       background: rgba(255, 255, 255, 0.03);
@@ -113,10 +129,14 @@
       box-sizing: border-box;
       transition: var(--transition);
     }
-    .auth-input-group input:focus, .auth-input-group select:focus, .auth-input-group textarea:focus {
+
+    .auth-input-group input:focus,
+    .auth-input-group select:focus,
+    .auth-input-group textarea:focus {
       border-color: var(--gold);
       box-shadow: 0 0 10px rgba(200, 168, 76, 0.2);
     }
+
     .dashboard-header {
       display: flex;
       justify-content: space-between;
@@ -125,10 +145,12 @@
       flex-wrap: wrap;
       gap: 1.5rem;
     }
+
     .db-logo {
       display: flex;
       flex-direction: column;
     }
+
     .db-logo-main {
       font-family: var(--font-display);
       font-size: 2.4rem;
@@ -136,6 +158,7 @@
       color: var(--white);
       line-height: 1;
     }
+
     .db-logo-sub {
       font-size: 0.6rem;
       letter-spacing: 0.35em;
@@ -143,12 +166,14 @@
       text-transform: uppercase;
       margin-top: 0.25rem;
     }
+
     .analytics-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1.5rem;
       margin-bottom: 3rem;
     }
+
     .analytic-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -157,13 +182,18 @@
       position: relative;
       overflow: hidden;
     }
+
     .analytic-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; height: 2px;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
       background: var(--gradient-gold);
       opacity: 0.6;
     }
+
     .analytic-label {
       font-size: 0.65rem;
       font-weight: 700;
@@ -171,6 +201,7 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
+
     .analytic-value {
       font-family: var(--font-heading);
       font-size: 2.6rem;
@@ -178,6 +209,7 @@
       color: var(--white);
       margin-top: 0.5rem;
     }
+
     .table-container {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -185,46 +217,55 @@
       overflow: hidden;
       margin-bottom: 2rem;
     }
+
     /* Kanban needs its own horizontal scroll — don't clip the board */
     #leads-container.table-container {
       overflow: visible;
     }
+
     #leads-container .table-header {
       border-radius: var(--radius-md) var(--radius-md) 0 0;
     }
+
     .analytic-card.is-clickable {
       cursor: pointer;
       transition: border-color .15s, transform .15s;
     }
+
     .analytic-card.is-clickable:hover {
-      border-color: rgba(200,168,76,0.45);
+      border-color: rgba(200, 168, 76, 0.45);
       transform: translateY(-1px);
     }
+
     .db-tabs .tab-btn {
       cursor: pointer;
       position: relative;
       z-index: 2;
       pointer-events: auto;
     }
+
     .attach-item {
       padding: 0.65rem 0.75rem;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 10px;
-      background: rgba(0,0,0,0.25);
+      background: rgba(0, 0, 0, 0.25);
       margin-bottom: 0.45rem;
     }
+
     .attach-item time {
       display: block;
       font-size: 0.68rem;
       color: #888;
       margin-top: 0.2rem;
     }
+
     .attach-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.4rem;
       align-items: center;
     }
+
     .table-header {
       padding: 1.5rem 2rem;
       border-bottom: 1px solid var(--card-border);
@@ -234,17 +275,20 @@
       flex-wrap: wrap;
       gap: 1rem;
     }
+
     .table-title {
       font-family: var(--font-heading);
       font-size: 1.4rem;
       font-weight: 300;
       letter-spacing: 0.05em;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
     }
+
     th {
       font-size: 0.65rem;
       font-weight: 800;
@@ -255,15 +299,18 @@
       background: rgba(255, 255, 255, 0.01);
       border-bottom: 1px solid var(--card-border);
     }
+
     td {
       padding: 1.25rem 2rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.02);
       font-size: 0.85rem;
       color: var(--silver-light);
     }
+
     tr:hover td {
       background: rgba(255, 255, 255, 0.01);
     }
+
     .status-pill {
       display: inline-flex;
       padding: 0.25rem 0.75rem;
@@ -273,16 +320,19 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+
     .status-pending {
       background: rgba(200, 168, 76, 0.1);
       color: var(--gold);
       border: 1px solid rgba(200, 168, 76, 0.25);
     }
+
     .status-contacted {
       background: rgba(58, 122, 58, 0.1);
       color: #55c555;
       border: 1px solid rgba(58, 122, 58, 0.25);
     }
+
     .btn-action {
       background: none;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -295,10 +345,12 @@
       transition: var(--transition);
       margin-right: 0.25rem;
     }
+
     .btn-action:hover {
       border-color: var(--gold);
       color: var(--gold);
     }
+
     .artist-img-preview {
       width: 48px;
       height: 48px;
@@ -306,12 +358,15 @@
       object-fit: cover;
       border: 1px solid var(--gold-dark);
     }
+
     tr.artist-row {
       cursor: pointer;
     }
+
     tr.artist-row:hover td {
       background: rgba(200, 168, 76, 0.06);
     }
+
     .cell-muted {
       font-size: 0.72rem;
       color: var(--silver-mid);
@@ -320,6 +375,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     /* Kanban CRM */
     .kanban-wrap {
       display: flex;
@@ -329,18 +385,20 @@
       min-height: 520px;
       align-items: flex-start;
     }
+
     .kanban-col {
       flex: 0 0 280px;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 14px;
       display: flex;
       flex-direction: column;
       max-height: 72vh;
     }
+
     .kanban-col-head {
       padding: 0.85rem 1rem;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -351,6 +409,7 @@
       border-radius: 14px 14px 0 0;
       z-index: 1;
     }
+
     .kanban-col-title {
       font-size: 0.72rem;
       font-weight: 800;
@@ -358,6 +417,7 @@
       text-transform: uppercase;
       color: #fff;
     }
+
     .kanban-count {
       font-size: 0.68rem;
       font-weight: 700;
@@ -371,51 +431,66 @@
       justify-content: center;
       padding: 0 0.4rem;
     }
+
     .kanban-cards {
       padding: 0.65rem;
       overflow-y: auto;
       flex: 1;
       min-height: 120px;
     }
+
     .kanban-cards.is-dragover {
-      background: rgba(200,168,76,0.08);
-      outline: 1px dashed rgba(200,168,76,0.45);
+      background: rgba(200, 168, 76, 0.08);
+      outline: 1px dashed rgba(200, 168, 76, 0.45);
       outline-offset: -4px;
       border-radius: 10px;
     }
+
     .kanban-card {
       background: #121212;
-      border: 1px solid rgba(200,168,76,0.18);
+      border: 1px solid rgba(200, 168, 76, 0.18);
       border-radius: 12px;
       padding: 0.85rem;
       margin-bottom: 0.65rem;
       cursor: grab;
       transition: border-color .15s, transform .15s, box-shadow .15s;
     }
-    .kanban-card:active { cursor: grabbing; }
-    .kanban-card:hover {
-      border-color: rgba(200,168,76,0.5);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+
+    .kanban-card:active {
+      cursor: grabbing;
     }
-    .kanban-card.is-dragging { opacity: 0.45; transform: scale(0.98); }
+
+    .kanban-card:hover {
+      border-color: rgba(200, 168, 76, 0.5);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .kanban-card.is-dragging {
+      opacity: 0.45;
+      transform: scale(0.98);
+    }
+
     .kanban-card h4 {
       margin: 0 0 0.35rem;
       font-size: 0.92rem;
       color: #fff;
       font-weight: 700;
     }
+
     .kanban-meta {
       font-size: 0.72rem;
       color: #aaa;
       line-height: 1.45;
       margin: 0.15rem 0;
     }
+
     .kanban-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 0.3rem;
       margin-top: 0.55rem;
     }
+
     .kanban-tag {
       font-size: 0.62rem;
       font-weight: 700;
@@ -423,15 +498,17 @@
       text-transform: uppercase;
       padding: 0.2rem 0.45rem;
       border-radius: 6px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       color: #ccc;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
+
     .kanban-tag.gold {
       color: var(--gold);
-      border-color: rgba(200,168,76,0.35);
-      background: rgba(200,168,76,0.1);
+      border-color: rgba(200, 168, 76, 0.35);
+      background: rgba(200, 168, 76, 0.1);
     }
+
     .kanban-card-actions {
       display: flex;
       gap: 0.35rem;
@@ -439,6 +516,7 @@
       flex-wrap: wrap;
       align-items: center;
     }
+
     .crm-toolbar {
       padding: 0 1.25rem 0.85rem;
       display: flex;
@@ -446,15 +524,17 @@
       flex-wrap: wrap;
       align-items: center;
     }
+
     .crm-toolbar select,
     .crm-toolbar input[type="search"] {
       padding: 0.65rem 0.85rem;
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
       color: #fff;
       font-family: inherit;
     }
+
     .crm-sync {
       display: inline-flex;
       align-items: center;
@@ -464,10 +544,11 @@
       letter-spacing: 0.04em;
       padding: 0.4rem 0.7rem;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       color: #bbb;
-      background: rgba(255,255,255,0.03);
+      background: rgba(255, 255, 255, 0.03);
     }
+
     .crm-sync.dot::before {
       content: '';
       width: 8px;
@@ -475,12 +556,35 @@
       border-radius: 50%;
       background: #666;
     }
-    .crm-sync.is-live { color: #8fd18f; border-color: rgba(85,197,85,0.35); }
-    .crm-sync.is-live.dot::before { background: #55c555; box-shadow: 0 0 8px #55c555; }
-    .crm-sync.is-syncing { color: #e8c86b; border-color: rgba(200,168,76,0.35); }
-    .crm-sync.is-syncing.dot::before { background: #c9a84c; }
-    .crm-sync.is-offline { color: #ff8a8a; border-color: rgba(255,100,100,0.3); }
-    .crm-sync.is-offline.dot::before { background: #ff5555; }
+
+    .crm-sync.is-live {
+      color: #8fd18f;
+      border-color: rgba(85, 197, 85, 0.35);
+    }
+
+    .crm-sync.is-live.dot::before {
+      background: #55c555;
+      box-shadow: 0 0 8px #55c555;
+    }
+
+    .crm-sync.is-syncing {
+      color: #e8c86b;
+      border-color: rgba(200, 168, 76, 0.35);
+    }
+
+    .crm-sync.is-syncing.dot::before {
+      background: #c9a84c;
+    }
+
+    .crm-sync.is-offline {
+      color: #ff8a8a;
+      border-color: rgba(255, 100, 100, 0.3);
+    }
+
+    .crm-sync.is-offline.dot::before {
+      background: #ff5555;
+    }
+
     .assignee-chip {
       display: inline-flex;
       align-items: center;
@@ -488,6 +592,7 @@
       font-size: 0.68rem;
       color: #ddd;
     }
+
     .assignee-avatar {
       width: 22px;
       height: 22px;
@@ -500,6 +605,7 @@
       color: #0a0a0a;
       flex-shrink: 0;
     }
+
     .priority-pill {
       font-size: 0.6rem;
       font-weight: 800;
@@ -507,8 +613,9 @@
       text-transform: uppercase;
       padding: 0.15rem 0.4rem;
       border-radius: 6px;
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
+
     .card-top-row {
       display: flex;
       justify-content: space-between;
@@ -516,42 +623,51 @@
       gap: 0.5rem;
       margin-bottom: 0.25rem;
     }
+
     .quick-assign {
       width: 100%;
       margin-top: 0.35rem;
       padding: 0.35rem 0.45rem;
       border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.35);
       color: #ddd;
       font-size: 0.68rem;
       font-family: inherit;
     }
+
     .activity-item {
       font-size: 0.78rem;
       color: #ccc;
       padding: 0.45rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
+
     .activity-item time {
       display: block;
       font-size: 0.65rem;
       color: #777;
       margin-top: 0.2rem;
     }
+
     .lead-detail-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.85rem 1rem;
     }
+
     @media (max-width: 720px) {
-      .lead-detail-grid { grid-template-columns: 1fr; }
+      .lead-detail-grid {
+        grid-template-columns: 1fr;
+      }
     }
+
     .lead-section {
       margin-top: 1.15rem;
       padding-top: 1rem;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
+
     .lead-section h4 {
       margin: 0 0 0.65rem;
       font-size: 0.75rem;
@@ -559,21 +675,26 @@
       text-transform: uppercase;
       color: var(--gold);
     }
-    .note-item, .attach-item {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
+
+    .note-item,
+    .attach-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 10px;
       padding: 0.65rem 0.75rem;
       margin-bottom: 0.5rem;
       font-size: 0.8rem;
       color: #ddd;
     }
-    .note-item time, .attach-item time {
+
+    .note-item time,
+    .attach-item time {
       display: block;
       font-size: 0.65rem;
       color: #777;
       margin-top: 0.3rem;
     }
+
     /* Modal Styling */
     .admin-modal-overlay {
       position: fixed;
@@ -589,10 +710,12 @@
       visibility: hidden;
       transition: all 0.3s ease;
     }
+
     .admin-modal-overlay.active {
       opacity: 1;
       visibility: visible;
     }
+
     .admin-modal-body {
       background: var(--black-3);
       border: 1px solid var(--gold);
@@ -604,36 +727,43 @@
       overflow-y: auto;
       box-shadow: var(--gold-glow);
     }
+
     .admin-modal-body.wide {
       max-width: 760px;
     }
+
     @media (max-width: 900px) {
       .analytics-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
+
     @media (max-width: 600px) {
       .analytics-grid {
         grid-template-columns: 1fr;
       }
+
       .db-tabs {
         flex-wrap: wrap;
       }
     }
   </style>
 </head>
+
 <body>
 
   <!-- AUTH COVER OVERLAY -->
   <div id="auth-overlay">
     <div class="auth-card">
       <div class="db-logo" style="align-items:center; margin-bottom:2rem;">
-        <img src="images/brand/logo-icon.png" alt="Elite Entertainment and Events" style="width:min(160px,50vw);height:auto;margin-bottom:0.75rem;filter:drop-shadow(0 0 18px rgba(200,168,76,0.35));" />
+        <img src="images/brand/logo-icon.png" alt="Elite Entertainment and Events"
+          style="width:min(160px,50vw);height:auto;margin-bottom:0.75rem;filter:drop-shadow(0 0 18px rgba(200,168,76,0.35));" />
         <span class="db-logo-sub">Super Admin CMS Portal</span>
       </div>
       <h2>Super Admin Login</h2>
       <p>Enter authorised administrator credentials to manage artists, images, content &amp; leads</p>
-      <p style="font-size:0.72rem;color:var(--silver-mid);margin:-0.5rem 0 1.25rem;line-height:1.45;">Restricted access · sessions expire after 12 hours · change your password after first login</p>
+      <p style="font-size:0.72rem;color:var(--silver-mid);margin:-0.5rem 0 1.25rem;line-height:1.45;">Restricted access
+        · sessions expire after 12 hours · change your password after first login</p>
       <div class="auth-input-group">
         <label for="auth-user">Email Address</label>
         <input type="email" id="auth-user" placeholder="your@email.com" autocomplete="username" />
@@ -643,9 +773,13 @@
         <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" />
       </div>
       <button class="btn btn-gold" id="btn-login" style="width:100%;">ACCESS SUPER ADMIN</button>
-      <button type="button" class="btn btn-outline" id="btn-forgot" style="width:100%;margin-top:0.65rem;">Forgot password?</button>
-      <p id="auth-status" style="font-size:0.78rem;min-height:1.2em;margin:0.85rem 0 0;text-align:center;line-height:1.4;"></p>
-      <p style="font-size:0.68rem;color:#666;margin:1rem 0 0;text-align:center;line-height:1.4;">Links: <a href="admin.html" style="color:var(--gold);">admin.html</a> · <a href="ops-console.html" style="color:var(--gold);">ops-console.html</a></p>
+      <button type="button" class="btn btn-outline" id="btn-forgot" style="width:100%;margin-top:0.65rem;">Forgot
+        password?</button>
+      <p id="auth-status"
+        style="font-size:0.78rem;min-height:1.2em;margin:0.85rem 0 0;text-align:center;line-height:1.4;"></p>
+      <p style="font-size:0.68rem;color:#666;margin:1rem 0 0;text-align:center;line-height:1.4;">Links: <a
+          href="admin.html" style="color:var(--gold);">admin.html</a> · <a href="ops-console.html"
+          style="color:var(--gold);">ops-console.html</a></p>
     </div>
   </div>
 
@@ -657,7 +791,8 @@
       <!-- HEADER -->
       <div class="dashboard-header">
         <div class="db-logo" style="display:flex;align-items:center;gap:1rem;">
-          <img src="images/brand/logo-icon.png" alt="" width="52" height="52" style="border-radius:12px;box-shadow:0 0 16px rgba(200,168,76,0.3);" />
+          <img src="images/brand/logo-icon.png" alt="" width="52" height="52"
+            style="border-radius:12px;box-shadow:0 0 16px rgba(200,168,76,0.3);" />
           <div>
             <span class="db-logo-main" style="font-size:1.6rem;">SUPER ADMIN</span>
             <span class="db-logo-sub">CMS · ELITE ENTERTAINMENT &amp; EVENTS</span>
@@ -665,7 +800,8 @@
         </div>
         <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
           <span id="admin-session-email" style="font-size:0.72rem;color:var(--gold);letter-spacing:0.04em;"></span>
-          <button class="btn btn-outline" id="btn-account" type="button" style="border-color:rgba(200,168,76,0.3); color:var(--gold);">Account / Password</button>
+          <button class="btn btn-outline" id="btn-account" type="button"
+            style="border-color:rgba(200,168,76,0.3); color:var(--gold);">Account / Password</button>
           <button class="btn btn-outline" id="btn-logout">Logout</button>
           <a href="ops-console.html" class="btn btn-outline">Ops Console</a>
           <a href="index.html" class="btn btn-gold" target="_blank">View Live Site &rarr;</a>
@@ -673,22 +809,36 @@
       </div>
 
       <!-- Account / change password -->
-      <div id="admin-account-panel" class="content-card" style="display:none; margin-bottom:1.5rem; padding:1.5rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.2); border-radius:14px;">
-        <h3 style="margin:0 0 0.5rem; font-family:'Cormorant Garamond',serif; font-weight:400; color:#fff;">Account security</h3>
-        <p style="font-size:0.8rem; color:#999; margin:0 0 1rem; line-height:1.5;">Change your Super Admin password. Minimum 10 characters with upper, lower and a number. Applies to local Super Admin login; Firebase password is updated when signed in via Firebase.</p>
-        <p id="admin-bootstrap-hint" style="display:none; font-size:0.78rem; color:#e8c86b; margin:0 0 1rem;">You are still on the bootstrap password. Change it now for production safety.</p>
+      <div id="admin-account-panel" class="content-card"
+        style="display:none; margin-bottom:1.5rem; padding:1.5rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.2); border-radius:14px;">
+        <h3 style="margin:0 0 0.5rem; font-family:'Cormorant Garamond',serif; font-weight:400; color:#fff;">Account
+          security</h3>
+        <p style="font-size:0.8rem; color:#999; margin:0 0 1rem; line-height:1.5;">Change your Super Admin password.
+          Minimum 10 characters with upper, lower and a number. Applies to local Super Admin login; Firebase password is
+          updated when signed in via Firebase.</p>
+        <p id="admin-bootstrap-hint" style="display:none; font-size:0.78rem; color:#e8c86b; margin:0 0 1rem;">You are
+          still on the bootstrap password. Change it now for production safety.</p>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; max-width:900px;">
           <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">Current password</label>
-            <input type="password" id="pwd-current" autocomplete="current-password" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
+            <label
+              style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">Current
+              password</label>
+            <input type="password" id="pwd-current" autocomplete="current-password"
+              style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
           </div>
           <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">New password</label>
-            <input type="password" id="pwd-new" autocomplete="new-password" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
+            <label
+              style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">New
+              password</label>
+            <input type="password" id="pwd-new" autocomplete="new-password"
+              style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
           </div>
           <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">Confirm new password</label>
-            <input type="password" id="pwd-confirm" autocomplete="new-password" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
+            <label
+              style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">Confirm
+              new password</label>
+            <input type="password" id="pwd-confirm" autocomplete="new-password"
+              style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
           </div>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1rem; align-items:center;">
@@ -712,19 +862,30 @@
           <div class="analytic-label">Open Enquiries</div>
           <div class="analytic-value" id="stat-leads">0</div>
         </div>
-        <div class="analytic-card is-clickable" id="stat-card-pipeline" title="Open CRM Kanban" role="button" tabindex="0">
+        <div class="analytic-card is-clickable" id="stat-card-pipeline" title="Open CRM Kanban" role="button"
+          tabindex="0">
           <div class="analytic-label">Active Pipeline Cards</div>
           <div class="analytic-value" id="stat-rev" style="color: var(--gold);">0</div>
         </div>
       </div>
 
       <!-- Tab Toggles -->
-      <div class="db-tabs" style="display:flex; gap:1rem; margin-bottom:2rem; justify-content:flex-start; width:100%; flex-wrap:wrap;">
-        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-artists" data-admin-tab="cms-artists" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Artists &amp; Performers</button>
-        <button type="button" class="btn btn-gold tab-btn" id="tab-btn-leads" data-admin-tab="leads" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem;">CRM Kanban</button>
-        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-events" data-admin-tab="cms-events" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Events &amp; Packages</button>
-        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-content" data-admin-tab="cms-content" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Hero &amp; Global Content</button>
-        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-partners" data-admin-tab="partners" style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Partner Applications</button>
+      <div class="db-tabs"
+        style="display:flex; gap:1rem; margin-bottom:2rem; justify-content:flex-start; width:100%; flex-wrap:wrap;">
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-artists" data-admin-tab="cms-artists"
+          style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Artists
+          &amp; Performers</button>
+        <button type="button" class="btn btn-gold tab-btn" id="tab-btn-leads" data-admin-tab="leads"
+          style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem;">CRM Kanban</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-events" data-admin-tab="cms-events"
+          style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Events
+          &amp; Packages</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-content" data-admin-tab="cms-content"
+          style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Hero
+          &amp; Global Content</button>
+        <button type="button" class="btn btn-outline tab-btn" id="tab-btn-partners" data-admin-tab="partners"
+          style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Partner
+          Applications</button>
       </div>
 
       <!-- ARTISTS CMS TABLE (hidden by default — CRM Kanban is the primary workspace) -->
@@ -732,13 +893,16 @@
         <div class="table-header">
           <div>
             <div class="table-title">Artists &amp; Performers</div>
-            <p style="margin:0.35rem 0 0;font-size:0.78rem;color:var(--silver-mid);">Click any row to edit photo, details, YouTube, description and SEO meta.</p>
+            <p style="margin:0.35rem 0 0;font-size:0.78rem;color:var(--silver-mid);">Click any row to edit photo,
+              details, YouTube, description and SEO meta.</p>
           </div>
           <button class="btn btn-gold btn-sm" id="btn-add-artist">+ Add New Artist / Act</button>
         </div>
         <div style="padding:0 1.5rem 1rem; display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
-          <input type="search" id="artist-search" placeholder="Search artists…" style="flex:1; min-width:200px; max-width:360px; padding:0.65rem 0.85rem; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04); color:#fff;" />
-          <select id="artist-filter-category" style="padding:0.65rem 0.85rem; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:#121212; color:#fff;">
+          <input type="search" id="artist-search" placeholder="Search artists…"
+            style="flex:1; min-width:200px; max-width:360px; padding:0.65rem 0.85rem; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04); color:#fff;" />
+          <select id="artist-filter-category"
+            style="padding:0.65rem 0.85rem; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:#121212; color:#fff;">
             <option value="">All categories</option>
           </select>
         </div>
@@ -807,13 +971,15 @@
             <label>Hero Banner Image Path / Upload</label>
             <div style="display:flex; gap:0.5rem; align-items:center;">
               <input type="text" id="content-hero-banner" style="flex:1;" />
-              <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
+              <label class="btn btn-outline btn-sm"
+                style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
                 📷 Upload Hero
                 <input type="file" id="content-hero-banner-file" accept="image/*" style="display:none;" />
               </label>
             </div>
             <div style="margin-top:0.5rem; text-align:center;">
-              <img id="hero-img-preview" src="" alt="Hero preview" style="max-height:100px; border-radius:8px; border:1px solid var(--gold); display:none; margin:0 auto;" />
+              <img id="hero-img-preview" src="" alt="Hero preview"
+                style="max-height:100px; border-radius:8px; border:1px solid var(--gold); display:none; margin:0 auto;" />
             </div>
           </div>
           <div class="auth-input-group">
@@ -852,18 +1018,21 @@
         <div class="table-header">
           <div>
             <div class="table-title">CRM · Enquiry Kanban</div>
-            <p style="margin:0.35rem 0 0;font-size:0.78rem;color:var(--silver-mid);">Realtime multi-device board · assign team members · drag stages · docs, dates &amp; notes on each card.</p>
+            <p style="margin:0.35rem 0 0;font-size:0.78rem;color:var(--silver-mid);">Realtime multi-device board ·
+              assign team members · drag stages · docs, dates &amp; notes on each card.</p>
           </div>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
             <span class="crm-sync dot" id="crm-sync-badge" title="Sync status">Connecting…</span>
             <button class="btn btn-gold btn-sm" id="btn-refresh-leads" type="button">Sync now</button>
             <button class="btn btn-outline btn-sm" id="btn-push-crm" type="button">Push local → cloud</button>
             <button class="btn btn-outline btn-sm" id="btn-manage-team" type="button">Team</button>
-            <button class="btn btn-outline btn-sm" id="btn-clear-leads" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear local</button>
+            <button class="btn btn-outline btn-sm" id="btn-clear-leads"
+              style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear local</button>
           </div>
         </div>
         <div class="crm-toolbar">
-          <input type="search" id="crm-search" placeholder="Search name, email, service, venue, assignee…" style="flex:1; min-width:220px; max-width:380px;" />
+          <input type="search" id="crm-search" placeholder="Search name, email, service, venue, assignee…"
+            style="flex:1; min-width:220px; max-width:380px;" />
           <select id="crm-filter-assignee" title="Filter by assignee">
             <option value="">All assignees</option>
             <option value="__unassigned__">Unassigned</option>
@@ -878,14 +1047,18 @@
           </select>
         </div>
         <div class="kanban-wrap" id="kanban-board" aria-label="Enquiry kanban board"></div>
-        <p id="kanban-empty" style="display:none; text-align:center; padding:2rem; color:var(--silver-mid);">No enquiries match this filter. Submit a website form, or click <strong style="color:#ccc;">Sync now</strong> to pull from Firebase. Drag cards between columns to change stage · click a card to open full details &amp; attachments.</p>
+        <p id="kanban-empty" style="display:none; text-align:center; padding:2rem; color:var(--silver-mid);">No
+          enquiries match this filter. Submit a website form, or click <strong style="color:#ccc;">Sync now</strong> to
+          pull from Firebase. Drag cards between columns to change stage · click a card to open full details &amp;
+          attachments.</p>
       </div>
 
       <!-- PARTNERS TABLE -->
       <div class="table-container" id="partners-container" style="display:none; width:100%;">
         <div class="table-header">
           <div class="table-title">Partner Signups</div>
-          <button class="btn btn-outline btn-sm" id="btn-clear-partners" style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear Local Logs</button>
+          <button class="btn btn-outline btn-sm" id="btn-clear-partners"
+            style="border-color: rgba(255,0,0,0.2); color: #ff5555;">Clear Local Logs</button>
         </div>
         <div style="overflow-x:auto;">
           <table>
@@ -911,7 +1084,8 @@
   <!-- ARTIST EDITOR MODAL -->
   <div class="admin-modal-overlay" id="artist-modal">
     <div class="admin-modal-body wide">
-      <h3 style="font-family:var(--font-heading); font-size:1.8rem; margin-top:0; color:var(--gold);" id="artist-modal-title">Edit Artist / Act</h3>
+      <h3 style="font-family:var(--font-heading); font-size:1.8rem; margin-top:0; color:var(--gold);"
+        id="artist-modal-title">Edit Artist / Act</h3>
       <form id="artist-form">
         <input type="hidden" id="artist-id" />
         <div class="lead-detail-grid">
@@ -947,52 +1121,77 @@
             <input type="text" id="artist-genre" placeholder="e.g. Soul / Pop / High Energy" required />
           </div>
           <div class="auth-input-group">
-            <label>YouTube Video</label>
-            <input type="url" id="artist-youtube" placeholder="https://www.youtube.com/watch?v=… or youtu.be/…" />
+            <label>YouTube Live Performance Video</label>
+            <input type="url" id="artist-youtube"
+              placeholder="https://www.youtube.com/watch?v=… (prefer a live performance clip)" />
+            <p style="margin:0.35rem 0 0; font-size:0.72rem; color:var(--silver-mid);">Use a watch/embed URL with a
+              video ID (not a channel link) so it plays on the profile.</p>
           </div>
         </div>
         <div class="auth-input-group">
           <label>Photo</label>
           <div style="display:flex; gap:0.5rem; align-items:center;">
             <input type="text" id="artist-image" placeholder="Image path or URL" style="flex:1;" required />
-            <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
+            <label class="btn btn-outline btn-sm"
+              style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
               Upload Photo
               <input type="file" id="artist-image-file" accept="image/*" style="display:none;" />
             </label>
           </div>
           <div style="margin-top:0.5rem; text-align:center;">
-            <img id="artist-img-preview" src="" alt="Thumbnail preview" style="max-height:140px; border-radius:8px; border:1px solid var(--gold); display:none; margin:0 auto;" />
+            <img id="artist-img-preview" src="" alt="Thumbnail preview"
+              style="max-height:140px; border-radius:8px; border:1px solid var(--gold); display:none; margin:0 auto;" />
           </div>
         </div>
         <div class="auth-input-group">
+          <label>Gallery images (extra profile photos)</label>
+          <textarea id="artist-gallery" rows="3" placeholder="One image URL or path per line"
+            style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:#fff; resize:vertical; font-size:0.85rem;"></textarea>
+          <p style="margin:0.35rem 0 0; font-size:0.72rem; color:var(--silver-mid);">Shown on the public profile under
+            the live video. Primary photo is included automatically when blank.</p>
+        </div>
+        <div class="auth-input-group">
           <label>Description</label>
-          <div class="rich-toolbar" style="display:flex; gap:0.3rem; margin-bottom:0.4rem; background:rgba(255,255,255,0.05); padding:0.4rem; border-radius:6px; border:1px solid rgba(255,255,255,0.1); flex-wrap:wrap;">
-            <button type="button" class="btn-tb" onclick="execRichCommand('bold')" title="Bold" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><b>B</b></button>
-            <button type="button" class="btn-tb" onclick="execRichCommand('italic')" title="Italic" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><i>I</i></button>
-            <button type="button" class="btn-tb" onclick="execRichCommand('underline')" title="Underline" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><u>U</u></button>
-            <button type="button" class="btn-tb" onclick="execRichCommand('insertUnorderedList')" title="Bullet List" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">• List</button>
-            <button type="button" class="btn-tb" onclick="promptRichLink()" title="Link" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">Link</button>
-            <button type="button" class="btn-tb" onclick="execRichCommand('removeFormat')" title="Clear" style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">Clear</button>
+          <div class="rich-toolbar"
+            style="display:flex; gap:0.3rem; margin-bottom:0.4rem; background:rgba(255,255,255,0.05); padding:0.4rem; border-radius:6px; border:1px solid rgba(255,255,255,0.1); flex-wrap:wrap;">
+            <button type="button" class="btn-tb" onclick="execRichCommand('bold')" title="Bold"
+              style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><b>B</b></button>
+            <button type="button" class="btn-tb" onclick="execRichCommand('italic')" title="Italic"
+              style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><i>I</i></button>
+            <button type="button" class="btn-tb" onclick="execRichCommand('underline')" title="Underline"
+              style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;"><u>U</u></button>
+            <button type="button" class="btn-tb" onclick="execRichCommand('insertUnorderedList')" title="Bullet List"
+              style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">•
+              List</button>
+            <button type="button" class="btn-tb" onclick="promptRichLink()" title="Link"
+              style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">Link</button>
+            <button type="button" class="btn-tb" onclick="execRichCommand('removeFormat')" title="Clear"
+              style="background:#222; border:1px solid #444; color:#fff; padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;">Clear</button>
           </div>
-          <div id="artist-bio-editor" contenteditable="true" style="min-height:110px; padding:0.75rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:var(--white); outline:none; line-height:1.6;"></div>
+          <div id="artist-bio-editor" contenteditable="true"
+            style="min-height:110px; padding:0.75rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:var(--white); outline:none; line-height:1.6;">
+          </div>
           <input type="hidden" id="artist-bio" />
         </div>
         <div class="lead-detail-grid">
           <div class="auth-input-group">
             <label>Meta Description (SEO)</label>
-            <textarea id="artist-meta-description" rows="3" placeholder="Short SEO blurb for search / social shares" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:#fff; resize:vertical;"></textarea>
+            <textarea id="artist-meta-description" rows="3" placeholder="Short SEO blurb for search / social shares"
+              style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:#fff; resize:vertical;"></textarea>
           </div>
           <div class="auth-input-group">
             <label>Meta Image (SEO / social)</label>
             <div style="display:flex; gap:0.5rem; align-items:center;">
               <input type="text" id="artist-meta-image" placeholder="Meta/share image path or URL" style="flex:1;" />
-              <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
+              <label class="btn btn-outline btn-sm"
+                style="margin:0; cursor:pointer; white-space:nowrap; padding:0.6rem 1rem;">
                 Upload
                 <input type="file" id="artist-meta-image-file" accept="image/*" style="display:none;" />
               </label>
             </div>
             <div style="margin-top:0.5rem; text-align:center;">
-              <img id="artist-meta-img-preview" src="" alt="Meta preview" style="max-height:90px; border-radius:8px; border:1px solid rgba(200,168,76,0.35); display:none; margin:0 auto;" />
+              <img id="artist-meta-img-preview" src="" alt="Meta preview"
+                style="max-height:90px; border-radius:8px; border:1px solid rgba(200,168,76,0.35); display:none; margin:0 auto;" />
             </div>
           </div>
         </div>
@@ -1013,7 +1212,8 @@
     <div class="admin-modal-body wide">
       <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; flex-wrap:wrap;">
         <div>
-          <h3 style="font-family:var(--font-heading); font-size:1.7rem; margin:0; color:var(--gold);" id="lead-modal-title">Enquiry</h3>
+          <h3 style="font-family:var(--font-heading); font-size:1.7rem; margin:0; color:var(--gold);"
+            id="lead-modal-title">Enquiry</h3>
           <p id="lead-modal-sub" style="margin:0.35rem 0 0; font-size:0.78rem; color:var(--silver-mid);"></p>
         </div>
         <button type="button" class="btn btn-outline btn-sm" id="btn-close-lead-modal">Close</button>
@@ -1049,10 +1249,13 @@
         <div class="auth-input-group"><label>Follow-up due date</label><input type="date" id="lead-due-date" /></div>
       </div>
       <div class="auth-input-group"><label>Service / package</label><input type="text" id="lead-service" /></div>
-      <div class="auth-input-group"><label>Message / brief</label><textarea id="lead-message" rows="4" style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:#fff; resize:vertical;"></textarea></div>
+      <div class="auth-input-group"><label>Message / brief</label><textarea id="lead-message" rows="4"
+          style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,76,0.3); border-radius:8px; color:#fff; resize:vertical;"></textarea>
+      </div>
       <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem;">
         <button type="button" class="btn btn-gold" id="btn-save-lead">Save enquiry</button>
-        <button type="button" class="btn btn-outline" id="btn-delete-lead" style="border-color:rgba(255,80,80,0.35); color:#ff8a8a;">Move to trash</button>
+        <button type="button" class="btn btn-outline" id="btn-delete-lead"
+          style="border-color:rgba(255,80,80,0.35); color:#ff8a8a;">Move to trash</button>
         <a class="btn btn-outline" id="lead-mailto" href="#">Email client</a>
         <a class="btn btn-outline" id="lead-mailto-assignee" href="#" style="display:none;">Email assignee</a>
       </div>
@@ -1061,7 +1264,8 @@
         <h4>Notes</h4>
         <div id="lead-notes-list"></div>
         <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-          <input type="text" id="lead-note-input" placeholder="Add an internal note…" style="flex:1; padding:0.65rem; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#fff;" />
+          <input type="text" id="lead-note-input" placeholder="Add an internal note…"
+            style="flex:1; padding:0.65rem; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#fff;" />
           <button type="button" class="btn btn-gold btn-sm" id="btn-add-note">Add note</button>
         </div>
       </div>
@@ -1069,13 +1273,15 @@
       <div class="lead-section">
         <h4>Documents &amp; attachments</h4>
         <p style="font-size:0.75rem; color:#888; margin:0 0 0.65rem;">
-          Full client files are stored in CRM Storage. Use <strong style="color:#ccc;">Open / download</strong> on every file — available on any Super Admin device.
+          Full client files are stored in CRM Storage. Use <strong style="color:#ccc;">Open / download</strong> on every
+          file — available on any Super Admin device.
           Copies are also emailed to the team inboxes.
         </p>
         <div id="lead-attachments-list"></div>
         <label class="btn btn-outline btn-sm" style="cursor:pointer; display:inline-flex; margin-top:0.35rem;">
           + Attach file
-          <input type="file" id="lead-attach-file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" multiple style="display:none;" />
+          <input type="file" id="lead-attach-file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip"
+            multiple style="display:none;" />
         </label>
       </div>
 
@@ -1092,16 +1298,22 @@
       <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start;">
         <div>
           <h3 style="font-family:var(--font-heading); font-size:1.6rem; margin:0; color:var(--gold);">CRM team</h3>
-          <p style="margin:0.35rem 0 0; font-size:0.78rem; color:#999;">People you can assign cards to. Synced via Firebase across Super Admin devices.</p>
+          <p style="margin:0.35rem 0 0; font-size:0.78rem; color:#999;">People you can assign cards to. Synced via
+            Firebase across Super Admin devices.</p>
         </div>
         <button type="button" class="btn btn-outline btn-sm" id="btn-close-team-modal">Close</button>
       </div>
       <div id="team-list" style="margin-top:1.25rem;"></div>
       <div class="lead-detail-grid" style="margin-top:1rem;">
-        <div class="auth-input-group"><label>Name</label><input type="text" id="team-new-name" placeholder="Full name" /></div>
-        <div class="auth-input-group"><label>Email</label><input type="email" id="team-new-email" placeholder="name@company.com" /></div>
-        <div class="auth-input-group"><label>Role</label><input type="text" id="team-new-role" placeholder="e.g. Sales, Ops" value="Admin" /></div>
-        <div class="auth-input-group"><label>Colour</label><input type="color" id="team-new-color" value="#c9a84c" style="height:42px; padding:0.2rem; background:transparent; border:1px solid rgba(255,255,255,0.12);" /></div>
+        <div class="auth-input-group"><label>Name</label><input type="text" id="team-new-name"
+            placeholder="Full name" /></div>
+        <div class="auth-input-group"><label>Email</label><input type="email" id="team-new-email"
+            placeholder="name@company.com" /></div>
+        <div class="auth-input-group"><label>Role</label><input type="text" id="team-new-role"
+            placeholder="e.g. Sales, Ops" value="Admin" /></div>
+        <div class="auth-input-group"><label>Colour</label><input type="color" id="team-new-color" value="#c9a84c"
+            style="height:42px; padding:0.2rem; background:transparent; border:1px solid rgba(255,255,255,0.12);" />
+        </div>
       </div>
       <div style="display:flex; gap:0.75rem; margin-top:0.75rem;">
         <button type="button" class="btn btn-gold" id="btn-add-team-member">Add team member</button>
@@ -1114,7 +1326,8 @@
   <!-- EVENT EDITOR MODAL -->
   <div class="admin-modal-overlay" id="event-modal">
     <div class="admin-modal-body">
-      <h3 style="font-family:var(--font-heading); font-size:1.8rem; margin-top:0; color:var(--gold);" id="event-modal-title">Edit Event / Package</h3>
+      <h3 style="font-family:var(--font-heading); font-size:1.8rem; margin-top:0; color:var(--gold);"
+        id="event-modal-title">Edit Event / Package</h3>
       <form id="event-form">
         <input type="hidden" id="event-id" />
         <div class="auth-input-group">
@@ -1158,6 +1371,7 @@
   <script src="elite-admin-auth.js"></script>
   <script src="elite-attachments.js"></script>
   <script src="elite-crm.js"></script>
+  <script src="media-library.js"></script>
   <script src="cms.js"></script>
 
   <script>
@@ -1199,7 +1413,7 @@
               }
             });
           }
-        } catch (e) {}
+        } catch (e) { }
         if (typeof populateCrmFilters === 'function') populateCrmFilters();
         if (typeof updateCrmSyncBadge === 'function') updateCrmSyncBadge();
         if (typeof renderDashboard === 'function') renderDashboard();
@@ -1410,7 +1624,7 @@
         if (opts.scroll !== false && tabs[activeKey]) {
           try {
             tabs[activeKey].scrollIntoView({ behavior: 'smooth', block: 'start' });
-          } catch (sErr) {}
+          } catch (sErr) { }
         }
       }
 
@@ -1419,7 +1633,7 @@
         var info = parseAdminHash();
         if (info.account && accountPanel) {
           accountPanel.style.display = 'block';
-          try { accountPanel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+          try { accountPanel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { }
         }
         if (info.leadId) pendingLeadOpenId = info.leadId;
         if (info.tab) {
@@ -1443,7 +1657,7 @@
                 pendingLeadOpenId = '';
                 return;
               }
-            } catch (e) {}
+            } catch (e) { }
             if (tries < 8) setTimeout(tick, 250);
           };
           setTimeout(tick, 50);
@@ -1838,8 +2052,8 @@
           colEl.dataset.column = col.id;
           colEl.innerHTML =
             '<div class="kanban-col-head">' +
-              '<span class="kanban-col-title" style="border-left:3px solid ' + col.color + ';padding-left:0.5rem;">' + esc(col.label) + '</span>' +
-              '<span class="kanban-count">' + leads.length + '</span>' +
+            '<span class="kanban-col-title" style="border-left:3px solid ' + col.color + ';padding-left:0.5rem;">' + esc(col.label) + '</span>' +
+            '<span class="kanban-count">' + leads.length + '</span>' +
             '</div>' +
             '<div class="kanban-cards" data-drop-column="' + esc(col.id) + '"></div>';
           const cards = colEl.querySelector('.kanban-cards');
@@ -1860,39 +2074,39 @@
             card.dataset.leadId = lead.id;
             card.innerHTML =
               '<div class="card-top-row">' +
-                '<h4 style="margin:0;flex:1;">' + esc(lead.name) + '</h4>' +
-                '<span class="priority-pill" style="color:' + p.color + ';border-color:' + p.color + '33;">' + esc(p.label) + '</span>' +
+              '<h4 style="margin:0;flex:1;">' + esc(lead.name) + '</h4>' +
+              '<span class="priority-pill" style="color:' + p.color + ';border-color:' + p.color + '33;">' + esc(p.label) + '</span>' +
               '</div>' +
               '<p class="kanban-meta">' + esc(lead.service || 'General enquiry') + '</p>' +
               '<p class="kanban-meta">' + (lead.date ? ('📅 ' + esc(lead.date)) : '📅 Date TBC') +
-                (lead.dueDate ? (' · ⏰ Due ' + esc(lead.dueDate)) : '') +
-                (lead.venue ? (' · ' + esc(lead.venue)) : '') + '</p>' +
+              (lead.dueDate ? (' · ⏰ Due ' + esc(lead.dueDate)) : '') +
+              (lead.venue ? (' · ' + esc(lead.venue)) : '') + '</p>' +
               '<p class="kanban-meta">' + esc(lead.email || '') + (lead.phone ? (' · ' + esc(lead.phone)) : '') + '</p>' +
               '<div class="kanban-tags">' +
-                '<span class="kanban-tag gold">' + esc(lead.source || 'web') + '</span>' +
-                (attCount ? '<span class="kanban-tag" title="Client attachments">📎 ' + attCount + ' file' + (attCount > 1 ? 's' : '') + '</span>' : '') +
-                (noteCount ? '<span class="kanban-tag">' + noteCount + ' note' + (noteCount > 1 ? 's' : '') + '</span>' : '') +
+              '<span class="kanban-tag gold">' + esc(lead.source || 'web') + '</span>' +
+              (attCount ? '<span class="kanban-tag" title="Client attachments">📎 ' + attCount + ' file' + (attCount > 1 ? 's' : '') + '</span>' : '') +
+              (noteCount ? '<span class="kanban-tag">' + noteCount + ' note' + (noteCount > 1 ? 's' : '') + '</span>' : '') +
               '</div>' +
               '<div class="kanban-card-actions">' +
-                (lead.assigneeEmail
-                  ? ('<span class="assignee-chip" title="' + esc(lead.assigneeEmail) + '"><span class="assignee-avatar" style="background:' + aColor + ';">' + esc(aInit) + '</span>' + esc(aName || lead.assigneeEmail) + '</span>')
-                  : '<span class="kanban-meta" style="margin:0;">Unassigned</span>') +
-                '<button type="button" class="btn-action" data-open-lead="' + esc(lead.id) + '">Open</button>' +
-                '<button type="button" class="btn-action" data-trash-lead="' + esc(lead.id) + '" style="color:#ff8a8a;">Trash</button>' +
+              (lead.assigneeEmail
+                ? ('<span class="assignee-chip" title="' + esc(lead.assigneeEmail) + '"><span class="assignee-avatar" style="background:' + aColor + ';">' + esc(aInit) + '</span>' + esc(aName || lead.assigneeEmail) + '</span>')
+                : '<span class="kanban-meta" style="margin:0;">Unassigned</span>') +
+              '<button type="button" class="btn-action" data-open-lead="' + esc(lead.id) + '">Open</button>' +
+              '<button type="button" class="btn-action" data-trash-lead="' + esc(lead.id) + '" style="color:#ff8a8a;">Trash</button>' +
               '</div>' +
               '<select class="quick-assign" data-quick-assign="' + esc(lead.id) + '" title="Assign team member">' +
-                '<option value="">Assign…</option>' +
-                team.map(t =>
-                  '<option value="' + esc(t.email) + '"' +
-                  (String(t.email).toLowerCase() === String(lead.assigneeEmail || '').toLowerCase() ? ' selected' : '') +
-                  '>' + esc(t.name) + '</option>'
-                ).join('') +
+              '<option value="">Assign…</option>' +
+              team.map(t =>
+                '<option value="' + esc(t.email) + '"' +
+                (String(t.email).toLowerCase() === String(lead.assigneeEmail || '').toLowerCase() ? ' selected' : '') +
+                '>' + esc(t.name) + '</option>'
+              ).join('') +
               '</select>';
 
             card.addEventListener('dragstart', (e) => {
               dragLeadId = lead.id;
               card.classList.add('is-dragging');
-              try { e.dataTransfer.setData('text/plain', lead.id); e.dataTransfer.effectAllowed = 'move'; } catch (err) {}
+              try { e.dataTransfer.setData('text/plain', lead.id); e.dataTransfer.effectAllowed = 'move'; } catch (err) { }
             });
             card.addEventListener('dragend', () => {
               dragLeadId = null;
@@ -2024,28 +2238,28 @@
 
         list.innerHTML =
           '<p style="font-size:0.72rem;color:#aaa;margin:0 0 0.65rem;">' +
-            atts.length + ' file' + (atts.length > 1 ? 's' : '') +
-            ' · loading download links…' +
+          atts.length + ' file' + (atts.length > 1 ? 's' : '') +
+          ' · loading download links…' +
           '</p>' +
           atts.map(function (a, idx) {
             const name = a.name || 'file';
             const ext = (name.split('.').pop() || 'FILE').toUpperCase().slice(0, 5);
             return '<div class="attach-item" data-att-idx="' + idx + '" style="display:flex;justify-content:space-between;gap:0.75rem;align-items:flex-start;flex-wrap:wrap;">' +
               '<div style="display:flex;gap:0.75rem;align-items:flex-start;flex:1;min-width:180px;">' +
-                '<div class="att-thumb" style="width:52px;height:52px;border-radius:8px;background:rgba(200,168,76,.12);border:1px solid rgba(200,168,76,.25);display:flex;align-items:center;justify-content:center;font-size:.62rem;color:#e8c86b;font-weight:800;text-align:center;padding:4px;">' +
-                  esc(ext) +
-                '</div>' +
-                '<div>' +
-                  '<div style="font-weight:700;color:#fff;">' + esc(name) + '</div>' +
-                  '<time>' + esc(a.at || '') + (a.size ? (' · ' + formatBytes(a.size)) : '') + '</time>' +
-                  '<p class="att-note" style="margin:0.25rem 0 0;font-size:0.72rem;color:#999;">Resolving full file…</p>' +
-                '</div>' +
+              '<div class="att-thumb" style="width:52px;height:52px;border-radius:8px;background:rgba(200,168,76,.12);border:1px solid rgba(200,168,76,.25);display:flex;align-items:center;justify-content:center;font-size:.62rem;color:#e8c86b;font-weight:800;text-align:center;padding:4px;">' +
+              esc(ext) +
+              '</div>' +
+              '<div>' +
+              '<div style="font-weight:700;color:#fff;">' + esc(name) + '</div>' +
+              '<time>' + esc(a.at || '') + (a.size ? (' · ' + formatBytes(a.size)) : '') + '</time>' +
+              '<p class="att-note" style="margin:0.25rem 0 0;font-size:0.72rem;color:#999;">Resolving full file…</p>' +
+              '</div>' +
               '</div>' +
               '<div class="attach-actions">' +
-                '<button type="button" class="btn btn-gold btn-sm" data-dl-att="' + idx + '">Open / download</button>' +
-                (a.id ? '<button type="button" class="btn btn-outline btn-sm" style="color:#ff8a8a;border-color:rgba(255,80,80,.35);" data-rm-att="' + esc(a.id) + '">Remove</button>' : '') +
+              '<button type="button" class="btn btn-gold btn-sm" data-dl-att="' + idx + '">Open / download</button>' +
+              (a.id ? '<button type="button" class="btn btn-outline btn-sm" style="color:#ff8a8a;border-color:rgba(255,80,80,.35);" data-rm-att="' + esc(a.id) + '">Remove</button>' : '') +
               '</div>' +
-            '</div>';
+              '</div>';
           }).join('');
 
         // Resolve full file hrefs (Storage URL or Firestore body) for EVERY attachment
@@ -2182,13 +2396,13 @@
         }
         list.innerHTML = team.map(t =>
           '<div class="attach-item" style="display:flex;justify-content:space-between;gap:1rem;align-items:center;">' +
-            '<div style="display:flex;gap:0.65rem;align-items:center;">' +
-              '<span class="assignee-avatar" style="background:' + esc(t.color || '#c9a84c') + ';width:28px;height:28px;font-size:0.7rem;">' +
-                esc((window.EliteCRM ? EliteCRM.initials(t.name) : '?')) + '</span>' +
-              '<div><strong style="color:#fff;">' + esc(t.name) + '</strong>' +
-              '<div style="font-size:0.75rem;color:#999;">' + esc(t.email) + ' · ' + esc(t.role || 'Admin') + '</div></div>' +
-            '</div>' +
-            '<button type="button" class="btn-action" style="color:#ff8a8a;" data-rm-team="' + esc(t.id) + '">Remove</button>' +
+          '<div style="display:flex;gap:0.65rem;align-items:center;">' +
+          '<span class="assignee-avatar" style="background:' + esc(t.color || '#c9a84c') + ';width:28px;height:28px;font-size:0.7rem;">' +
+          esc((window.EliteCRM ? EliteCRM.initials(t.name) : '?')) + '</span>' +
+          '<div><strong style="color:#fff;">' + esc(t.name) + '</strong>' +
+          '<div style="font-size:0.75rem;color:#999;">' + esc(t.email) + ' · ' + esc(t.role || 'Admin') + '</div></div>' +
+          '</div>' +
+          '<button type="button" class="btn-action" style="color:#ff8a8a;" data-rm-team="' + esc(t.id) + '">Remove</button>' +
           '</div>'
         ).join('');
         list.querySelectorAll('[data-rm-team]').forEach(btn => {
@@ -2290,7 +2504,7 @@
         if (!confirm('Clear LOCAL enquiry cache on this device only?\n\nCloud CRM stays intact. This device will re-download leads from Firebase immediately so the Kanban does not stay empty.')) {
           return;
         }
-        try { localStorage.setItem('elite_clients', '[]'); } catch (e) {}
+        try { localStorage.setItem('elite_clients', '[]'); } catch (e) { }
         if (window.EliteCRM && EliteCRM.clearInquiries) {
           // clearInquiries wipes local only, then pullOnce() rehydrates from cloud
           Promise.resolve(EliteCRM.clearInquiries({ skipCloud: true, repull: true }))
@@ -2303,7 +2517,7 @@
           EliteCMS.clearInquiries();
           renderLeads();
         } else {
-          try { localStorage.setItem('elite_inquiries', '[]'); } catch (e2) {}
+          try { localStorage.setItem('elite_inquiries', '[]'); } catch (e2) { }
           renderLeads();
         }
       });
@@ -2573,6 +2787,7 @@
         document.getElementById('artist-id').value = '';
         document.getElementById('artist-bio-editor').innerHTML = '';
         document.getElementById('artist-youtube').value = '';
+        document.getElementById('artist-gallery').value = '';
         document.getElementById('artist-meta-description').value = '';
         document.getElementById('artist-meta-image').value = '';
         document.getElementById('artist-img-preview').style.display = 'none';
@@ -2603,6 +2818,7 @@
           document.getElementById('artist-genre').value = artist.genre || '';
           document.getElementById('artist-image').value = artist.image || '';
           document.getElementById('artist-youtube').value = artist.youtubeUrl || '';
+          document.getElementById('artist-gallery').value = Array.isArray(artist.gallery) ? artist.gallery.join('\n') : (artist.gallery || '');
           document.getElementById('artist-bio-editor').innerHTML = artist.bio || '';
           document.getElementById('artist-bio').value = artist.bio || '';
           document.getElementById('artist-meta-description').value = artist.metaDescription || '';
@@ -2637,6 +2853,10 @@
       document.getElementById('artist-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const bioHtml = document.getElementById('artist-bio-editor').innerHTML.trim();
+        const galleryRaw = (document.getElementById('artist-gallery').value || '').trim();
+        const gallery = galleryRaw
+          ? galleryRaw.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+          : [];
         window.EliteCMS.saveArtist({
           id: document.getElementById('artist-id').value || undefined,
           name: document.getElementById('artist-name').value,
@@ -2644,6 +2864,7 @@
           genre: document.getElementById('artist-genre').value,
           image: document.getElementById('artist-image').value,
           youtubeUrl: document.getElementById('artist-youtube').value.trim(),
+          gallery: gallery,
           bio: bioHtml || document.getElementById('artist-bio').value,
           metaDescription: document.getElementById('artist-meta-description').value.trim(),
           metaImage: document.getElementById('artist-meta-image').value.trim(),
@@ -2730,5 +2951,5 @@
     });
   </script>
 </body>
-</html>
 
+</html>

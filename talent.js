@@ -165,7 +165,7 @@
       if (state.group !== 'all' && t.group !== state.group) return false;
       if (!q) return true;
       var hay = [t.name, t.style, t.group, t.location, t.category, t.summary,
-        (t.styles || []).join(' '), (t.features || []).join(' '), (t.tags || []).join(' ')
+      (t.styles || []).join(' '), (t.features || []).join(' '), (t.tags || []).join(' ')
       ].join(' ').toLowerCase();
       return hay.indexOf(q) !== -1;
     });
@@ -176,32 +176,145 @@
     var fallback = 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80';
     var img = t.image || fallback;
     var idAttr = esc(t.id);
+    var hasVideo = !!(t.youtubeUrl && ((window.EliteMedia && window.EliteMedia.youtubeId(t.youtubeUrl)) || /watch\?v=|youtu\.be\/|shorts\//.test(String(t.youtubeUrl || ''))));
+    var galCount = (t.gallery && t.gallery.length) || 0;
     return (
       '<article class="talent-card' + (on ? ' is-selected' : '') + '" data-id="' + idAttr + '">' +
-        '<div class="talent-card-media">' +
-          '<img src="' + esc(img) + '" alt="' + esc(t.name) + '" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'' + fallback + '\'" />' +
-          '<span class="talent-card-badge">' + esc(t.style) + '</span>' +
-          '<span class="talent-card-group">' + esc(t.group) + '</span>' +
-          (on ? '<span class="talent-card-check is-on" aria-hidden="true"></span>' : '') +
-        '</div>' +
-        '<div class="talent-card-body">' +
-          '<div class="talent-card-loc">' + esc(t.location) + '</div>' +
-          '<h3 class="talent-card-title">' + esc(t.name) + '</h3>' +
-          '<p class="talent-card-summary">' + esc(t.summary) + '</p>' +
-          '<dl class="talent-specs">' +
-            '<div class="talent-spec"><dt>Style</dt><dd>' + esc(t.style) + '</dd></div>' +
-            '<div class="talent-spec"><dt>Group</dt><dd>' + esc(t.group) + '</dd></div>' +
-          '</dl>' +
-          '<div class="talent-card-actions">' +
-            '<button type="button" class="btn-cart-add' + (on ? ' is-on' : '') + '" data-action="toggle" data-id="' + idAttr + '" aria-label="' + (on ? 'In multi-enquiry' : 'Add to multi-enquiry') + '">' +
-              '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>' +
-              '<span>' + (on ? 'In multi-enquiry' : 'Add to multi-enquiry') + '</span>' +
-            '</button>' +
-            '<button type="button" class="btn btn-gold" data-action="enquire" data-id="' + idAttr + '">Enquire now</button>' +
-          '</div>' +
-        '</div>' +
+      '<div class="talent-card-media">' +
+      '<img src="' + esc(img) + '" alt="' + esc(t.name) + '" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'' + fallback + '\'" />' +
+      '<span class="talent-card-badge">' + esc(t.style) + '</span>' +
+      '<span class="talent-card-group">' + esc(t.group) + '</span>' +
+      (hasVideo ? '<span class="talent-card-live">Live video</span>' : '') +
+      (on ? '<span class="talent-card-check is-on" aria-hidden="true"></span>' : '') +
+      '</div>' +
+      '<div class="talent-card-body">' +
+      '<div class="talent-card-loc">' + esc(t.location) + '</div>' +
+      '<h3 class="talent-card-title">' + esc(t.name) + '</h3>' +
+      '<p class="talent-card-summary">' + esc(t.summary) + '</p>' +
+      '<dl class="talent-specs">' +
+      '<div class="talent-spec"><dt>Style</dt><dd>' + esc(t.style) + '</dd></div>' +
+      '<div class="talent-spec"><dt>Group</dt><dd>' + esc(t.group) + '</dd></div>' +
+      '</dl>' +
+      '<div class="talent-card-actions">' +
+      '<button type="button" class="btn btn-outline talent-profile-btn" data-action="profile" data-id="' + idAttr + '">View profile' + (galCount ? ' · ' + galCount + ' photos' : '') + '</button>' +
+      '<button type="button" class="btn-cart-add' + (on ? ' is-on' : '') + '" data-action="toggle" data-id="' + idAttr + '" aria-label="' + (on ? 'In multi-enquiry' : 'Add to multi-enquiry') + '">' +
+      '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>' +
+      '<span>' + (on ? 'In multi-enquiry' : 'Add to multi-enquiry') + '</span>' +
+      '</button>' +
+      '<button type="button" class="btn btn-gold" data-action="enquire" data-id="' + idAttr + '">Enquire now</button>' +
+      '</div>' +
+      '</div>' +
       '</article>'
     );
+  }
+
+  function closeProfile() {
+    var modal = document.getElementById('talent-profile-modal');
+    if (!modal) return;
+    var iframe = modal.querySelector('iframe');
+    if (iframe) iframe.src = '';
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('talent-profile-open');
+  }
+
+  function openProfile(id) {
+    var t = list().find(function (x) { return x.id === id; });
+    if (!t) return;
+    if (window.EliteMedia && window.EliteMedia.enrichTalent) window.EliteMedia.enrichTalent(t);
+
+    var modal = document.getElementById('talent-profile-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'talent-profile-modal';
+      modal.className = 'talent-profile-modal';
+      modal.setAttribute('aria-hidden', 'true');
+      modal.innerHTML =
+        '<div class="talent-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="talent-profile-title">' +
+        '<button type="button" class="talent-profile-close" data-action="close-profile" aria-label="Close profile">&times;</button>' +
+        '<div class="talent-profile-layout">' +
+        '<div class="talent-profile-media-col">' +
+        '<div class="talent-profile-hero"><img id="talent-profile-photo" src="" alt="" /></div>' +
+        '<div id="talent-profile-yt" class="talent-profile-yt" hidden></div>' +
+        '<div id="talent-profile-gallery" class="talent-profile-gallery"></div>' +
+        '</div>' +
+        '<div class="talent-profile-copy">' +
+        '<p class="section-eyebrow" id="talent-profile-style"></p>' +
+        '<h2 id="talent-profile-title"></h2>' +
+        '<p class="talent-profile-meta" id="talent-profile-meta"></p>' +
+        '<p class="talent-profile-summary" id="talent-profile-summary"></p>' +
+        '<div class="talent-profile-actions">' +
+        '<button type="button" class="btn-cart-add" id="talent-profile-toggle" data-action="toggle">Add to multi-enquiry</button>' +
+        '<button type="button" class="btn btn-gold" id="talent-profile-enquire" data-action="enquire">Enquire now</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeProfile();
+      });
+    }
+
+    var fallback = 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=900&q=80';
+    var photo = document.getElementById('talent-profile-photo');
+    photo.src = t.image || fallback;
+    photo.alt = t.name;
+    photo.onerror = function () { photo.onerror = null; photo.src = fallback; };
+
+    document.getElementById('talent-profile-title').textContent = t.name;
+    document.getElementById('talent-profile-style').textContent = t.style || 'Models & Dancers';
+    document.getElementById('talent-profile-meta').textContent = [t.group, t.location, t.category].filter(Boolean).join(' · ');
+    document.getElementById('talent-profile-summary').textContent = t.summary || (t.name + ' is available for hire through Elite Entertainment.');
+
+    var ytHost = document.getElementById('talent-profile-yt');
+    var ytId = window.EliteMedia && window.EliteMedia.youtubeId ? window.EliteMedia.youtubeId(t.youtubeUrl) : '';
+    if (ytId) {
+      ytHost.hidden = false;
+      ytHost.innerHTML =
+        '<p class="artist-yt-label">Live performance</p>' +
+        '<div class="artist-yt-frame">' +
+        '<iframe src="https://www.youtube-nocookie.com/embed/' + ytId + '?rel=0&modestbranding=1" title="' + esc(t.name) + ' live performance" ' +
+        'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>' +
+        '</div>';
+    } else {
+      ytHost.hidden = true;
+      ytHost.innerHTML = '';
+    }
+
+    var galHost = document.getElementById('talent-profile-gallery');
+    var gallery = t.gallery || [];
+    if (gallery.length) {
+      galHost.innerHTML =
+        '<p class="artist-yt-label">Gallery</p>' +
+        '<div class="artist-gallery-grid">' +
+        gallery.map(function (src, i) {
+          return '<button type="button" class="artist-gallery-item" data-gallery-src="' + esc(src) + '">' +
+            '<img src="' + esc(src) + '" alt="' + esc(t.name) + ' photo ' + (i + 1) + '" loading="lazy" /></button>';
+        }).join('') +
+        '</div>';
+      galHost.querySelectorAll('[data-gallery-src]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          photo.src = btn.getAttribute('data-gallery-src');
+        });
+      });
+    } else {
+      galHost.innerHTML = '';
+    }
+
+    var toggleBtn = document.getElementById('talent-profile-toggle');
+    var enquireBtn = document.getElementById('talent-profile-enquire');
+    toggleBtn.setAttribute('data-id', t.id);
+    enquireBtn.setAttribute('data-id', t.id);
+    var on = !!selected[t.id];
+    toggleBtn.classList.toggle('is-on', on);
+    toggleBtn.innerHTML =
+      '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>' +
+      '<span>' + (on ? 'In multi-enquiry' : 'Add to multi-enquiry') + '</span>';
+
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('talent-profile-open');
   }
 
   function renderGrid() {
@@ -252,10 +365,22 @@
       e.preventDefault();
       e.stopPropagation();
       toggle(id);
+      if (document.getElementById('talent-profile-modal') &&
+        document.getElementById('talent-profile-modal').classList.contains('is-open') && id) {
+        openProfile(id);
+      }
     } else if (action === 'enquire') {
       e.preventDefault();
       e.stopPropagation();
+      closeProfile();
       enquire(id);
+    } else if (action === 'profile') {
+      e.preventDefault();
+      e.stopPropagation();
+      openProfile(id);
+    } else if (action === 'close-profile') {
+      e.preventDefault();
+      closeProfile();
     } else if (action === 'style') {
       e.preventDefault();
       state.style = id;
@@ -277,6 +402,9 @@
 
   function init() {
     try {
+      if (window.EliteMedia && typeof window.EliteMedia.enrichAll === 'function') {
+        window.EliteMedia.enrichAll();
+      }
       if (!list().length) {
         var g = document.getElementById('talent-grid');
         if (g) g.innerHTML = '<div class="talent-empty"><strong>Roster unavailable</strong>Please refresh the page.</div>';
@@ -289,6 +417,17 @@
       renderGroups();
       renderGrid();
       updateBar();
+
+      // Deep-link ?talent=id opens profile
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var tid = params.get('talent');
+        if (tid) openProfile(tid);
+      } catch (e) { /* ignore */ }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeProfile();
+      });
 
       // Document-level click so selection panel + bar + cards all work
       document.addEventListener('click', function (e) {
@@ -328,6 +467,8 @@
     toggle: toggle,
     enquire: enquire,
     clear: clearAll,
+    openProfile: openProfile,
+    closeProfile: closeProfile,
     getSelected: getSelected,
     getSelectedLabels: function () { return getSelected().map(labelOf); },
     syncForm: syncForm
