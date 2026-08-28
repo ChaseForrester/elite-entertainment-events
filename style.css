@@ -305,7 +305,7 @@ textarea {
   flex-direction: column;
   line-height: 1;
   flex-shrink: 0;
-  max-width: min(52vw, 220px);
+  max-width: min(70vw, 280px);
 }
 
 .brand-link {
@@ -313,6 +313,38 @@ textarea {
   align-items: center;
   text-decoration: none;
   line-height: 0;
+}
+
+.brand-link--lockup {
+  gap: 0.75rem;
+  line-height: 1.1;
+}
+
+.brand-lockup-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.brand-lockup-name {
+  font-family: var(--font-display), 'Montserrat', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--white);
+  line-height: 1;
+}
+
+.brand-lockup-sub {
+  margin-top: 0.28rem;
+  font-family: var(--font-heading), 'Cormorant Garamond', serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  white-space: nowrap;
 }
 
 .brand-logo {
@@ -324,18 +356,20 @@ textarea {
 }
 
 .brand-logo--nav {
-  height: 50px;
-  width: 50px;
-  border-radius: 12px;
+  height: 52px;
+  width: 52px;
+  border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(200, 168, 76, 0.25);
-  border: 1px solid rgba(200, 168, 76, 0.35);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55), 0 0 18px rgba(200, 168, 76, 0.32);
+  border: 1px solid rgba(200, 168, 76, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .brand-logo--nav:hover {
   transform: scale(1.06);
-  box-shadow: 0 6px 20px rgba(200, 168, 76, 0.45);
+  border-color: var(--gold);
+  box-shadow: 0 6px 22px rgba(200, 168, 76, 0.5);
 }
 
 /* Only show one logo at a time: full/horizontal OR icon */
@@ -343,19 +377,21 @@ textarea {
   display: none;
   height: 44px;
   width: 44px;
-  border-radius: 10px;
+  border-radius: 50%;
   object-fit: cover;
+  background: #000;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(200, 168, 76, 0.25);
-  border: 1px solid rgba(200, 168, 76, 0.35);
+  border: 1px solid rgba(200, 168, 76, 0.4);
 }
 
 .brand-logo--footer {
-  height: auto;
-  width: min(280px, 100%);
-  max-width: 280px;
-  max-height: 110px;
+  width: 280px;
+  height: 120px;
+  max-width: min(280px, 100%);
+  max-height: 120px;
   border-radius: 0;
   object-fit: contain;
+  object-position: left center;
   margin-bottom: 0.75rem;
   filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 14px rgba(200, 168, 76, 0.25));
   box-shadow: none;
@@ -369,18 +405,22 @@ textarea {
 }
 
 .loading-brand-logo {
-  width: min(200px, 55vw);
+  width: min(168px, 46vw);
   height: auto;
   margin: 0 auto 0.5rem;
+  border-radius: 50%;
   filter: drop-shadow(0 0 28px rgba(200, 168, 76, 0.35));
   animation: pulseLogo 2s infinite ease-in-out;
 }
 
 .modal-brand-logo {
-  width: min(140px, 40vw);
+  width: min(120px, 38vw);
   height: auto;
   margin: 0 auto;
-  filter: drop-shadow(0 0 16px rgba(200, 168, 76, 0.3));
+  border-radius: 50%;
+  border: 1px solid rgba(200, 168, 76, 0.4);
+  box-shadow: 0 0 22px rgba(200, 168, 76, 0.28);
+  filter: none;
 }
 
 .logo-main {
@@ -407,7 +447,7 @@ textarea {
    the old rule hid it and expected a missing brand-logo--nav-icon) */
 @media (max-width: 900px) {
   .logo {
-    max-width: 56px;
+    max-width: 220px;
     flex-shrink: 0;
     z-index: 3;
     position: relative;
@@ -424,6 +464,15 @@ textarea {
   .brand-logo--nav-icon {
     display: none;
   }
+
+  .brand-lockup-name {
+    font-size: 0.95rem;
+    letter-spacing: 0.14em;
+  }
+
+  .brand-lockup-sub {
+    font-size: 0.5rem;
+  }
 }
 
 @media (max-width: 520px) {
@@ -434,6 +483,10 @@ textarea {
   .brand-logo--nav {
     height: 42px;
     width: 42px;
+  }
+
+  .brand-lockup-text {
+    display: none;
   }
 }
 
@@ -5430,9 +5483,10 @@ body.page-home .hero-events-inner {
 .vendor-callout-logo {
   width: 54px;
   height: 54px;
-  border-radius: 12px;
+  border-radius: 50%;
   object-fit: cover;
-  border: 1px solid rgba(200, 168, 76, 0.35);
+  background: #000;
+  border: 1px solid rgba(200, 168, 76, 0.45);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 16px rgba(200, 168, 76, 0.3);
   flex-shrink: 0;
 }

@@ -2,7 +2,7 @@
    ELITE ENTERTAINMENT — PWA Service Worker
 ═══════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'elite-events-v81-crm-storage-files';
+const CACHE_NAME = 'elite-events-v84-ee-mark';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -45,15 +45,19 @@ const ASSETS_TO_CACHE = [
   './service-form.css',
   './site-nav.js',
   './ops-console.html',
+  './admin-chrome.css',
+  './admin-chrome.js',
   './manifest.webmanifest',
-  './favicon.ico',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/apple-touch-icon.png',
-  './images/brand/logo-icon.png',
-  './images/brand/logo-nav-icon.png',
-  './images/brand/logo-loading.png',
-  './images/brand/logo-footer.png',
+  './ee-favicon.ico',
+  './icons/ee-192.png',
+  './icons/ee-512.png',
+  './icons/ee-apple.png',
+  './images/brand/ee-mark.png',
+  './images/brand/ee-mark.png',
+  './images/brand/ee-mark.png',
+  './images/brand/ee-wordmark.png',
+  './images/brand/og-image.png',
+  './ee-favicon-32.png',
   './images/party-band.jpg',
   './images/trio.jpg',
   './images/duo.jpg',

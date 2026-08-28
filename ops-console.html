@@ -1,66 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Operations Console</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="ee-favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="ee-favicon-32.png" />
+  <link rel="apple-touch-icon" href="icons/ee-apple.png" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin-chrome.css" />
   <style>
-    body { background:#050505; color:#eee; font-family:Montserrat,sans-serif; margin:0; }
-    .ops-wrap { max-width:1100px; margin:0 auto; padding:2rem 1.25rem 4rem; }
-    .ops-auth, .ops-dash { display:none; }
-    .ops-auth.is-on, .ops-dash.is-on { display:block; }
-    .ops-card { background:#0d0d0d; border:1px solid rgba(200,168,76,.25); border-radius:16px; padding:1.5rem; margin-bottom:1.25rem; }
-    .ops-card h2 { font-family:'Cormorant Garamond',serif; font-weight:400; margin:0 0 1rem; color:#fff; }
-    .ops-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-    @media(max-width:720px){ .ops-grid{ grid-template-columns:1fr; } }
-    label { display:block; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#c9a84c; margin:0 0 .35rem; }
-    input, textarea, select { width:100%; box-sizing:border-box; padding:.7rem .8rem; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:#fff; font-family:inherit; margin-bottom:.85rem; }
-    textarea { min-height:90px; resize:vertical; }
-    .ops-top { display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem; align-items:center; margin-bottom:1.5rem; }
-    .ops-top h1 { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:1.8rem; margin:0; }
-    .ops-note { font-size:.78rem; color:#999; line-height:1.5; }
-    .ops-status { font-size:.8rem; color:#c9a84c; min-height:1.2em; margin:.5rem 0; }
-    table { width:100%; border-collapse:collapse; font-size:.78rem; }
-    th, td { text-align:left; padding:.55rem .4rem; border-bottom:1px solid rgba(255,255,255,.06); vertical-align:top; }
-    th { color:#c9a84c; font-size:.65rem; letter-spacing:.08em; text-transform:uppercase; }
-    .btn-row { display:flex; flex-wrap:wrap; gap:.5rem; }
+    body {
+      background: #050505;
+      color: #eee;
+      font-family: Montserrat, sans-serif;
+      margin: 0;
+    }
+
+    .ops-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    .ops-auth,
+    .ops-dash {
+      display: none;
+    }
+
+    .ops-auth.is-on,
+    .ops-dash.is-on {
+      display: block;
+    }
+
+    .ops-card {
+      background: #0d0d0d;
+      border: 1px solid rgba(200, 168, 76, .25);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .ops-card h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      margin: 0 0 1rem;
+      color: #fff;
+    }
+
+    .ops-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media(max-width:720px) {
+      .ops-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      display: block;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #c9a84c;
+      margin: 0 0 .35rem;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: .7rem .8rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .04);
+      color: #fff;
+      font-family: inherit;
+      margin-bottom: .85rem;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .ops-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .ops-top h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .ops-note {
+      font-size: .78rem;
+      color: #999;
+      line-height: 1.5;
+    }
+
+    .ops-status {
+      font-size: .8rem;
+      color: #c9a84c;
+      min-height: 1.2em;
+      margin: .5rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .78rem;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: .55rem .4rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      vertical-align: top;
+    }
+
+    th {
+      color: #c9a84c;
+      font-size: .65rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
     /* Inbound enquiry cards */
-    #ops-inq-list { display:flex; flex-direction:column; gap:1rem; margin-top:.75rem; }
+    #ops-inq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: .75rem;
+    }
+
     .inq-card {
-      display:grid;
+      display: grid;
       grid-template-columns: 120px 1fr;
       gap: 1rem;
       padding: 1rem;
       border-radius: 14px;
-      border: 1px solid rgba(200,168,76,.2);
-      background: linear-gradient(145deg, rgba(255,255,255,.03), rgba(0,0,0,.25));
-      box-shadow: 0 8px 28px rgba(0,0,0,.35);
+      border: 1px solid rgba(200, 168, 76, .2);
+      background: linear-gradient(145deg, rgba(255, 255, 255, .03), rgba(0, 0, 0, .25));
+      box-shadow: 0 8px 28px rgba(0, 0, 0, .35);
     }
+
     @media (max-width:640px) {
-      .inq-card { grid-template-columns: 1fr; }
+      .inq-card {
+        grid-template-columns: 1fr;
+      }
     }
+
     .inq-cover {
       width: 100%;
       aspect-ratio: 1;
       max-height: 140px;
       border-radius: 12px;
       object-fit: cover;
-      border: 1px solid rgba(200,168,76,.25);
+      border: 1px solid rgba(200, 168, 76, .25);
       background: #111;
     }
+
     .inq-cover-fallback {
       width: 100%;
       aspect-ratio: 1;
       max-height: 140px;
       border-radius: 12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: radial-gradient(circle at 30% 20%, rgba(200,168,76,.2), #121212 70%);
-      border: 1px solid rgba(200,168,76,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 30% 20%, rgba(200, 168, 76, .2), #121212 70%);
+      border: 1px solid rgba(200, 168, 76, .2);
       color: #c9a84c;
       font-size: .7rem;
       font-weight: 800;
@@ -69,14 +203,16 @@
       text-align: center;
       padding: .5rem;
     }
+
     .inq-head {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
       gap: .5rem .75rem;
-      align-items:flex-start;
+      align-items: flex-start;
       margin-bottom: .55rem;
     }
+
     .inq-name {
       margin: 0;
       font-family: 'Cormorant Garamond', serif;
@@ -85,10 +221,30 @@
       color: #fff;
       line-height: 1.15;
     }
-    .inq-meta { font-size: .78rem; color: #aaa; line-height: 1.45; margin: .2rem 0 0; }
-    .inq-meta a { color: #e8c86b; text-decoration: none; }
-    .inq-meta a:hover { text-decoration: underline; }
-    .inq-badges { display:flex; flex-wrap:wrap; gap: .35rem; justify-content:flex-end; }
+
+    .inq-meta {
+      font-size: .78rem;
+      color: #aaa;
+      line-height: 1.45;
+      margin: .2rem 0 0;
+    }
+
+    .inq-meta a {
+      color: #e8c86b;
+      text-decoration: none;
+    }
+
+    .inq-meta a:hover {
+      text-decoration: underline;
+    }
+
+    .inq-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      justify-content: flex-end;
+    }
+
     .inq-badge {
       font-size: .62rem;
       font-weight: 800;
@@ -96,53 +252,73 @@
       text-transform: uppercase;
       padding: .28rem .55rem;
       border-radius: 999px;
-      border: 1px solid rgba(200,168,76,.35);
+      border: 1px solid rgba(200, 168, 76, .35);
       color: #e8c86b;
-      background: rgba(200,168,76,.1);
+      background: rgba(200, 168, 76, .1);
       white-space: nowrap;
     }
+
     .inq-badge.muted {
       color: #bbb;
-      border-color: rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
+      border-color: rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .04);
     }
-    .inq-badge.stage-new { color:#c9a84c; }
-    .inq-badge.stage-booked { color:#8fd18f; border-color:rgba(85,197,85,.35); background:rgba(85,197,85,.1); }
-    .inq-badge.stage-lost { color:#ff8a8a; border-color:rgba(255,100,100,.3); background:rgba(255,80,80,.08); }
+
+    .inq-badge.stage-new {
+      color: #c9a84c;
+    }
+
+    .inq-badge.stage-booked {
+      color: #8fd18f;
+      border-color: rgba(85, 197, 85, .35);
+      background: rgba(85, 197, 85, .1);
+    }
+
+    .inq-badge.stage-lost {
+      color: #ff8a8a;
+      border-color: rgba(255, 100, 100, .3);
+      background: rgba(255, 80, 80, .08);
+    }
+
     .inq-facts {
-      display:grid;
+      display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: .45rem .75rem;
       margin: .65rem 0 .75rem;
       padding: .65rem .75rem;
       border-radius: 10px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .06);
     }
+
     .inq-fact label {
       margin: 0 0 .15rem;
       font-size: .58rem;
       letter-spacing: .1em;
     }
+
     .inq-fact div {
       font-size: .8rem;
       color: #e8e8e8;
       font-weight: 600;
       word-break: break-word;
     }
+
     .inq-table-wrap {
       margin: .45rem 0 .75rem;
       overflow: auto;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(0, 0, 0, .28);
     }
+
     .inq-table {
       width: 100%;
       border-collapse: collapse;
       font-size: .74rem;
       min-width: 640px;
     }
+
     .inq-table th {
       position: sticky;
       top: 0;
@@ -152,32 +328,42 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       padding: .55rem .55rem;
-      border-bottom: 1px solid rgba(200,168,76,.2);
+      border-bottom: 1px solid rgba(200, 168, 76, .2);
       white-space: nowrap;
     }
+
     .inq-table td {
       padding: .55rem;
-      border-bottom: 1px solid rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
       vertical-align: middle;
       color: #ddd;
     }
-    .inq-table tr:last-child td { border-bottom: none; }
-    .inq-table tr:hover td { background: rgba(200,168,76,.04); }
+
+    .inq-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .inq-table tr:hover td {
+      background: rgba(200, 168, 76, .04);
+    }
+
     .inq-table .thumb {
       width: 48px;
       height: 48px;
       border-radius: 8px;
       object-fit: cover;
       display: block;
-      border: 1px solid rgba(200,168,76,.25);
+      border: 1px solid rgba(200, 168, 76, .25);
       background: #1a1a1a;
     }
+
     .inq-table .item-name {
       font-weight: 700;
       color: #fff;
       margin: 0 0 .15rem;
       font-size: .8rem;
     }
+
     .inq-table .item-meta {
       margin: 0;
       font-size: .68rem;
@@ -185,6 +371,7 @@
       max-width: 220px;
       line-height: 1.35;
     }
+
     .inq-table .kind-pill {
       display: inline-block;
       font-size: .58rem;
@@ -192,12 +379,13 @@
       letter-spacing: .06em;
       text-transform: uppercase;
       color: #c9a84c;
-      border: 1px solid rgba(200,168,76,.3);
-      background: rgba(200,168,76,.08);
+      border: 1px solid rgba(200, 168, 76, .3);
+      background: rgba(200, 168, 76, .08);
       border-radius: 999px;
       padding: .2rem .45rem;
       white-space: nowrap;
     }
+
     .inq-message {
       margin: 0;
       font-size: .8rem;
@@ -208,50 +396,74 @@
       overflow: auto;
       padding: .55rem .7rem;
       border-radius: 8px;
-      background: rgba(255,255,255,.025);
-      border: 1px solid rgba(255,255,255,.05);
+      background: rgba(255, 255, 255, .025);
+      border: 1px solid rgba(255, 255, 255, .05);
     }
+
     .inq-actions {
       display: flex;
       flex-wrap: wrap;
       gap: .4rem;
       margin-top: .75rem;
     }
-    .inq-actions .btn { font-size: .72rem; padding: .45rem .85rem; border-radius: 999px; }
+
+    .inq-actions .btn {
+      font-size: .72rem;
+      padding: .45rem .85rem;
+      border-radius: 999px;
+    }
   </style>
 </head>
+
 <body>
   <div class="ops-wrap">
     <div class="ops-auth is-on" id="ops-auth">
-      <div class="ops-card" style="max-width:420px;margin:4rem auto;">
+      <form class="ops-card sa-login-card" id="ops-auth-form" style="max-width:420px;margin:4rem auto;"
+        autocomplete="on">
+        <img class="sa-login-mark" src="images/brand/ee-mark.png" width="132" height="132"
+          alt="Elite Entertainment and Events" />
+        <span class="sa-brand-name">ELITE</span>
+        <span class="sa-brand-sub">Entertainment &amp; Events</span>
         <h2>Operations Console</h2>
-        <p class="ops-note">Restricted Super Admin access. Sessions expire after 12 hours. Unauthorised use is prohibited.</p>
+        <p class="ops-note">Restricted Super Admin access. Sessions expire after 12 hours. Unauthorised use is
+          prohibited.</p>
         <label for="ops-email">Email</label>
-        <input id="ops-email" type="email" autocomplete="username" placeholder="your@email.com" />
+        <input id="ops-email" type="email" autocomplete="username" placeholder="your@email.com" required />
         <label for="ops-pass">Password</label>
-        <input id="ops-pass" type="password" autocomplete="current-password" />
+        <input id="ops-pass" type="password" autocomplete="current-password" required />
         <div class="btn-row">
-          <button type="button" class="btn btn-gold" id="ops-login">Sign in</button>
+          <button type="submit" class="btn btn-gold" id="ops-login">Sign in</button>
           <button type="button" class="btn btn-outline" id="ops-forgot">Forgot password?</button>
-          <a class="btn btn-outline" href="admin.html#leads">CRM Kanban</a>
         </div>
         <p class="ops-status" id="ops-auth-status"></p>
-      </div>
+        <p class="ops-note" style="margin-top:0.75rem;text-align:center;">Also: <a href="admin.html#leads"
+            style="color:#c9a84c;">CMS &amp; CRM</a></p>
+      </form>
     </div>
 
     <div class="ops-dash" id="ops-dash">
-      <div class="ops-top">
-        <h1>Super Admin</h1>
-        <div class="btn-row">
-          <span id="ops-session-email" class="ops-note" style="margin:0;align-self:center;"></span>
-          <a class="btn btn-outline" href="index.html">View site</a>
-          <a class="btn btn-outline" href="admin.html#artists">Artists CMS</a>
-          <a class="btn btn-outline" href="admin.html#leads">CRM Kanban</a>
-          <a class="btn btn-outline" href="admin.html#account">Change password</a>
+      <header class="sa-top ops-top">
+        <a class="sa-brand" href="ops-console.html" aria-label="Elite Super Admin operations">
+          <img class="sa-mark" src="images/brand/ee-mark.png" alt="Elite Entertainment and Events" width="48"
+            height="48" />
+          <span class="sa-brand-text">
+            <span class="sa-brand-name">ELITE</span>
+            <span class="sa-brand-sub">Super Admin · Ops</span>
+          </span>
+        </a>
+        <nav class="sa-switch" aria-label="Super Admin sections">
+          <a class="sa-switch-link" href="admin.html#leads" data-sa-page="cms">CMS &amp; CRM</a>
+          <a class="sa-switch-link" href="ops-console.html" data-sa-page="ops">Operations</a>
+          <a class="sa-switch-link" href="index.html" target="_blank" rel="noopener">Live site</a>
+        </nav>
+        <div class="sa-actions">
+          <span id="ops-session-email" class="sa-session"></span>
+          <a class="btn btn-outline" href="admin.html#account">Account</a>
           <button type="button" class="btn btn-outline" id="ops-logout">Log out</button>
         </div>
-      </div>
-      <p class="ops-note">Edits save to browser storage and sync to Firebase <code>site_content/main</code> when available. Multi-enquiries and client messages appear below from local + Firestore.</p>
+      </header>
+      <p class="ops-note">Edits save to browser storage and sync to Firebase <code>site_content/main</code> when
+        available. Multi-enquiries and client messages appear below from local + Firestore.</p>
 
       <div class="ops-card">
         <h2>Homepage hero video</h2>
@@ -305,7 +517,8 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:center;">
           <div>
             <h2 style="margin:0;">Inbound enquiries</h2>
-            <p class="ops-note" style="margin:0.35rem 0 0;">Live from CRM Kanban + multi-enquiry + website forms (Firebase <code>crm_leads</code>).</p>
+            <p class="ops-note" style="margin:0.35rem 0 0;">Live from CRM Kanban + multi-enquiry + website forms
+              (Firebase <code>crm_leads</code>).</p>
           </div>
           <div class="btn-row">
             <span class="ops-status" id="ops-crm-sync" style="margin:0;">Syncing…</span>
@@ -320,10 +533,12 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:center;">
           <div>
             <h2 style="margin:0;">Trash</h2>
-            <p class="ops-note" style="margin:0.35rem 0 0;">Deleted enquiries stay here until restored or permanently removed.</p>
+            <p class="ops-note" style="margin:0.35rem 0 0;">Deleted enquiries stay here until restored or permanently
+              removed.</p>
           </div>
           <div class="btn-row">
-            <button type="button" class="btn btn-outline" id="ops-empty-trash" style="border-color:rgba(255,80,80,.35);color:#ff8a8a;">Empty trash</button>
+            <button type="button" class="btn btn-outline" id="ops-empty-trash"
+              style="border-color:rgba(255,80,80,.35);color:#ff8a8a;">Empty trash</button>
           </div>
         </div>
         <p class="ops-note" id="ops-trash-count" style="margin:0.75rem 0 0.5rem;"></p>
@@ -332,8 +547,21 @@
 
       <div class="ops-card">
         <h2>Client messages &amp; consultations</h2>
-        <p class="ops-note">From client portal + consultation requests (local feed + Firebase + CRM consultation leads).</p>
-        <div style="overflow:auto;"><table><thead><tr><th>When</th><th>Client</th><th>Type</th><th>Detail</th></tr></thead><tbody id="ops-client-body"></tbody></table></div>
+        <p class="ops-note">From client portal + consultation requests (local feed + Firebase + CRM consultation leads).
+        </p>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>When</th>
+                <th>Client</th>
+                <th>Type</th>
+                <th>Detail</th>
+              </tr>
+            </thead>
+            <tbody id="ops-client-body"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -350,643 +578,652 @@
   <script src="yacht-data.js"></script>
   <script src="talent-data.js"></script>
   <script src="elite-admin-auth.js"></script>
+  <script src="admin-chrome.js"></script>
   <script src="elite-attachments.js"></script>
   <script src="elite-crm.js"></script>
   <script src="cms.js"></script>
   <script>
-  (function () {
-    initEliteFirebase && initEliteFirebase();
-    var auth = document.getElementById('ops-auth');
-    var dash = document.getElementById('ops-dash');
-    var FIELDS = ['heroVideo1','heroVideo2','heroVideo3','heroPoster','heroTitle','heroSubtitle','companyLegalName','abn','acn','asicDate','contactPhone','contactEmail','contactAddress','publicLiability','workersComp'];
+    (function () {
+      initEliteFirebase && initEliteFirebase();
+      var auth = document.getElementById('ops-auth');
+      var dash = document.getElementById('ops-dash');
+      var FIELDS = ['heroVideo1', 'heroVideo2', 'heroVideo3', 'heroPoster', 'heroTitle', 'heroSubtitle', 'companyLegalName', 'abn', 'acn', 'asicDate', 'contactPhone', 'contactEmail', 'contactAddress', 'publicLiability', 'workersComp'];
 
-    function esc(s) {
-      return String(s == null ? '' : s)
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
-
-    function setSyncLabel(text, ok) {
-      var el = document.getElementById('ops-crm-sync');
-      if (!el) return;
-      el.textContent = text || '';
-      el.style.color = ok === false ? '#ff8a8a' : (ok ? '#8fd18f' : '#c9a84c');
-    }
-
-    function startCrm() {
-      if (!window.EliteCRM) return Promise.resolve();
-      try { EliteCRM.startRealtime(); } catch (e) {}
-      return (EliteCRM.pullOnce ? EliteCRM.pullOnce() : Promise.resolve({ ok: false }))
-        .then(function (r) {
-          var localN = (EliteCRM.getAllLeads && EliteCRM.getAllLeads().length) || 0;
-          if (r && r.ok) setSyncLabel('Live · ' + (r.count || 0) + ' cloud leads · ' + localN + ' total', true);
-          else if (r && r.offline) setSyncLabel('Local only · ' + localN + ' leads (Firebase offline)', false);
-          else if (r && r.error && /permission/i.test(r.error)) {
-            setSyncLabel('Permissions fixed? Hit Refresh · showing ' + localN + ' local leads', false);
-          } else setSyncLabel((r && r.error) || ('Sync partial · ' + localN + ' leads loaded'), localN > 0);
-          return r;
-        });
-    }
-
-    function showDash() {
-      auth.classList.remove('is-on');
-      dash.classList.add('is-on');
-      var se = document.getElementById('ops-session-email');
-      if (se && window.EliteAdminAuth) se.textContent = EliteAdminAuth.currentEmail() || '';
-      loadContent();
-      setSyncLabel('Syncing CRM…');
-      startCrm().then(function () {
-        loadInquiries();
-        loadTrash();
-        loadClientFeed();
-      });
-    }
-
-    function loadContent() {
-      if (!window.EliteCMS) return;
-      var c = EliteCMS.getContent();
-      FIELDS.forEach(function (k) {
-        var el = document.getElementById('c-' + k);
-        if (el) el.value = c[k] || '';
-      });
-    }
-
-    function allLeads() {
-      if (window.EliteCRM && EliteCRM.getAllLeads) return EliteCRM.getAllLeads();
-      if (window.EliteCMS && EliteCMS.getAllLeads) return EliteCMS.getAllLeads();
-      try { return JSON.parse(localStorage.getItem('elite_inquiries') || '[]'); } catch (e) { return []; }
-    }
-
-    var ACT_IMAGE_INDEX = null; // normalized name -> image path
-
-    function normName(s) {
-      return String(s || '')
-        .toLowerCase()
-        .replace(/\s*×\s*\d+\s*$/i, '')
-        .replace(/\s*x\s*\d+\s*$/i, '')
-        .replace(/[–—−]/g, '-') // normalize dashes
-        .replace(/['']/g, "'")
-        .replace(/[^\w\s\-'.&]/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
-
-    function isPlaceholderImage(img) {
-      if (!img) return true;
-      // Only treat brand logos as empty — stock / Unsplash URLs are real product photos
-      if (/images\/brand\/logo/i.test(img)) return true;
-      if (img.indexOf('logo-icon') !== -1) return true;
-      return false;
-    }
-
-    function indexImage(name, image) {
-      if (!name || !image || isPlaceholderImage(image)) return;
-      var k = normName(name);
-      if (!k || ACT_IMAGE_INDEX[k]) return;
-      ACT_IMAGE_INDEX[k] = image;
-    }
-
-    function indexCatalogRow(x) {
-      if (!x) return;
-      var img = x.image || x.img || x.photo || x.cover || '';
-      if (!img) return;
-      indexImage(x.name, img);
-      indexImage(x.title, img);
-      indexImage(x.model, img);
-      if (x.brand && x.model) indexImage(x.brand + ' ' + x.model, img);
-      if (x.id) {
-        indexImage(String(x.id).replace(/[-_]+/g, ' '), img);
+      function esc(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       }
-    }
 
-    function loadActImageIndex() {
-      if (ACT_IMAGE_INDEX) return Promise.resolve(ACT_IMAGE_INDEX);
-      ACT_IMAGE_INDEX = {};
+      function setSyncLabel(text, ok) {
+        var el = document.getElementById('ops-crm-sync');
+        if (!el) return;
+        el.textContent = text || '';
+        el.style.color = ok === false ? '#ff8a8a' : (ok ? '#8fd18f' : '#c9a84c');
+      }
 
-      // 1) Full live roster (~200 acts with real photos)
-      try {
-        (window.ELITE_FOLDERS || []).forEach(function (f) {
-          (f.acts || []).forEach(function (a) {
-            indexImage(a.name, a.image);
+      function startCrm() {
+        if (!window.EliteCRM) return Promise.resolve();
+        try { EliteCRM.startRealtime(); } catch (e) { }
+        return (EliteCRM.pullOnce ? EliteCRM.pullOnce() : Promise.resolve({ ok: false }))
+          .then(function (r) {
+            var localN = (EliteCRM.getAllLeads && EliteCRM.getAllLeads().length) || 0;
+            if (r && r.ok) setSyncLabel('Live · ' + (r.count || 0) + ' cloud leads · ' + localN + ' total', true);
+            else if (r && r.offline) setSyncLabel('Local only · ' + localN + ' leads (Firebase offline)', false);
+            else if (r && r.error && /permission/i.test(r.error)) {
+              setSyncLabel('Permissions fixed? Hit Refresh · showing ' + localN + ' local leads', false);
+            } else setSyncLabel((r && r.error) || ('Sync partial · ' + localN + ' leads loaded'), localN > 0);
+            return r;
           });
-        });
-      } catch (e1) {}
-
-      // 2) CMS artists (admin-edited)
-      try {
-        if (window.EliteCMS && EliteCMS.getArtists) {
-          EliteCMS.getArtists().forEach(function (a) {
-            indexImage(a.name, a.image);
-          });
-        }
-      } catch (e2) {}
-
-      // 3) Security / production / fleet / yacht / talent catalogs
-      try {
-        (window.ELITE_SECURITY || window.SECURITY_TYPES || []).forEach(indexCatalogRow);
-      } catch (e3) {}
-      try {
-        (window.ELITE_PRODUCTION || []).forEach(indexCatalogRow);
-      } catch (e3b) {}
-      try {
-        (window.ELITE_FLEET || []).forEach(indexCatalogRow);
-      } catch (e3c) {}
-      try {
-        (window.ELITE_YACHTS || []).forEach(indexCatalogRow);
-      } catch (e3d) {}
-      try {
-        (window.ELITE_TALENT || []).forEach(indexCatalogRow);
-      } catch (e3e) {}
-
-      // 4) mapping.json fallback (partial ~82 acts)
-      return fetch('images/acts/mapping.json')
-        .then(function (r) { return r.ok ? r.json() : {}; })
-        .then(function (map) {
-          Object.keys(map || {}).forEach(function (k) {
-            var row = map[k] || {};
-            indexImage(row.name, row.image);
-            if (k) indexImage(String(k).replace(/[-_]+/g, ' '), row.image);
-          });
-          return ACT_IMAGE_INDEX;
-        })
-        .catch(function () { return ACT_IMAGE_INDEX; });
-    }
-
-    function resolveItemImage(it) {
-      if (!it) return 'images/brand/logo-icon.png';
-      var img = String(it.image || it.coverImage || '').trim();
-      if (img && !/^data:/.test(img) && img.indexOf('http') !== 0 && img.charAt(0) === '/') {
-        img = img.slice(1);
-      }
-      // Prefer the exact image the client cart stored (skip empty/logo placeholders)
-      if (img && !isPlaceholderImage(img)) return img;
-
-      var key = normName(it.name);
-      if (key && ACT_IMAGE_INDEX && ACT_IMAGE_INDEX[key]) return ACT_IMAGE_INDEX[key];
-      // Try without leading "The "
-      if (key && key.indexOf('the ') === 0 && ACT_IMAGE_INDEX[key.slice(4)]) {
-        return ACT_IMAGE_INDEX[key.slice(4)];
-      }
-      // Try kind-stripped common prefixes in meta/id
-      if (it.id) {
-        var idKey = normName(String(it.id).replace(/[-_]+/g, ' '));
-        if (ACT_IMAGE_INDEX[idKey]) return ACT_IMAGE_INDEX[idKey];
-      }
-      return (img && !isPlaceholderImage(img) ? img : '') || 'images/brand/logo-icon.png';
-    }
-
-    function stageClass(stage) {
-      var s = String(stage || 'new').toLowerCase();
-      if (s.indexOf('book') !== -1 || s === 'won') return 'stage-booked';
-      if (s.indexOf('lost') !== -1 || s.indexOf('closed') !== -1) return 'stage-lost';
-      if (s === 'new' || s.indexOf('new') !== -1 || s.indexOf('pend') !== -1) return 'stage-new';
-      return '';
-    }
-
-    function leadItems(r) {
-      // ONLY the client's package lines — never invent a roster of artists
-      var items = Array.isArray(r.cartItems) ? r.cartItems.slice() : [];
-      if (!items.length) {
-        // Recover only from explicit multi-cart field dumps, not free-form bios
-        var blob = '';
-        if (r.formFields && r.formFields['sf-cart']) blob = String(r.formFields['sf-cart']);
-        else if (r.multi_cart) blob = String(r.multi_cart);
-        else if (r.message && /\d+\.\s*\[/.test(r.message)) blob = String(r.message);
-        if (blob) items = parseItemsLocal(blob);
-      }
-      // Drop junk rows that came from pipe-dump parsing
-      items = items.filter(function (it) {
-        return it && it.name && !/^(Detail|Info|Start date|End date|Hours|People|Location|Notes|Source|Image):/i.test(it.name);
-      });
-      items.forEach(function (it) {
-        it.image = resolveItemImage(it);
-      });
-      return items;
-    }
-
-    function parseItemsLocal(text) {
-      text = String(text || '');
-      if (!text) return [];
-      text = text.replace(/\s*\|\s*/g, '\n').replace(/Multi-cart:\s*/i, '\n');
-      var chunks = text.split(/(?=\d+\.\s*\[)/);
-      var items = [];
-      chunks.forEach(function (block) {
-        var m = block.match(/(\d+)\.\s*\[([^\]]+)\]\s*([^\n]+?)(?:\s*×(\d+))?/);
-        if (!m) return;
-        var item = {
-          kindLabel: m[2].trim(),
-          name: m[3].replace(/\s*×\d+\s*$/, '').trim(),
-          image: '',
-          meta: '',
-          date: '',
-          endDate: '',
-          hours: '',
-          guests: '',
-          location: '',
-          notes: '',
-          qty: parseInt(m[4] || '1', 10) || 1
-        };
-        var pick = function (re) {
-          var x = block.match(re);
-          return x ? x[1].trim() : '';
-        };
-        item.image = pick(/Image:\s*([^\n]+)/i);
-        item.meta = pick(/Detail:\s*([^\n]+)/i) || pick(/Info:\s*([^\n]+)/i);
-        item.date = pick(/Start date:\s*([^\n]+)/i);
-        item.endDate = pick(/End date:\s*([^\n]+)/i);
-        item.hours = pick(/Hours\s*\/\s*duration:\s*([^\n]+)/i);
-        item.guests = pick(/People\s*\/\s*capacity:\s*([^\n]+)/i);
-        item.location = pick(/Location:\s*([^\n]+)/i);
-        item.notes = pick(/Notes:\s*([^\n]+)/i);
-        items.push(item);
-      });
-      return items;
-    }
-
-    function cleanServiceTitle(r) {
-      var s = String(r.service || '');
-      s = s.replace(/\s*·\s*Multi-cart:[\s\S]*/i, '').trim();
-      s = s.replace(/\s*·\s*Qty:\s*[\s\S]*/i, '').trim();
-      if (!s || s.length > 120 || /Start date:|Detail:|Source:/i.test(s)) {
-        var items = leadItems(r);
-        var n = items.length;
-        var eventType = (r.formFields && r.formFields['sf-service']) || '';
-        var company = r.company || (r.formFields && r.formFields['sf-company']) || '';
-        var bits = ['Multi-Enquiry Package'];
-        if (eventType) bits.push(eventType);
-        if (company) bits.push(company);
-        if (n) bits.push(n + ' lines');
-        return bits.join(' · ');
-      }
-      return s;
-    }
-
-    function leadCover(r) {
-      var items = leadItems(r);
-      // Resolve against the package act name (not the client contact name)
-      if (r.coverImage) {
-        return resolveItemImage({
-          image: r.coverImage,
-          name: (items[0] && items[0].name) || r.service || '',
-          id: items[0] && items[0].id
-        });
-      }
-      if (items[0]) return resolveItemImage(items[0]);
-      if (Array.isArray(r.attachments)) {
-        for (var i = 0; i < r.attachments.length; i++) {
-          var a = r.attachments[i];
-          if (a.dataUrl && String(a.type || '').indexOf('image') === 0) return a.dataUrl;
-          if (a.url && /\.(png|jpe?g|webp|gif|avif)(\?|$)/i.test(a.url)) return a.url;
-        }
-      }
-      return '';
-    }
-
-    function briefMessage(r) {
-      if (r.formFields && r.formFields['sf-message']) return String(r.formFields['sf-message']);
-      var msg = String(r.message || '');
-      msg = msg.replace(/--- FULL MULTI-CART ---[\s\S]*/i, '');
-      msg = msg.replace(/Multi-cart:[\s\S]*/i, '');
-      msg = msg.replace(/\d+\.\s*\[[^\]]+\][\s\S]*/i, '');
-      msg = msg.replace(/full_form_json:[\s\S]*/i, '');
-      msg = msg.trim();
-      if (msg.length > 360) msg = msg.slice(0, 360) + '…';
-      return msg || 'See package table for full hire lines. Client brief not provided.';
-    }
-
-    function leadAttachments(r) {
-      var atts = Array.isArray(r.attachments) ? r.attachments.slice() : [];
-      if (!atts.length && Array.isArray(r.attachmentNames)) {
-        atts = r.attachmentNames.map(function (n, i) {
-          return { id: 'n' + i, name: n, size: 0, emailed: true };
-        });
-      }
-      return atts.filter(function (a) { return a && a.name; });
-    }
-
-    function attachmentsBlock(r) {
-      var atts = leadAttachments(r);
-      if (!atts.length) return '';
-      var rows = atts.map(function (a) {
-        var link = a.url || a.dataUrl || '';
-        var name = a.name || 'file';
-        var size = a.size ? (' · ' + Math.round(a.size / 1024) + 'KB') : '';
-        var open = link
-          ? ('<a href="' + esc(link) + '" target="_blank" rel="noopener" download="' + esc(name) + '" style="color:#e8c86b;font-weight:700;">' + esc(name) + '</a>')
-          : ('<span style="color:#fff;font-weight:700;">' + esc(name) + '</span>');
-        return '<div style="display:flex;justify-content:space-between;gap:.5rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.78rem;">' +
-          '<div>' + open + '<span style="color:#888;">' + size + (a.url ? ' · CRM' : '') + '</span></div>' +
-          (link
-            ? '<a href="' + esc(link) + '" target="_blank" rel="noopener" download="' + esc(name) + '" style="color:#c9a84c;font-size:.72rem;font-weight:700;">Download</a>'
-            : '<span style="color:#777;font-size:.7rem;">Legacy (no file body)</span>') +
-        '</div>';
-      }).join('');
-      return '<label style="margin:.15rem 0 .35rem;">Client attachments (' + atts.length + ')</label>' +
-        '<div style="margin:0 0 .75rem;padding:.55rem .75rem;border-radius:10px;border:1px solid rgba(200,168,76,.2);background:rgba(0,0,0,.28);">' +
-          rows +
-          '<p style="margin:.45rem 0 0;font-size:.68rem;color:#888;">Open/download full files here or in Super Admin → CRM Kanban → Open card.</p>' +
-        '</div>';
-    }
-
-    function itemsTable(items) {
-      if (!items.length) return '';
-      var rows = items.map(function (it, idx) {
-        var img = resolveItemImage(it);
-        return '<tr>' +
-          '<td style="width:58px;"><img class="thumb" src="' + esc(img) + '" alt="" loading="lazy" onerror="this.src=\'images/brand/logo-icon.png\'" /></td>' +
-          '<td><span class="kind-pill">' + esc(it.kindLabel || it.kind || 'Item') + '</span></td>' +
-          '<td><p class="item-name">' + esc(it.name || 'Item') + (it.qty > 1 ? ' ×' + it.qty : '') + '</p>' +
-            (it.meta ? '<p class="item-meta">' + esc(String(it.meta).slice(0, 120)) + (String(it.meta).length > 120 ? '…' : '') + '</p>' : '') +
-          '</td>' +
-          '<td>' + esc(it.date || '—') + (it.endDate ? '<br><span style="color:#888">' + esc(it.endDate) + '</span>' : '') + '</td>' +
-          '<td>' + esc(it.hours || '—') + '</td>' +
-          '<td>' + esc(it.guests || '—') + '</td>' +
-          '<td>' + esc(it.location || '—') + '</td>' +
-          '<td>' + esc(it.notes || '—') + '</td>' +
-        '</tr>';
-      }).join('');
-      return (
-        '<div class="inq-table-wrap">' +
-          '<table class="inq-table">' +
-            '<thead><tr>' +
-              '<th>Photo</th><th>Type</th><th>Act / item</th><th>Dates</th><th>Hours</th><th>People</th><th>Venue</th><th>Notes</th>' +
-            '</tr></thead>' +
-            '<tbody>' + rows + '</tbody>' +
-          '</table>' +
-        '</div>'
-      );
-    }
-
-    function enquiryCard(r) {
-      var stage = r.status || r.kanbanColumn || 'New';
-      var when = r.timestamp || r.updatedAt || r.at || '';
-      var items = leadItems(r);
-      var cover = leadCover(r);
-      var isMulti = r.page === 'multi' || /multi/i.test(r.source || '') || items.length > 1;
-      var title = cleanServiceTitle(r);
-      var coverHtml = cover
-        ? '<img class="inq-cover" src="' + esc(cover) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" />' +
-          '<div class="inq-cover-fallback" style="display:none">Elite</div>'
-        : '<div class="inq-cover-fallback">' + esc((r.name || 'E').charAt(0)) + '</div>';
-
-      var facts = [
-        ['Event date', r.date || (items[0] && items[0].date) || '—'],
-        ['End date', r.endDate || (items[0] && items[0].endDate) || '—'],
-        ['Venue', r.venue || (items[0] && items[0].location) || '—'],
-        ['Guests', r.guests || (items[0] && items[0].guests) || '—'],
-        ['Lines', String(items.length || 0)],
-        ['Source', r.source || r.page || 'website']
-      ];
-
-      return (
-        '<article class="inq-card" data-lead-id="' + esc(r.id || '') + '">' +
-          '<div>' + coverHtml + '</div>' +
-          '<div>' +
-            '<div class="inq-head">' +
-              '<div>' +
-                '<h3 class="inq-name">' + esc(r.name || 'Unknown client') + '</h3>' +
-                '<p class="inq-meta">' +
-                  (r.email ? '<a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>' : 'No email') +
-                  (r.phone ? ' · <a href="tel:' + esc(r.phone) + '">' + esc(r.phone) + '</a>' : '') +
-                  (when ? '<br><span style="color:#777">' + esc(when) + '</span>' : '') +
-                '</p>' +
-              '</div>' +
-              '<div class="inq-badges">' +
-                '<span class="inq-badge ' + stageClass(stage) + '">' + esc(stage) + '</span>' +
-                (isMulti ? '<span class="inq-badge muted">Multi package</span>' : '') +
-                (r.priority && r.priority !== 'normal' ? '<span class="inq-badge muted">' + esc(r.priority) + '</span>' : '') +
-              '</div>' +
-            '</div>' +
-            '<p class="inq-meta" style="margin:0 0 .35rem;color:#e8c86b;font-weight:700;font-size:.9rem;">' + esc(title) + '</p>' +
-            '<div class="inq-facts">' + facts.map(function (f) {
-              return '<div class="inq-fact"><label>' + esc(f[0]) + '</label><div>' + esc(f[1]) + '</div></div>';
-            }).join('') + '</div>' +
-            (items.length ? '<label style="margin:.15rem 0 .35rem;">Package lines</label>' + itemsTable(items) : '') +
-            attachmentsBlock(r) +
-            '<label style="margin:.15rem 0 .35rem;">Client brief</label>' +
-            '<p class="inq-message">' + esc(briefMessage(r)) + '</p>' +
-            '<div class="inq-actions">' +
-              (r.email ? '<a class="btn btn-gold" href="mailto:' + esc(r.email) + '?subject=' + encodeURIComponent('Re: your Elite enquiry') + '">Email client</a>' : '') +
-              (r.phone ? '<a class="btn btn-outline" href="tel:' + esc(r.phone) + '">Call</a>' : '') +
-              '<a class="btn btn-outline" href="admin.html#leads' + (r.id ? ('/' + encodeURIComponent(r.id)) : '') + '">Open in CRM Kanban</a>' +
-              '<button type="button" class="btn btn-outline" data-trash-lead="' + esc(r.id || '') + '" style="border-color:rgba(255,80,80,.35);color:#ff8a8a;">Move to trash</button>' +
-            '</div>' +
-          '</div>' +
-        '</article>'
-      );
-    }
-
-    function trashCard(r) {
-      var when = r.deletedAt || r.timestamp || r.updatedAt || '';
-      var items = leadItems(r);
-      var title = cleanServiceTitle(r);
-      return (
-        '<article class="inq-card" style="opacity:.92;border-style:dashed;">' +
-          '<div class="inq-cover-fallback">Trash</div>' +
-          '<div>' +
-            '<div class="inq-head">' +
-              '<div>' +
-                '<h3 class="inq-name">' + esc(r.name || 'Unknown') + '</h3>' +
-                '<p class="inq-meta">' + esc(r.email || '') + (when ? ' · deleted ' + esc(when) : '') + '</p>' +
-              '</div>' +
-              '<span class="inq-badge muted">' + esc(items.length ? (items.length + ' lines') : 'enquiry') + '</span>' +
-            '</div>' +
-            '<p class="inq-meta" style="color:#e8c86b;font-weight:700;">' + esc(title) + '</p>' +
-            '<div class="inq-actions">' +
-              '<button type="button" class="btn btn-gold" data-restore-lead="' + esc(r.id || '') + '">Restore</button>' +
-              '<button type="button" class="btn btn-outline" data-perm-delete-lead="' + esc(r.id || '') + '" style="border-color:rgba(255,80,80,.45);color:#ff8a8a;">Delete permanently</button>' +
-            '</div>' +
-          '</div>' +
-        '</article>'
-      );
-    }
-
-    function loadInquiries() {
-      var list = document.getElementById('ops-inq-list');
-      var countEl = document.getElementById('ops-inq-count');
-      if (!list) return;
-      function paint() {
-        var rows = allLeads();
-        var open = rows.filter(function (r) {
-          var col = r.kanbanColumn || 'new';
-          return col !== 'lost';
-        });
-        if (countEl) {
-          countEl.textContent = rows.length + ' active · ' + open.length + ' open pipeline · only client-selected package lines shown';
-        }
-        list.innerHTML = rows.slice(0, 60).map(enquiryCard).join('') ||
-          '<div class="ops-note" style="padding:1.25rem;border:1px dashed rgba(255,255,255,.12);border-radius:12px;text-align:center;">No enquiries yet. Submit a website form or multi-enquiry, then hit Refresh CRM.</div>';
-      }
-      loadActImageIndex().then(paint).catch(paint);
-    }
-
-    function loadTrash() {
-      var list = document.getElementById('ops-trash-list');
-      var countEl = document.getElementById('ops-trash-count');
-      if (!list) return;
-      var rows = [];
-      if (window.EliteCRM && EliteCRM.getTrash) rows = EliteCRM.getTrash() || [];
-      if (countEl) countEl.textContent = rows.length ? (rows.length + ' in trash') : 'Trash is empty';
-      list.innerHTML = rows.length
-        ? rows.map(trashCard).join('')
-        : '<div class="ops-note" style="padding:1rem;color:#777;">No deleted enquiries.</div>';
-    }
-
-    function loadClientFeed() {
-      var body = document.getElementById('ops-client-body');
-      if (!body) return;
-
-      function paint(list) {
-        body.innerHTML = (list || []).slice(0, 50).map(function (r) {
-          return '<tr><td>' + esc(r.at || r.timestamp || '') + '</td><td>' +
-            esc(r.client || r.email || r.name || '') + '</td><td>' +
-            esc(r.type || 'activity') + '</td><td style="white-space:pre-wrap;max-width:360px;">' +
-            esc(r.detail || r.message || '') + '</td></tr>';
-        }).join('') || '<tr><td colspan="4">No client activity yet.</td></tr>';
       }
 
-      var list = [];
-      if (window.EliteCRM && EliteCRM.getClientFeed) {
-        list = EliteCRM.getClientFeed();
-      } else {
-        try { list = JSON.parse(localStorage.getItem('elite_client_feed') || '[]'); } catch (e) {}
-      }
-      paint(list);
-
-      // Merge remote client_feed
-      try {
-        if (window.EliteFirebase && EliteFirebase.db) {
-          EliteFirebase.db.collection('client_feed').limit(50).get().then(function (snap) {
-            var remote = [];
-            snap.forEach(function (d) {
-              var row = d.data() || {};
-              if (!row.id) row.id = d.id;
-              remote.push(row);
-            });
-            if (!remote.length) return;
-            var map = {};
-            list.concat(remote).forEach(function (r) {
-              var key = r.id || (r.client + '|' + r.at + '|' + (r.detail || '').slice(0, 40));
-              map[key] = r;
-            });
-            var merged = Object.keys(map).map(function (k) { return map[k]; });
-            merged.sort(function (a, b) {
-              return String(b.atIso || b.at || '').localeCompare(String(a.atIso || a.at || ''));
-            });
-            paint(merged);
-          }).catch(function () {});
-        }
-      } catch (e) {}
-    }
-
-    if (window.EliteAdminAuth) {
-      EliteAdminAuth.bindLoginForm({
-        emailId: 'ops-email',
-        passId: 'ops-pass',
-        submitId: 'ops-login',
-        statusId: 'ops-auth-status',
-        forgotId: 'ops-forgot',
-        onSuccess: function (result) {
-          showDash();
-          if (result && result.mustChangePassword) {
-            alert('You signed in with the bootstrap password. Open CRM → Account / Password and change it now.');
-          }
-        }
-      });
-    }
-
-    document.getElementById('ops-logout').onclick = function () {
-      if (window.EliteAdminAuth) EliteAdminAuth.logout();
-      else {
-        localStorage.removeItem('elite_admin_authed');
-        localStorage.removeItem('elite_admin_session_v2');
-        try { if (EliteFirebase && EliteFirebase.auth) EliteFirebase.auth.signOut(); } catch (e) {}
-      }
-      try { if (window.EliteCRM && EliteCRM.stopRealtime) EliteCRM.stopRealtime(); } catch (e2) {}
-      dash.classList.remove('is-on');
-      auth.classList.add('is-on');
-    };
-
-    document.getElementById('ops-save-content').onclick = function () {
-      if (!window.EliteCMS) return;
-      var payload = {};
-      FIELDS.forEach(function (k) {
-        var el = document.getElementById('c-' + k);
-        if (el) payload[k] = el.value.trim();
-      });
-      EliteCMS.saveContent(payload);
-      EliteCMS.applyHeroVideos();
-      document.getElementById('ops-content-status').textContent = 'Saved locally and pushed to Firebase (if connected).';
-    };
-
-    var refreshBtn = document.getElementById('ops-refresh-crm');
-    if (refreshBtn) {
-      refreshBtn.onclick = function () {
-        setSyncLabel('Refreshing…');
+      function showDash() {
+        if (window.EliteAdminUI) EliteAdminUI.setAuthed(true);
+        auth.classList.remove('is-on');
+        dash.classList.add('is-on');
+        var se = document.getElementById('ops-session-email');
+        if (se && window.EliteAdminAuth) se.textContent = EliteAdminAuth.currentEmail() || '';
+        loadContent();
+        setSyncLabel('Syncing CRM…');
         startCrm().then(function () {
           loadInquiries();
           loadTrash();
           loadClientFeed();
         });
+      }
+
+      function loadContent() {
+        if (!window.EliteCMS) return;
+        var c = EliteCMS.getContent();
+        FIELDS.forEach(function (k) {
+          var el = document.getElementById('c-' + k);
+          if (el) el.value = c[k] || '';
+        });
+      }
+
+      function allLeads() {
+        if (window.EliteCRM && EliteCRM.getAllLeads) return EliteCRM.getAllLeads();
+        if (window.EliteCMS && EliteCMS.getAllLeads) return EliteCMS.getAllLeads();
+        try { return JSON.parse(localStorage.getItem('elite_inquiries') || '[]'); } catch (e) { return []; }
+      }
+
+      var ACT_IMAGE_INDEX = null; // normalized name -> image path
+
+      function normName(s) {
+        return String(s || '')
+          .toLowerCase()
+          .replace(/\s*×\s*\d+\s*$/i, '')
+          .replace(/\s*x\s*\d+\s*$/i, '')
+          .replace(/[–—−]/g, '-') // normalize dashes
+          .replace(/['']/g, "'")
+          .replace(/[^\w\s\-'.&]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+
+      function isPlaceholderImage(img) {
+        if (!img) return true;
+        // Only treat brand logos as empty — stock / Unsplash URLs are real product photos
+        if (/images\/brand\/logo/i.test(img)) return true;
+        if (img.indexOf('logo-icon') !== -1) return true;
+        return false;
+      }
+
+      function indexImage(name, image) {
+        if (!name || !image || isPlaceholderImage(image)) return;
+        var k = normName(name);
+        if (!k || ACT_IMAGE_INDEX[k]) return;
+        ACT_IMAGE_INDEX[k] = image;
+      }
+
+      function indexCatalogRow(x) {
+        if (!x) return;
+        var img = x.image || x.img || x.photo || x.cover || '';
+        if (!img) return;
+        indexImage(x.name, img);
+        indexImage(x.title, img);
+        indexImage(x.model, img);
+        if (x.brand && x.model) indexImage(x.brand + ' ' + x.model, img);
+        if (x.id) {
+          indexImage(String(x.id).replace(/[-_]+/g, ' '), img);
+        }
+      }
+
+      function loadActImageIndex() {
+        if (ACT_IMAGE_INDEX) return Promise.resolve(ACT_IMAGE_INDEX);
+        ACT_IMAGE_INDEX = {};
+
+        // 1) Full live roster (~200 acts with real photos)
+        try {
+          (window.ELITE_FOLDERS || []).forEach(function (f) {
+            (f.acts || []).forEach(function (a) {
+              indexImage(a.name, a.image);
+            });
+          });
+        } catch (e1) { }
+
+        // 2) CMS artists (admin-edited)
+        try {
+          if (window.EliteCMS && EliteCMS.getArtists) {
+            EliteCMS.getArtists().forEach(function (a) {
+              indexImage(a.name, a.image);
+            });
+          }
+        } catch (e2) { }
+
+        // 3) Security / production / fleet / yacht / talent catalogs
+        try {
+          (window.ELITE_SECURITY || window.SECURITY_TYPES || []).forEach(indexCatalogRow);
+        } catch (e3) { }
+        try {
+          (window.ELITE_PRODUCTION || []).forEach(indexCatalogRow);
+        } catch (e3b) { }
+        try {
+          (window.ELITE_FLEET || []).forEach(indexCatalogRow);
+        } catch (e3c) { }
+        try {
+          (window.ELITE_YACHTS || []).forEach(indexCatalogRow);
+        } catch (e3d) { }
+        try {
+          (window.ELITE_TALENT || []).forEach(indexCatalogRow);
+        } catch (e3e) { }
+
+        // 4) mapping.json fallback (partial ~82 acts)
+        return fetch('images/acts/mapping.json')
+          .then(function (r) { return r.ok ? r.json() : {}; })
+          .then(function (map) {
+            Object.keys(map || {}).forEach(function (k) {
+              var row = map[k] || {};
+              indexImage(row.name, row.image);
+              if (k) indexImage(String(k).replace(/[-_]+/g, ' '), row.image);
+            });
+            return ACT_IMAGE_INDEX;
+          })
+          .catch(function () { return ACT_IMAGE_INDEX; });
+      }
+
+      function resolveItemImage(it) {
+        if (!it) return 'images/brand/ee-mark.png';
+        var img = String(it.image || it.coverImage || '').trim();
+        if (img && !/^data:/.test(img) && img.indexOf('http') !== 0 && img.charAt(0) === '/') {
+          img = img.slice(1);
+        }
+        // Prefer the exact image the client cart stored (skip empty/logo placeholders)
+        if (img && !isPlaceholderImage(img)) return img;
+
+        var key = normName(it.name);
+        if (key && ACT_IMAGE_INDEX && ACT_IMAGE_INDEX[key]) return ACT_IMAGE_INDEX[key];
+        // Try without leading "The "
+        if (key && key.indexOf('the ') === 0 && ACT_IMAGE_INDEX[key.slice(4)]) {
+          return ACT_IMAGE_INDEX[key.slice(4)];
+        }
+        // Try kind-stripped common prefixes in meta/id
+        if (it.id) {
+          var idKey = normName(String(it.id).replace(/[-_]+/g, ' '));
+          if (ACT_IMAGE_INDEX[idKey]) return ACT_IMAGE_INDEX[idKey];
+        }
+        return (img && !isPlaceholderImage(img) ? img : '') || 'images/brand/ee-mark.png';
+      }
+
+      function stageClass(stage) {
+        var s = String(stage || 'new').toLowerCase();
+        if (s.indexOf('book') !== -1 || s === 'won') return 'stage-booked';
+        if (s.indexOf('lost') !== -1 || s.indexOf('closed') !== -1) return 'stage-lost';
+        if (s === 'new' || s.indexOf('new') !== -1 || s.indexOf('pend') !== -1) return 'stage-new';
+        return '';
+      }
+
+      function leadItems(r) {
+        // ONLY the client's package lines — never invent a roster of artists
+        var items = Array.isArray(r.cartItems) ? r.cartItems.slice() : [];
+        if (!items.length) {
+          // Recover only from explicit multi-cart field dumps, not free-form bios
+          var blob = '';
+          if (r.formFields && r.formFields['sf-cart']) blob = String(r.formFields['sf-cart']);
+          else if (r.multi_cart) blob = String(r.multi_cart);
+          else if (r.message && /\d+\.\s*\[/.test(r.message)) blob = String(r.message);
+          if (blob) items = parseItemsLocal(blob);
+        }
+        // Drop junk rows that came from pipe-dump parsing
+        items = items.filter(function (it) {
+          return it && it.name && !/^(Detail|Info|Start date|End date|Hours|People|Location|Notes|Source|Image):/i.test(it.name);
+        });
+        items.forEach(function (it) {
+          it.image = resolveItemImage(it);
+        });
+        return items;
+      }
+
+      function parseItemsLocal(text) {
+        text = String(text || '');
+        if (!text) return [];
+        text = text.replace(/\s*\|\s*/g, '\n').replace(/Multi-cart:\s*/i, '\n');
+        var chunks = text.split(/(?=\d+\.\s*\[)/);
+        var items = [];
+        chunks.forEach(function (block) {
+          var m = block.match(/(\d+)\.\s*\[([^\]]+)\]\s*([^\n]+?)(?:\s*×(\d+))?/);
+          if (!m) return;
+          var item = {
+            kindLabel: m[2].trim(),
+            name: m[3].replace(/\s*×\d+\s*$/, '').trim(),
+            image: '',
+            meta: '',
+            date: '',
+            endDate: '',
+            hours: '',
+            guests: '',
+            location: '',
+            notes: '',
+            qty: parseInt(m[4] || '1', 10) || 1
+          };
+          var pick = function (re) {
+            var x = block.match(re);
+            return x ? x[1].trim() : '';
+          };
+          item.image = pick(/Image:\s*([^\n]+)/i);
+          item.meta = pick(/Detail:\s*([^\n]+)/i) || pick(/Info:\s*([^\n]+)/i);
+          item.date = pick(/Start date:\s*([^\n]+)/i);
+          item.endDate = pick(/End date:\s*([^\n]+)/i);
+          item.hours = pick(/Hours\s*\/\s*duration:\s*([^\n]+)/i);
+          item.guests = pick(/People\s*\/\s*capacity:\s*([^\n]+)/i);
+          item.location = pick(/Location:\s*([^\n]+)/i);
+          item.notes = pick(/Notes:\s*([^\n]+)/i);
+          items.push(item);
+        });
+        return items;
+      }
+
+      function cleanServiceTitle(r) {
+        var s = String(r.service || '');
+        s = s.replace(/\s*·\s*Multi-cart:[\s\S]*/i, '').trim();
+        s = s.replace(/\s*·\s*Qty:\s*[\s\S]*/i, '').trim();
+        if (!s || s.length > 120 || /Start date:|Detail:|Source:/i.test(s)) {
+          var items = leadItems(r);
+          var n = items.length;
+          var eventType = (r.formFields && r.formFields['sf-service']) || '';
+          var company = r.company || (r.formFields && r.formFields['sf-company']) || '';
+          var bits = ['Multi-Enquiry Package'];
+          if (eventType) bits.push(eventType);
+          if (company) bits.push(company);
+          if (n) bits.push(n + ' lines');
+          return bits.join(' · ');
+        }
+        return s;
+      }
+
+      function leadCover(r) {
+        var items = leadItems(r);
+        // Resolve against the package act name (not the client contact name)
+        if (r.coverImage) {
+          return resolveItemImage({
+            image: r.coverImage,
+            name: (items[0] && items[0].name) || r.service || '',
+            id: items[0] && items[0].id
+          });
+        }
+        if (items[0]) return resolveItemImage(items[0]);
+        if (Array.isArray(r.attachments)) {
+          for (var i = 0; i < r.attachments.length; i++) {
+            var a = r.attachments[i];
+            if (a.dataUrl && String(a.type || '').indexOf('image') === 0) return a.dataUrl;
+            if (a.url && /\.(png|jpe?g|webp|gif|avif)(\?|$)/i.test(a.url)) return a.url;
+          }
+        }
+        return '';
+      }
+
+      function briefMessage(r) {
+        if (r.formFields && r.formFields['sf-message']) return String(r.formFields['sf-message']);
+        var msg = String(r.message || '');
+        msg = msg.replace(/--- FULL MULTI-CART ---[\s\S]*/i, '');
+        msg = msg.replace(/Multi-cart:[\s\S]*/i, '');
+        msg = msg.replace(/\d+\.\s*\[[^\]]+\][\s\S]*/i, '');
+        msg = msg.replace(/full_form_json:[\s\S]*/i, '');
+        msg = msg.trim();
+        if (msg.length > 360) msg = msg.slice(0, 360) + '…';
+        return msg || 'See package table for full hire lines. Client brief not provided.';
+      }
+
+      function leadAttachments(r) {
+        var atts = Array.isArray(r.attachments) ? r.attachments.slice() : [];
+        if (!atts.length && Array.isArray(r.attachmentNames)) {
+          atts = r.attachmentNames.map(function (n, i) {
+            return { id: 'n' + i, name: n, size: 0, emailed: true };
+          });
+        }
+        return atts.filter(function (a) { return a && a.name; });
+      }
+
+      function attachmentsBlock(r) {
+        var atts = leadAttachments(r);
+        if (!atts.length) return '';
+        var rows = atts.map(function (a) {
+          var link = a.url || a.dataUrl || '';
+          var name = a.name || 'file';
+          var size = a.size ? (' · ' + Math.round(a.size / 1024) + 'KB') : '';
+          var open = link
+            ? ('<a href="' + esc(link) + '" target="_blank" rel="noopener" download="' + esc(name) + '" style="color:#e8c86b;font-weight:700;">' + esc(name) + '</a>')
+            : ('<span style="color:#fff;font-weight:700;">' + esc(name) + '</span>');
+          return '<div style="display:flex;justify-content:space-between;gap:.5rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.78rem;">' +
+            '<div>' + open + '<span style="color:#888;">' + size + (a.url ? ' · CRM' : '') + '</span></div>' +
+            (link
+              ? '<a href="' + esc(link) + '" target="_blank" rel="noopener" download="' + esc(name) + '" style="color:#c9a84c;font-size:.72rem;font-weight:700;">Download</a>'
+              : '<span style="color:#777;font-size:.7rem;">Legacy (no file body)</span>') +
+            '</div>';
+        }).join('');
+        return '<label style="margin:.15rem 0 .35rem;">Client attachments (' + atts.length + ')</label>' +
+          '<div style="margin:0 0 .75rem;padding:.55rem .75rem;border-radius:10px;border:1px solid rgba(200,168,76,.2);background:rgba(0,0,0,.28);">' +
+          rows +
+          '<p style="margin:.45rem 0 0;font-size:.68rem;color:#888;">Open/download full files here or in Super Admin → CRM Kanban → Open card.</p>' +
+          '</div>';
+      }
+
+      function itemsTable(items) {
+        if (!items.length) return '';
+        var rows = items.map(function (it, idx) {
+          var img = resolveItemImage(it);
+          return '<tr>' +
+            '<td style="width:58px;"><img class="thumb" src="' + esc(img) + '" alt="" loading="lazy" onerror="this.src=\'images/brand/ee-mark.png\'" /></td>' +
+            '<td><span class="kind-pill">' + esc(it.kindLabel || it.kind || 'Item') + '</span></td>' +
+            '<td><p class="item-name">' + esc(it.name || 'Item') + (it.qty > 1 ? ' ×' + it.qty : '') + '</p>' +
+            (it.meta ? '<p class="item-meta">' + esc(String(it.meta).slice(0, 120)) + (String(it.meta).length > 120 ? '…' : '') + '</p>' : '') +
+            '</td>' +
+            '<td>' + esc(it.date || '—') + (it.endDate ? '<br><span style="color:#888">' + esc(it.endDate) + '</span>' : '') + '</td>' +
+            '<td>' + esc(it.hours || '—') + '</td>' +
+            '<td>' + esc(it.guests || '—') + '</td>' +
+            '<td>' + esc(it.location || '—') + '</td>' +
+            '<td>' + esc(it.notes || '—') + '</td>' +
+            '</tr>';
+        }).join('');
+        return (
+          '<div class="inq-table-wrap">' +
+          '<table class="inq-table">' +
+          '<thead><tr>' +
+          '<th>Photo</th><th>Type</th><th>Act / item</th><th>Dates</th><th>Hours</th><th>People</th><th>Venue</th><th>Notes</th>' +
+          '</tr></thead>' +
+          '<tbody>' + rows + '</tbody>' +
+          '</table>' +
+          '</div>'
+        );
+      }
+
+      function enquiryCard(r) {
+        var stage = r.status || r.kanbanColumn || 'New';
+        var when = r.timestamp || r.updatedAt || r.at || '';
+        var items = leadItems(r);
+        var cover = leadCover(r);
+        var isMulti = r.page === 'multi' || /multi/i.test(r.source || '') || items.length > 1;
+        var title = cleanServiceTitle(r);
+        var coverHtml = cover
+          ? '<img class="inq-cover" src="' + esc(cover) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" />' +
+          '<div class="inq-cover-fallback" style="display:none">Elite</div>'
+          : '<div class="inq-cover-fallback">' + esc((r.name || 'E').charAt(0)) + '</div>';
+
+        var facts = [
+          ['Event date', r.date || (items[0] && items[0].date) || '—'],
+          ['End date', r.endDate || (items[0] && items[0].endDate) || '—'],
+          ['Venue', r.venue || (items[0] && items[0].location) || '—'],
+          ['Guests', r.guests || (items[0] && items[0].guests) || '—'],
+          ['Lines', String(items.length || 0)],
+          ['Source', r.source || r.page || 'website']
+        ];
+
+        return (
+          '<article class="inq-card" data-lead-id="' + esc(r.id || '') + '">' +
+          '<div>' + coverHtml + '</div>' +
+          '<div>' +
+          '<div class="inq-head">' +
+          '<div>' +
+          '<h3 class="inq-name">' + esc(r.name || 'Unknown client') + '</h3>' +
+          '<p class="inq-meta">' +
+          (r.email ? '<a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>' : 'No email') +
+          (r.phone ? ' · <a href="tel:' + esc(r.phone) + '">' + esc(r.phone) + '</a>' : '') +
+          (when ? '<br><span style="color:#777">' + esc(when) + '</span>' : '') +
+          '</p>' +
+          '</div>' +
+          '<div class="inq-badges">' +
+          '<span class="inq-badge ' + stageClass(stage) + '">' + esc(stage) + '</span>' +
+          (isMulti ? '<span class="inq-badge muted">Multi package</span>' : '') +
+          (r.priority && r.priority !== 'normal' ? '<span class="inq-badge muted">' + esc(r.priority) + '</span>' : '') +
+          '</div>' +
+          '</div>' +
+          '<p class="inq-meta" style="margin:0 0 .35rem;color:#e8c86b;font-weight:700;font-size:.9rem;">' + esc(title) + '</p>' +
+          '<div class="inq-facts">' + facts.map(function (f) {
+            return '<div class="inq-fact"><label>' + esc(f[0]) + '</label><div>' + esc(f[1]) + '</div></div>';
+          }).join('') + '</div>' +
+          (items.length ? '<label style="margin:.15rem 0 .35rem;">Package lines</label>' + itemsTable(items) : '') +
+          attachmentsBlock(r) +
+          '<label style="margin:.15rem 0 .35rem;">Client brief</label>' +
+          '<p class="inq-message">' + esc(briefMessage(r)) + '</p>' +
+          '<div class="inq-actions">' +
+          (r.email ? '<a class="btn btn-gold" href="mailto:' + esc(r.email) + '?subject=' + encodeURIComponent('Re: your Elite enquiry') + '">Email client</a>' : '') +
+          (r.phone ? '<a class="btn btn-outline" href="tel:' + esc(r.phone) + '">Call</a>' : '') +
+          '<a class="btn btn-outline" href="admin.html#leads' + (r.id ? ('/' + encodeURIComponent(r.id)) : '') + '">Open in CRM Kanban</a>' +
+          '<button type="button" class="btn btn-outline" data-trash-lead="' + esc(r.id || '') + '" style="border-color:rgba(255,80,80,.35);color:#ff8a8a;">Move to trash</button>' +
+          '</div>' +
+          '</div>' +
+          '</article>'
+        );
+      }
+
+      function trashCard(r) {
+        var when = r.deletedAt || r.timestamp || r.updatedAt || '';
+        var items = leadItems(r);
+        var title = cleanServiceTitle(r);
+        return (
+          '<article class="inq-card" style="opacity:.92;border-style:dashed;">' +
+          '<div class="inq-cover-fallback">Trash</div>' +
+          '<div>' +
+          '<div class="inq-head">' +
+          '<div>' +
+          '<h3 class="inq-name">' + esc(r.name || 'Unknown') + '</h3>' +
+          '<p class="inq-meta">' + esc(r.email || '') + (when ? ' · deleted ' + esc(when) : '') + '</p>' +
+          '</div>' +
+          '<span class="inq-badge muted">' + esc(items.length ? (items.length + ' lines') : 'enquiry') + '</span>' +
+          '</div>' +
+          '<p class="inq-meta" style="color:#e8c86b;font-weight:700;">' + esc(title) + '</p>' +
+          '<div class="inq-actions">' +
+          '<button type="button" class="btn btn-gold" data-restore-lead="' + esc(r.id || '') + '">Restore</button>' +
+          '<button type="button" class="btn btn-outline" data-perm-delete-lead="' + esc(r.id || '') + '" style="border-color:rgba(255,80,80,.45);color:#ff8a8a;">Delete permanently</button>' +
+          '</div>' +
+          '</div>' +
+          '</article>'
+        );
+      }
+
+      function loadInquiries() {
+        var list = document.getElementById('ops-inq-list');
+        var countEl = document.getElementById('ops-inq-count');
+        if (!list) return;
+        function paint() {
+          var rows = allLeads();
+          var open = rows.filter(function (r) {
+            var col = r.kanbanColumn || 'new';
+            return col !== 'lost';
+          });
+          if (countEl) {
+            countEl.textContent = rows.length + ' active · ' + open.length + ' open pipeline · only client-selected package lines shown';
+          }
+          list.innerHTML = rows.slice(0, 60).map(enquiryCard).join('') ||
+            '<div class="ops-note" style="padding:1.25rem;border:1px dashed rgba(255,255,255,.12);border-radius:12px;text-align:center;">No enquiries yet. Submit a website form or multi-enquiry, then hit Refresh CRM.</div>';
+        }
+        loadActImageIndex().then(paint).catch(paint);
+      }
+
+      function loadTrash() {
+        var list = document.getElementById('ops-trash-list');
+        var countEl = document.getElementById('ops-trash-count');
+        if (!list) return;
+        var rows = [];
+        if (window.EliteCRM && EliteCRM.getTrash) rows = EliteCRM.getTrash() || [];
+        if (countEl) countEl.textContent = rows.length ? (rows.length + ' in trash') : 'Trash is empty';
+        list.innerHTML = rows.length
+          ? rows.map(trashCard).join('')
+          : '<div class="ops-note" style="padding:1rem;color:#777;">No deleted enquiries.</div>';
+      }
+
+      function loadClientFeed() {
+        var body = document.getElementById('ops-client-body');
+        if (!body) return;
+
+        function paint(list) {
+          body.innerHTML = (list || []).slice(0, 50).map(function (r) {
+            return '<tr><td>' + esc(r.at || r.timestamp || '') + '</td><td>' +
+              esc(r.client || r.email || r.name || '') + '</td><td>' +
+              esc(r.type || 'activity') + '</td><td style="white-space:pre-wrap;max-width:360px;">' +
+              esc(r.detail || r.message || '') + '</td></tr>';
+          }).join('') || '<tr><td colspan="4">No client activity yet.</td></tr>';
+        }
+
+        var list = [];
+        if (window.EliteCRM && EliteCRM.getClientFeed) {
+          list = EliteCRM.getClientFeed();
+        } else {
+          try { list = JSON.parse(localStorage.getItem('elite_client_feed') || '[]'); } catch (e) { }
+        }
+        paint(list);
+
+        // Merge remote client_feed
+        try {
+          if (window.EliteFirebase && EliteFirebase.db) {
+            EliteFirebase.db.collection('client_feed').limit(50).get().then(function (snap) {
+              var remote = [];
+              snap.forEach(function (d) {
+                var row = d.data() || {};
+                if (!row.id) row.id = d.id;
+                remote.push(row);
+              });
+              if (!remote.length) return;
+              var map = {};
+              list.concat(remote).forEach(function (r) {
+                var key = r.id || (r.client + '|' + r.at + '|' + (r.detail || '').slice(0, 40));
+                map[key] = r;
+              });
+              var merged = Object.keys(map).map(function (k) { return map[k]; });
+              merged.sort(function (a, b) {
+                return String(b.atIso || b.at || '').localeCompare(String(a.atIso || a.at || ''));
+              });
+              paint(merged);
+            }).catch(function () { });
+          }
+        } catch (e) { }
+      }
+
+      if (window.EliteAdminAuth) {
+        EliteAdminAuth.bindLoginForm({
+          emailId: 'ops-email',
+          passId: 'ops-pass',
+          submitId: 'ops-login',
+          statusId: 'ops-auth-status',
+          forgotId: 'ops-forgot',
+          onSuccess: function (result) {
+            showDash();
+            if (result && result.mustChangePassword) {
+              if (window.EliteAdminUI) {
+                EliteAdminUI.toast('Bootstrap password in use. Open CMS → Account and change it now.', 'error');
+              } else {
+                alert('You signed in with the bootstrap password. Open CRM → Account / Password and change it now.');
+              }
+            }
+          }
+        });
+      }
+
+      document.getElementById('ops-logout').onclick = function () {
+        if (window.EliteAdminAuth) EliteAdminAuth.logout();
+        else {
+          localStorage.removeItem('elite_admin_authed');
+          localStorage.removeItem('elite_admin_session_v2');
+          try { if (EliteFirebase && EliteFirebase.auth) EliteFirebase.auth.signOut(); } catch (e) { }
+        }
+        try { if (window.EliteCRM && EliteCRM.stopRealtime) EliteCRM.stopRealtime(); } catch (e2) { }
+        if (window.EliteAdminUI) EliteAdminUI.setAuthed(false);
+        dash.classList.remove('is-on');
+        auth.classList.add('is-on');
       };
-    }
 
-    document.addEventListener('click', function (e) {
-      var t = e.target;
-      if (!t || !t.getAttribute) return;
-      var trashId = t.getAttribute('data-trash-lead');
-      if (trashId && window.EliteCRM) {
-        if (!confirm('Move this enquiry to trash? You can restore it later.')) return;
-        EliteCRM.deleteLead(trashId, { actor: (window.EliteAdminAuth && EliteAdminAuth.currentEmail()) || 'Ops' });
-        loadInquiries();
-        loadTrash();
-        return;
-      }
-      var restoreId = t.getAttribute('data-restore-lead');
-      if (restoreId && window.EliteCRM) {
-        EliteCRM.restoreFromTrash(restoreId, { actor: (window.EliteAdminAuth && EliteAdminAuth.currentEmail()) || 'Ops' });
-        loadInquiries();
-        loadTrash();
-        return;
-      }
-      var permId = t.getAttribute('data-perm-delete-lead');
-      if (permId && window.EliteCRM) {
-        if (!confirm('Permanently delete this enquiry? This cannot be undone.')) return;
-        EliteCRM.permanentDeleteFromTrash(permId);
-        loadTrash();
-        return;
-      }
-      if (t.id === 'ops-empty-trash' && window.EliteCRM) {
-        var n = (EliteCRM.getTrash() || []).length;
-        if (!n) return;
-        if (!confirm('Permanently delete all ' + n + ' items in trash? This cannot be undone.')) return;
-        EliteCRM.emptyTrash();
-        loadTrash();
-      }
-    });
+      document.getElementById('ops-save-content').onclick = function () {
+        if (!window.EliteCMS) return;
+        var payload = {};
+        FIELDS.forEach(function (k) {
+          var el = document.getElementById('c-' + k);
+          if (el) payload[k] = el.value.trim();
+        });
+        EliteCMS.saveContent(payload);
+        EliteCMS.applyHeroVideos();
+        document.getElementById('ops-content-status').textContent = 'Saved locally and pushed to Firebase (if connected).';
+        if (window.EliteAdminUI) EliteAdminUI.toast('Site content saved. Refresh the live site to see it.', 'ok');
+      };
 
-    window.addEventListener('elite-crm-updated', function () {
-      if (dash.classList.contains('is-on')) {
-        loadInquiries();
-        loadTrash();
-        loadClientFeed();
+      var refreshBtn = document.getElementById('ops-refresh-crm');
+      if (refreshBtn) {
+        refreshBtn.onclick = function () {
+          setSyncLabel('Refreshing…');
+          startCrm().then(function () {
+            loadInquiries();
+            loadTrash();
+            loadClientFeed();
+          });
+        };
       }
-    });
-    window.addEventListener('elite-crm-trash', function () {
-      if (dash.classList.contains('is-on')) {
-        loadInquiries();
-        loadTrash();
-      }
-    });
-    window.addEventListener('elite-crm-sync', function () {
-      if (!window.EliteCRM) return;
-      var st = EliteCRM.getSyncStatus();
-      if (st.listenersReady || st.lastSyncAt) setSyncLabel('Live CRM', true);
-      else if (st.syncing) setSyncLabel('Syncing…');
-      else if (st.lastError) setSyncLabel(st.lastError, false);
-    });
 
-    if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) showDash();
-  })();
+      document.addEventListener('click', function (e) {
+        var t = e.target;
+        if (!t || !t.getAttribute) return;
+        var trashId = t.getAttribute('data-trash-lead');
+        if (trashId && window.EliteCRM) {
+          if (!confirm('Move this enquiry to trash? You can restore it later.')) return;
+          EliteCRM.deleteLead(trashId, { actor: (window.EliteAdminAuth && EliteAdminAuth.currentEmail()) || 'Ops' });
+          loadInquiries();
+          loadTrash();
+          return;
+        }
+        var restoreId = t.getAttribute('data-restore-lead');
+        if (restoreId && window.EliteCRM) {
+          EliteCRM.restoreFromTrash(restoreId, { actor: (window.EliteAdminAuth && EliteAdminAuth.currentEmail()) || 'Ops' });
+          loadInquiries();
+          loadTrash();
+          return;
+        }
+        var permId = t.getAttribute('data-perm-delete-lead');
+        if (permId && window.EliteCRM) {
+          if (!confirm('Permanently delete this enquiry? This cannot be undone.')) return;
+          EliteCRM.permanentDeleteFromTrash(permId);
+          loadTrash();
+          return;
+        }
+        if (t.id === 'ops-empty-trash' && window.EliteCRM) {
+          var n = (EliteCRM.getTrash() || []).length;
+          if (!n) return;
+          if (!confirm('Permanently delete all ' + n + ' items in trash? This cannot be undone.')) return;
+          EliteCRM.emptyTrash();
+          loadTrash();
+        }
+      });
+
+      window.addEventListener('elite-crm-updated', function () {
+        if (dash.classList.contains('is-on')) {
+          loadInquiries();
+          loadTrash();
+          loadClientFeed();
+        }
+      });
+      window.addEventListener('elite-crm-trash', function () {
+        if (dash.classList.contains('is-on')) {
+          loadInquiries();
+          loadTrash();
+        }
+      });
+      window.addEventListener('elite-crm-sync', function () {
+        if (!window.EliteCRM) return;
+        var st = EliteCRM.getSyncStatus();
+        if (st.listenersReady || st.lastSyncAt) setSyncLabel('Live CRM', true);
+        else if (st.syncing) setSyncLabel('Syncing…');
+        else if (st.lastError) setSyncLabel(st.lastError, false);
+      });
+
+      if (window.EliteAdminAuth && EliteAdminAuth.isAuthed()) showDash();
+    })();
   </script>
 </body>
+
 </html>

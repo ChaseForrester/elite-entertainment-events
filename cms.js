@@ -1291,20 +1291,197 @@
       } catch (e) { }
     }
 
+    _normName(s) {
+      return String(s == null ? '' : s)
+        .toLowerCase()
+        .replace(/['’]/g, '')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    _stripHtml(html) {
+      try {
+        var d = document.createElement('div');
+        d.innerHTML = html || '';
+        return (d.textContent || d.innerText || '').trim();
+      } catch (e) {
+        return String(html || '').replace(/<[^>]+>/g, '').trim();
+      }
+    }
+
+    _readList(key, fallback) {
+      try {
+        var raw = JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback || []));
+        return Array.isArray(raw) ? raw : (fallback || []);
+      } catch (e) {
+        return fallback || [];
+      }
+    }
+
+    _mergeById(local, remote) {
+      local = Array.isArray(local) ? local : [];
+      remote = Array.isArray(remote) ? remote : [];
+      if (!remote.length) return local;
+      var map = {};
+      var order = [];
+      function stamp(item) {
+        return Date.parse(item && (item.updatedAtIso || item.updatedAt) || 0) || 0;
+      }
+      function put(item, preferRemote) {
+        if (!item || !item.id) return;
+        var cur = map[item.id];
+        if (!cur) {
+          map[item.id] = item;
+          order.push(item.id);
+          return;
+        }
+        var tNew = stamp(item);
+        var tCur = stamp(cur);
+        if (tNew > tCur) map[item.id] = item;
+        else if (tNew === tCur && preferRemote) map[item.id] = Object.assign({}, cur, item);
+      }
+      local.forEach(function (x) { put(x, false); });
+      remote.forEach(function (x) { put(x, true); });
+      return order.map(function (id) { return map[id]; });
+    }
+
+    _folderIdForCategory(category) {
+      var map = {
+        celebrity: 'celebrity-bands-and-artists',
+        bands: 'party-bands',
+        djs: 'djs-karaoke',
+        solos: 'solo-acts',
+        duos: 'duos',
+        trios: 'trios',
+        jazz: 'classical-entertainment',
+        tributes: 'tribute-acts',
+        multicultural: 'multicultural-entertainment',
+        country: 'country',
+        comedians: 'comedians',
+        children: 'childrens-entertainment',
+        classical: 'classical-entertainment',
+        specialty: 'seasonal-specialty-entertainment',
+        roving: 'roving-entertainment',
+        'models-dancers': 'dance-troupes-mcs',
+        corporate: 'party-bands',
+        weddings: 'party-bands'
+      };
+      return map[String(category || '').toLowerCase()] || 'party-bands';
+    }
+
+    /**
+     * Overlay Super Admin CMS artists onto the public roster (ELITE_FOLDERS).
+     * Matching names get bio/image/video updates; new CMS-only acts are appended.
+     */
+    applyRosterOverlay() {
+      if (!window.ELITE_FOLDERS || !window.ELITE_FOLDERS.length) return;
+      var self = this;
+      var artists = this._readList(STORAGE_KEYS.ARTISTS, []);
+      var byName = {};
+      artists.forEach(function (a) {
+        if (!a || !a.name) return;
+        byName[self._normName(a.name)] = a;
+      });
+      var matched = {};
+      window.ELITE_FOLDERS.forEach(function (folder) {
+        (folder.acts || []).forEach(function (act) {
+          if (!act) return;
+          var cms = byName[self._normName(act.name)];
+          if (!cms) return;
+          matched[cms.id] = true;
+          var plain = self._stripHtml(cms.bio || '');
+          if (plain) act.bio = plain;
+          if (cms.image) act.image = cms.image;
+          if (cms.genre) act.style = cms.genre;
+          if (cms.youtubeUrl) act.youtubeUrl = cms.youtubeUrl;
+          if (cms.gallery) act.gallery = cms.gallery;
+          if (cms.featured) act.recommended = true;
+          if (cms.metaDescription) act.metaDescription = cms.metaDescription;
+          act.cmsId = cms.id;
+        });
+        folder.count = (folder.acts || []).length;
+      });
+      artists.forEach(function (cms) {
+        if (!cms || !cms.name || matched[cms.id]) return;
+        var folderId = self._folderIdForCategory(cms.category);
+        var folder = (window.ELITE_FOLDER_MAP && window.ELITE_FOLDER_MAP[folderId]) ||
+          window.ELITE_FOLDERS.filter(function (f) { return f.id === folderId; })[0];
+        if (!folder) return;
+        if (!folder.acts) folder.acts = [];
+        var already = folder.acts.some(function (a) {
+          return self._normName(a && a.name) === self._normName(cms.name);
+        });
+        if (already) return;
+        folder.acts.unshift({
+          name: cms.name,
+          style: cms.genre || '',
+          bio: self._stripHtml(cms.bio || '') || (cms.name + ' is available through Elite Entertainment & Events.'),
+          image: cms.image || '',
+          youtubeUrl: cms.youtubeUrl || '',
+          gallery: cms.gallery || [],
+          recommended: !!cms.featured,
+          cmsId: cms.id
+        });
+        folder.count = folder.acts.length;
+      });
+      if (window.ELITE_FOLDER_MAP) {
+        window.ELITE_FOLDERS.forEach(function (f) {
+          window.ELITE_FOLDER_MAP[f.id] = f;
+        });
+      }
+      try {
+        window.dispatchEvent(new CustomEvent('elite-cms-roster'));
+      } catch (e) { }
+    }
+
+    findArtistByName(name) {
+      var want = this._normName(name);
+      if (!want) return null;
+      var list = this.getArtists();
+      for (var i = 0; i < list.length; i++) {
+        if (this._normName(list[i].name) === want) return list[i];
+      }
+      return null;
+    }
+
+    isCustomContent(key, value) {
+      if (value == null || value === '') return false;
+      return String(value) !== String(DEFAULT_CONTENT[key] == null ? '' : DEFAULT_CONTENT[key]);
+    }
+
     syncFirestore() {
       var self = this;
       function pull(db) {
         db.collection('site_content').doc('main').get().then(function (doc) {
           if (doc.exists) {
             var data = doc.data() || {};
-            if (data.artists) localStorage.setItem(STORAGE_KEYS.ARTISTS, JSON.stringify(data.artists));
-            if (data.events) localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(data.events));
-            if (data.categories) localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(data.categories));
+            if (Array.isArray(data.artists) && data.artists.length) {
+              var mergedArtists = self._mergeById(self._readList(STORAGE_KEYS.ARTISTS, []), data.artists);
+              localStorage.setItem(STORAGE_KEYS.ARTISTS, JSON.stringify(mergedArtists));
+            }
+            if (Array.isArray(data.events) && data.events.length) {
+              var mergedEvents = self._mergeById(self.getEvents(), data.events);
+              localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(mergedEvents));
+            }
+            if (Array.isArray(data.categories) && data.categories.length) {
+              localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(data.categories));
+            }
+            if (Array.isArray(data.partners) && data.partners.length) {
+              var mergedPartners = self._mergeById(self.getPartners(), data.partners);
+              localStorage.setItem('elite_partners', JSON.stringify(mergedPartners));
+            }
             if (data.content) {
-              var merged = Object.assign({}, DEFAULT_CONTENT, data.content);
+              var localC = self.getContent();
+              var rAt = Date.parse(data.content._savedAt || data.updatedAt || 0) || 0;
+              var lAt = Date.parse(localC._savedAt || 0) || 0;
+              var merged = rAt >= lAt
+                ? Object.assign({}, DEFAULT_CONTENT, localC, data.content)
+                : Object.assign({}, DEFAULT_CONTENT, data.content, localC);
               localStorage.setItem(STORAGE_KEYS.CONTENT, JSON.stringify(merged));
             }
             self.applyHeroVideos();
+            self.applyRosterOverlay();
             window.dispatchEvent(new CustomEvent('elite-cms-synced'));
           }
         }).catch(function (err) { console.log('Firestore sync notice:', err.message); });
@@ -1323,10 +1500,11 @@
     pushToFirestore() {
       try {
         var payload = {
-          artists: this.getArtists(),
+          artists: this._readList(STORAGE_KEYS.ARTISTS, []),
           events: this.getEvents(),
           categories: this.getCategories(),
           content: this.getContent(),
+          partners: this.getPartners(),
           updatedAt: new Date().toISOString()
         };
         if (window.EliteFirebase && window.EliteFirebase.db) {
@@ -1342,22 +1520,26 @@
 
     /* ─── ARTIST CMS METHODS ─── */
     getArtists(categoryFilter = null) {
-      let data = JSON.parse(localStorage.getItem(STORAGE_KEYS.ARTISTS) || '[]');
+      let data = this._readList(STORAGE_KEYS.ARTISTS, []);
       if (window.EliteMedia && typeof window.EliteMedia.enrichCmsArtist === 'function') {
         data = data.map(function (a) {
-          return window.EliteMedia.enrichCmsArtist(Object.assign({}, a));
+          try {
+            return window.EliteMedia.enrichCmsArtist(JSON.parse(JSON.stringify(a)));
+          } catch (e) {
+            return window.EliteMedia.enrichCmsArtist(Object.assign({}, a));
+          }
         });
       }
       if (!categoryFilter) return data;
-      const catLower = categoryFilter.toLowerCase();
+      const catLower = String(categoryFilter).toLowerCase();
       return data.filter(a =>
-        a.category.toLowerCase() === catLower ||
-        (a.tags && a.tags.map(t => t.toLowerCase()).includes(catLower))
+        (a.category && String(a.category).toLowerCase() === catLower) ||
+        (a.tags && a.tags.map(t => String(t).toLowerCase()).includes(catLower))
       );
     }
 
     saveArtist(artist) {
-      const artists = this.getArtists();
+      const artists = this._readList(STORAGE_KEYS.ARTISTS, []);
       if (!artist.id) {
         artist.id = 'artist_' + Date.now();
       }
@@ -1368,6 +1550,7 @@
         : artist;
       // Keep rate optional for legacy data but never require it
       if (merged.rate == null) merged.rate = '';
+      merged.updatedAt = new Date().toISOString();
       if (existingIdx >= 0) {
         artists[existingIdx] = merged;
       } else {
@@ -1375,14 +1558,16 @@
       }
       localStorage.setItem(STORAGE_KEYS.ARTISTS, JSON.stringify(artists));
       this.pushToFirestore();
+      this.applyRosterOverlay();
       return merged;
     }
 
     deleteArtist(id) {
-      let artists = this.getArtists();
+      let artists = this._readList(STORAGE_KEYS.ARTISTS, []);
       artists = artists.filter(a => a.id !== id);
       localStorage.setItem(STORAGE_KEYS.ARTISTS, JSON.stringify(artists));
       this.pushToFirestore();
+      this.applyRosterOverlay();
     }
 
     /* ─── EVENT CMS METHODS ─── */
@@ -1395,9 +1580,10 @@
       if (!event.id) {
         event.id = 'event_' + Date.now();
       }
+      event.updatedAt = new Date().toISOString();
       const idx = events.findIndex(e => e.id === event.id);
       if (idx >= 0) {
-        events[idx] = event;
+        events[idx] = Object.assign({}, events[idx], event);
       } else {
         events.unshift(event);
       }
@@ -1437,9 +1623,10 @@
 
     saveContent(content) {
       const current = this.getContent();
-      const updated = Object.assign({}, current, content);
+      const updated = Object.assign({}, current, content, { _savedAt: new Date().toISOString() });
       localStorage.setItem(STORAGE_KEYS.CONTENT, JSON.stringify(updated));
       this.pushToFirestore();
+      this.applyHeroVideos();
       return updated;
     }
 
@@ -1538,6 +1725,20 @@
 
     getPartners() {
       return this._readJson('elite_partners', []);
+    }
+
+    savePartner(partner) {
+      const partners = this.getPartners();
+      if (!partner || !partner.id) {
+        partner = Object.assign({ id: 'PRT-' + Date.now().toString(36) }, partner || {});
+      }
+      partner.updatedAt = new Date().toISOString();
+      const idx = partners.findIndex((p) => p.id === partner.id);
+      if (idx >= 0) partners[idx] = Object.assign({}, partners[idx], partner);
+      else partners.unshift(partner);
+      this._writeJson('elite_partners', partners);
+      this.pushToFirestore();
+      return partner;
     }
 
     getAllLeads() {
@@ -1694,7 +1895,9 @@
       const idx = partners.findIndex((p) => p.id === id);
       if (idx < 0) return null;
       partners[idx].status = status;
+      partners[idx].updatedAt = new Date().toISOString();
       this._writeJson('elite_partners', partners);
+      this.pushToFirestore();
       return partners[idx];
     }
 
@@ -1706,6 +1909,7 @@
 
   window.EliteCMS = new EliteCMSEngine();
   window.EliteCMS.KANBAN_COLUMNS = EliteCMSEngine.KANBAN_COLUMNS;
+  window.EliteCMS.DEFAULT_CONTENT = DEFAULT_CONTENT;
   // Re-bridge CRM methods if elite-crm.js already loaded
   try {
     if (typeof window.__eliteBridgeCms === 'function') window.__eliteBridgeCms();

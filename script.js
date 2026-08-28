@@ -602,9 +602,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const div = document.createElement('div');
         div.className = 'autocomplete-item autocomplete-item--media';
         div.setAttribute('role', 'option');
-        const imgSrc = item.image || 'images/brand/logo-nav-icon.png';
+        const imgSrc = item.image || 'images/brand/ee-mark.png';
         div.innerHTML =
-          '<div class="ac-thumb"><img src="' + imgSrc + '" alt="" loading="lazy" onerror="this.src=\'images/brand/logo-nav-icon.png\'" /></div>' +
+          '<div class="ac-thumb"><img src="' + imgSrc + '" alt="" loading="lazy" onerror="this.src=\'images/brand/ee-mark.png\'" /></div>' +
           '<div class="ac-meta">' +
           '<div class="ac-name">' + item.name + '</div>' +
           '<div class="ac-style">' + (item.style || item.type) + (item.folder ? ' · ' + item.folder : '') + '</div>' +
@@ -1253,9 +1253,13 @@ document.addEventListener('DOMContentLoaded', function () {
           timestamp: new Date().toLocaleString()
         };
 
-        const partners = JSON.parse(localStorage.getItem('elite_partners') || '[]');
-        partners.unshift(newPartner);
-        localStorage.setItem('elite_partners', JSON.stringify(partners));
+        if (window.EliteCMS && typeof window.EliteCMS.savePartner === 'function') {
+          window.EliteCMS.savePartner(newPartner);
+        } else {
+          const partners = JSON.parse(localStorage.getItem('elite_partners') || '[]');
+          partners.unshift(newPartner);
+          localStorage.setItem('elite_partners', JSON.stringify(partners));
+        }
 
         const submitBtn = document.getElementById('btn-signup-submit');
         const originalSignupText = submitBtn ? submitBtn.textContent : 'Submit Profile';
@@ -1558,7 +1562,7 @@ document.addEventListener('DOMContentLoaded', function () {
       backdrop-filter: blur(10px);
     `;
       installToast.innerHTML = `
-      <img src="./icons/icon-192.png" style="width:36px; height:36px; border-radius:6px;" alt="Elite App">
+      <img src="./icons/ee-192.png" style="width:36px; height:36px; border-radius:6px;" alt="Elite App">
       <div>
         <div style="font-size:0.85rem; font-weight:700; color:#fff;">Install Elite App</div>
         <div style="font-size:0.7rem; color:var(--silver-mid);">Fast offline access &amp; instant booking</div>
@@ -1594,6 +1598,15 @@ document.addEventListener('DOMContentLoaded', function () {
     function applyCmsContent() {
       if (!window.EliteCMS) return;
       const siteContent = window.EliteCMS.getContent();
+      const cmsEsc = (s) => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      const isCustom = (key) => window.EliteCMS.isCustomContent
+        ? window.EliteCMS.isCustomContent(key, siteContent[key])
+        : !!(siteContent[key]);
+
+      if (typeof window.EliteCMS.applyRosterOverlay === 'function') {
+        window.EliteCMS.applyRosterOverlay();
+      }
 
       // Prefer explicit data-cms hooks so we don't clobber designed hero markup
       document.querySelectorAll('[data-cms]').forEach(el => {
@@ -1624,6 +1637,23 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
 
+      // Super Admin / Ops custom hero copy (skip stock defaults so designed homepage stays)
+      if (isCustom('heroTitle')) {
+        const heroTitleEl = document.querySelector('.hero-title-main, h1.hero-title');
+        if (heroTitleEl) heroTitleEl.textContent = siteContent.heroTitle;
+      }
+      if (isCustom('heroSubtitle')) {
+        const heroSubEl = document.querySelector('.hero-sub, .hero-sub-center');
+        if (heroSubEl) heroSubEl.textContent = siteContent.heroSubtitle;
+      }
+      const heroBanner = isCustom('heroBackdrop')
+        ? siteContent.heroBackdrop
+        : (isCustom('heroPoster') ? siteContent.heroPoster : '');
+      if (heroBanner) {
+        const fallback = document.querySelector('.hero-video-fallback, .hero-photo-slide img, img.hero-video-fallback');
+        if (fallback) fallback.setAttribute('src', heroBanner);
+      }
+
       // Contact chips from CMS
       if (siteContent.contactPhone) {
         document.querySelectorAll('a[href^="tel:"]').forEach(a => {
@@ -1640,6 +1670,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
 
+      // Company / ABN / ACN in footers when Super Admin has custom values
+      if (isCustom('companyLegalName') || isCustom('abn') || isCustom('acn')) {
+        document.querySelectorAll('.footer-brand p, .footer-col p, .footer-bottom p, .footer-bottom-inner p').forEach(p => {
+          let html = p.innerHTML;
+          if (isCustom('companyLegalName')) {
+            html = html.replace(/ELITE ENTERTAINMENT(?:\s|&amp;|&|&nbsp;)+EVENTS PTY LTD/gi, cmsEsc(siteContent.companyLegalName));
+          }
+          if (isCustom('abn')) html = html.replace(/ABN:\s*[\d\s]+/gi, 'ABN: ' + cmsEsc(siteContent.abn));
+          if (isCustom('acn')) html = html.replace(/ACN:\s*[\d\s]+/gi, 'ACN: ' + cmsEsc(siteContent.acn));
+          p.innerHTML = html;
+        });
+      }
+
       // Dynamic Artist cards on category pages (id=artists-grid / .artist-grid)
       const artistGrid = document.getElementById('artists-grid') || document.querySelector('.artist-grid');
       if (artistGrid && document.body.dataset.category) {
@@ -1651,17 +1694,20 @@ document.addEventListener('DOMContentLoaded', function () {
           cmsArtists.forEach(art => {
             const card = document.createElement('div');
             card.className = 'artist-card service-card';
-            const ytBtn = art.youtubeUrl ? `<button class="btn btn-outline btn-full" style="margin-bottom:0.5rem; border-color:rgba(255,80,80,0.6); color:#ff6b6b;" onclick="openVideoModal('${art.youtubeUrl.replace(/'/g, "\\'")}', '${art.name.replace(/'/g, "\\'")}')">▶ Watch Video Preview</button>` : '';
+            const safeName = String(art.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            const safeCat = String(art.category || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            const safeYt = String(art.youtubeUrl || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            const ytBtn = art.youtubeUrl ? `<button class="btn btn-outline btn-full" style="margin-bottom:0.5rem; border-color:rgba(255,80,80,0.6); color:#ff6b6b;" onclick="openVideoModal('${safeYt}', '${safeName}')">▶ Watch Video Preview</button>` : '';
             card.innerHTML = `
             <div class="artist-img-wrap" style="position:relative; overflow:hidden; border-radius:12px; margin-bottom:1.2rem;">
-              <img src="${art.image}" alt="${art.name}" style="width:100%; height:260px; object-fit:cover; transition:var(--transition);" loading="lazy" />
-              <div style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.75); border:1px solid var(--gold); color:var(--gold); padding:0.25rem 0.75rem; border-radius:20px; font-size:0.65rem; font-weight:700; text-transform:uppercase;">${art.rate}</div>
+              <img src="${cmsEsc(art.image)}" alt="${cmsEsc(art.name)}" style="width:100%; height:260px; object-fit:cover; transition:var(--transition);" loading="lazy" />
+              <div style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.75); border:1px solid var(--gold); color:var(--gold); padding:0.25rem 0.75rem; border-radius:20px; font-size:0.65rem; font-weight:700; text-transform:uppercase;">${cmsEsc(art.rate || '')}</div>
             </div>
-            <h3 style="font-family:var(--font-heading); font-size:1.6rem; color:var(--white); margin-bottom:0.3rem;">${art.name}</h3>
-            <p style="color:var(--gold); font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.6rem;">${art.genre}</p>
-            <div class="artist-rich-bio" style="font-size:0.85rem; color:var(--silver-light); line-height:1.6; margin-bottom:1.2rem;">${art.bio}</div>
+            <h3 style="font-family:var(--font-heading); font-size:1.6rem; color:var(--white); margin-bottom:0.3rem;">${cmsEsc(art.name)}</h3>
+            <p style="color:var(--gold); font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.6rem;">${cmsEsc(art.genre)}</p>
+            <div class="artist-rich-bio" style="font-size:0.85rem; color:var(--silver-light); line-height:1.6; margin-bottom:1.2rem;">${art.bio || ''}</div>
             ${ytBtn}
-            <button class="btn btn-gold btn-full" onclick="openBookingModal('${art.name.replace(/'/g, "\\'")}', '${art.category}')">Hire ${art.name} &rarr;</button>
+            <button class="btn btn-gold btn-full" onclick="openBookingModal('${safeName}', '${safeCat}')">Hire ${cmsEsc(art.name)} &rarr;</button>
           `;
             artistGrid.appendChild(card);
           });

@@ -8,8 +8,67 @@
       .replace(/"/g, '&quot;');
   }
 
+  function stripHtml(html) {
+    try {
+      var d = document.createElement('div');
+      d.innerHTML = html || '';
+      return (d.textContent || d.innerText || '').trim();
+    } catch (e) {
+      return String(html || '').replace(/<[^>]+>/g, '').trim();
+    }
+  }
+
+  function overlayCmsAct(act) {
+    if (!act || !window.EliteCMS) return act;
+    var cms = null;
+    if (typeof window.EliteCMS.findArtistByName === 'function') {
+      cms = window.EliteCMS.findArtistByName(act.name);
+    } else if (window.EliteCMS.getArtists) {
+      var want = String(act.name || '').toLowerCase();
+      cms = (window.EliteCMS.getArtists() || []).find(function (a) {
+        return a && String(a.name || '').toLowerCase() === want;
+      });
+    }
+    if (!cms) return act;
+    var plain = stripHtml(cms.bio || '');
+    if (plain) act.bio = plain;
+    if (cms.image) act.image = cms.image;
+    if (cms.genre) act.style = cms.genre;
+    if (cms.youtubeUrl) act.youtubeUrl = cms.youtubeUrl;
+    if (cms.gallery) act.gallery = cms.gallery;
+    if (cms.metaDescription) act.metaDescription = cms.metaDescription;
+    return act;
+  }
+
+  function cmsActAsRoster(cms, folderId) {
+    return {
+      name: cms.name,
+      style: cms.genre || '',
+      bio: stripHtml(cms.bio || ''),
+      image: cms.image || '',
+      youtubeUrl: cms.youtubeUrl || '',
+      gallery: cms.gallery || [],
+      metaDescription: cms.metaDescription || '',
+      cmsId: cms.id
+    };
+  }
+
   function findAct(folderId, actName) {
-    if (!window.ELITE_FOLDERS) return null;
+    if (window.EliteCMS && typeof window.EliteCMS.applyRosterOverlay === 'function') {
+      window.EliteCMS.applyRosterOverlay();
+    }
+    if (!window.ELITE_FOLDERS) {
+      if (window.EliteCMS && actName) {
+        var only = window.EliteCMS.findArtistByName ? window.EliteCMS.findArtistByName(actName) : null;
+        if (only) {
+          return {
+            folder: { id: folderId || 'cms', name: only.category || 'Artists', slug: 'index.html#categories' },
+            act: cmsActAsRoster(only, folderId)
+          };
+        }
+      }
+      return null;
+    }
     var folder = null;
     if (folderId && window.ELITE_FOLDER_MAP) folder = window.ELITE_FOLDER_MAP[folderId];
     if (!folder) {
@@ -17,20 +76,35 @@
         var hit = window.ELITE_FOLDERS[i].acts.find(function (a) {
           return a.name.toLowerCase() === (actName || '').toLowerCase();
         });
-        if (hit) return { folder: window.ELITE_FOLDERS[i], act: hit };
+        if (hit) return { folder: window.ELITE_FOLDERS[i], act: overlayCmsAct(hit) };
+      }
+      if (window.EliteCMS && actName) {
+        var cmsOnly = window.EliteCMS.findArtistByName ? window.EliteCMS.findArtistByName(actName) : null;
+        if (cmsOnly) {
+          return {
+            folder: { id: 'cms', name: cmsOnly.category || 'Artists', slug: 'index.html#categories' },
+            act: cmsActAsRoster(cmsOnly, folderId)
+          };
+        }
       }
       return null;
     }
     var act = folder.acts.find(function (a) {
       return a.name.toLowerCase() === (actName || '').toLowerCase();
     });
+    if (!act && window.EliteCMS && actName) {
+      var cmsInFolder = window.EliteCMS.findArtistByName ? window.EliteCMS.findArtistByName(actName) : null;
+      if (cmsInFolder) {
+        return { folder: folder, act: cmsActAsRoster(cmsInFolder, folderId) };
+      }
+    }
     if (!act) act = folder.acts[0];
-    return { folder: folder, act: act };
+    return { folder: folder, act: overlayCmsAct(act) };
   }
 
   // Never substitute a stock/Unsplash stranger for a missing act photo
   function themedFallback(style, name) {
-    return 'images/brand/logo-icon.png';
+    return 'images/brand/ee-mark.png';
   }
 
   document.addEventListener('DOMContentLoaded', function () {

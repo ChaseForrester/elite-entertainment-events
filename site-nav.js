@@ -115,13 +115,13 @@
         var ddClass = item.mega ? 'dropdown dropdown--cols' : 'dropdown';
         return (
           '<li class="has-dropdown">' +
-            '<a href="' + item.href + '" class="nav-top-link' + topCur + '">' +
-              item.label +
-              '<svg class="nav-caret" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">' +
-                '<path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>' +
-              '</svg>' +
-            '</a>' +
-            '<ul class="' + ddClass + '">' + kids + '</ul>' +
+          '<a href="' + item.href + '" class="nav-top-link' + topCur + '">' +
+          item.label +
+          '<svg class="nav-caret" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">' +
+          '<path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>' +
+          '</svg>' +
+          '</a>' +
+          '<ul class="' + ddClass + '">' + kids + '</ul>' +
           '</li>'
         );
       }
@@ -132,10 +132,10 @@
     return (
       '<ul class="nav-primary">' + items + '</ul>' +
       '<div class="mobile-contact-info">' +
-        '<a href="tel:+61417221111">+61 417 221 111</a>' +
-        '<a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>' +
-        '<a href="mailto:bookings@eeevents.com.au">bookings@eeevents.com.au</a>' +
-        '<a href="index.html#contact" class="btn btn-gold" style="margin-top:0.75rem;border-radius:30px;width:100%;">Get a Quote</a>' +
+      '<a href="tel:+61417221111">+61 417 221 111</a>' +
+      '<a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>' +
+      '<a href="mailto:bookings@eeevents.com.au">bookings@eeevents.com.au</a>' +
+      '<a href="index.html#contact" class="btn btn-gold" style="margin-top:0.75rem;border-radius:30px;width:100%;">Get a Quote</a>' +
       '</div>'
     );
   }
@@ -357,14 +357,14 @@
       } else if (window.EliteCart && window.EliteCart.renderFab) {
         window.EliteCart.renderFab();
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function socialHtml() {
     return SOCIALS.map(function (s) {
       return (
         '<a href="' + s.href + '" target="_blank" rel="noopener noreferrer" aria-label="' + s.label + '" title="' + s.label + '">' +
-          s.icon +
+        s.icon +
         '</a>'
       );
     }).join('');
@@ -391,7 +391,7 @@
           brand.appendChild(wrap);
         }
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   /** Fix footer legal links that still point to #contact */
@@ -439,7 +439,49 @@
         legal.textContent = 'Legal Centre';
         links.appendChild(legal);
       }
-    } catch (e) {}
+    } catch (e) { }
+  }
+
+  function ensureBrandLockup() {
+    var header = document.querySelector('.site-header') || document.getElementById('site-header');
+    if (!header) return;
+    var inner = header.querySelector('.header-inner') || header;
+    var logo = inner.querySelector('.logo');
+    if (!logo) {
+      logo = document.createElement('div');
+      logo.className = 'logo';
+      inner.insertBefore(logo, inner.firstChild);
+    }
+    var link = logo.querySelector('a.brand-link') || logo.querySelector('a[href]');
+    if (!link) {
+      link = document.createElement('a');
+      link.href = 'index.html';
+      link.setAttribute('aria-label', 'Elite Entertainment and Events — Home');
+      logo.innerHTML = '';
+      logo.appendChild(link);
+    }
+    link.classList.add('brand-link', 'brand-link--lockup');
+    var img = link.querySelector('img');
+    if (!img) {
+      img = document.createElement('img');
+      link.insertBefore(img, link.firstChild);
+    }
+    img.className = 'brand-logo brand-logo--nav';
+    img.setAttribute('src', 'images/brand/ee-mark.png');
+    img.setAttribute('alt', 'Elite Entertainment and Events');
+    img.setAttribute('width', '52');
+    img.setAttribute('height', '52');
+    img.setAttribute('decoding', 'async');
+    if (!link.querySelector('.brand-lockup-text')) {
+      var span = document.createElement('span');
+      span.className = 'brand-lockup-text';
+      span.innerHTML = '<span class="brand-lockup-name">ELITE</span><span class="brand-lockup-sub">Entertainment &amp; Events</span>';
+      link.appendChild(span);
+    }
+    // Drop leftover text-only ELITE wordmarks in the header logo slot
+    Array.prototype.slice.call(logo.querySelectorAll('.logo-main, .logo-sub')).forEach(function (el) {
+      if (el && el.parentNode && !el.closest('.brand-lockup-text')) el.parentNode.removeChild(el);
+    });
   }
 
   function init() {
@@ -449,6 +491,7 @@
         nav.innerHTML = buildNavHtml();
         bindNav();
       }
+      ensureBrandLockup();
       ensureSocials();
       ensureFooterLegalLinks();
       ensureCartAssets();

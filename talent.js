@@ -173,7 +173,7 @@
 
   function cardHtml(t) {
     var on = !!selected[t.id];
-    var fallback = 'images/brand/logo-icon.png';
+    var fallback = 'images/brand/ee-mark.png';
     var img = t.image || fallback;
     var idAttr = esc(t.id);
     var hasVideo = !!(t.youtubeUrl && ((window.EliteMedia && window.EliteMedia.youtubeId(t.youtubeUrl)) || /watch\?v=|youtu\.be\/|shorts\//.test(String(t.youtubeUrl || ''))));
@@ -260,7 +260,7 @@
       });
     }
 
-    var fallback = 'images/brand/logo-icon.png';
+    var fallback = 'images/brand/ee-mark.png';
     var photo = document.getElementById('talent-profile-photo');
     photo.src = t.image || fallback;
     photo.alt = t.name;

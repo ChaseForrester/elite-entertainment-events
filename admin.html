@@ -10,7 +10,12 @@
   <!-- PWA Metadata -->
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#c9a84c" />
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" href="icons/ee-apple.png" />
+  <link rel="icon" href="ee-favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="ee-favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+  <meta property="og:image" content="https://eliteentertainment.com.au/images/brand/og-image.png" />
+  <meta name="twitter:image" content="https://eliteentertainment.com.au/images/brand/og-image.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,6 +23,7 @@
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin-chrome.css" />
   <style>
     :root {
       --bg-dark: #050505;
@@ -42,7 +48,7 @@
         linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
       background-size: 40px 40px;
-      padding: 3rem 2rem;
+      padding: 0 2rem 3rem;
       box-sizing: border-box;
     }
 
@@ -708,12 +714,14 @@
       padding: 1.5rem;
       opacity: 0;
       visibility: hidden;
+      pointer-events: none;
       transition: all 0.3s ease;
     }
 
     .admin-modal-overlay.active {
       opacity: 1;
       visibility: visible;
+      pointer-events: auto;
     }
 
     .admin-modal-body {
@@ -746,6 +754,11 @@
       .db-tabs {
         flex-wrap: wrap;
       }
+
+      .dashboard-wrap {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
     }
   </style>
 </head>
@@ -753,34 +766,33 @@
 <body>
 
   <!-- AUTH COVER OVERLAY -->
-  <div id="auth-overlay">
-    <div class="auth-card">
-      <div class="db-logo" style="align-items:center; margin-bottom:2rem;">
-        <img src="images/brand/logo-icon.png" alt="Elite Entertainment and Events"
-          style="width:min(160px,50vw);height:auto;margin-bottom:0.75rem;filter:drop-shadow(0 0 18px rgba(200,168,76,0.35));" />
-        <span class="db-logo-sub">Super Admin CMS Portal</span>
-      </div>
-      <h2>Super Admin Login</h2>
-      <p>Enter authorised administrator credentials to manage artists, images, content &amp; leads</p>
+  <div id="auth-overlay" aria-hidden="false">
+    <form class="auth-card sa-login-card" id="auth-form" autocomplete="on">
+      <img class="sa-login-mark" src="images/brand/ee-mark.png" width="132" height="132"
+        alt="Elite Entertainment and Events" />
+      <span class="sa-brand-name">ELITE</span>
+      <span class="sa-brand-sub">Entertainment &amp; Events</span>
+      <h2>Super Admin</h2>
+      <p>Sign in to manage artists, CRM, site content and partner applications.</p>
       <p style="font-size:0.72rem;color:var(--silver-mid);margin:-0.5rem 0 1.25rem;line-height:1.45;">Restricted access
-        · sessions expire after 12 hours · change your password after first login</p>
+        · sessions expire after 12 hours</p>
       <div class="auth-input-group">
         <label for="auth-user">Email Address</label>
-        <input type="email" id="auth-user" placeholder="your@email.com" autocomplete="username" />
+        <input type="email" id="auth-user" placeholder="your@email.com" autocomplete="username" required />
       </div>
       <div class="auth-input-group" style="margin-bottom:1.25rem;">
         <label for="auth-pass">Password</label>
-        <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" />
+        <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" required />
       </div>
-      <button class="btn btn-gold" id="btn-login" style="width:100%;">ACCESS SUPER ADMIN</button>
+      <button class="btn btn-gold" id="btn-login" type="submit" style="width:100%;">Sign in</button>
       <button type="button" class="btn btn-outline" id="btn-forgot" style="width:100%;margin-top:0.65rem;">Forgot
         password?</button>
       <p id="auth-status"
         style="font-size:0.78rem;min-height:1.2em;margin:0.85rem 0 0;text-align:center;line-height:1.4;"></p>
-      <p style="font-size:0.68rem;color:#666;margin:1rem 0 0;text-align:center;line-height:1.4;">Links: <a
-          href="admin.html" style="color:var(--gold);">admin.html</a> · <a href="ops-console.html"
-          style="color:var(--gold);">ops-console.html</a></p>
-    </div>
+      <p style="font-size:0.68rem;color:#888;margin:1rem 0 0;text-align:center;line-height:1.4;">Also:
+        <a href="ops-console.html" style="color:var(--gold);">Operations Console</a>
+      </p>
+    </form>
   </div>
 
   <!-- DASHBOARD CONTAINER -->
@@ -789,24 +801,26 @@
 
     <div class="container">
       <!-- HEADER -->
-      <div class="dashboard-header">
-        <div class="db-logo" style="display:flex;align-items:center;gap:1rem;">
-          <img src="images/brand/logo-icon.png" alt="" width="52" height="52"
-            style="border-radius:12px;box-shadow:0 0 16px rgba(200,168,76,0.3);" />
-          <div>
-            <span class="db-logo-main" style="font-size:1.6rem;">SUPER ADMIN</span>
-            <span class="db-logo-sub">CMS · ELITE ENTERTAINMENT &amp; EVENTS</span>
-          </div>
+      <header class="sa-top dashboard-header">
+        <a class="sa-brand" href="admin.html#leads" aria-label="Elite Super Admin home">
+          <img class="sa-mark" src="images/brand/ee-mark.png" alt="Elite Entertainment and Events" width="48"
+            height="48" />
+          <span class="sa-brand-text">
+            <span class="sa-brand-name">ELITE</span>
+            <span class="sa-brand-sub">Super Admin · CMS</span>
+          </span>
+        </a>
+        <nav class="sa-switch" aria-label="Super Admin sections">
+          <a class="sa-switch-link" href="admin.html#leads" data-sa-page="cms">CMS &amp; CRM</a>
+          <a class="sa-switch-link" href="ops-console.html" data-sa-page="ops">Operations</a>
+          <a class="sa-switch-link" href="index.html" target="_blank" rel="noopener">Live site</a>
+        </nav>
+        <div class="sa-actions">
+          <span id="admin-session-email" class="sa-session"></span>
+          <button class="btn btn-outline" id="btn-account" type="button">Account</button>
+          <button class="btn btn-outline" id="btn-logout" type="button">Log out</button>
         </div>
-        <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
-          <span id="admin-session-email" style="font-size:0.72rem;color:var(--gold);letter-spacing:0.04em;"></span>
-          <button class="btn btn-outline" id="btn-account" type="button"
-            style="border-color:rgba(200,168,76,0.3); color:var(--gold);">Account / Password</button>
-          <button class="btn btn-outline" id="btn-logout">Logout</button>
-          <a href="ops-console.html" class="btn btn-outline">Ops Console</a>
-          <a href="index.html" class="btn btn-gold" target="_blank">View Live Site &rarr;</a>
-        </div>
-      </div>
+      </header>
 
       <!-- Account / change password -->
       <div id="admin-account-panel" class="content-card"
@@ -818,7 +832,7 @@
           updated when signed in via Firebase.</p>
         <p id="admin-bootstrap-hint" style="display:none; font-size:0.78rem; color:#e8c86b; margin:0 0 1rem;">You are
           still on the bootstrap password. Change it now for production safety.</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; max-width:900px;">
+        <div class="sa-form-grid cols-3" style="max-width:900px;">
           <div>
             <label
               style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.35rem; font-weight:700;">Current
@@ -870,8 +884,7 @@
       </div>
 
       <!-- Tab Toggles -->
-      <div class="db-tabs"
-        style="display:flex; gap:1rem; margin-bottom:2rem; justify-content:flex-start; width:100%; flex-wrap:wrap;">
+      <div class="db-tabs sa-tabs" role="tablist" aria-label="CMS sections">
         <button type="button" class="btn btn-outline tab-btn" id="tab-btn-cms-artists" data-admin-tab="cms-artists"
           style="border-radius:30px; font-weight:700; padding:0.6rem 1.6rem; font-size:0.8rem; border-color:rgba(255,255,255,0.2);">Artists
           &amp; Performers</button>
@@ -958,7 +971,7 @@
           <div class="table-title">Global Site Content &amp; Imagery</div>
           <button class="btn btn-gold btn-sm" id="btn-save-content">Save Global Changes</button>
         </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+        <div class="sa-form-grid">
           <div class="auth-input-group">
             <label>Hero Title</label>
             <input type="text" id="content-hero-title" />
@@ -1371,6 +1384,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
   <script src="firebase-config.js"></script>
   <script src="elite-admin-auth.js"></script>
+  <script src="admin-chrome.js"></script>
   <script src="elite-attachments.js"></script>
   <script src="elite-crm.js"></script>
   <script src="media-library.js"></script>
@@ -1387,6 +1401,7 @@
       const bootstrapHint = document.getElementById('admin-bootstrap-hint');
 
       function enterDashboard(result) {
+        if (window.EliteAdminUI) EliteAdminUI.setAuthed(true);
         authOverlay.classList.add('hidden');
         if (sessionEmailEl) {
           sessionEmailEl.textContent = (window.EliteAdminAuth && EliteAdminAuth.currentEmail())
@@ -1418,7 +1433,11 @@
         } catch (e) { }
         if (typeof populateCrmFilters === 'function') populateCrmFilters();
         if (typeof updateCrmSyncBadge === 'function') updateCrmSyncBadge();
-        if (typeof renderDashboard === 'function') renderDashboard();
+        try {
+          if (typeof renderDashboard === 'function') renderDashboard();
+        } catch (dashErr) {
+          console.error('Admin dashboard render', dashErr);
+        }
         // Hash routing applied after tabs are wired (see bottom of this script)
       }
 
@@ -1470,7 +1489,10 @@
           localStorage.removeItem('elite_admin_session_v2');
         }
         if (accountPanel) accountPanel.style.display = 'none';
+        if (window.EliteAdminUI) EliteAdminUI.setAuthed(false);
         authOverlay.classList.remove('hidden');
+        var emailFocus = document.getElementById('auth-user');
+        if (emailFocus) try { emailFocus.focus(); } catch (e) { }
       });
 
       const tabs = {
@@ -1889,7 +1911,9 @@
       }
 
       let dragLeadId = null;
-      const crmApi = () => window.EliteCRM || window.EliteCMS;
+      function crmApi() {
+        return window.EliteCRM || window.EliteCMS;
+      }
 
       function currentAdminEmail() {
         return (window.EliteAdminAuth && EliteAdminAuth.currentEmail()) || '';
@@ -2476,7 +2500,7 @@
         const content = window.EliteCMS.getContent();
         document.getElementById('content-hero-title').value = content.heroTitle || '';
         document.getElementById('content-hero-subtitle').value = content.heroSubtitle || '';
-        document.getElementById('content-hero-banner').value = content.heroBackdrop || '';
+        document.getElementById('content-hero-banner').value = content.heroBackdrop || content.heroPoster || '';
         document.getElementById('content-phone').value = content.contactPhone || '';
         document.getElementById('content-email').value = content.contactEmail || '';
         document.getElementById('content-address').value = content.contactAddress || '';
@@ -2487,10 +2511,12 @@
       }
 
       document.getElementById('btn-save-content').addEventListener('click', () => {
+        var banner = document.getElementById('content-hero-banner').value;
         window.EliteCMS.saveContent({
           heroTitle: document.getElementById('content-hero-title').value,
           heroSubtitle: document.getElementById('content-hero-subtitle').value,
-          heroBackdrop: document.getElementById('content-hero-banner').value,
+          heroBackdrop: banner,
+          heroPoster: banner,
           contactPhone: document.getElementById('content-phone').value,
           contactEmail: document.getElementById('content-email').value,
           contactAddress: document.getElementById('content-address').value,
@@ -2499,7 +2525,9 @@
           acn: document.getElementById('content-acn').value,
           asicDate: document.getElementById('content-asic-date').value
         });
-        alert('Global site content saved. Changes appear on the live site after refresh.');
+        if (window.EliteCMS.applyHeroVideos) window.EliteCMS.applyHeroVideos();
+        if (window.EliteAdminUI) EliteAdminUI.toast('Site content saved. Refresh the live site to see it.', 'ok');
+        else alert('Global site content saved. Changes appear on the live site after refresh.');
       });
 
       document.getElementById('btn-clear-leads').addEventListener('click', () => {
@@ -2539,7 +2567,8 @@
       if (pushCrmBtn) {
         pushCrmBtn.addEventListener('click', () => {
           if (!window.EliteCRM || !EliteCRM.pushAllLocal) {
-            alert('CRM cloud module not loaded.');
+            if (window.EliteAdminUI) EliteAdminUI.toast('CRM cloud module not loaded.', 'error');
+            else alert('CRM cloud module not loaded.');
             return;
           }
           pushCrmBtn.disabled = true;
@@ -2548,7 +2577,12 @@
             pushCrmBtn.disabled = false;
             pushCrmBtn.textContent = 'Push local → cloud';
             updateCrmSyncBadge();
-            alert(r && r.ok ? ('Pushed ' + (r.count || 0) + ' enquiries to cloud.') : ('Push failed: ' + ((r && r.error) || 'unknown')));
+            var ok = r && r.ok;
+            var msg = ok
+              ? ('Pushed ' + (r.count || 0) + ' enquiries to cloud.')
+              : ('Push failed: ' + ((r && r.error) || 'unknown'));
+            if (window.EliteAdminUI) EliteAdminUI.toast(msg, ok ? 'ok' : 'error');
+            else alert(msg);
           });
         });
       }
@@ -2661,6 +2695,7 @@
         else crmApi().saveLead(payload);
         openLead(id);
         renderLeads();
+        if (window.EliteAdminUI) EliteAdminUI.toast('Enquiry saved.', 'ok');
       });
       document.getElementById('btn-delete-lead').addEventListener('click', () => {
         const id = document.getElementById('lead-id').value;
@@ -2885,6 +2920,7 @@
         });
         artistModal.classList.remove('active');
         renderArtists();
+        if (window.EliteAdminUI) EliteAdminUI.toast('Artist saved. It will show on the live site after refresh.', 'ok');
       });
 
       const eventModal = document.getElementById('event-modal');
@@ -2933,6 +2969,7 @@
         });
         eventModal.classList.remove('active');
         renderEvents();
+        if (window.EliteAdminUI) EliteAdminUI.toast('Event package saved.', 'ok');
       });
 
       function renderDashboard() {

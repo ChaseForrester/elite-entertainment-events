@@ -23,7 +23,33 @@
 
   function list() {
     var data = window.ELITE_EVENT_PACKAGES || {};
-    return data[pageKey] || [];
+    var base = (data[pageKey] || []).slice();
+    if (!window.EliteCMS || !EliteCMS.getEvents) return base;
+    var matchRe = pageKey === 'corporate'
+      ? /corporate|gala|conference/i
+      : pageKey === 'parties'
+        ? /party|private|yacht|luxury|car/i
+        : /wedding/i;
+    var seen = {};
+    base.forEach(function (p) { if (p && p.name) seen[String(p.name).toLowerCase()] = true; });
+    (EliteCMS.getEvents() || []).forEach(function (e) {
+      if (!e || !e.title) return;
+      var cat = String(e.category || '');
+      if (!matchRe.test(cat) && !matchRe.test(e.title)) return;
+      var key = String(e.title).toLowerCase();
+      if (seen[key]) return;
+      seen[key] = true;
+      base.unshift({
+        id: e.id || ('cms-' + key.replace(/\s+/g, '-')),
+        name: e.title,
+        type: e.category || 'Package',
+        summary: e.description || e.date || '',
+        image: e.image || '',
+        includes: e.status ? [e.status, e.date].filter(Boolean) : [],
+        cms: true
+      });
+    });
+    return base;
   }
 
   function getSelected() {
@@ -177,26 +203,26 @@
     var idAttr = esc(p.id);
     return (
       '<article class="event-card' + (on ? ' is-selected' : '') + '" data-id="' + idAttr + '">' +
-        '<div class="event-card-media">' +
-          '<img src="' + esc(p.image || fallback) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async" width="600" height="400" onerror="this.onerror=null;this.src=\'' + fallback + '\'" />' +
-          '<span class="event-card-badge">' + esc(p.type) + '</span>' +
-        '</div>' +
-        '<div class="event-card-body">' +
-          '<h3 class="event-card-title">' + esc(p.name) + '</h3>' +
-          '<p class="event-card-summary">' + esc(p.summary) + '</p>' +
-          '<ul class="event-features">' +
-            (p.includes || []).slice(0, 3).map(function (f) {
-              return '<li>' + esc(f) + '</li>';
-            }).join('') +
-          '</ul>' +
-          '<div class="event-card-actions">' +
-            '<button type="button" class="btn-cart-add' + (on ? ' is-on' : '') + '" data-action="toggle" data-id="' + idAttr + '" aria-label="' + (on ? 'In multi-enquiry' : 'Add to multi-enquiry') + '">' +
-              '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>' +
-              '<span>' + (on ? 'In multi-enquiry' : 'Add to multi-enquiry') + '</span>' +
-            '</button>' +
-            '<button type="button" class="btn btn-gold" data-action="enquire" data-id="' + idAttr + '">Enquire now</button>' +
-          '</div>' +
-        '</div>' +
+      '<div class="event-card-media">' +
+      '<img src="' + esc(p.image || fallback) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async" width="600" height="400" onerror="this.onerror=null;this.src=\'' + fallback + '\'" />' +
+      '<span class="event-card-badge">' + esc(p.type) + '</span>' +
+      '</div>' +
+      '<div class="event-card-body">' +
+      '<h3 class="event-card-title">' + esc(p.name) + '</h3>' +
+      '<p class="event-card-summary">' + esc(p.summary) + '</p>' +
+      '<ul class="event-features">' +
+      (p.includes || []).slice(0, 3).map(function (f) {
+        return '<li>' + esc(f) + '</li>';
+      }).join('') +
+      '</ul>' +
+      '<div class="event-card-actions">' +
+      '<button type="button" class="btn-cart-add' + (on ? ' is-on' : '') + '" data-action="toggle" data-id="' + idAttr + '" aria-label="' + (on ? 'In multi-enquiry' : 'Add to multi-enquiry') + '">' +
+      '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>' +
+      '<span>' + (on ? 'In multi-enquiry' : 'Add to multi-enquiry') + '</span>' +
+      '</button>' +
+      '<button type="button" class="btn btn-gold" data-action="enquire" data-id="' + idAttr + '">Enquire now</button>' +
+      '</div>' +
+      '</div>' +
       '</article>'
     );
   }
@@ -282,21 +308,26 @@
         selected[pkg] = true;
         setTimeout(function () { enquire(pkg); }, 300);
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
-  function init() {
+  function renderAll() {
     detectPage();
     var heroCount = document.getElementById('event-hero-count');
     if (heroCount) heroCount.textContent = String(list().length);
     renderTypes();
     renderGrid();
     updateBar();
+  }
+
+  function init() {
+    renderAll();
     bind();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
+  window.addEventListener('elite-cms-synced', renderAll);
 
   window.EliteEventPackages = {
     getSelected: getSelected,

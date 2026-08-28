@@ -71,7 +71,7 @@
   function setStoredLocalHash(hex) {
     try {
       localStorage.setItem(LOCAL_HASH_KEY, hex);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function expectedLocalHash() {
@@ -83,7 +83,7 @@
   }
 
   function clearLegacyFlag() {
-    try { localStorage.removeItem(LEGACY_FLAG); } catch (e) {}
+    try { localStorage.removeItem(LEGACY_FLAG); } catch (e) { }
   }
 
   function readSession() {
@@ -113,7 +113,7 @@
       localStorage.setItem(SESSION_KEY, JSON.stringify(s));
       // Keep a short-lived compatibility flag for any older checks
       localStorage.setItem(LEGACY_FLAG, 'true');
-    } catch (e) {}
+    } catch (e) { }
     return s;
   }
 
@@ -121,7 +121,7 @@
     try {
       localStorage.removeItem(SESSION_KEY);
       localStorage.removeItem(LEGACY_FLAG);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function isAuthed() {
@@ -137,13 +137,13 @@
     try {
       if (global.EliteFirebase && EliteFirebase.auth) return EliteFirebase.auth;
       if (global.firebase && firebase.auth) return firebase.auth();
-    } catch (e) {}
+    } catch (e) { }
     return null;
   }
 
   function ensureFirebase() {
     if (typeof global.initEliteFirebase === 'function') {
-      try { global.initEliteFirebase(); } catch (e) {}
+      try { global.initEliteFirebase(); } catch (e) { }
     }
     return getFirebaseAuth();
   }
@@ -224,7 +224,7 @@
     clearSession();
     var auth = getFirebaseAuth();
     if (auth) {
-      try { auth.signOut(); } catch (e) {}
+      try { auth.signOut(); } catch (e) { }
     }
   }
 
@@ -417,18 +417,27 @@
       });
     }
 
-    if (submitEl) {
+    var form = (submitEl && submitEl.form) || (emailEl && emailEl.form) || (passEl && passEl.form);
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        doLogin();
+      });
+    } else if (submitEl) {
       submitEl.addEventListener('click', function (e) {
         e.preventDefault();
         doLogin();
       });
     }
-    if (passEl) {
-      passEl.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          doLogin();
-        }
+    if (!form) {
+      [emailEl, passEl].forEach(function (el) {
+        if (!el) return;
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            doLogin();
+          }
+        });
       });
     }
     if (forgotEl) {
@@ -496,7 +505,7 @@
       if (localStorage.getItem(LEGACY_FLAG) === 'true' && !localStorage.getItem(SESSION_KEY)) {
         localStorage.removeItem(LEGACY_FLAG);
       }
-    } catch (e) {}
+    } catch (e) { }
   })();
 
   global.EliteAdminAuth = {

@@ -16,15 +16,15 @@
       var role = typeof a === 'string' ? '' : (a.role || a.style || '');
       return (
         '<li class="act-lineup-item">' +
-          '<span class="act-lineup-name">' + esc(name) + '</span>' +
-          (role ? '<span class="act-lineup-role">' + esc(role) + '</span>' : '') +
+        '<span class="act-lineup-name">' + esc(name) + '</span>' +
+        (role ? '<span class="act-lineup-role">' + esc(role) + '</span>' : '') +
         '</li>'
       );
     }).join('');
     return (
       '<details class="act-lineup-accordion"' + (act.recommended ? ' open' : '') + '>' +
-        '<summary class="act-lineup-summary">Featured artists <span>(' + list.length + ')</span></summary>' +
-        '<ul class="act-lineup-list">' + items + '</ul>' +
+      '<summary class="act-lineup-summary">Featured artists <span>(' + list.length + ')</span></summary>' +
+      '<ul class="act-lineup-list">' + items + '</ul>' +
       '</details>'
     );
   }
@@ -35,28 +35,28 @@
       : ('#category-enquiry');
     var photo = act.image
       ? '<a class="act-card-photo" href="' + esc(profileHref) + '"><img src="' + esc(act.image) + '" alt="' + esc(act.name) + '" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=600&amp;q=80\';" />' +
-        '<div class="act-card-hover-panel"><p>' + esc(act.bio || '') + '</p></div></a>'
+      '<div class="act-card-hover-panel"><p>' + esc(act.bio || '') + '</p></div></a>'
       : '<a class="act-card-photo act-card-photo--placeholder" href="' + esc(profileHref) + '" aria-hidden="true"><span>' + esc((act.name || '?').charAt(0)) + '</span></a>';
     var recBadge = act.recommended
       ? '<span class="act-rec-badge">Recommended</span>'
       : '';
     return (
       '<article class="act-card' + (act.image ? ' act-card--has-photo' : '') + (act.recommended ? ' act-card--recommended' : '') + '" style="--delay:' + (((si || 0) * 0.04) + (ai * 0.02)) + 's">' +
-        '<div class="act-card-inner">' +
-          photo +
-          recBadge +
-          '<span class="act-card-num">' + String(ai + 1).padStart(2, '0') + '</span>' +
-          '<h4 class="act-card-name"><a href="' + esc(profileHref) + '">' + esc(act.name) + '</a></h4>' +
-          '<p class="act-card-style">' + esc(act.style || '') + '</p>' +
-          artistsAccordion(act) +
-          '<div class="act-card-actions">' +
-            '<a class="btn btn-gold btn-sm act-card-btn" href="' + esc(profileHref) + '">View profile</a>' +
-            '<button type="button" class="btn-cart-add btn-cart-add--sm act-card-btn" data-cart-artist="' + esc(act.name) + '" data-cart-folder="' + esc(folderId || '') + '" data-cart-style="' + esc(act.style || '') + '" data-cart-image="' + esc(act.image || '') + '" data-cart-summary="' + esc((act.bio || act.style || '').slice(0, 160)) + '">' +
-              '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>' +
-              '<span>Add to multi-enquiry</span>' +
-            '</button>' +
-          '</div>' +
-        '</div>' +
+      '<div class="act-card-inner">' +
+      photo +
+      recBadge +
+      '<span class="act-card-num">' + String(ai + 1).padStart(2, '0') + '</span>' +
+      '<h4 class="act-card-name"><a href="' + esc(profileHref) + '">' + esc(act.name) + '</a></h4>' +
+      '<p class="act-card-style">' + esc(act.style || '') + '</p>' +
+      artistsAccordion(act) +
+      '<div class="act-card-actions">' +
+      '<a class="btn btn-gold btn-sm act-card-btn" href="' + esc(profileHref) + '">View profile</a>' +
+      '<button type="button" class="btn-cart-add btn-cart-add--sm act-card-btn" data-cart-artist="' + esc(act.name) + '" data-cart-folder="' + esc(folderId || '') + '" data-cart-style="' + esc(act.style || '') + '" data-cart-image="' + esc(act.image || '') + '" data-cart-summary="' + esc((act.bio || act.style || '').slice(0, 160)) + '">' +
+      '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>' +
+      '<span>Add to multi-enquiry</span>' +
+      '</button>' +
+      '</div>' +
+      '</div>' +
       '</article>'
     );
   }
@@ -161,23 +161,23 @@
         var rec = act.recommended ? '<span class="home-act-rec">Recommended</span>' : '';
         return (
           '<article class="home-act-tile' + (act.recommended ? ' home-act-tile--rec' : '') + '" style="--i:' + ai + '">' +
-            '<a class="home-act-tile-media" href="' + esc(profileHref) + '" aria-label="View ' + esc(act.name) + '">' +
-              '<img src="' + esc(imgSrc) + '" alt="" loading="lazy" decoding="async" width="400" height="400" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=600&amp;q=80\'" />' +
-              rec +
-            '</a>' +
-            '<div class="home-act-tile-meta">' +
-              '<a class="home-act-tile-name" href="' + esc(profileHref) + '">' + esc(act.name) + '</a>' +
-              '<span class="home-act-tile-style">' + esc(act.style || folder.name) + '</span>' +
-              '<button type="button" class="btn-cart-add btn-cart-add--sm" ' +
-                'data-cart-artist="' + esc(act.name) + '" ' +
-                'data-cart-folder="' + esc(folder.id) + '" ' +
-                'data-cart-style="' + esc(act.style || folder.name) + '" ' +
-                'data-cart-image="' + esc(imgSrc) + '" ' +
-                'data-cart-summary="' + esc(bio.slice(0, 160)) + '">' +
-                '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>' +
-                '<span>Add to multi-enquiry</span>' +
-              '</button>' +
-            '</div>' +
+          '<a class="home-act-tile-media" href="' + esc(profileHref) + '" aria-label="View ' + esc(act.name) + '">' +
+          '<img src="' + esc(imgSrc) + '" alt="" loading="lazy" decoding="async" width="400" height="400" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=600&amp;q=80\'" />' +
+          rec +
+          '</a>' +
+          '<div class="home-act-tile-meta">' +
+          '<a class="home-act-tile-name" href="' + esc(profileHref) + '">' + esc(act.name) + '</a>' +
+          '<span class="home-act-tile-style">' + esc(act.style || folder.name) + '</span>' +
+          '<button type="button" class="btn-cart-add btn-cart-add--sm" ' +
+          'data-cart-artist="' + esc(act.name) + '" ' +
+          'data-cart-folder="' + esc(folder.id) + '" ' +
+          'data-cart-style="' + esc(act.style || folder.name) + '" ' +
+          'data-cart-image="' + esc(imgSrc) + '" ' +
+          'data-cart-summary="' + esc(bio.slice(0, 160)) + '">' +
+          '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>' +
+          '<span>Add to multi-enquiry</span>' +
+          '</button>' +
+          '</div>' +
           '</article>'
         );
       }).join('');
@@ -188,21 +188,21 @@
 
       return (
         '<section class="home-folder-block" id="home-folder-' + esc(folder.id) + '" style="--fi:' + fi + '">' +
-          '<div class="home-folder-head">' +
-            '<div class="home-folder-head-left">' +
-              '<div class="home-folder-cover-wrap">' +
-                '<img class="home-folder-cover" src="' + esc(cover) + '" alt="" loading="lazy" width="120" height="120" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=400&amp;q=80\'" />' +
-                '<span class="home-folder-icon-badge">' + folderIcon(folder.id) + '</span>' +
-              '</div>' +
-              '<div class="home-folder-head-text">' +
-                '<span class="home-folder-eyebrow">' + count + ' acts</span>' +
-                '<h3 class="home-folder-title">' + esc(folder.name) + '</h3>' +
-                '<p class="home-folder-short">' + esc(folder.short || '') + '</p>' +
-              '</div>' +
-            '</div>' +
-            '<a class="btn btn-outline btn-sm home-folder-link" href="' + esc(folder.slug) + '">Open full roster</a>' +
-          '</div>' +
-          '<div class="home-act-grid" role="list">' + tiles + more + '</div>' +
+        '<div class="home-folder-head">' +
+        '<div class="home-folder-head-left">' +
+        '<div class="home-folder-cover-wrap">' +
+        '<img class="home-folder-cover" src="' + esc(cover) + '" alt="" loading="lazy" width="120" height="120" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=400&amp;q=80\'" />' +
+        '<span class="home-folder-icon-badge">' + folderIcon(folder.id) + '</span>' +
+        '</div>' +
+        '<div class="home-folder-head-text">' +
+        '<span class="home-folder-eyebrow">' + count + ' acts</span>' +
+        '<h3 class="home-folder-title">' + esc(folder.name) + '</h3>' +
+        '<p class="home-folder-short">' + esc(folder.short || '') + '</p>' +
+        '</div>' +
+        '</div>' +
+        '<a class="btn btn-outline btn-sm home-folder-link" href="' + esc(folder.slug) + '">Open full roster</a>' +
+        '</div>' +
+        '<div class="home-act-grid" role="list">' + tiles + more + '</div>' +
         '</section>'
       );
     }).join('');
@@ -230,7 +230,7 @@
 
     var heroImg = document.getElementById('folder-hero-img');
     if (heroImg) {
-      heroImg.src = folder.cover || 'images/brand/logo-icon.png';
+      heroImg.src = folder.cover || 'images/brand/ee-mark.png';
       heroImg.alt = folder.name;
     }
     var t = document.getElementById('folder-title');
@@ -275,7 +275,7 @@
           }
         }, 150);
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   /* ── Legacy mega category pages ── */
@@ -298,7 +298,7 @@
 
     var heroImg = document.getElementById('cat-hero-img');
     if (heroImg) {
-      heroImg.src = cat.image || 'images/brand/logo-icon.png';
+      heroImg.src = cat.image || 'images/brand/ee-mark.png';
       heroImg.alt = cat.title;
     }
 
@@ -307,16 +307,16 @@
     if (sheet && cat.folderIds && window.ELITE_FOLDER_MAP) {
       sheet.innerHTML =
         '<div class="cat-sheet-header">' +
-          '<div class="section-eyebrow">Browse by folder</div>' +
-          '<h2 class="section-title" style="font-size:clamp(1.4rem,3vw,1.9rem);">Open a roster folder</h2>' +
-          '<div class="gold-divider"></div>' +
+        '<div class="section-eyebrow">Browse by folder</div>' +
+        '<h2 class="section-title" style="font-size:clamp(1.4rem,3vw,1.9rem);">Open a roster folder</h2>' +
+        '<div class="gold-divider"></div>' +
         '</div>' +
         '<div class="folder-nav-chips" style="margin-bottom:2rem;">' +
-          cat.folderIds.map(function (fid) {
-            var f = window.ELITE_FOLDER_MAP[fid];
-            if (!f) return '';
-            return '<a class="folder-chip" href="' + esc(f.slug) + '">' + esc(f.name) + ' (' + f.count + ')</a>';
-          }).join('') +
+        cat.folderIds.map(function (fid) {
+          var f = window.ELITE_FOLDER_MAP[fid];
+          if (!f) return '';
+          return '<a class="folder-chip" href="' + esc(f.slug) + '">' + esc(f.name) + ' (' + f.count + ')</a>';
+        }).join('') +
         '</div>';
     }
 
@@ -329,11 +329,11 @@
         }).join('');
         return (
           '<div class="act-section" id="section-' + si + '">' +
-            '<div class="act-section-head">' +
-              '<div class="act-section-banner">' + esc(section.name) + '</div>' +
-              '<span class="act-section-meta">' + ordered.length + ' acts</span>' +
-            '</div>' +
-            '<div class="act-grid">' + cards + '</div>' +
+          '<div class="act-section-head">' +
+          '<div class="act-section-banner">' + esc(section.name) + '</div>' +
+          '<span class="act-section-meta">' + ordered.length + ' acts</span>' +
+          '</div>' +
+          '<div class="act-grid">' + cards + '</div>' +
           '</div>'
         );
       }).join('');
@@ -368,7 +368,18 @@
     });
   });
 
-  document.addEventListener('DOMContentLoaded', function () {
+  function bootRoster() {
+    if (window.EliteCMS && typeof window.EliteCMS.applyRosterOverlay === 'function') {
+      window.EliteCMS.applyRosterOverlay();
+    }
+    renderHomepageFolders();
+    renderFolderPage();
+    renderCategoryPage();
+  }
+
+  document.addEventListener('DOMContentLoaded', bootRoster);
+  window.addEventListener('elite-cms-synced', bootRoster);
+  window.addEventListener('elite-cms-roster', function () {
     renderHomepageFolders();
     renderFolderPage();
     renderCategoryPage();
