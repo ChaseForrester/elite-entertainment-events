@@ -83,6 +83,10 @@
             'images/acts/celebrity-bands-and-artists/jessica-mauboy.webp',
             'images/artists/jessica-mauboy.jpg'
         ],
+        'delta goodrem': [
+            'images/acts/celebrity-bands-and-artists/delta-goodrem.jpg',
+            'images/artists/delta-goodrem.jpg'
+        ],
         'mark vincent': [
             'images/acts/celebrity-bands-and-artists/mark-vincent.jpg',
             'images/acts/celebrity-bands-and-artists/mark-vincent.png'
@@ -184,6 +188,7 @@
         if (/unsplash\.com|picsum\.photos|placehold|loremflickr|via\.placeholder|dummyimage/i.test(u)) return true;
         if (/^images\/(solo|duo|trio|party-band)\.jpe?g$/i.test(u)) return true;
         if (/^images\/categories\//i.test(u)) return true;
+        if (/images\/brand\//i.test(u)) return true;
         return false;
     }
 
@@ -237,8 +242,8 @@
         if (!act || typeof act !== 'object') return act;
         act.youtubeUrl = pickYoutube(act.name, act.youtubeUrl);
         act.image = cleanPrimaryImage(act.image) || act.image;
-        // If primary is stock, clear it so UI does not present a fake person as the act
-        if (isStockImage(act.image)) act.image = '';
+        // If primary is stock, drop it so UI never presents a stranger as the act
+        if (isStockImage(act.image)) act.image = 'images/brand/ee-mark.png';
         act.gallery = buildGallery(act.name, act.image, act.gallery);
         return act;
     }
@@ -246,7 +251,7 @@
     function enrichTalent(t) {
         if (!t || typeof t !== 'object') return t;
         t.youtubeUrl = pickYoutube(t.name, t.youtubeUrl);
-        if (isStockImage(t.image)) t.image = '';
+        if (isStockImage(t.image)) t.image = 'images/brand/ee-mark.png';
         t.gallery = buildGallery(t.name, t.image, t.gallery);
         return t;
     }
@@ -254,7 +259,7 @@
     function enrichCmsArtist(a) {
         if (!a || typeof a !== 'object') return a;
         a.youtubeUrl = pickYoutube(a.name, a.youtubeUrl);
-        if (isStockImage(a.image)) a.image = '';
+        if (isStockImage(a.image)) a.image = 'images/brand/ee-mark.png';
         a.gallery = buildGallery(a.name, a.image, a.gallery);
         return a;
     }

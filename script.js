@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
               name: act.name,
               style: act.style || folder.name,
               bio: act.bio || '',
-              image: act.image || folder.cover,
+              image: act.image || 'images/brand/ee-mark.png',
               url: 'artist.html?folder=' + encodeURIComponent(folder.id) + '&act=' + encodeURIComponent(act.name),
               folder: folder.name
             });

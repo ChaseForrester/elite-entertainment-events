@@ -54,25 +54,25 @@ window.ELITE_FOLDERS = [
         "name": "Delta Goodrem",
         "style": "Celebrity Artist",
         "bio": "Chart-topping Australian vocalist perfect for premium galas and brand events.",
-        "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=600&q=80"
+        "image": "images/acts/celebrity-bands-and-artists/delta-goodrem.jpg"
       },
       {
         "name": "John Farnham Tribute Experience",
         "style": "Celebrity Showcase",
         "bio": "Stadium-style vocal tribute delivering classic Australian anthems.",
-        "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "The Veronicas Showcase",
         "style": "Celebrity Duo",
         "bio": "High-energy pop duo performance package for elite private events.",
-        "image": "https://images.unsplash.com/photo-1514320291840-75f0a7100b6d?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "Keith Urban Acoustic Set",
         "style": "Celebrity Country",
         "bio": "Intimate acoustic country-rock set for exclusive corporate dinners.",
-        "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       }
     ]
   },
@@ -1039,7 +1039,7 @@ window.ELITE_FOLDERS = [
         "name": "DJ Luna Reign",
         "style": "Wedding DJ",
         "bio": "Luxury wedding DJ with custom lighting and seamless first-dance mixes.",
-        "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       }
     ]
   },
@@ -1257,7 +1257,7 @@ window.ELITE_FOLDERS = [
         "name": "The Oriental Show featuring Lily Cheng",
         "style": "Oriental Showcase",
         "bio": "Headline oriental showcase with Lily Cheng.",
-        "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "Chinese Lion Dancers",
@@ -1358,13 +1358,13 @@ window.ELITE_FOLDERS = [
         "name": "Dust & Diamonds",
         "style": "Country Duo",
         "bio": "Modern Australian country duo for festivals and private rodeos.",
-        "image": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "The Outback Harmonies",
         "style": "Country Band",
         "bio": "Full country band with fiddle and three-part harmonies.",
-        "image": "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       }
     ]
   },
@@ -1405,7 +1405,7 @@ window.ELITE_FOLDERS = [
         "name": "Dave Hughes Style Night",
         "style": "Comedy Night",
         "bio": "Observational comedy night package for corporate dinners.",
-        "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "Tahir",
@@ -1529,7 +1529,7 @@ window.ELITE_FOLDERS = [
         "name": "Sydney Chamber Quartet",
         "style": "String Quartet",
         "bio": "Elegant string quartet for ceremonies and black-tie dinners.",
-        "image": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       }
     ]
   },
@@ -1587,19 +1587,19 @@ window.ELITE_FOLDERS = [
         "name": "Halloween Horror Hosts",
         "style": "Seasonal Specialty",
         "bio": "Themed horror hosts and walkabout characters for Halloween events.",
-        "image": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "NYE Countdown Crew",
         "style": "Seasonal Specialty",
         "bio": "New Year’s countdown hosts with confetti and champagne moments.",
-        "image": "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "Melbourne Cup Fashions Show",
         "style": "Seasonal Specialty",
         "bio": "Race-day fashion parade hosts and models package.",
-        "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "Christmas Carol Choir",
@@ -1657,13 +1657,13 @@ window.ELITE_FOLDERS = [
         "name": "Living Statues Gold",
         "style": "Roving Act",
         "bio": "Metallic living statues for red carpets and brand activations.",
-        "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "Bubble Art Walkabout",
         "style": "Roving Act",
         "bio": "Interactive giant bubble artist for family and outdoor events.",
-        "image": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80"
+        "image": "images/brand/ee-mark.png"
       },
       {
         "name": "Ian Cooper Irish Jig Music",
@@ -1755,7 +1755,7 @@ window.ELITE_CATEGORIES = {
             "name": "DJ Luna Reign",
             "style": "Wedding DJ",
             "bio": "Luxury wedding DJ with custom lighting and seamless first-dance mixes.",
-            "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           }
         ]
       }
@@ -1877,7 +1877,7 @@ window.ELITE_CATEGORIES = {
             "name": "Sydney Chamber Quartet",
             "style": "String Quartet",
             "bio": "Elegant string quartet for ceremonies and black-tie dinners.",
-            "image": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           }
         ]
       },
@@ -1924,13 +1924,13 @@ window.ELITE_CATEGORIES = {
             "name": "Living Statues Gold",
             "style": "Roving Act",
             "bio": "Metallic living statues for red carpets and brand activations.",
-            "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "Bubble Art Walkabout",
             "style": "Roving Act",
             "bio": "Interactive giant bubble artist for family and outdoor events.",
-            "image": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "Ian Cooper Irish Jig Music",
@@ -2005,13 +2005,13 @@ window.ELITE_CATEGORIES = {
             "name": "Living Statues Gold",
             "style": "Roving Act",
             "bio": "Metallic living statues for red carpets and brand activations.",
-            "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "Bubble Art Walkabout",
             "style": "Roving Act",
             "bio": "Interactive giant bubble artist for family and outdoor events.",
-            "image": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "Ian Cooper Irish Jig Music",
@@ -2086,13 +2086,13 @@ window.ELITE_CATEGORIES = {
             "name": "Living Statues Gold",
             "style": "Roving Act",
             "bio": "Metallic living statues for red carpets and brand activations.",
-            "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "Bubble Art Walkabout",
             "style": "Roving Act",
             "bio": "Interactive giant bubble artist for family and outdoor events.",
-            "image": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "Ian Cooper Irish Jig Music",
@@ -2259,7 +2259,7 @@ window.ELITE_CATEGORIES = {
             "name": "The Oriental Show featuring Lily Cheng",
             "style": "Oriental Showcase",
             "bio": "Headline oriental showcase with Lily Cheng.",
-            "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "Chinese Lion Dancers",
@@ -2355,13 +2355,13 @@ window.ELITE_CATEGORIES = {
             "name": "Dust & Diamonds",
             "style": "Country Duo",
             "bio": "Modern Australian country duo for festivals and private rodeos.",
-            "image": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "The Outback Harmonies",
             "style": "Country Band",
             "bio": "Full country band with fiddle and three-part harmonies.",
-            "image": "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           }
         ]
       },
@@ -2397,7 +2397,7 @@ window.ELITE_CATEGORIES = {
             "name": "Dave Hughes Style Night",
             "style": "Comedy Night",
             "bio": "Observational comedy night package for corporate dinners.",
-            "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "Tahir",
@@ -2476,25 +2476,25 @@ window.ELITE_CATEGORIES = {
             "name": "Delta Goodrem",
             "style": "Celebrity Artist",
             "bio": "Chart-topping Australian vocalist perfect for premium galas and brand events.",
-            "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=600&q=80"
+            "image": "images/acts/celebrity-bands-and-artists/delta-goodrem.jpg"
           },
           {
             "name": "John Farnham Tribute Experience",
             "style": "Celebrity Showcase",
             "bio": "Stadium-style vocal tribute delivering classic Australian anthems.",
-            "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "The Veronicas Showcase",
             "style": "Celebrity Duo",
             "bio": "High-energy pop duo performance package for elite private events.",
-            "image": "https://images.unsplash.com/photo-1514320291840-75f0a7100b6d?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           },
           {
             "name": "Keith Urban Acoustic Set",
             "style": "Celebrity Country",
             "bio": "Intimate acoustic country-rock set for exclusive corporate dinners.",
-            "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80"
+            "image": "images/brand/ee-mark.png"
           }
         ]
       },

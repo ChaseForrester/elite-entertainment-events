@@ -34,7 +34,7 @@
       ? ('artist.html?folder=' + encodeURIComponent(folderId) + '&act=' + encodeURIComponent(act.name))
       : ('#category-enquiry');
     var photo = act.image
-      ? '<a class="act-card-photo" href="' + esc(profileHref) + '"><img src="' + esc(act.image) + '" alt="' + esc(act.name) + '" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=600&amp;q=80\';" />' +
+      ? '<a class="act-card-photo" href="' + esc(profileHref) + '"><img src="' + esc(act.image) + '" alt="' + esc(act.name) + '" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'images/brand/ee-mark.png\';" />' +
       '<div class="act-card-hover-panel"><p>' + esc(act.bio || '') + '</p></div></a>'
       : '<a class="act-card-photo act-card-photo--placeholder" href="' + esc(profileHref) + '" aria-hidden="true"><span>' + esc((act.name || '?').charAt(0)) + '</span></a>';
     var recBadge = act.recommended
@@ -149,20 +149,21 @@
 
     mount.className = 'home-roster';
     mount.innerHTML = window.ELITE_FOLDERS.map(function (folder, fi) {
-      var cover = folder.cover || (folder.acts[0] && folder.acts[0].image) ||
-        'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=800&q=80';
+      var cover = folder.cover || 'images/brand/ee-mark.png';
+      var brandMark = 'images/brand/ee-mark.png';
       var count = folder.acts ? folder.acts.length : (folder.count || 0);
       // Recommended first; homepage tiles stay compact (no lineup accordion — full lineup on profile)
       var preview = sortRecommendedFirst(folder.acts || []).slice(0, 6);
       var tiles = preview.map(function (act, ai) {
         var profileHref = 'artist.html?folder=' + encodeURIComponent(folder.id) + '&act=' + encodeURIComponent(act.name);
-        var imgSrc = act.image || cover;
+        // Never fall back to another act's photo (folder cover) or stock Unsplash
+        var imgSrc = act.image || brandMark;
         var bio = act.bio || ('Premium ' + (act.style || folder.name) + ' available Australia-wide.');
         var rec = act.recommended ? '<span class="home-act-rec">Recommended</span>' : '';
         return (
           '<article class="home-act-tile' + (act.recommended ? ' home-act-tile--rec' : '') + '" style="--i:' + ai + '">' +
           '<a class="home-act-tile-media" href="' + esc(profileHref) + '" aria-label="View ' + esc(act.name) + '">' +
-          '<img src="' + esc(imgSrc) + '" alt="" loading="lazy" decoding="async" width="400" height="400" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=600&amp;q=80\'" />' +
+          '<img src="' + esc(imgSrc) + '" alt="" loading="lazy" decoding="async" width="400" height="400" onerror="this.onerror=null;this.src=\'' + brandMark + '\'" />' +
           rec +
           '</a>' +
           '<div class="home-act-tile-meta">' +
@@ -191,7 +192,7 @@
         '<div class="home-folder-head">' +
         '<div class="home-folder-head-left">' +
         '<div class="home-folder-cover-wrap">' +
-        '<img class="home-folder-cover" src="' + esc(cover) + '" alt="" loading="lazy" width="120" height="120" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=400&amp;q=80\'" />' +
+        '<img class="home-folder-cover" src="' + esc(cover) + '" alt="" loading="lazy" width="120" height="120" onerror="this.onerror=null;this.src=\'images/brand/ee-mark.png\'" />' +
         '<span class="home-folder-icon-badge">' + folderIcon(folder.id) + '</span>' +
         '</div>' +
         '<div class="home-folder-head-text">' +
