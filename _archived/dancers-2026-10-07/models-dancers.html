@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Models &amp; Dancers | Elite Entertainment &amp; Events</title>
+  <meta name="description"
+    content="Book Sydney models and dancers — hip hop, showgirls, Latin, Bollywood, crews. Multi-act enquiry. No public pricing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@400;500;600;700;800&family=Bebas+Neue&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="service-form.css" />
+  <link rel="stylesheet" href="talent.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#c9a84c" />
+  <link rel="apple-touch-icon" href="icons/ee-apple.png" />
+</head>
+
+<body class="catalogue-page">
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-left">
+        <a href="tel:+61417221111">+61 417 221 111</a>
+        <span class="topbar-sep">|</span>
+        <a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a>
+      </div>
+      <div class="topbar-right">
+        <span style="font-size:0.72rem;color:var(--silver-mid);">Sydney · Australia-wide</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header scrolled" id="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" class="brand-link" aria-label="Home">
+          <img class="brand-logo brand-logo--nav" src="images/brand/ee-mark.png" alt="Elite Entertainment" width="52"
+            height="52" decoding="async" />
+        </a>
+      </div>
+      <nav class="main-nav" id="main-nav" aria-label="Primary"></nav>
+      <div class="header-actions">
+        <a href="#talent-enquiry" class="btn btn-gold header-cta">Get a Quote</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Menu" aria-expanded="false"
+          aria-controls="main-nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="cat-page-head">
+    <div class="container">
+      <p class="section-eyebrow">Talent hire · Sydney</p>
+      <h1>Models &amp; Dancers</h1>
+      <p class="cat-page-sub"><span id="talent-hero-count">50+</span> acts · no public prices · multi-act packages
+        welcome</p>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="cat-howto">
+    <div class="container">
+      <ol class="cat-howto-steps">
+        <li><strong>1. Browse</strong><span>Filter or search the roster</span></li>
+        <li><strong>2. Select</strong><span>Tap <em>Add to enquiry</em> on each act you want</span></li>
+        <li><strong>3. Enquire</strong><span>Scroll to the form (or use the bar) and submit</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Roster -->
+  <section class="detail-content cat-main" id="elite-talent">
+    <div class="container">
+      <div class="talent-toolbar cat-toolbar">
+        <div class="talent-search-row">
+          <div class="talent-search">
+            <svg class="talent-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4.3-4.3" />
+            </svg>
+            <input type="search" id="talent-search" placeholder="Search name or style…" autocomplete="off"
+              aria-label="Search roster" />
+          </div>
+          <div class="talent-count" id="talent-count">Loading…</div>
+        </div>
+        <div class="talent-styles" id="talent-styles" role="toolbar" aria-label="Style filters"></div>
+        <div class="talent-groups" id="talent-groups" role="toolbar" aria-label="Group size"></div>
+      </div>
+
+      <div class="talent-grid" id="talent-grid" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- Your selection (always in page flow) -->
+  <section class="cat-selection-panel" id="talent-selection-panel" hidden>
+    <div class="container">
+      <div class="cat-selection-box">
+        <div>
+          <h3>Your selection</h3>
+          <ul id="talent-selection-list" class="cat-selection-list"></ul>
+        </div>
+        <div class="cat-selection-btns">
+          <button type="button" class="btn btn-outline" data-action="clear">Clear all</button>
+          <a href="#talent-enquiry" class="btn btn-gold" data-action="bar-enquire">Continue to form</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form -->
+  <section class="detail-content" id="talent-enquiry">
+    <div class="container">
+      <div class="cat-form-block">
+        <h2 class="cat-form-heading">Book these acts</h2>
+        <p class="cat-form-lead">Selected acts appear in the form automatically. Need more than one? Add them from the
+          roster first, then submit once.</p>
+        <div id="talent-form-selected" class="talent-form-selected" hidden></div>
+        <div class="sf-wrap" data-service-form="models"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky mobile bar -->
+  <div class="talent-selection-bar" id="talent-selection-bar" aria-live="polite">
+    <div class="talent-selection-inner">
+      <div class="talent-selection-info">
+        <strong>0 acts selected</strong>
+        <span>Tap Add to enquiry on cards above</span>
+      </div>
+      <div class="talent-selection-actions">
+        <button type="button" class="btn btn-outline" data-action="clear">Clear</button>
+        <button type="button" class="btn btn-gold" data-action="bar-enquire">Go to form</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="container footer-top-inner">
+        <div class="footer-brand">
+          <div class="logo">
+            <a href="index.html" class="brand-link" aria-label="Home">
+              <img class="brand-logo brand-logo--footer" src="images/brand/ee-wordmark.png" alt="Elite Entertainment"
+                width="280" height="120" decoding="async" />
+            </a>
+          </div>
+          <p>Australia's premier entertainment agency delivering world-class acts for over 40 years.</p>
+          <p style="margin-top:0.5rem;font-size:0.72rem;color:var(--silver-dark);"><strong>ELITE ENTERTAINMENT &amp;
+              EVENTS PTY LTD</strong> &nbsp;|&nbsp; ABN: 17 698 991 481 &nbsp;|&nbsp; ACN: 698 991 481</p>
+        </div>
+        <div class="footer-col">
+          <h4>Artists</h4>
+          <ul>
+            <li><a href="artists-solo.html">Solo Artists</a></li>
+            <li><a href="artists-duo.html">Duos</a></li>
+            <li><a href="artists-bands.html">Trios &amp; Bands</a></li>
+            <li><a href="artists-djs.html">DJs</a></li>
+            <li><a href="artists-tributes.html">Tribute Acts</a></li>
+            <li><a href="models-dancers.html">Models &amp; Dancers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="weddings.html">Weddings</a></li>
+            <li><a href="corporate.html">Corporate</a></li>
+            <li><a href="private-parties.html">Private Parties</a></li>
+            <li><a href="luxury-car-hire.html">Luxury Car Hire</a></li>
+            <li><a href="luxury-yacht-hire.html">Luxury Yacht Hire</a></li>
+            <li><a href="security.html">Security</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:+61417221111">+61 417 221 111</a></li>
+            <li><a href="mailto:info@eeevents.com.au">info@eeevents.com.au</a></li>
+            <li><span>Sydney, NSW</span></li>
+            <li><a href="index.html#contact">Get a Quote</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p>&copy; ELITE ENTERTAINMENT &amp; EVENTS PTY LTD (ACN: 698 991 481 | ABN: 17 698 991 481). All rights
+          reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="talent-data.js"></script>
+  <script src="media-library.js"></script>
+  <script src="talent.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="elite-mail.js"></script>
+  <script src="elite-attachments.js"></script>
+  <script src="elite-crm-push.js"></script>
+  <script src="service-form.js"></script>
+  <script src="site-nav.js"></script>
+  <script src="cms.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
