@@ -34,7 +34,6 @@
     { label: 'Party Bands', href: 'folder.html?id=party-bands' },
     { label: 'Tribute', href: 'folder.html?id=tribute-acts' },
     { label: 'Production Shows', href: 'folder.html?id=production-shows' },
-    { label: 'Dance Troupes', href: 'folder.html?id=dance-troupes-mcs' },
     { label: 'MCs & Hosts', href: 'folder.html?id=mcs' },
     { label: "DJ's & Karaoke", href: 'folder.html?id=djs-karaoke' },
     { label: 'Instrumentalists', href: 'folder.html?id=instrumentals' },
@@ -67,9 +66,8 @@
     },
     {
       label: 'Hire',
-      href: 'models-dancers.html',
+      href: 'luxury-car-hire.html',
       children: [
-        { label: 'Models & Dancers', href: 'models-dancers.html' },
         { label: 'Luxury Car Hire', href: 'luxury-car-hire.html' },
         { label: 'Luxury Yacht Hire', href: 'luxury-yacht-hire.html' },
         { label: 'Security', href: 'security.html' },
