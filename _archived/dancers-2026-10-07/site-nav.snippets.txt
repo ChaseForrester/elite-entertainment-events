@@ -1,0 +1,6 @@
+REMOVED from ARTIST_FOLDERS:
+    { label: 'Dance Troupes', href: 'folder.html?id=dance-troupes-mcs' },
+
+REMOVED from Hire children:
+        { label: 'Models & Dancers', href: 'models-dancers.html' },
+Hire href was models-dancers.html -> now luxury-car-hire.html
