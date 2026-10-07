@@ -566,7 +566,6 @@ document.addEventListener('DOMContentLoaded', function () {
         { name: 'Private Parties', url: 'private-parties.html', style: 'Event package', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=200&q=80' },
         { name: 'Luxury Car Hire', url: 'luxury-car-hire.html', style: 'Luxury hire', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=200&q=80' },
         { name: 'Luxury Yacht Hire', url: 'luxury-yacht-hire.html', style: 'Luxury hire', image: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&w=200&q=80' },
-        { name: 'Models & Dancers', url: 'models-dancers.html', style: 'Talent', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=200&q=80' },
         { name: 'Security & Crowd Control', url: 'security.html', style: 'Support', image: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=200&q=80' },
         { name: 'Stage, Sound & Lighting', url: 'stage-sound-lighting.html', style: 'Production hire', image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=200&q=80' }
       ].forEach(s => items.push(Object.assign({ type: 'service' }, s)));
@@ -1008,36 +1007,6 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
         </div>
       `;
-      } else if (selectedType === 'Models & Dancers') {
-        dynamicContainer.innerHTML = `
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
-          <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Performer Type</label>
-            <select id="spec-model-type" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
-              <option value="Promotional Model">Promotional Model / Hostess</option>
-              <option value="Choreographed Dancer">Choreographed Dancer</option>
-              <option value="Acrobat / Stage Act">Acrobat / Stage performer</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Height (cm)</label>
-            <input type="number" id="spec-model-height" required placeholder="e.g. 175" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
-          </div>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
-          <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Costumes / Outfits Provided?</label>
-            <select id="spec-model-outfit" style="width:100%; padding:0.65rem; background:rgba(20,20,20,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;">
-              <option value="BYO Costumes">BYO Performance Costumes</option>
-              <option value="Client Provided">Client / Venue Provided Uniform</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size:0.65rem; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:0.4rem; font-weight:700;">Performance Video Reel Link</label>
-            <input type="url" id="spec-model-reel" placeholder="https://vimeo.com/yourshow" style="width:100%; padding:0.65rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); outline:none;" />
-          </div>
-        </div>
-      `;
       } else if (selectedType === 'RSA & RCG Staff') {
         dynamicContainer.innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
@@ -1199,11 +1168,7 @@ document.addEventListener('DOMContentLoaded', function () {
           details.expiry = document.getElementById('spec-sec-exp').value;
           details.firstAid = document.getElementById('spec-sec-firstaid').value;
           details.experience = document.getElementById('spec-sec-exp').value;
-        } else if (type === 'Models & Dancers') {
-          details.modelType = document.getElementById('spec-model-type').value;
-          details.height = document.getElementById('spec-model-height').value;
-          details.outfits = document.getElementById('spec-model-outfit').value;
-          details.reel = document.getElementById('spec-model-reel').value;
+
         } else if (type === 'RSA & RCG Staff') {
           details.rsa = document.getElementById('spec-staff-rsa').value;
           details.rcg = document.getElementById('spec-staff-rcg').value;

@@ -1363,7 +1363,6 @@
         classical: 'classical-entertainment',
         specialty: 'seasonal-specialty-entertainment',
         roving: 'roving-entertainment',
-        'models-dancers': 'dance-troupes-mcs',
         corporate: 'party-bands',
         weddings: 'party-bands'
       };
