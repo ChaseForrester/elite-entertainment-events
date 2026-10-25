@@ -387,7 +387,7 @@
       "name": "Chinese Dance Spectacular",
       "category": "multicultural",
       "genre": "Traditional Cultural Dance",
-      "image": "images/party-band.jpg",
+      "image": "images/acts/multicultural-entertainment/chinese-dance-spectacular.jpg",
       "rate": "$2,500+",
       "bio": "Breathtaking traditional Chinese fan, ribbon, and folk dancers.",
       "featured": true,
@@ -471,7 +471,7 @@
       "name": "Ulah Lebanese Belly Dancers",
       "category": "multicultural",
       "genre": "Belly Dance & Tabla",
-      "image": "images/solo.jpg",
+      "image": "images/acts/multicultural-entertainment/utah-lebanese-belly-dancers.jpg",
       "rate": "$1,500+",
       "bio": "Mesmerizing Arabic belly dancers accompanied by live Middle Eastern percussion.",
       "featured": true,
@@ -499,7 +499,7 @@
       "name": "Chinese Lion Dancers",
       "category": "multicultural",
       "genre": "Traditional Lion & Drumming",
-      "image": "images/party-band.jpg",
+      "image": "images/acts/multicultural-entertainment/chinese-lion-dancers.avif",
       "rate": "$1,800+",
       "bio": "High-energy Chinese lion dance troupe bringing blessing, luck, and spectacle.",
       "featured": true,
@@ -527,7 +527,7 @@
       "name": "Thailand Dancers",
       "category": "multicultural",
       "genre": "Thai Classical Dance",
-      "image": "images/solo.jpg",
+      "image": "images/acts/multicultural-entertainment/thailand-dancers.jpg",
       "rate": "$1,800+",
       "bio": "Exquisite Thai traditional dancers with golden headpieces and costumes.",
       "featured": false,
@@ -1028,7 +1028,7 @@
       "name": "Thai Roving Dancers",
       "category": "roving",
       "genre": "Roving Dance Troupe",
-      "image": "images/party-band.jpg",
+      "image": "images/acts/roving-entertainment/thai-roving-dancers.jpg",
       "rate": "$1,800+",
       "bio": "Roving Thai dancers in authentic traditional costumes greeting VIP guests.",
       "featured": false,
@@ -1393,7 +1393,13 @@
         'vixen strings': 'images/acts/classical-entertainment/vixen-strings.jpg',
         'mimosa duo': 'images/acts/classical-entertainment/mimosa-duo.jpg',
         'the bavarians oom pa pa band': 'images/acts/seasonal-specialty-entertainment/the-bavarians-oom-pa-pa-band-oktoberfest.jpg',
-        'julie & tony italian': 'images/acts/soloists-duos-trios/julie-and-tony.png'
+        'julie & tony italian': 'images/acts/soloists-duos-trios/julie-and-tony.png',
+        'ulah lebanese belly dancers': 'images/acts/multicultural-entertainment/utah-lebanese-belly-dancers.jpg',
+        'utah lebanese belly dancers': 'images/acts/multicultural-entertainment/utah-lebanese-belly-dancers.jpg',
+        'chinese dance spectacular': 'images/acts/multicultural-entertainment/chinese-dance-spectacular.jpg',
+        'chinese lion dancers': 'images/acts/multicultural-entertainment/chinese-lion-dancers.avif',
+        'thailand dancers': 'images/acts/multicultural-entertainment/thailand-dancers.jpg',
+        'thai roving dancers': 'images/acts/roving-entertainment/thai-roving-dancers.jpg'
       };
       var repoImg = function (name) {
         var n = String(name || '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -1406,9 +1412,9 @@
         if (/^(https?:|data:|blob:|\/\/)/i.test(src)) return false;
         return !/^\/?images\/acts\//i.test(src);
       };
-      // Dancer / showgirl content is intentionally left on its existing behaviour.
+      // Showgirl, Moulin Rouge, and model names keep existing CMS image behaviour.
       var isProtected = function (name) {
-        return /danc|showgirl|moulin|model/i.test(String(name || ''));
+        return /showgirl|moulin|model/i.test(String(name || ''));
       };
       var matched = {};
       window.ELITE_FOLDERS.forEach(function (folder) {
