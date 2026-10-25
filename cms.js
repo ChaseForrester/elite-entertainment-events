@@ -61,7 +61,7 @@
       "name": "Dami Im",
       "category": "celebrity",
       "genre": "Pop / Eurovision Star",
-      "image": "images/solo.jpg",
+      "image": "images/acts/celebrity-bands-and-artists/dami-im.webp",
       "rate": "$12,000+",
       "bio": "Eurovision runner-up and multi-platinum recording artist with breathtaking vocal range.",
       "featured": true,
@@ -387,7 +387,7 @@
       "name": "Chinese Dance Spectacular",
       "category": "multicultural",
       "genre": "Traditional Cultural Dance",
-      "image": "images/party-band.jpg",
+      "image": "images/acts/multicultural-entertainment/chinese-dance-spectacular.jpg",
       "rate": "$2,500+",
       "bio": "Breathtaking traditional Chinese fan, ribbon, and folk dancers.",
       "featured": true,
@@ -471,7 +471,7 @@
       "name": "Ulah Lebanese Belly Dancers",
       "category": "multicultural",
       "genre": "Belly Dance & Tabla",
-      "image": "images/solo.jpg",
+      "image": "images/acts/multicultural-entertainment/utah-lebanese-belly-dancers.jpg",
       "rate": "$1,500+",
       "bio": "Mesmerizing Arabic belly dancers accompanied by live Middle Eastern percussion.",
       "featured": true,
@@ -499,7 +499,7 @@
       "name": "Chinese Lion Dancers",
       "category": "multicultural",
       "genre": "Traditional Lion & Drumming",
-      "image": "images/party-band.jpg",
+      "image": "images/acts/multicultural-entertainment/chinese-lion-dancers.avif",
       "rate": "$1,800+",
       "bio": "High-energy Chinese lion dance troupe bringing blessing, luck, and spectacle.",
       "featured": true,
@@ -527,7 +527,7 @@
       "name": "Thailand Dancers",
       "category": "multicultural",
       "genre": "Thai Classical Dance",
-      "image": "images/solo.jpg",
+      "image": "images/acts/multicultural-entertainment/thailand-dancers.jpg",
       "rate": "$1,800+",
       "bio": "Exquisite Thai traditional dancers with golden headpieces and costumes.",
       "featured": false,
@@ -1028,7 +1028,7 @@
       "name": "Thai Roving Dancers",
       "category": "roving",
       "genre": "Roving Dance Troupe",
-      "image": "images/party-band.jpg",
+      "image": "images/acts/roving-entertainment/thai-roving-dancers.jpg",
       "rate": "$1,800+",
       "bio": "Roving Thai dancers in authentic traditional costumes greeting VIP guests.",
       "featured": false,
@@ -1382,6 +1382,40 @@
         if (!a || !a.name) return;
         byName[self._normName(a.name)] = a;
       });
+      // CMS records often carry the brand logo or old legacy paths as "image";
+      // never let those replace a real roster photo.
+      var REPO_IMAGES = {
+        'dami im': 'images/acts/celebrity-bands-and-artists/dami-im.webp',
+        'guy sebastian': 'images/acts/celebrity-bands-and-artists/guy-sebastian.webp',
+        'geoff zhang duo': 'images/acts/soloists-duos-trios/geoff-zhang-duo.jpg',
+        'high rollers': 'images/acts/bands/high-rollers.jpg',
+        'salza kings': 'images/acts/multicultural-entertainment/salsa-kings.jpg',
+        'vixen strings': 'images/acts/classical-entertainment/vixen-strings.jpg',
+        'mimosa duo': 'images/acts/classical-entertainment/mimosa-duo.jpg',
+        'the bavarians oom pa pa band': 'images/acts/seasonal-specialty-entertainment/the-bavarians-oom-pa-pa-band-oktoberfest.jpg',
+        'julie & tony italian': 'images/acts/soloists-duos-trios/julie-and-tony.png',
+        'ulah lebanese belly dancers': 'images/acts/multicultural-entertainment/utah-lebanese-belly-dancers.jpg',
+        'utah lebanese belly dancers': 'images/acts/multicultural-entertainment/utah-lebanese-belly-dancers.jpg',
+        'chinese dance spectacular': 'images/acts/multicultural-entertainment/chinese-dance-spectacular.jpg',
+        'chinese lion dancers': 'images/acts/multicultural-entertainment/chinese-lion-dancers.avif',
+        'thailand dancers': 'images/acts/multicultural-entertainment/thailand-dancers.jpg',
+        'thai roving dancers': 'images/acts/roving-entertainment/thai-roving-dancers.jpg'
+      };
+      var repoImg = function (name) {
+        var n = String(name || '').toLowerCase().replace(/\s+/g, ' ').trim();
+        return REPO_IMAGES[n] || '';
+      };
+      var isPlaceholderImg = function (src) {
+        src = String(src || '').trim();
+        if (!src) return true;
+        if (/brand\/ee-mark/i.test(src)) return true;
+        if (/^(https?:|data:|blob:|\/\/)/i.test(src)) return false;
+        return !/^\/?images\/acts\//i.test(src);
+      };
+      // Showgirl, Moulin Rouge, and model names keep existing CMS image behaviour.
+      var isProtected = function (name) {
+        return /showgirl|moulin|model/i.test(String(name || ''));
+      };
       var matched = {};
       window.ELITE_FOLDERS.forEach(function (folder) {
         (folder.acts || []).forEach(function (act) {
@@ -1391,7 +1425,13 @@
           matched[cms.id] = true;
           var plain = self._stripHtml(cms.bio || '');
           if (plain) act.bio = plain;
-          if (cms.image) act.image = cms.image;
+          if (isProtected(act.name)) {
+            if (cms.image) act.image = cms.image;
+          } else if (cms.image && !isPlaceholderImg(cms.image)) {
+            act.image = cms.image;
+          } else if (isPlaceholderImg(act.image) && repoImg(act.name)) {
+            act.image = repoImg(act.name);
+          }
           if (cms.genre) act.style = cms.genre;
           if (cms.youtubeUrl) act.youtubeUrl = cms.youtubeUrl;
           if (cms.gallery) act.gallery = cms.gallery;
@@ -1416,7 +1456,7 @@
           name: cms.name,
           style: cms.genre || '',
           bio: self._stripHtml(cms.bio || '') || (cms.name + ' is available through Elite Entertainment & Events.'),
-          image: cms.image || '',
+          image: (!isProtected(cms.name) && isPlaceholderImg(cms.image) && repoImg(cms.name)) ? repoImg(cms.name) : (cms.image || ''),
           youtubeUrl: cms.youtubeUrl || '',
           gallery: cms.gallery || [],
           recommended: !!cms.featured,
