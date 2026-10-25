@@ -17,7 +17,7 @@
       "name": "Guy Sebastian",
       "category": "celebrity",
       "genre": "Pop / R&B Celebrity",
-      "image": "images/artists/guy-sebastian.jpg",
+      "image": "images/acts/celebrity-bands-and-artists/guy-sebastian.webp",
       "rate": "$15,000+",
       "bio": "Multi-ARIA award winner and Australian pop royalty available for headline corporate galas and grand weddings.",
       "featured": true,
